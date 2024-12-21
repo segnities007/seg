@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.segnities007.seg"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.segnities007.seg"
