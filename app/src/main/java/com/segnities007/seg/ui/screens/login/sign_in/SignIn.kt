@@ -7,12 +7,12 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.segnities007.seg.ui.screens.login.LoginUiState
+import com.segnities007.seg.ui.screens.login.SignUiState
 
 @Composable
 fun SignIn(// TODO modify ui
     modifier: Modifier = Modifier,
-    uiState: LoginUiState,
+    signUiState: SignUiState,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
 ){
@@ -21,8 +21,8 @@ fun SignIn(// TODO modify ui
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ){
-        InputForm(text = uiState.email) { onEmailChange(it) }
-        InputForm(text = uiState.password) { onPasswordChange(it) }
+        InputForm(text = signUiState.email) { onEmailChange(it) }
+        InputForm(text = signUiState.password) { onPasswordChange(it) }
     }
 }
 

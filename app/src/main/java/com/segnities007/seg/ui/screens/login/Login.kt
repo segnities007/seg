@@ -20,7 +20,7 @@ fun Login(
         }
     ) {
         LoginUi(
-            uiState = loginUiState.uiState,
+            uiState = loginUiState.signUiState,
             onEmailChange = loginUiState::onEmailChange,
             onPasswordChange = loginUiState::onPasswordChange,
         )
@@ -29,7 +29,8 @@ fun Login(
 
 @Composable
 private fun LoginUi(
-    uiState: LoginUiState,
+    signUiState: SignUiState,
+    navigateUiState: NavigateUiState,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
 ){
@@ -37,16 +38,16 @@ private fun LoginUi(
         topBar = {},
         bottomBar = {},
     ){innerPadding ->
-        when(uiState.index){
+        when(navigateUiState.index){
             0 -> SignIn(
                     modifier = Modifier.padding(innerPadding),
-                    uiState = uiState,
+                    uiState = signUiState,
                     onEmailChange = onEmailChange,
                     onPasswordChange = onPasswordChange
                 )
             1 -> SignUp(
                     modifier = Modifier.padding(innerPadding),
-                    uiState = uiState,
+                    uiState = signUiState,
                     onEmailChange = onEmailChange,
                     onPasswordChange = onPasswordChange
                 )

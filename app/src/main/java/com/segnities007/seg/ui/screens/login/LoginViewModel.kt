@@ -6,27 +6,32 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 
 
-data class LoginUiState(
+data class SignUiState(
     val email: String = "",
     val password: String = "",
+)
+
+data class NavigateUiState(
     val index: Int = 0,
 )
 
 class LoginViewModel : ViewModel() {
 
-    var uiState by mutableStateOf(LoginUiState())
+    var signUiState by mutableStateOf(SignUiState())
+        private set
+    var navigateUiState by mutableStateOf(NavigateUiState())
         private set
 
     fun onEmailChange(newEmail: String) {
-        uiState = uiState.copy(email = newEmail)
+        signUiState = signUiState.copy(email = newEmail)
     }
 
     fun onPasswordChange(newPassword: String) {
-        uiState = uiState.copy(password = newPassword)
+        signUiState = signUiState.copy(password = newPassword)
     }
 
     fun onIndexChange(newIndex: Int) {
-        uiState = uiState.copy(index = newIndex)
+        navigateUiState = navigateUiState.copy(index = newIndex)
     }
 
 }
