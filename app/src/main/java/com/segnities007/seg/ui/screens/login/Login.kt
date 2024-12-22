@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.segnities007.seg.ui.screens.login.sign_in.SignIn
 import com.segnities007.seg.ui.screens.login.sign_up.SignUp
+import kotlin.math.sign
 
 @Composable
 fun Login(
@@ -20,7 +21,8 @@ fun Login(
         }
     ) {
         LoginUi(
-            uiState = loginUiState.signUiState,
+            signUiState = loginUiState.signUiState,
+            navigateUiState = loginUiState.navigateUiState,
             onEmailChange = loginUiState::onEmailChange,
             onPasswordChange = loginUiState::onPasswordChange,
         )
@@ -41,13 +43,13 @@ private fun LoginUi(
         when(navigateUiState.index){
             0 -> SignIn(
                     modifier = Modifier.padding(innerPadding),
-                    uiState = signUiState,
+                    signUiState = signUiState,
                     onEmailChange = onEmailChange,
                     onPasswordChange = onPasswordChange
                 )
             1 -> SignUp(
                     modifier = Modifier.padding(innerPadding),
-                    uiState = signUiState,
+                    signUiState = signUiState,
                     onEmailChange = onEmailChange,
                     onPasswordChange = onPasswordChange
                 )
