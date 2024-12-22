@@ -3,17 +3,13 @@ package com.segnities007.seg.data.model
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed class Navigation {
-    @Serializable
-    object Splash : Navigation()
+object  Splash
 
-    @Serializable
-    object Login : Navigation()
+@Serializable
+object Login
 
-    @Serializable
-    object Hub : Navigation()
-}
-
+@Serializable
+object Hub
 
 
 
