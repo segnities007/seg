@@ -42,6 +42,7 @@ ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktorCli
 ktor-utils = { module = "io.ktor:ktor-utils", version.ref = "ktorUtils" }
 postgrest-kt = { module = "io.github.jan-tennert.supabase:postgrest-kt", version.ref = "postgrestKt" }
 storage-kt = { module = "io.github.jan-tennert.supabase:storage-kt", version.ref = "storageKt" }
+x-x-x = { module = "libs.kotlinx.serialization.json:1.7.3" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
