@@ -20,12 +20,12 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        val properties = Properties().apply {
-            load(rootProject.file("local.properties").inputStream())
-        }
+        // local.properties から Supabase の URL と Key を取得して BuildConfig に設定
+        val supabaseUrl = getLocalProperty("SUPABASE_URL")
+        val supabaseKey = getLocalProperty("SUPABASE_API_KEY")
 
-        buildConfigField("String", "SUPABASE_API_KEY", "\"${properties.getProperty("SUPABASE_API_KEY")}\"")
-        buildConfigField("String", "SUPABASE_URL", "\"${properties.getProperty("SUPABASE_URL")}\"")
+        buildConfigField("String", "SUPABASE_URL", "\"$supabaseUrl\"")
+        buildConfigField("String", "SUPABASE_API_KEY", "\"$supabaseKey\"")
     }
 
     buildTypes {
@@ -46,6 +46,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -81,3 +82,15 @@ dependencies {
 
     implementation(libs.kotlinx.serialization.json)
 }
+
+fun getLocalProperty(key: String): String? {
+    val properties = Properties()
+    val localPropertiesFile = rootProject.file("local.properties")
+    if (localPropertiesFile.exists()) {
+        localPropertiesFile.inputStream().use { stream ->
+            properties.load(stream)
+        }
+    }
+    return properties.getProperty(key)
+}
+
