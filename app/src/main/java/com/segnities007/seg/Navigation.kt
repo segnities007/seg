@@ -17,6 +17,7 @@ object Login
 @Serializable
 object Hub
 
+
 @Composable
 fun Navigation(
     navController: NavHostController = rememberNavController(),

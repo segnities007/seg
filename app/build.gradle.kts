@@ -68,4 +68,7 @@ dependencies {
     implementation(libs.storage.kt)
     implementation(libs.auth.kt)
 
+    implementation(libs.androidx.hilt.navigation.fragment)
+
+    implementation(libs.kotlinx.serialization.json)
 }
