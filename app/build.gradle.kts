@@ -81,6 +81,12 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.fragment)
 
     implementation(libs.kotlinx.serialization.json)
+
+    implementation(libs.androidx.credentials)
+    implementation (libs.googleid)
+
+//    implementation("androidx.credentials:credentials-play-services-auth:<")
+
 }
 
 fun getLocalProperty(key: String): String? {
