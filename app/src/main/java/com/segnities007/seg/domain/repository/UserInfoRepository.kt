@@ -1,6 +1,6 @@
-package com.segnities007.seg.data.repository
+package com.segnities007.seg.domain.repository
 
-import com.segnities007.seg.domain.model.UserInfo
+import com.segnities007.seg.data.model.UserInfo
 
 interface UserInfoRepository {
     suspend fun createUser(user: UserInfo): Boolean

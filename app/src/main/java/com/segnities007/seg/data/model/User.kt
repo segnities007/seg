@@ -1,5 +1,8 @@
-package com.segnities007.seg.domain.model
+package com.segnities007.seg.data.model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class User(
     val id: Int,
     val name: String,
