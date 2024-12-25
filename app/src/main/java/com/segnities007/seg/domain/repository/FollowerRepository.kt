@@ -1,6 +1,6 @@
-package com.segnities007.seg.data.repository
+package com.segnities007.seg.domain.repository
 
-import com.segnities007.seg.domain.model.Follower
+import com.segnities007.seg.data.model.Follower
 
 interface FollowerRepository {
     suspend fun createFollower(follower: Follower): Boolean
