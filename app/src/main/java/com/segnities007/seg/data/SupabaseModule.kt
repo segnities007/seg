@@ -8,6 +8,8 @@ import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.createSupabaseClient
 import javax.inject.Singleton
 import com.segnities007.seg.BuildConfig
+import com.segnities007.seg.data.repository.AuthRepositoryImpl
+import com.segnities007.seg.domain.repository.AuthRepository
 import io.github.jan.supabase.auth.Auth
 import io.github.jan.supabase.auth.FlowType
 import io.github.jan.supabase.auth.auth
@@ -29,11 +31,7 @@ object SupabaseModule {
             supabaseKey = BuildConfig.SUPABASE_API_KEY
         ) {
             install(Postgrest)
-            install(Auth) {
-                flowType = FlowType.PKCE
-                scheme = "app"
-                host = "supabase.com"
-            }
+            install(Auth)
             install(Storage)
         }
     }
@@ -46,8 +44,8 @@ object SupabaseModule {
 
     @Provides
     @Singleton
-    fun provideSupabaseAuth(client: SupabaseClient): Auth {
-        return client.auth
+    fun provideSupabaseAuth(client: SupabaseClient): AuthRepository {
+        return AuthRepositoryImpl(auth = client.auth)
     }
 
 
