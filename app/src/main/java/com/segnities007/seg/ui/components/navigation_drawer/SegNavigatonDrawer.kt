@@ -13,17 +13,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun SegNavigationDrawer(
     modifier: Modifier = Modifier,
     textPadding: Dp = 16.dp,
-    thisViewModel: SegNavigationDrawerViewModel = SegNavigationDrawerViewModel(),
+    thisViewModel: SegNavigationDrawerViewModel = viewModel(),
     content: @Composable () -> Unit,
 ){
 
     ModalNavigationDrawer(
-        drawerState = rememberDrawerState(thisViewModel.drawerState.value),
+        drawerState = thisViewModel.drawerState,
         drawerContent = {
             ModalDrawerSheet {
                 DrawerSheet(textPadding = textPadding)

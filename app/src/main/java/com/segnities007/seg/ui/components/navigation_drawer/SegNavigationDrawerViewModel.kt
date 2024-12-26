@@ -1,22 +1,29 @@
 package com.segnities007.seg.ui.components.navigation_drawer
 
+import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 
 class SegNavigationDrawerViewModel : ViewModel() {
 
-    private var _drawerValue = MutableStateFlow(DrawerValue.Closed)
-    val drawerState: StateFlow<DrawerValue> = _drawerValue.asStateFlow()
+    var drawerState by mutableStateOf(DrawerState(initialValue = DrawerValue.Closed))
+        private set
 
     fun openDrawer(){
-        _drawerValue.value = DrawerValue.Open
+        viewModelScope.launch{
+            drawerState.open()
+        }
     }
 
     fun closeDrawer(){
-        _drawerValue.value = DrawerValue.Closed
+        viewModelScope.launch{
+            drawerState.close()
+        }
     }
 
 }
