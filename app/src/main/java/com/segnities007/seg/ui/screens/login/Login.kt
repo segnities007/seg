@@ -7,7 +7,8 @@ import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.segnities007.seg.ui.components.bottom_bar.LoginBottomBar
 import com.segnities007.seg.ui.components.top_bar.LoginTopBar
 import com.segnities007.seg.ui.screens.login.sign_in.SignIn
@@ -16,6 +17,7 @@ import com.segnities007.seg.ui.screens.login.sign_up.SignUp
 @Composable
 fun Login(
     loginUiState: LoginViewModel = hiltViewModel(),
+    navController: NavHostController,
 ){
     ModalNavigationDrawer(
         drawerContent = {
@@ -28,7 +30,9 @@ fun Login(
             onEmailChange = loginUiState::onEmailChange,
             onPasswordChange = loginUiState::onPasswordChange,
             onChangeIndex = loginUiState::onIndexChange,
-            onLoginWithGoogle = loginUiState::onLoginWithGoogle
+            onSignInWithEmailPassword = {loginUiState.onSignInWithEmailPassword(navController)},
+            onLoginWithGoogle = loginUiState::onLoginWithGoogle,
+            onSignUpWithEmailPassword = {loginUiState.onSignUpWithEmailPassword(navController)}
         )
     }
 }
@@ -40,6 +44,8 @@ private fun LoginUi(
     onChangeIndex: (Int) -> Unit,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
+    onSignInWithEmailPassword: () -> Unit,
+    onSignUpWithEmailPassword: () -> Unit,
     onLoginWithGoogle: (Context) -> Unit,
 ){
     Scaffold(
@@ -52,13 +58,16 @@ private fun LoginUi(
                     signUiState = signUiState,
                     onEmailChange = onEmailChange,
                     onPasswordChange = onPasswordChange,
+                    onSignInWithEmailPassword = onSignInWithEmailPassword,
                     onLoginWithGoogle = onLoginWithGoogle,
                 )
             1 -> SignUp(
-                    modifier = Modifier.padding(innerPadding),
-                    signUiState = signUiState,
-                    onEmailChange = onEmailChange,
-                    onPasswordChange = onPasswordChange
+                modifier = Modifier.padding(innerPadding),
+                signUiState = signUiState,
+                onEmailChange = onEmailChange,
+                onPasswordChange = onPasswordChange,
+                onSignUpWithEmailPassword = onSignUpWithEmailPassword,
+                onLoginWithGoogle = onLoginWithGoogle,
                 )
         }
     }

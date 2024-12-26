@@ -4,4 +4,7 @@
     <string name="login_screen_menu_description">menu</string>
     <string name="google_icon_url">https://image.similarpng.com/very-thumbnail/2020/06/Logo-google-icon-PNG.png</string>
     <string name="google_login_label">Login with google</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="enter">Enter</string>
 </resources>

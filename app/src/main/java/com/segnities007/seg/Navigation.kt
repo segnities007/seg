@@ -23,12 +23,12 @@ fun Navigation(
     navController: NavHostController = rememberNavController(),
 ){
 
-    NavHost(navController = navController, startDestination = Login) {
+    NavHost(navController = navController, startDestination = Splash) {
         composable<Splash> {
-            Splash()
+            Splash(navController = navController)
         }
         composable<Login> {
-            Login()
+            Login(navController = navController)
         }
         composable<Hub>{
             Home()

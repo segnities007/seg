@@ -1,7 +1,20 @@
 package com.segnities007.seg.ui.screens.splash
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavHostController
+import com.segnities007.seg.data.repository.AuthRepositoryImpl
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class SplashViewModel: ViewModel(){
-
+@HiltViewModel
+class SplashViewModel @Inject constructor(
+    private val authRepositoryImpl: AuthRepositoryImpl,
+): ViewModel(){
+    fun hasLogined(
+        navController: NavHostController,
+    ){
+        Log.d("check splash", "run hasLogined")
+        authRepositoryImpl.hasLogined(navController)
+    }
 }
