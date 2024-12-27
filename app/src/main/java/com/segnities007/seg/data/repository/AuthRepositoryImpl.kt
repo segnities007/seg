@@ -5,7 +5,6 @@ import android.util.Log
 import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.exceptions.GetCredentialException
-import androidx.navigation.NavHost
 import androidx.navigation.NavHostController
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
@@ -13,9 +12,7 @@ import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingExcept
 import com.segnities007.seg.Hub
 import com.segnities007.seg.Login
 import com.segnities007.seg.domain.repository.AuthRepository
-import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.Auth
-import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.providers.Google
 import io.github.jan.supabase.auth.providers.builtin.Email
 import io.github.jan.supabase.auth.providers.builtin.IDToken
@@ -30,6 +27,7 @@ class AuthRepositoryImpl @Inject constructor(
     private val auth: Auth,
 ) : AuthRepository {
 
+    //前回ログインしていたかを確認
     fun hasLogined(
         navController: NavHostController
     ) {
