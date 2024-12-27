@@ -6,4 +6,5 @@ import kotlinx.serialization.Serializable
 data class Hashtag(
     val id: Int,
     val name: String,
+    val icon: String,
 )

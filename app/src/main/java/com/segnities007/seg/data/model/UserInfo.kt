@@ -1,13 +1,16 @@
 package com.segnities007.seg.data.model
 
+import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class UserInfo(
-    val id: Int,
-    val isPrime: Boolean,
-    val posts: List<Int>,
-    val followers: List<Int>,
-    val createdAt: String,
-    val updatedAt: String,
+    val id: Int,                    // ID of User Information
+    val isPrime: Boolean = false,   // Status that user is payer
+    val icon: String?,              // Icon of user
+    val posts: List<Int>,           // List of Post of user
+    val followings: List<Int>,      // Users of following
+    val followers: List<Int>,       // Users of followers
+    val createAt: LocalDate,        // create date
+    val updateAt: LocalDate,        // update date
 )
