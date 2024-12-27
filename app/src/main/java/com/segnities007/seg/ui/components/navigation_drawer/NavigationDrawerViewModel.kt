@@ -6,24 +6,19 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.launch
 
-class SegNavigationDrawerViewModel : ViewModel() {
+class NavigationDrawerViewModel : ViewModel() {
 
     var drawerState by mutableStateOf(DrawerState(initialValue = DrawerValue.Closed))
         private set
 
-    fun openDrawer(){
-        viewModelScope.launch{
-            drawerState.open()
-        }
+    suspend fun openDrawer(){
+        drawerState.open()
     }
 
-    fun closeDrawer(){
-        viewModelScope.launch{
-            drawerState.close()
-        }
+    suspend fun closeDrawer(){
+        drawerState.close()
+
     }
 
 }

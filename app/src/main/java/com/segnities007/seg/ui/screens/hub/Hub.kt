@@ -1,8 +1,6 @@
 package com.segnities007.seg.ui.screens.hub
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ModalDrawerSheet
-import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -13,6 +11,8 @@ import com.segnities007.seg.ui.components.top_bar.TopBar
 import com.segnities007.seg.R
 import com.segnities007.seg.data.model.bottom_bar.HubItem
 import com.segnities007.seg.ui.components.bottom_bar.BottomBar
+import com.segnities007.seg.ui.components.navigation_drawer.NavigationDrawer
+import com.segnities007.seg.ui.components.navigation_drawer.NavigationDrawerViewModel
 import com.segnities007.seg.ui.screens.hub.home.Home
 import com.segnities007.seg.ui.screens.hub.notify.Notify
 import com.segnities007.seg.ui.screens.hub.post.Post
@@ -24,22 +24,17 @@ fun Hub(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     hubViewModel: HubViewModel = hiltViewModel(),
+    navigationDrawerViewModel: NavigationDrawerViewModel = hiltViewModel()
 ){
-    ModalNavigationDrawer(
-        modifier = modifier,
-        drawerContent = {
-//            ModalDrawerSheet {
-//                NavigationDrawerItem(
-//                    label = { Text(text = "Drawer Item") },
-//                    selected = false,
-//                    onClick = { /*TODO*/ }
-//                )
-//            }
-        }
+    NavigationDrawer(
+        items = HubItem(),
+        onIndexChange = hubViewModel::onIndexChange,
+        onDrawerClose = navigationDrawerViewModel::closeDrawer
     ) {
         HubUi(
             navigateUiState = hubViewModel.navigateUiState,
             onIndexChange = hubViewModel::onIndexChange,
+            onDrawerOpen = navigationDrawerViewModel::openDrawer
         )
     }
 }
@@ -48,13 +43,15 @@ fun Hub(
 private fun HubUi(
     navigateUiState: NavigateUiState,
     onIndexChange: (Int) -> Unit,
+    onDrawerOpen: suspend () -> Unit,
 ){
     Scaffold(
         topBar = {
             TopBar(
                 title = stringResource(R.string.app_name),
                 contentDescription = stringResource(R.string.menu_description),
-            ) { }
+                onDrawerOpen = onDrawerOpen,
+            )
         },
         bottomBar = {
             BottomBar(
