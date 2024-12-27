@@ -28,7 +28,7 @@ object SupabaseModule {
     fun provideSupabaseClient(): SupabaseClient {
         return createSupabaseClient(
             supabaseUrl = BuildConfig.SUPABASE_URL,
-            supabaseKey = BuildConfig.SUPABASE_API_KEY
+            supabaseKey = BuildConfig.SUPABASE_API_KEY,
         ) {
             install(Postgrest)
             install(Auth)
@@ -44,8 +44,8 @@ object SupabaseModule {
 
     @Provides
     @Singleton
-    fun provideSupabaseAuth(client: SupabaseClient): AuthRepository {
-        return AuthRepositoryImpl(auth = client.auth)
+    fun provideSupabaseAuth(client: SupabaseClient): Auth {
+        return client.auth
     }
 
 

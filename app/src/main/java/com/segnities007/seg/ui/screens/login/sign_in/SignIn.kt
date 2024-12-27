@@ -9,6 +9,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,7 +20,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.segnities007.seg.ui.screens.login.SignUiState
@@ -28,6 +34,7 @@ fun SignIn(// TODO modify ui
     modifier: Modifier = Modifier,
     signUiState: SignUiState,
     onLoginWithGoogle: (Context) -> Unit,
+    onSignInWithEmailPassword: () -> Unit,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
 ){
@@ -38,9 +45,9 @@ fun SignIn(// TODO modify ui
         verticalArrangement = Arrangement.Center,
     ){
         
-        InputForm(text = signUiState.email) { onEmailChange(it) }
-        InputForm(text = signUiState.password) { onPasswordChange(it) }
-        LoginButtonWithGoogle(onClick = onLoginWithGoogle)
+        InputForm(text = signUiState.email, label = stringResource(R.string.email)) { onEmailChange(it) }
+        InputForm(text = signUiState.password, label = stringResource(R.string.password)) { onPasswordChange(it) }
+        ElevatedButton(onClick = onSignInWithEmailPassword ){ Text(stringResource(R.string.enter)) }
     }
 }
 
@@ -48,14 +55,26 @@ fun SignIn(// TODO modify ui
 private fun InputForm(
     modifier: Modifier = Modifier,
     text: String,
+    label: String,
     onValueChange: (String) -> Unit,
 ){
+
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
+
     Box(modifier = modifier){
         OutlinedTextField(
             value = text,
             onValueChange = onValueChange,
-            label = { Text("Label") },
-            modifier = Modifier
+            label = { Text(label) },
+            maxLines = 1,
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    focusManager.clearFocus() // フォーカスを外す
+                    keyboardController?.hide() // キーボードを閉じる
+                }
+            )
         )
     }
 }

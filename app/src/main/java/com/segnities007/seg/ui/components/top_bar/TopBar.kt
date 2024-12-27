@@ -11,25 +11,27 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginTopBar(
+fun TopBar(
     modifier: Modifier = Modifier,
+    title: String,
+    contentDescription: String,
     onClick: () -> Unit,
 ){
         CenterAlignedTopAppBar(
+            modifier = modifier,
             colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                 titleContentColor = MaterialTheme.colorScheme.primary,
             ),
-            title = { Text(text = stringResource(R.string.login_screen_title), maxLines = 1,) },
+            title = { Text(text = title, maxLines = 1,) },
             navigationIcon = {
                 IconButton(onClick = onClick) {
                     Icon(
                         painter = painterResource(id = R.drawable.baseline_menu_24),
-                        contentDescription = stringResource(R.string.login_screen_menu_description)
+                        contentDescription = contentDescription,
                     )
                 }
             },

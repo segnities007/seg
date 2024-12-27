@@ -7,10 +7,13 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavHostController
+import com.segnities007.seg.Hub
 import com.segnities007.seg.data.repository.AuthRepositoryImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 
@@ -50,6 +53,28 @@ class LoginViewModel @Inject constructor(
     ){
         viewModelScope.launch(Dispatchers.IO){
             authRepositoryImpl.loginWithGoogle(context = context)
+        }
+    }
+
+    fun onSignUpWithEmailPassword(
+        navController: NavHostController,
+    ){
+        viewModelScope.launch(Dispatchers.IO){
+            val isSuccess = authRepositoryImpl.signUpWithEmailPassword(email = signUiState.email, password = signUiState.password)
+            withContext(Dispatchers.Main){
+                if(isSuccess) navController.navigate(route = Hub)
+            }
+        }
+    }
+
+    fun onSignInWithEmailPassword(
+        navController: NavHostController,
+    ){
+        viewModelScope.launch(Dispatchers.IO){
+            val isSuccess = authRepositoryImpl.signInWithEmailPassword(email = signUiState.email, password = signUiState.password)
+            withContext(Dispatchers.Main){
+                if(isSuccess) navController.navigate(route = Hub)
+            }
         }
     }
 

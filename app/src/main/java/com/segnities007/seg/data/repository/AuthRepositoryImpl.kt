@@ -5,13 +5,14 @@ import android.util.Log
 import androidx.credentials.CredentialManager
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.exceptions.GetCredentialException
+import androidx.navigation.NavHostController
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
+import com.segnities007.seg.Hub
+import com.segnities007.seg.Login
 import com.segnities007.seg.domain.repository.AuthRepository
-import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.Auth
-import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.providers.Google
 import io.github.jan.supabase.auth.providers.builtin.Email
 import io.github.jan.supabase.auth.providers.builtin.IDToken
@@ -25,6 +26,19 @@ import javax.inject.Inject
 class AuthRepositoryImpl @Inject constructor(
     private val auth: Auth,
 ) : AuthRepository {
+
+    //前回ログインしていたかを確認
+    fun hasLogined(
+        navController: NavHostController
+    ) {
+        val currentUser = auth.currentUserOrNull()
+
+        if (currentUser != null) {
+            navController.navigate(route = Hub)
+        } else {
+            navController.navigate(route = Login)
+        }
+    }
 
     //EmailとPasswordを使用してサインインする
     override suspend fun signInWithEmailPassword(
@@ -102,16 +116,16 @@ class AuthRepositoryImpl @Inject constructor(
             true
 
         } catch (e: GetCredentialException) {
-            Log.e("AuthRepositoryImpl", "$e")
+            Log.e("AuthRepositoryImpl1", "$e")
             false
         } catch (e: GoogleIdTokenParsingException) {
-            Log.e("AuthRepositoryImpl", "$e")
+            Log.e("AuthRepositoryImpl2", "$e")
             false
         } catch (e: RestException) {
-            Log.e("AuthRepositoryImpl", "$e")
+            Log.e("AuthRepositoryImpl3", "$e")
             false
         } catch (e: Exception) {
-            Log.e("AuthRepositoryImpl", "$e")
+            Log.e("AuthRepositoryImpl4", "$e")
             false
         }
     }
