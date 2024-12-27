@@ -9,8 +9,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -18,8 +20,11 @@ fun TopBar(
     modifier: Modifier = Modifier,
     title: String,
     contentDescription: String,
-    onClick: () -> Unit,
+    onDrawerOpen: suspend () -> Unit,
 ){
+
+    val scope = rememberCoroutineScope()
+
         CenterAlignedTopAppBar(
             modifier = modifier,
             colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
@@ -28,7 +33,7 @@ fun TopBar(
             ),
             title = { Text(text = title, maxLines = 1,) },
             navigationIcon = {
-                IconButton(onClick = onClick) {
+                IconButton(onClick = { scope.launch{ onDrawerOpen() } }) {
                     Icon(
                         painter = painterResource(id = R.drawable.baseline_menu_24),
                         contentDescription = contentDescription,

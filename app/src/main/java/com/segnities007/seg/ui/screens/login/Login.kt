@@ -16,28 +16,31 @@ import com.segnities007.seg.ui.screens.login.sign_up.SignUp
 import com.segnities007.seg.R
 import com.segnities007.seg.data.model.bottom_bar.LoginItem
 import com.segnities007.seg.ui.components.bottom_bar.BottomBar
+import com.segnities007.seg.ui.components.navigation_drawer.NavigationDrawer
+import com.segnities007.seg.ui.components.navigation_drawer.NavigationDrawerViewModel
 
 @Composable
 fun Login(
-    loginUiState: LoginViewModel = hiltViewModel(),
+    modifier: Modifier = Modifier,
+    loginViewModel: LoginViewModel = hiltViewModel(),
+    navigationDrawerViewModel: NavigationDrawerViewModel = hiltViewModel(),
     navController: NavHostController,
 ){
-    ModalNavigationDrawer(
-        drawerContent = {
-            ModalDrawerSheet {
-
-            }
-        }
+    NavigationDrawer(
+        items = LoginItem(),
+        onIndexChange = loginViewModel::onIndexChange,
+        onDrawerClose = navigationDrawerViewModel::closeDrawer
     ) {
         LoginUi(
-            signUiState = loginUiState.signUiState,
-            navigateUiState = loginUiState.navigateUiState,
-            onEmailChange = loginUiState::onEmailChange,
-            onPasswordChange = loginUiState::onPasswordChange,
-            onChangeIndex = loginUiState::onIndexChange,
-            onSignInWithEmailPassword = {loginUiState.onSignInWithEmailPassword(navController)},
-            onLoginWithGoogle = loginUiState::onLoginWithGoogle,
-            onSignUpWithEmailPassword = {loginUiState.onSignUpWithEmailPassword(navController)}
+            signUiState = loginViewModel.signUiState,
+            navigateUiState = loginViewModel.navigateUiState,
+            onEmailChange = loginViewModel::onEmailChange,
+            onPasswordChange = loginViewModel::onPasswordChange,
+            onChangeIndex = loginViewModel::onIndexChange,
+            onSignInWithEmailPassword = {loginViewModel.onSignInWithEmailPassword(navController)},
+            onLoginWithGoogle = loginViewModel::onLoginWithGoogle,
+            onSignUpWithEmailPassword = {loginViewModel.onSignUpWithEmailPassword(navController)},
+            onDrawerOpen = navigationDrawerViewModel::openDrawer
         )
     }
 }
@@ -46,6 +49,7 @@ fun Login(
 private fun LoginUi(
     signUiState: SignUiState,
     navigateUiState: NavigateUiState,
+    onDrawerOpen: suspend () -> Unit,
     onChangeIndex: (Int) -> Unit,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
@@ -56,17 +60,17 @@ private fun LoginUi(
     Scaffold(
         topBar = {
                 TopBar(
-                            title = stringResource(R.string.login_screen_title),
-                            contentDescription = stringResource(R.string.menu_description),
-                            onClick = {/* TODO */}
-                        )
-                    },
+                    title = stringResource(R.string.login_screen_title),
+                    contentDescription = stringResource(R.string.menu_description),
+                    onDrawerOpen = onDrawerOpen
+                    )
+                 },
         bottomBar = {
                 BottomBar(
-                            currentIndex = navigateUiState.index,
-                            items = LoginItem(),
-                            onClick = onChangeIndex
-                        )
+                    currentIndex = navigateUiState.index,
+                    items = LoginItem(),
+                    onClick = onChangeIndex
+                    )
                     },
     ){innerPadding ->
         when(navigateUiState.index){
