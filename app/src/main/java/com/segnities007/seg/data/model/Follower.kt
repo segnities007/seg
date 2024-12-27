@@ -4,7 +4,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Follower(
-    val id: Int,
-    val followId: Int,
-    val followeeId: Int,
+    val followerId: Int,           // フォロワー関係のID
+    val followerUserId: String,    // 自分（フォロワー）のID
+    val followedUserId: String?,   // 相手（フォローされている側）のID（オプション）
 )
+
+
