@@ -28,15 +28,13 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.segnities007.seg.ui.screens.login.SignUiState
 import com.segnities007.seg.R
+import com.segnities007.seg.ui.screens.login.SignUiAction
 
 @Composable
 fun SignUp(// TODO modify ui
     modifier: Modifier = Modifier,
     signUiState: SignUiState,
-    onLoginWithGoogle: (Context) -> Unit,
-    onSignUpWithEmailPassword: () -> Unit,
-    onEmailChange: (String) -> Unit,
-    onPasswordChange: (String) -> Unit,
+    signUiAction: SignUiAction,
 ){
 
     Column(
@@ -45,9 +43,9 @@ fun SignUp(// TODO modify ui
         verticalArrangement = Arrangement.Center,
     ){
 
-        InputForm(text = signUiState.email, label = stringResource(R.string.email)) { onEmailChange(it) }
-        InputForm(text = signUiState.password, label = stringResource(R.string.password)) { onPasswordChange(it) }
-        ElevatedButton(onClick = onSignUpWithEmailPassword ){ Text(stringResource(R.string.enter)) }
+        InputForm(text = signUiState.email, label = stringResource(R.string.email)) { signUiAction.onEmailChange(it) }
+        InputForm(text = signUiState.password, label = stringResource(R.string.password)) { signUiAction.onPasswordChange(it) }
+        ElevatedButton(onClick = { signUiAction.onSignUpWithEmailPassword } ){ Text(stringResource(R.string.enter)) }
     }
 }
 

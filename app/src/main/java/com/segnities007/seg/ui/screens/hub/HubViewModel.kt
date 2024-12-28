@@ -6,20 +6,24 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-
-data class NavigateUiState(
-    val index: Int = 0,
-)
+import com.segnities007.seg.ui.screens.login.NavigateAction
+import com.segnities007.seg.ui.screens.login.NavigateState
 
 @HiltViewModel
 class HubViewModel @Inject constructor(
 
 ) : ViewModel(){
 
-    var navigateUiState by mutableStateOf(NavigateUiState())
+    var navigateState by mutableStateOf(NavigateState())
 
-    fun onIndexChange(newIndex: Int){
-        navigateUiState = navigateUiState.copy(index = newIndex)
+    fun getNavigateAction(): NavigateAction{
+        return NavigateAction(
+            onIndexChange = this::onIndexChange
+        )
+    }
+
+    private fun onIndexChange(newIndex: Int){
+        navigateState = navigateState.copy(index = newIndex)
     }
 
 }

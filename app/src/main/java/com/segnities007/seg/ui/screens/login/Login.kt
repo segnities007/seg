@@ -1,9 +1,6 @@
 package com.segnities007.seg.ui.screens.login
 
-import android.content.Context
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ModalDrawerSheet
-import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -17,7 +14,9 @@ import com.segnities007.seg.R
 import com.segnities007.seg.data.model.bottom_bar.LoginItem
 import com.segnities007.seg.ui.components.bottom_bar.BottomBar
 import com.segnities007.seg.ui.components.navigation_drawer.NavigationDrawer
+import com.segnities007.seg.ui.components.navigation_drawer.NavigationDrawerAction
 import com.segnities007.seg.ui.components.navigation_drawer.NavigationDrawerViewModel
+import com.segnities007.seg.ui.screens.login.sign_up.CreateAccount
 
 @Composable
 fun Login(
@@ -28,19 +27,17 @@ fun Login(
 ){
     NavigationDrawer(
         items = LoginItem(),
-        onIndexChange = loginViewModel::onIndexChange,
-        onDrawerClose = navigationDrawerViewModel::closeDrawer
+        navigateAction = loginViewModel.getNavigateAction(),
+        navigationDrawerAction = navigationDrawerViewModel.getNavigationDrawerAction(),
     ) {
         LoginUi(
             signUiState = loginViewModel.signUiState,
+            signUiAction = loginViewModel.getSignUiAction(),
             navigateUiState = loginViewModel.navigateUiState,
-            onEmailChange = loginViewModel::onEmailChange,
-            onPasswordChange = loginViewModel::onPasswordChange,
-            onChangeIndex = loginViewModel::onIndexChange,
-            onSignInWithEmailPassword = {loginViewModel.onSignInWithEmailPassword(navController)},
-            onLoginWithGoogle = loginViewModel::onLoginWithGoogle,
-            onSignUpWithEmailPassword = {loginViewModel.onSignUpWithEmailPassword(navController)},
-            onDrawerOpen = navigationDrawerViewModel::openDrawer
+            navigateUiAction = loginViewModel.getNavigationUiAction(),
+            createAccountUiState = loginViewModel.createAccountUiState,
+            createAccountUiAction = loginViewModel.getCreateAccountUiAction(),
+            navigationDrawerAction = navigationDrawerViewModel.getNavigationDrawerAction(),
         )
     }
 }
@@ -48,47 +45,44 @@ fun Login(
 @Composable
 private fun LoginUi(
     signUiState: SignUiState,
-    navigateUiState: NavigateUiState,
-    onDrawerOpen: suspend () -> Unit,
-    onChangeIndex: (Int) -> Unit,
-    onEmailChange: (String) -> Unit,
-    onPasswordChange: (String) -> Unit,
-    onSignInWithEmailPassword: () -> Unit,
-    onSignUpWithEmailPassword: () -> Unit,
-    onLoginWithGoogle: (Context) -> Unit,
+    navigateUiState: NavigateState,
+    signUiAction: SignUiAction,
+    navigateUiAction: NavigateAction,
+    navigationDrawerAction: NavigationDrawerAction,
+    createAccountUiState: CreateAccountUiState,
+    createAccountUiAction: CreateAccountUiAction,
+
 ){
     Scaffold(
         topBar = {
                 TopBar(
-                    title = stringResource(R.string.login_screen_title),
-                    contentDescription = stringResource(R.string.menu_description),
-                    onDrawerOpen = onDrawerOpen
-                    )
+                        title = stringResource(R.string.login_screen_title),
+                        contentDescription = stringResource(R.string.menu_description),
+                        onDrawerOpen = navigationDrawerAction.openDrawer
+                        )
                  },
         bottomBar = {
                 BottomBar(
-                    currentIndex = navigateUiState.index,
-                    items = LoginItem(),
-                    onClick = onChangeIndex
-                    )
+                        currentIndex = navigateUiState.index,
+                        items = LoginItem(),
+                        onClick = navigateUiAction.onIndexChange
+                        )
                     },
     ){innerPadding ->
         when(navigateUiState.index){
             0 -> SignIn(
                     modifier = Modifier.padding(innerPadding),
                     signUiState = signUiState,
-                    onEmailChange = onEmailChange,
-                    onPasswordChange = onPasswordChange,
-                    onSignInWithEmailPassword = onSignInWithEmailPassword,
-                    onLoginWithGoogle = onLoginWithGoogle,
+                    signUiAction = signUiAction,
                 )
             1 -> SignUp(
                     modifier = Modifier.padding(innerPadding),
                     signUiState = signUiState,
-                    onEmailChange = onEmailChange,
-                    onPasswordChange = onPasswordChange,
-                    onSignUpWithEmailPassword = onSignUpWithEmailPassword,
-                    onLoginWithGoogle = onLoginWithGoogle,
+                    signUiAction = signUiAction,
+                )
+            2 -> CreateAccount(
+                    createAccountUiAction = createAccountUiAction,
+                    createAccountUiState = createAccountUiState,
                 )
         }
     }
