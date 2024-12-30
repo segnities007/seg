@@ -11,10 +11,8 @@ import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
 import com.segnities007.seg.Hub
 import com.segnities007.seg.Login
-import com.segnities007.seg.data.SupabaseModule
 import com.segnities007.seg.domain.repository.AuthRepository
 import io.github.jan.supabase.SupabaseClient
-import io.github.jan.supabase.auth.Auth
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.providers.Google
 import io.github.jan.supabase.auth.providers.builtin.Email
@@ -31,11 +29,12 @@ class AuthRepositoryImpl @Inject constructor(
 ) : AuthRepository {
 
     //前回ログインしていたかを確認
-    fun hasLogged(
+    suspend fun hasLogged(
         navController: NavHostController
     ) {
+        supabaseClient.auth.awaitInitialization()
         val currentUser = supabaseClient.auth.currentUserOrNull()
-
+        Log.d("SplashAuth", "currentUser is $currentUser")
         if (currentUser != null) {
             navController.navigate(route = Hub)
         } else {

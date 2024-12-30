@@ -3,6 +3,7 @@ package com.segnities007.seg.ui.screens.hub
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -29,6 +30,11 @@ fun Hub(
     hubViewModel: HubViewModel = hiltViewModel(),
     navigationDrawerViewModel: NavigationDrawerViewModel = hiltViewModel()
 ){
+
+    LaunchedEffect(Unit) {
+        hubViewModel.checkUser()
+    }
+
     NavigationDrawer(
         items = HubItem(),
         navigateAction = hubViewModel.getNavigateAction(),
