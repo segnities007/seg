@@ -26,4 +26,17 @@ class HubViewModel @Inject constructor(
         navigateState = navigateState.copy(index = newIndex)
     }
 
+    private fun onPickerImages(){
+//        val pickMultipleMedia =
+//            rememberLauncherForActivityResult(PickMultipleVisualMedia(5)) { uris ->
+//                // Callback is invoked after the user selects media items or closes the
+//                // photo picker.
+//                if (uris.isNotEmpty()) {
+//                    Log.d("PhotoPicker", "Number of items selected: ${uris.size}")
+//                } else {
+//                    Log.d("PhotoPicker", "No media selected")
+//                }
+//            }
+    }
+
 }

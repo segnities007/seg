@@ -16,5 +16,8 @@ fun Home(
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
-    ){  }
+    ){
+
+    }
 }
+
