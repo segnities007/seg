@@ -26,7 +26,7 @@ fun Navigation(
     NavHost(
         navController = navController,
         //TODO modify startDescription
-        startDestination = Splash,
+        startDestination = Hub,
     ) {
         composable<Splash> {
             Splash(navController = navController)
