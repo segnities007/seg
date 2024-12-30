@@ -12,18 +12,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopBar(
     modifier: Modifier = Modifier,
+    screenIndex: Int = 0,
     title: String,
     contentDescription: String,
     onDrawerOpen: suspend () -> Unit,
+    scope: CoroutineScope = rememberCoroutineScope()
 ){
-
-    val scope = rememberCoroutineScope()
 
         CenterAlignedTopAppBar(
             modifier = modifier,
@@ -33,12 +34,13 @@ fun TopBar(
             ),
             title = { Text(text = title, maxLines = 1,) },
             navigationIcon = {
-                IconButton(onClick = { scope.launch{ onDrawerOpen() } }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.baseline_menu_24),
-                        contentDescription = contentDescription,
-                    )
-                }
+                if(screenIndex != 2 && screenIndex != 3)
+                    IconButton(onClick = { scope.launch{ onDrawerOpen() } }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.baseline_menu_24),
+                            contentDescription = contentDescription,
+                        )
+                    }
             },
         )
 }

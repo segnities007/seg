@@ -11,10 +11,10 @@ import javax.inject.Inject
 class SplashViewModel @Inject constructor(
     private val authRepositoryImpl: AuthRepositoryImpl,
 ): ViewModel(){
-    fun hasLogined(
+    fun hasLogged(
         navController: NavHostController,
     ){
-        Log.d("check splash", "run hasLogined")
-        authRepositoryImpl.hasLogined(navController)
+        Log.d("check splash", "run hasLogged")
+        authRepositoryImpl.hasLogged(navController)
     }
 }

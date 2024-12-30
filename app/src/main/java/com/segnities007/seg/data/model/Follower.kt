@@ -1,12 +1,11 @@
 package com.segnities007.seg.data.model
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class Follower(
-    val followerId: Int,           // フォロワー関係のID
-    val followerUserId: String,    // 自分（フォロワー）のID
-    val followedUserId: String?,   // 相手（フォローされている側）のID（オプション）
+    val id: Int,
+    @SerialName("follower_user_id") val followerUserId: String,
+    @SerialName("followed_user_id") val followedUserId: String,
 )
-
-

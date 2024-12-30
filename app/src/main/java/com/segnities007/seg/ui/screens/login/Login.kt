@@ -16,6 +16,7 @@ import com.segnities007.seg.ui.components.bottom_bar.BottomBar
 import com.segnities007.seg.ui.components.navigation_drawer.NavigationDrawer
 import com.segnities007.seg.ui.components.navigation_drawer.NavigationDrawerAction
 import com.segnities007.seg.ui.components.navigation_drawer.NavigationDrawerViewModel
+import com.segnities007.seg.ui.screens.login.sign_up.ConfirmEmail
 import com.segnities007.seg.ui.screens.login.sign_up.CreateAccount
 
 @Composable
@@ -31,6 +32,7 @@ fun Login(
         navigationDrawerAction = navigationDrawerViewModel.getNavigationDrawerAction(),
     ) {
         LoginUi(
+            navController = navController,
             signUiState = loginViewModel.signUiState,
             signUiAction = loginViewModel.getSignUiAction(),
             navigateUiState = loginViewModel.navigateUiState,
@@ -38,12 +40,14 @@ fun Login(
             createAccountUiState = loginViewModel.createAccountUiState,
             createAccountUiAction = loginViewModel.getCreateAccountUiAction(),
             navigationDrawerAction = navigationDrawerViewModel.getNavigationDrawerAction(),
+            confirmEmailUiAction = loginViewModel.getConfirmEmailUiAction(),
         )
     }
 }
 
 @Composable
 private fun LoginUi(
+    navController: NavHostController,
     signUiState: SignUiState,
     navigateUiState: NavigateState,
     signUiAction: SignUiAction,
@@ -51,39 +55,45 @@ private fun LoginUi(
     navigationDrawerAction: NavigationDrawerAction,
     createAccountUiState: CreateAccountUiState,
     createAccountUiAction: CreateAccountUiAction,
-
+    confirmEmailUiAction: ConfirmEmailUiAction,
 ){
     Scaffold(
         topBar = {
                 TopBar(
-                        title = stringResource(R.string.login_screen_title),
-                        contentDescription = stringResource(R.string.menu_description),
-                        onDrawerOpen = navigationDrawerAction.openDrawer
-                        )
+                    screenIndex = navigateUiState.index,
+                    title = stringResource(R.string.login_screen_title),
+                    contentDescription = stringResource(R.string.menu_description),
+                    onDrawerOpen = navigationDrawerAction.openDrawer
+                )
                  },
         bottomBar = {
+            if (navigateUiState.index != 2 && navigateUiState.index != 3){
                 BottomBar(
                         currentIndex = navigateUiState.index,
                         items = LoginItem(),
                         onClick = navigateUiAction.onIndexChange
                         )
+            }
                     },
     ){innerPadding ->
         when(navigateUiState.index){
             0 -> SignIn(
-                    modifier = Modifier.padding(innerPadding),
-                    signUiState = signUiState,
-                    signUiAction = signUiAction,
-                )
+                modifier = Modifier.padding(innerPadding),
+                signUiState = signUiState,
+                signUiAction = signUiAction,
+                navController = navController,
+            )
             1 -> SignUp(
                     modifier = Modifier.padding(innerPadding),
                     signUiState = signUiState,
                     signUiAction = signUiAction,
                 )
-            2 -> CreateAccount(
-                    createAccountUiAction = createAccountUiAction,
-                    createAccountUiState = createAccountUiState,
-                )
+            2 -> ConfirmEmail(confirmEmailUiAction = confirmEmailUiAction)
+            3 -> CreateAccount(
+                navController = navController,
+                createAccountUiAction = createAccountUiAction,
+                createAccountUiState = createAccountUiState,
+            )
         }
     }
 }
