@@ -6,7 +6,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.segnities007.seg.ui.screens.hub.Hub
-import com.segnities007.seg.ui.screens.hub.home.Home
 import com.segnities007.seg.ui.screens.login.Login
 import com.segnities007.seg.ui.screens.splash.Splash
 import kotlinx.serialization.Serializable
@@ -27,7 +26,7 @@ fun Navigation(
     NavHost(
         navController = navController,
         //TODO modify startDescription
-        startDestination = Login,
+        startDestination = Splash,
     ) {
         composable<Splash> {
             Splash(navController = navController)

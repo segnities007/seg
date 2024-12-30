@@ -12,7 +12,8 @@ import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingExcept
 import com.segnities007.seg.Hub
 import com.segnities007.seg.Login
 import com.segnities007.seg.domain.repository.AuthRepository
-import io.github.jan.supabase.auth.Auth
+import io.github.jan.supabase.SupabaseClient
+import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.providers.Google
 import io.github.jan.supabase.auth.providers.builtin.Email
 import io.github.jan.supabase.auth.providers.builtin.IDToken
@@ -24,15 +25,16 @@ import java.util.UUID
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
-    private val auth: Auth,
+    private val supabaseClient: SupabaseClient ,
 ) : AuthRepository {
 
     //前回ログインしていたかを確認
-    fun hasLogined(
+    suspend fun hasLogged(
         navController: NavHostController
     ) {
-        val currentUser = auth.currentUserOrNull()
-
+        supabaseClient.auth.awaitInitialization()
+        val currentUser = supabaseClient.auth.currentUserOrNull()
+        Log.d("SplashAuth", "currentUser is $currentUser")
         if (currentUser != null) {
             navController.navigate(route = Hub)
         } else {
@@ -46,7 +48,7 @@ class AuthRepositoryImpl @Inject constructor(
         password: String,
     ): Boolean {
         return try {
-            auth.signInWith(Email){
+            supabaseClient.auth.signInWith(Email){
                 this.email = email
                 this.password = password
             }
@@ -63,7 +65,7 @@ class AuthRepositoryImpl @Inject constructor(
         password: String,
     ): Boolean {
         return try {
-            auth.signUpWith(Email){
+            supabaseClient.auth.signUpWith(Email){
                 this.email = email
                 this.password = password
             }
@@ -107,7 +109,7 @@ class AuthRepositoryImpl @Inject constructor(
             val googleIdToken = googleIdTokenCredential.idToken
 
             // Supabase で ID Token 認証を実行
-            auth.signInWith(IDToken) {
+            supabaseClient.auth.signInWith(IDToken) {
                 idToken = googleIdToken
                 provider = Google
                 nonce = rawNonce

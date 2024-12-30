@@ -1,20 +1,25 @@
 package com.segnities007.seg.ui.screens.login
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.segnities007.seg.Hub
+import com.segnities007.seg.data.model.User
 import com.segnities007.seg.data.repository.AuthRepositoryImpl
+import com.segnities007.seg.data.repository.UserRepositoryImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlinx.datetime.LocalDate
+import kotlinx.datetime.Instant
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
+import java.time.LocalDate
 import javax.inject.Inject
 
 // class for SignIn and SignUp UI
@@ -25,11 +30,11 @@ data class SignUiState(
 )
 
 data class SignUiAction(
-    val onPasswordChange: (String) -> Unit,
-    val onEmailChange: (String) -> Unit,
-    val onLoginWithGoogle: (Context) -> Unit,
-    val onSignUpWithEmailPassword: (NavHostController) -> Unit,
-    val onSignInWithEmailPassword: (NavHostController) -> Unit,
+    val onPasswordChange: (password: String) -> Unit,
+    val onEmailChange: (email: String) -> Unit,
+    val onLoginWithGoogle: (context: Context) -> Unit,
+    val onSignUpWithEmailPassword: () -> Unit,
+    val onSignInWithEmailPassword: (navController: NavHostController) -> Unit,
 )
 
 
@@ -40,7 +45,13 @@ data class NavigateState(
 )
 
 data class NavigateAction(
-    val onIndexChange: (Int) -> Unit,
+    val onIndexChange: (index: Int) -> Unit,
+)
+
+// class for ConfirmEmail UI
+
+data class ConfirmEmailUiAction(
+    val confirmEmail: () -> Unit,
 )
 
 
@@ -49,22 +60,25 @@ data class NavigateAction(
 data class CreateAccountUiState(
     val isShow: Boolean = false,
     val name: String = "",
-    val birthday: LocalDate = LocalDate(2020, 1, 1),
+    val birthday: LocalDate = LocalDate.now(),
 )
 
 data class CreateAccountUiAction(
     val onDatePickerOpen: () -> Unit,
     val onDatePickerClose: () -> Unit,
-    val onNameChange: (String) -> Unit,
-    val onBirthdayChange: (LocalDate) -> Unit,
+    val onDateSelect: (Long?) -> Unit,
+    val onNameChange: (name: String) -> Unit,
+    val onBirthdayChange: (birthday: LocalDate) -> Unit,
+    val createUser: (navController: NavHostController) -> Unit,
 )
+
 
 //
 
-
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val authRepositoryImpl: AuthRepositoryImpl
+    private val authRepositoryImpl: AuthRepositoryImpl,
+    private val userRepositoryImpl: UserRepositoryImpl,
 ) : ViewModel() {
 
     var signUiState by mutableStateOf(SignUiState())
@@ -77,6 +91,12 @@ class LoginViewModel @Inject constructor(
     fun getNavigateAction(): NavigateAction{
         return NavigateAction(
             onIndexChange = this::onIndexChange
+        )
+    }
+
+    fun getConfirmEmailUiAction(): ConfirmEmailUiAction{
+        return ConfirmEmailUiAction(
+            confirmEmail = this::confirmEmail
         )
     }
 
@@ -100,9 +120,59 @@ class LoginViewModel @Inject constructor(
         return CreateAccountUiAction(
             onDatePickerOpen = this::onDatePickerOpen,
             onDatePickerClose = this::onDatePickerClose,
+            onDateSelect = this::onDateSelect,
             onNameChange = this::onNameChange,
             onBirthdayChange = this::onBirthdayChange,
+            createUser = this::createUser,
         )
+    }
+
+    private fun onDateSelect(millis: Long?){
+        val instant = Instant.fromEpochMilliseconds(millis!!)
+        val localDateTime = instant.toLocalDateTime(TimeZone.currentSystemDefault())
+        val year = localDateTime.year
+        val month = localDateTime.monthNumber
+        val day = localDateTime.dayOfMonth
+
+        onBirthdayChange(LocalDate.of(year, month, day))
+    }
+
+    private fun confirmEmail(){
+        Log.d("confirmEmail", "exceed confirmEmail")
+        viewModelScope.launch(Dispatchers.IO){
+            val isSuccess = authRepositoryImpl
+                .signInWithEmailPassword(
+                    email = signUiState.email,
+                    password = signUiState.password
+                )
+            withContext(Dispatchers.Main){
+                if(isSuccess) Log.d("confirmEmailTest","success")
+                val result = userRepositoryImpl.confirmEmail()
+                if(result) onIndexChange(3)
+            }
+        }
+
+
+    }
+
+    private fun createUser(
+        navController: NavHostController,
+    ){
+        val user = User(
+            id = "",
+            name = createAccountUiState.name,
+            birthday = createAccountUiState.birthday,
+        )
+        viewModelScope.launch{
+            var isSuccess = false
+            withContext(Dispatchers.IO){
+                isSuccess = userRepositoryImpl.createUser(user)
+            }
+            if (isSuccess) {
+                navController.navigate(route = Hub)
+            }
+        }
+
     }
 
     private fun onDatePickerOpen(){
@@ -141,17 +211,15 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    private fun onSignUpWithEmailPassword(
-        navController: NavHostController,
-    ){
+    private fun onSignUpWithEmailPassword(){
         viewModelScope.launch(Dispatchers.IO){
-            val isSuccess = authRepositoryImpl
-                .signUpWithEmailPassword(
-                    email = signUiState.email,
-                    password = signUiState.password
-                )
             withContext(Dispatchers.Main){
-                if(isSuccess) navController.navigate(route = Hub)
+                val isSuccess = authRepositoryImpl
+                    .signUpWithEmailPassword(
+                        email = signUiState.email,
+                        password = signUiState.password
+                    )
+                if(isSuccess) onIndexChange(2)
             }
         }
     }
@@ -166,6 +234,7 @@ class LoginViewModel @Inject constructor(
                     password = signUiState.password
                 )
             withContext(Dispatchers.Main){
+                Log.d("test","$isSuccess")
                 if(isSuccess) navController.navigate(route = Hub)
             }
         }

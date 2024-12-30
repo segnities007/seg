@@ -1,36 +1,42 @@
-# Data Model
+# データベース設計ドキュメント
 
-## User
+## データモデル
 
-- id
-- name
-- age
-- icon
-- user_info_id
+### User
 
-## UserInfo
+- `id` String(UUID)
+- `name` String
+- `birthday` Int
+- `icon` String
+- `user_info_id` Int
 
-- id
-- is_prime
-- posts
-- followers
-- create_at
-- update_at
+### UserInfo
 
-## Follower
+- `id` Int
+- `is_prime` Boolean
+- `posts` List<Int>
+- `followers` List<Int>
+- `create_at` TIMESTAMP
+- `update_at` TIMESTAMP
 
-- id
-- follower_id
-- followee_id
+### Follower
 
-## Post
+- `id` Int
+- `follower_id` String(UUID)
+- `followee_id` String(UUID)
 
-- id
-- user_id
-- description
-- hashtags
+### Post
 
-## Hashtag
+- `id` Int
+- `user_id` String(UUID)
+- `description` String
+- `hashtags` Int
+- `create_at` TIMESTAMP
+- `update_at` TIMESTAMP
 
-- id
-- name
+### Hashtag
+
+- `id` Int
+- `name` String
+- `icon` String
+

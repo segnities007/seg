@@ -23,6 +23,7 @@ import io.github.jan.supabase.storage.storage
 @Module
 object SupabaseModule {
 
+
     @Provides
     @Singleton
     fun provideSupabaseClient(): SupabaseClient {

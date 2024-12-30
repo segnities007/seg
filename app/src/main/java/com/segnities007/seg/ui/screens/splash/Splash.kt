@@ -11,7 +11,7 @@ fun Splash(
     navController: NavHostController,
 ){
     LaunchedEffect(Unit) {
-        splashViewModel.hasLogined(navController)
+        splashViewModel.hasLogged(navController)
     }
 }
 

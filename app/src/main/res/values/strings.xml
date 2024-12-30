@@ -7,4 +7,10 @@
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="enter">Enter</string>
+    <string name="name">Name</string>
+    <string name="select">Select</string>
+    <string name="confirm_prompt_message">Emailに送られたURLを押して認証してください。</string>
+    <string name="confirm">Confirm</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
 </resources>

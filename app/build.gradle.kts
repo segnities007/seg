@@ -15,7 +15,7 @@ android {
 
     defaultConfig {
         applicationId = "com.segnities007.seg"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -91,6 +91,7 @@ dependencies {
     kapt(libs.hilt.android.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
 
+//    implementation(libs.kotlinx.serialization.java.time)
 }
 
 fun getLocalProperty(key: String): String? {

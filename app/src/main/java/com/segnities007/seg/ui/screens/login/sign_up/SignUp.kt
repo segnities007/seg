@@ -1,52 +1,64 @@
 package com.segnities007.seg.ui.screens.login.sign_up
 
-import android.content.Context
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
 import com.segnities007.seg.ui.screens.login.SignUiState
 import com.segnities007.seg.R
 import com.segnities007.seg.ui.screens.login.SignUiAction
 
 @Composable
-fun SignUp(// TODO modify ui
+fun SignUp(
     modifier: Modifier = Modifier,
     signUiState: SignUiState,
     signUiAction: SignUiAction,
 ){
 
+
     Column(
-        modifier = modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
-    ){
-
-        InputForm(text = signUiState.email, label = stringResource(R.string.email)) { signUiAction.onEmailChange(it) }
-        InputForm(text = signUiState.password, label = stringResource(R.string.password)) { signUiAction.onPasswordChange(it) }
-        ElevatedButton(onClick = { signUiAction.onSignUpWithEmailPassword } ){ Text(stringResource(R.string.enter)) }
+        ){
+        ElevatedCard{
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+            ){
+                InputForm(
+                    modifier = Modifier.padding(dimensionResource(R.dimen.padding_normal)),
+                    text = signUiState.email,
+                    label = stringResource(R.string.email),
+                ) { signUiAction.onEmailChange(it) }
+                InputForm(
+                    text = signUiState.password,
+                    label = stringResource(R.string.password),
+                    modifier = Modifier.padding(dimensionResource(R.dimen.padding_normal)),
+                ) { signUiAction.onPasswordChange(it) }
+                ElevatedButton(
+                    onClick = { signUiAction.onSignUpWithEmailPassword() },
+                    modifier = Modifier.padding(dimensionResource(R.dimen.padding_normal)),
+                ){ Text(stringResource(R.string.enter)) }
+            }
+        }
     }
+
 }
 
 @Composable
@@ -76,28 +88,3 @@ private fun InputForm(
         )
     }
 }
-
-@Composable
-private fun LoginButtonWithGoogle(
-    modifier: Modifier = Modifier,
-    onClick: (Context) -> Unit,
-    context: Context = LocalContext.current
-){
-
-    Box(
-        modifier = Modifier
-            .clip(shape = RoundedCornerShape(16.dp))
-            .clickable(onClick = {onClick(context)})
-            //TODO modify color
-            .background(color = Color.Black)
-    ){
-        Row {
-            AsyncImage(
-                model = stringResource(R.string.google_icon_url),
-                contentDescription = stringResource(R.string.google_icon_url),
-            )
-            Text(text = stringResource(R.string.google_login_label))
-        }
-    }
-}
-
