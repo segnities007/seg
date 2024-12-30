@@ -13,4 +13,10 @@
     <string name="confirm">Confirm</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="no_name">NoName</string>
+    <string name="favorite">Favorite</string>
+    <string name="repost">Repost</string>
+    <string name="comment">Comment</string>
+    <string name="view_count">ViewCount</string>
+    <string name="no_description">""</string>
 </resources>
