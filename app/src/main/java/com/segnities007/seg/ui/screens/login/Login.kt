@@ -12,10 +12,9 @@ import com.segnities007.seg.ui.screens.login.sign_in.SignIn
 import com.segnities007.seg.ui.screens.login.sign_up.SignUp
 import com.segnities007.seg.R
 import com.segnities007.seg.data.model.bottom_bar.LoginItem
+import com.segnities007.seg.domain.presentation.DrawerAction
 import com.segnities007.seg.ui.components.bottom_bar.BottomBar
 import com.segnities007.seg.ui.components.navigation_drawer.NavigationDrawer
-import com.segnities007.seg.ui.components.navigation_drawer.NavigationDrawerAction
-import com.segnities007.seg.ui.components.navigation_drawer.NavigationDrawerViewModel
 import com.segnities007.seg.ui.screens.login.sign_up.ConfirmEmail
 import com.segnities007.seg.ui.screens.login.sign_up.CreateAccount
 
@@ -23,13 +22,12 @@ import com.segnities007.seg.ui.screens.login.sign_up.CreateAccount
 fun Login(
     modifier: Modifier = Modifier,
     loginViewModel: LoginViewModel = hiltViewModel(),
-    navigationDrawerViewModel: NavigationDrawerViewModel = hiltViewModel(),
     navController: NavHostController,
 ){
     NavigationDrawer(
         items = LoginItem(),
         navigateAction = loginViewModel.getNavigateAction(),
-        navigationDrawerAction = navigationDrawerViewModel.getNavigationDrawerAction(),
+        drawerAction = loginViewModel.getDrawerAction(),
     ) {
         LoginUi(
             navController = navController,
@@ -39,7 +37,7 @@ fun Login(
             navigateUiAction = loginViewModel.getNavigationUiAction(),
             createAccountUiState = loginViewModel.createAccountUiState,
             createAccountUiAction = loginViewModel.getCreateAccountUiAction(),
-            navigationDrawerAction = navigationDrawerViewModel.getNavigationDrawerAction(),
+            drawerAction = loginViewModel.getDrawerAction(),
             confirmEmailUiAction = loginViewModel.getConfirmEmailUiAction(),
         )
     }
@@ -52,7 +50,7 @@ private fun LoginUi(
     navigateUiState: NavigateState,
     signUiAction: SignUiAction,
     navigateUiAction: NavigateAction,
-    navigationDrawerAction: NavigationDrawerAction,
+    drawerAction: DrawerAction,
     createAccountUiState: CreateAccountUiState,
     createAccountUiAction: CreateAccountUiAction,
     confirmEmailUiAction: ConfirmEmailUiAction,
@@ -63,7 +61,7 @@ private fun LoginUi(
                     screenIndex = navigateUiState.index,
                     title = stringResource(R.string.login_screen_title),
                     contentDescription = stringResource(R.string.menu_description),
-                    onDrawerOpen = navigationDrawerAction.openDrawer
+                    onDrawerOpen = drawerAction.openDrawer
                 )
                  },
         bottomBar = {

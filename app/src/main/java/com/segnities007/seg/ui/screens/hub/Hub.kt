@@ -3,7 +3,6 @@ package com.segnities007.seg.ui.screens.hub
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -11,10 +10,9 @@ import androidx.navigation.NavHostController
 import com.segnities007.seg.ui.components.top_bar.TopBar
 import com.segnities007.seg.R
 import com.segnities007.seg.data.model.bottom_bar.HubItem
+import com.segnities007.seg.domain.presentation.DrawerAction
 import com.segnities007.seg.ui.components.bottom_bar.BottomBar
 import com.segnities007.seg.ui.components.navigation_drawer.NavigationDrawer
-import com.segnities007.seg.ui.components.navigation_drawer.NavigationDrawerAction
-import com.segnities007.seg.ui.components.navigation_drawer.NavigationDrawerViewModel
 import com.segnities007.seg.ui.screens.hub.home.Home
 import com.segnities007.seg.ui.screens.hub.notify.Notify
 import com.segnities007.seg.ui.screens.hub.post.Post
@@ -28,38 +26,34 @@ fun Hub(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     hubViewModel: HubViewModel = hiltViewModel(),
-    navigationDrawerViewModel: NavigationDrawerViewModel = hiltViewModel()
 ){
-
-    LaunchedEffect(Unit) {
-        hubViewModel.checkUser()
-    }
 
     NavigationDrawer(
         items = HubItem(),
         navigateAction = hubViewModel.getNavigateAction(),
-        navigationDrawerAction = navigationDrawerViewModel.getNavigationDrawerAction()
+        drawerAction = hubViewModel.getDrawerAction()
     ) {
         HubUi(
             navigateState = hubViewModel.navigateState,
             navigateAction = hubViewModel.getNavigateAction(),
-            navigationDrawerAction = navigationDrawerViewModel.getNavigationDrawerAction()
+            drawerAction = hubViewModel.getDrawerAction(),
         )
     }
+
 }
 
 @Composable
 private fun HubUi(
     navigateState: NavigateState,
     navigateAction: NavigateAction,
-    navigationDrawerAction: NavigationDrawerAction,
+    drawerAction: DrawerAction,
 ){
     Scaffold(
         topBar = {
             TopBar(
                 title = stringResource(R.string.app_name),
                 contentDescription = stringResource(R.string.menu_description),
-                onDrawerOpen = navigationDrawerAction.openDrawer,
+                onDrawerOpen = drawerAction.openDrawer,
             )
         },
         bottomBar = {
