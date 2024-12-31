@@ -28,6 +28,7 @@ fun Login(
         items = LoginItem(),
         navigateAction = loginViewModel.getNavigateAction(),
         drawerAction = loginViewModel.getDrawerAction(),
+        drawerState = loginViewModel.drawerState,
     ) {
         LoginUi(
             navController = navController,

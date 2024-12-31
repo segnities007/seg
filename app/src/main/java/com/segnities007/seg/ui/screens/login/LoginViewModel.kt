@@ -1,7 +1,6 @@
 package com.segnities007.seg.ui.screens.login
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
@@ -37,7 +36,6 @@ data class SignUiAction(
     val onSignInWithEmailPassword: (navController: NavHostController) -> Unit,
 )
 
-
 // class for navigation
 
 data class NavigateState(
@@ -53,7 +51,6 @@ data class NavigateAction(
 data class ConfirmEmailUiAction(
     val confirmEmail: () -> Unit,
 )
-
 
 // class for CreateAccount UI
 
@@ -71,7 +68,6 @@ data class CreateAccountUiAction(
     val onBirthdayChange: (birthday: LocalDate) -> Unit,
     val createUser: (navController: NavHostController) -> Unit,
 )
-
 
 //
 
@@ -94,13 +90,14 @@ class LoginViewModel @Inject constructor(
         )
     }
 
-    fun getConfirmEmailUiAction(): ConfirmEmailUiAction{
+    fun getConfirmEmailUiAction(): ConfirmEmailUiAction {
         return ConfirmEmailUiAction(
             confirmEmail = this::confirmEmail
         )
     }
 
-    fun getSignUiAction(): SignUiAction{
+    fun getSignUiAction(): SignUiAction {
+
         return SignUiAction(
             onEmailChange = this::onEmailChange,
             onPasswordChange = this::onPasswordChange,
@@ -108,15 +105,19 @@ class LoginViewModel @Inject constructor(
             onSignUpWithEmailPassword = this::onSignUpWithEmailPassword,
             onSignInWithEmailPassword = this::onSignInWithEmailPassword,
         )
+
     }
 
     fun getNavigationUiAction(): NavigateAction{
+
         return NavigateAction(
             onIndexChange = this::onIndexChange
         )
+
     }
 
     fun getCreateAccountUiAction(): CreateAccountUiAction{
+
         return CreateAccountUiAction(
             onDatePickerOpen = this::onDatePickerOpen,
             onDatePickerClose = this::onDatePickerClose,
@@ -125,6 +126,7 @@ class LoginViewModel @Inject constructor(
             onBirthdayChange = this::onBirthdayChange,
             createUser = this::createUser,
         )
+
     }
 
     private fun onDateSelect(millis: Long?){
@@ -138,36 +140,32 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun confirmEmail(){
-        Log.d("confirmEmail", "exceed confirmEmail")
+
         viewModelScope.launch(Dispatchers.IO){
-            val isSuccess = authRepositoryImpl
-                .signInWithEmailPassword(
+            authRepositoryImpl.signInWithEmailPassword(
                     email = signUiState.email,
-                    password = signUiState.password
+                    password = signUiState.password,
                 )
             withContext(Dispatchers.Main){
-                if(isSuccess) Log.d("confirmEmailTest","success")
-                val result = userRepositoryImpl.confirmEmail()
-                if(result) onIndexChange(3)
+                val isConfirmed = userRepositoryImpl.confirmEmail()
+                if(isConfirmed) onIndexChange(3)
             }
         }
-
 
     }
 
     private fun createUser(
         navController: NavHostController,
     ){
+
         val user = User(
             id = "",
             name = createAccountUiState.name,
             birthday = createAccountUiState.birthday,
         )
-        viewModelScope.launch{
-            var isSuccess = false
-            withContext(Dispatchers.IO){
-                isSuccess = userRepositoryImpl.createUser(user)
-            }
+
+        viewModelScope.launch(Dispatchers.IO){
+            val isSuccess = userRepositoryImpl.createUser(user)
             if (isSuccess) {
                 navController.navigate(route = Hub)
             }
@@ -234,7 +232,6 @@ class LoginViewModel @Inject constructor(
                     password = signUiState.password
                 )
             withContext(Dispatchers.Main){
-                Log.d("test","$isSuccess")
                 if(isSuccess) navController.navigate(route = Hub)
             }
         }

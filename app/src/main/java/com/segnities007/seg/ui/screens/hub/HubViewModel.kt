@@ -29,10 +29,4 @@ class HubViewModel @Inject constructor(
         navigateState = navigateState.copy(index = newIndex)
     }
 
-
-    fun checkUser(){
-        val currentUser = supabaseClient.auth.currentUserOrNull()
-        Log.d("checkHub", "current user is $currentUser")
-    }
-
 }
