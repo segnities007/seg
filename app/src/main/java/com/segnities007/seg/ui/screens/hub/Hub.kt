@@ -1,9 +1,12 @@
 package com.segnities007.seg.ui.screens.hub
 
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -44,18 +47,24 @@ fun Hub(
 
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun HubUi(
     navigateState: NavigateState,
     navigateAction: NavigateAction,
     drawerAction: DrawerAction,
 ){
+
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+
     Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             TopBar(
                 title = stringResource(R.string.app_name),
                 contentDescription = stringResource(R.string.menu_description),
                 onDrawerOpen = drawerAction.openDrawer,
+                scrollBehavior = scrollBehavior,
             )
         },
         bottomBar = {

@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 fun Home(
     modifier: Modifier,
 ){
-    Column(
+    Column (
         modifier = modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState()),
@@ -21,5 +21,6 @@ fun Home(
         verticalArrangement = Arrangement.Center,
     ){
         for(i in 0..100) PostCard()
+
     }
 }

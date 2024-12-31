@@ -14,6 +14,7 @@ import androidx.compose.ui.res.painterResource
 import com.segnities007.seg.domain.model.BottomBarItem
 import com.segnities007.seg.domain.presentation.DrawerAction
 import com.segnities007.seg.ui.screens.login.NavigateAction
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
@@ -28,6 +29,7 @@ fun NavigationDrawer(
     ModalNavigationDrawer(
         modifier = modifier,
         drawerState = drawerState,
+        gesturesEnabled = false,
         drawerContent = {
             ModalDrawerSheet {
                 items.labels.forEachIndexed{ index, label ->
@@ -54,9 +56,8 @@ private fun DrawerSheet(
     painterResourceID: Int,
     onIndexChange: (Int) -> Unit,
     onDrawerClose: suspend () -> Unit,
+    scope: CoroutineScope = rememberCoroutineScope()
 ){
-
-    val scope = rememberCoroutineScope()
 
     HorizontalDivider()
     NavigationDrawerItem(

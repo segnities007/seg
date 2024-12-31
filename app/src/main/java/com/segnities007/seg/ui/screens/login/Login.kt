@@ -1,6 +1,7 @@
 package com.segnities007.seg.ui.screens.login
 
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -44,6 +45,7 @@ fun Login(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun LoginUi(
     navController: NavHostController,
@@ -62,7 +64,7 @@ private fun LoginUi(
                     screenIndex = navigateUiState.index,
                     title = stringResource(R.string.login_screen_title),
                     contentDescription = stringResource(R.string.menu_description),
-                    onDrawerOpen = drawerAction.openDrawer
+                    onDrawerOpen = drawerAction.openDrawer,
                 )
                  },
         bottomBar = {
