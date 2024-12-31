@@ -1,5 +1,6 @@
 package com.segnities007.seg.ui.screens.hub.home
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -7,24 +8,28 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter.Companion.tint
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.segnities007.seg.R
 
-@Preview
 @Composable
 fun PostCard(
     modifier: Modifier = Modifier
-        .padding(dimensionResource(R.dimen.padding_normal)),
+        .padding(dimensionResource(R.dimen.padding_small)),
     url: String = "https://avatars.githubusercontent.com/u/174174755?v=4",
 ){
     Row(
@@ -33,12 +38,16 @@ fun PostCard(
             .fillMaxWidth(),
     ){
         AsyncImage(
+            modifier = Modifier
+                .padding(dimensionResource(R.dimen.padding_small))
+                .size(dimensionResource(R.dimen.icon_small))
+                .clip(CircleShape)
+                .clickable {  },
             model = url,
             contentDescription = url,
+            contentScale = ContentScale.Crop,
         )
-        Column(
-            horizontalAlignment = Alignment.Start,
-        ){
+        Column(){
             Name(modifier = modifier)
             Description(modifier = modifier)
             Images(modifier = modifier)
@@ -51,8 +60,16 @@ fun PostCard(
 private fun Name(
     modifier: Modifier = Modifier,
     name: String = stringResource(R.string.no_name),
+    userId: String = stringResource(R.string.no_user_id)
 ){
-    Text(name, modifier = modifier)
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Start,
+    ){
+        Text(name)
+        Text(userId, color = MaterialTheme.colorScheme.secondaryContainer)
+    }
 }
 
 @Composable
@@ -95,7 +112,7 @@ private fun ActionIcons(
     )
 
     Row(
-        modifier = modifier,
+        modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceEvenly,
     ){
@@ -116,13 +133,14 @@ private fun ActionIcon(
     contentRes: Int,
 ){
     Row(
-        modifier = modifier,
+        modifier = modifier
+            .clickable {  },
     ){
         Image(
             painter = painterResource(painterRes),
             contentDescription = stringResource(contentRes),
             colorFilter = tint(MaterialTheme.colorScheme.secondary)
         )
-        Text("a")
+        Text("0")
     }
 }
