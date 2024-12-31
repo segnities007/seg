@@ -16,5 +16,7 @@ fun Search(
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
-    ){  }
+    ){
+
+    }
 }

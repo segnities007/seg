@@ -12,16 +12,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.segnities007.seg.domain.model.BottomBarItem
+import com.segnities007.seg.domain.presentation.DrawerAction
+import com.segnities007.seg.domain.presentation.TopLayerViewModel
 import com.segnities007.seg.ui.screens.login.NavigateAction
 import kotlinx.coroutines.launch
 
 @Composable
 fun NavigationDrawer(
     modifier: Modifier = Modifier,
-    navigationDrawerViewModel: NavigationDrawerViewModel = hiltViewModel(),
+    navigationDrawerViewModel: TopLayerViewModel = hiltViewModel(),
     items: BottomBarItem,
     navigateAction: NavigateAction,
-    navigationDrawerAction: NavigationDrawerAction,
+    drawerAction: DrawerAction,
     content: @Composable () -> Unit,
 ){
     ModalNavigationDrawer(
@@ -35,7 +37,7 @@ fun NavigationDrawer(
                         index = index,
                         painterResourceID = items.unSelectedIconIDs[index],
                         onIndexChange = navigateAction.onIndexChange,
-                        onDrawerClose =navigationDrawerAction.closeDrawer,
+                        onDrawerClose =drawerAction.closeDrawer,
                     )
                 }
             }

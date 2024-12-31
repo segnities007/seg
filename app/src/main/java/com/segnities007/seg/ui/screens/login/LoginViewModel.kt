@@ -5,13 +5,13 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.segnities007.seg.Hub
 import com.segnities007.seg.data.model.User
 import com.segnities007.seg.data.repository.AuthRepositoryImpl
 import com.segnities007.seg.data.repository.UserRepositoryImpl
+import com.segnities007.seg.domain.presentation.TopLayerViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -79,7 +79,7 @@ data class CreateAccountUiAction(
 class LoginViewModel @Inject constructor(
     private val authRepositoryImpl: AuthRepositoryImpl,
     private val userRepositoryImpl: UserRepositoryImpl,
-) : ViewModel() {
+) : TopLayerViewModel() {
 
     var signUiState by mutableStateOf(SignUiState())
         private set
