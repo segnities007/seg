@@ -1,5 +1,6 @@
 package com.segnities007.seg.ui.components.navigation_drawer
 
+import androidx.compose.material3.DrawerState
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalDrawerSheet
@@ -10,25 +11,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.segnities007.seg.domain.model.BottomBarItem
 import com.segnities007.seg.domain.presentation.DrawerAction
-import com.segnities007.seg.domain.presentation.TopLayerViewModel
 import com.segnities007.seg.ui.screens.login.NavigateAction
 import kotlinx.coroutines.launch
 
 @Composable
 fun NavigationDrawer(
     modifier: Modifier = Modifier,
-    navigationDrawerViewModel: TopLayerViewModel = hiltViewModel(),
     items: BottomBarItem,
     navigateAction: NavigateAction,
+    drawerState: DrawerState,
     drawerAction: DrawerAction,
     content: @Composable () -> Unit,
 ){
     ModalNavigationDrawer(
         modifier = modifier,
-        drawerState = navigationDrawerViewModel.drawerState,
+        drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet {
                 items.labels.forEachIndexed{ index, label ->
