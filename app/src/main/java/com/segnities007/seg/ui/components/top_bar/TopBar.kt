@@ -8,6 +8,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -19,20 +20,21 @@ import kotlinx.coroutines.launch
 @Composable
 fun TopBar(
     modifier: Modifier = Modifier,
-    screenIndex: Int = 0,
     title: String,
+    screenIndex: Int = 0,
     contentDescription: String,
     onDrawerOpen: suspend () -> Unit,
-    scope: CoroutineScope = rememberCoroutineScope()
+    scrollBehavior:  TopAppBarScrollBehavior? = null,
+    scope: CoroutineScope = rememberCoroutineScope(),
 ){
 
-        CenterAlignedTopAppBar(
+    CenterAlignedTopAppBar(
             modifier = modifier,
+            title = { Text(text = title, maxLines = 1,) },
             colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                 titleContentColor = MaterialTheme.colorScheme.primary,
             ),
-            title = { Text(text = title, maxLines = 1,) },
             navigationIcon = {
                 if(screenIndex != 2 && screenIndex != 3)
                     IconButton(onClick = { scope.launch{ onDrawerOpen() } }) {
@@ -42,5 +44,6 @@ fun TopBar(
                         )
                     }
             },
+        scrollBehavior = scrollBehavior
         )
 }
