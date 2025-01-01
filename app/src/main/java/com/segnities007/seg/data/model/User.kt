@@ -6,8 +6,13 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class User(
-    val id: String, // UUID を表す文字列
-    val name: String,
+
+    val id: String = "", // UUID を表す文字列
+
+    val name: String = "NoName",
+
+    @SerialName("user_id")
+    val userID: String = "NoID", //＠は後付
 
     @Serializable(with = LocalDateSerializer::class)
     val birthday: LocalDate? = null,

@@ -9,6 +9,7 @@
     <dimen name="icon_normal">64dp</dimen>
     <dimen name="icon_large">128dp</dimen>
     <dimen name="input_size">32dp</dimen>
+    <dimen name="button_height_size">64dp</dimen>
     <dimen name="elevation_default">1dp</dimen>
     <dimen name="floating_action_button_default">64dp</dimen>
     <dimen name="floating_action_button_image_default">32dp</dimen>

@@ -44,7 +44,9 @@ fun Hub(
             postUiAction = hubViewModel.getPostUiAction(),
             postUiState = hubViewModel.postUiState,
             drawerAction = hubViewModel.getDrawerAction(),
-            navController = navController
+            settingUiState = hubViewModel.settingUiState,
+            settingUiAction = hubViewModel.getSettingUiAction(),
+            navController = navController,
         )
     }
 
@@ -58,6 +60,8 @@ private fun HubUi(
     postUiAction: PostUiAction,
     navigateState: NavigateState,
     navigateAction: NavigateAction,
+    settingUiState: SettingUiState,
+    settingUiAction: SettingUiAction,
     drawerAction: DrawerAction,
 ){
 
@@ -118,7 +122,12 @@ private fun HubUi(
                 postUiAction = postUiAction,
             )
             3 -> Notify(modifier = Modifier.padding(innerPadding))
-            4 -> Setting(modifier = Modifier.padding(innerPadding))
+            4 -> Setting(
+                modifier = Modifier.padding(innerPadding),
+                settingUiState = settingUiState,
+                settingUiAction = settingUiAction,
+                navController = navController,
+            )
         }
     }
 }

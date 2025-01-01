@@ -56,6 +56,7 @@ fun Post(
     postUiState: PostUiState,
     postUiAction: PostUiAction,
 ) {
+
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -65,6 +66,7 @@ fun Post(
         InputField(modifier = Modifier.weight(1f), postUiState = postUiState , postUiAction = postUiAction)
         BottomToolBar(modifier = Modifier.imePadding(), postUiState = postUiState, postUiAction = postUiAction)
     }
+
 }
 
 @Composable
@@ -100,6 +102,7 @@ private fun InputField(
             }
         )
     )
+
 }
 
 @Composable
@@ -108,6 +111,7 @@ private fun TopToolBar(
     postUiState: PostUiState,
     postUiAction: PostUiAction,
 ){
+
     Card(
         shape = RoundedCornerShape(dimensionResource(R.dimen.rounded_corner_shape)),
         modifier = modifier
@@ -194,6 +198,7 @@ private fun BottomToolBar(
 
         }
     }
+
 }
 
 @Composable

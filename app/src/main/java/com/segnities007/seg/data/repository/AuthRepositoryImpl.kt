@@ -42,6 +42,10 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
+    suspend fun logout(){
+        supabaseClient.auth.signOut()
+    }
+
     //EmailとPasswordを使用してサインインする
     override suspend fun signInWithEmailPassword(
         email: String,
