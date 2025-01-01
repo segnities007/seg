@@ -56,6 +56,7 @@ fun Post(
     postUiState: PostUiState,
     postUiAction: PostUiAction,
 ) {
+
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -65,6 +66,7 @@ fun Post(
         InputField(modifier = Modifier.weight(1f), postUiState = postUiState , postUiAction = postUiAction)
         BottomToolBar(modifier = Modifier.imePadding(), postUiState = postUiState, postUiAction = postUiAction)
     }
+
 }
 
 @Composable
@@ -100,6 +102,7 @@ private fun InputField(
             }
         )
     )
+
 }
 
 @Composable
@@ -108,6 +111,7 @@ private fun TopToolBar(
     postUiState: PostUiState,
     postUiAction: PostUiAction,
 ){
+
     Card(
         shape = RoundedCornerShape(dimensionResource(R.dimen.rounded_corner_shape)),
         modifier = modifier
@@ -131,7 +135,7 @@ private fun TopToolBar(
                 contentAlignment = Alignment.CenterEnd,
             ){
                 ElevatedButton(
-                    onClick = {},
+                    onClick = {/*TODO*/},
                 ) { Text(stringResource(R.string.post)) }
             }
         }
@@ -145,11 +149,8 @@ private fun BottomToolBar(
     postUiAction: PostUiAction,
 ) {
     val maxNumberOfItem = 4
-    val selectedUris = remember { mutableStateOf<List<String>>(emptyList()) }
     val pickMultipleMedia = rememberLauncherForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(maxNumberOfItem)) { uris ->
-        if (uris.isNotEmpty()) {
-            selectedUris.value = uris.map { it.toString() }
-        }
+        if (uris.isNotEmpty()) postUiAction.onSelectedUrisChange(uris.map { it.toString() })
     }
 
 
@@ -172,16 +173,14 @@ private fun BottomToolBar(
                 },
             )
 
-            if (selectedUris.value.isNotEmpty()) {
+            if (postUiState.selectedUris.isNotEmpty()) {
                 IconButton(
                     iconResource = R.drawable.baseline_close_24,
                     iconDescription = R.string.image,
-                    onClick = {
-                        selectedUris.value = listOf()
-                    },
+                    onClick = { postUiAction.onSelectedUrisChange(listOf()) },
                 )
 
-                selectedUris.value.forEach { uri ->
+                postUiState.selectedUris.forEach { uri ->
 
                     Box(
                         modifier = Modifier
@@ -199,6 +198,7 @@ private fun BottomToolBar(
 
         }
     }
+
 }
 
 @Composable

@@ -21,7 +21,13 @@ class UserRepositoryImpl @Inject constructor(
             false // エラーが発生した場合は未確認とみなす
         }
     }
+
+    fun resetUser(): User{
+        return User()
+    }
+
     override suspend fun createUser(user: User): Boolean {
+        supabaseClient.auth.awaitInitialization()
         val id = supabaseClient.auth.currentUserOrNull()?.id
         if(id == null){
             Log.e("UserRepository", "failed to create user. id is null")
@@ -38,7 +44,6 @@ class UserRepositoryImpl @Inject constructor(
             Log.d("UserRepositoryImpl39", "error $e")
             throw Exception()
         }
-        return false
     }
 
     override suspend fun getUser(id: String): User {
