@@ -41,7 +41,10 @@ fun Hub(
         HubUi(
             navigateState = hubViewModel.navigateState,
             navigateAction = hubViewModel.getNavigateAction(),
+            postUiAction = hubViewModel.getPostUiAction(),
+            postUiState = hubViewModel.postUiState,
             drawerAction = hubViewModel.getDrawerAction(),
+            navController = navController
         )
     }
 
@@ -50,6 +53,9 @@ fun Hub(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun HubUi(
+    navController: NavHostController,
+    postUiState: PostUiState,
+    postUiAction: PostUiAction,
     navigateState: NavigateState,
     navigateAction: NavigateAction,
     drawerAction: DrawerAction,
@@ -60,12 +66,32 @@ private fun HubUi(
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            TopBar(
-                title = stringResource(R.string.app_name),
-                contentDescription = stringResource(R.string.menu_description),
-                onDrawerOpen = drawerAction.openDrawer,
-                scrollBehavior = scrollBehavior,
-            )
+            when(navigateState.index){
+                0 -> TopBar(
+                    title = stringResource(R.string.app_name),
+                    contentDescription = stringResource(R.string.menu_description),
+                    onDrawerOpen = drawerAction.openDrawer,
+                    scrollBehavior = scrollBehavior,
+                )
+                1 -> TopBar(
+                    title = stringResource(R.string.app_name),
+                    contentDescription = stringResource(R.string.menu_description),
+                    onDrawerOpen = drawerAction.openDrawer,
+                    scrollBehavior = scrollBehavior,
+                )
+                3 -> TopBar(
+                    title = stringResource(R.string.app_name),
+                    contentDescription = stringResource(R.string.menu_description),
+                    onDrawerOpen = drawerAction.openDrawer,
+                    scrollBehavior = scrollBehavior,
+                )
+                4 -> TopBar(
+                    title = stringResource(R.string.app_name),
+                    contentDescription = stringResource(R.string.menu_description),
+                    onDrawerOpen = drawerAction.openDrawer,
+                    scrollBehavior = scrollBehavior,
+                )
+            }
         },
         bottomBar = {
             BottomBar(
@@ -74,13 +100,23 @@ private fun HubUi(
             ) { navigateAction.onIndexChange(it) }
         },
         floatingActionButton = {
-            FloatingButton(iconID = R.drawable.baseline_search_24) { }
+            when(navigateState.index){
+                0 -> FloatingButton(iconID = R.drawable.baseline_search_24) { }
+                1 -> FloatingButton(iconID = R.drawable.baseline_search_24) { }
+                3 -> FloatingButton(iconID = R.drawable.baseline_search_24) { }
+                4 -> FloatingButton(iconID = R.drawable.baseline_search_24) { }
+            }
         }
     ){ innerPadding ->
         when(navigateState.index){
             0 -> Home(modifier = Modifier.padding(innerPadding))
             1 -> Trend(modifier = Modifier.padding(innerPadding))
-            2 -> Post(modifier = Modifier.padding(innerPadding))
+            2 -> Post(
+                modifier = Modifier.padding(innerPadding),
+                navController = navController,
+                postUiState = postUiState,
+                postUiAction = postUiAction,
+            )
             3 -> Notify(modifier = Modifier.padding(innerPadding))
             4 -> Setting(modifier = Modifier.padding(innerPadding))
         }
