@@ -131,7 +131,7 @@ private fun TopToolBar(
                 contentAlignment = Alignment.CenterEnd,
             ){
                 ElevatedButton(
-                    onClick = {},
+                    onClick = {/*TODO*/},
                 ) { Text(stringResource(R.string.post)) }
             }
         }
@@ -145,11 +145,8 @@ private fun BottomToolBar(
     postUiAction: PostUiAction,
 ) {
     val maxNumberOfItem = 4
-    val selectedUris = remember { mutableStateOf<List<String>>(emptyList()) }
     val pickMultipleMedia = rememberLauncherForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(maxNumberOfItem)) { uris ->
-        if (uris.isNotEmpty()) {
-            selectedUris.value = uris.map { it.toString() }
-        }
+        if (uris.isNotEmpty()) postUiAction.onSelectedUrisChange(uris.map { it.toString() })
     }
 
 
@@ -172,16 +169,14 @@ private fun BottomToolBar(
                 },
             )
 
-            if (selectedUris.value.isNotEmpty()) {
+            if (postUiState.selectedUris.isNotEmpty()) {
                 IconButton(
                     iconResource = R.drawable.baseline_close_24,
                     iconDescription = R.string.image,
-                    onClick = {
-                        selectedUris.value = listOf()
-                    },
+                    onClick = { postUiAction.onSelectedUrisChange(listOf()) },
                 )
 
-                selectedUris.value.forEach { uri ->
+                postUiState.selectedUris.forEach { uri ->
 
                     Box(
                         modifier = Modifier
