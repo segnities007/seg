@@ -20,4 +20,9 @@
     <string name="comment">Comment</string>
     <string name="view_count">ViewCount</string>
     <string name="no_description">""</string>
+    <string name="image">Image</string>
+    <string name="delete">delete</string>
+    <string name="post_label">投稿内容をここに入力してください</string>
+    <string name="post">Post</string>
+    <string name="clear">Clear</string>
 </resources>
