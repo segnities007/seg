@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,6 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.navigation.NavHostController
 import com.segnities007.seg.R
+import com.segnities007.seg.ui.components.button.BasicButton
 import com.segnities007.seg.ui.screens.hub.HubViewModel
 import com.segnities007.seg.ui.screens.hub.SettingUiAction
 import com.segnities007.seg.ui.screens.hub.SettingUiState
@@ -38,13 +40,11 @@ fun Setting(
     commonPadding: Dp = dimensionResource(R.dimen.padding_normal),
 ){
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(commonPadding),
+        modifier = modifier.fillMaxSize().padding(commonPadding),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
     ){
-        StatusCard()
+        StatusCard(settingUiState = settingUiState)
         Spacer(modifier = Modifier.padding(commonPadding))
         FollowsButton()
         Spacer(modifier = Modifier.padding(commonPadding))
@@ -55,9 +55,13 @@ fun Setting(
 @Composable
 private fun StatusCard(
     modifier: Modifier = Modifier,
+    settingUiState: SettingUiState,
     commonPadding: Dp = dimensionResource(R.dimen.padding_normal)
 ){
-    Card(modifier = Modifier.fillMaxWidth()){
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = CardDefaults.cardElevation(dimensionResource(R.dimen.elevation_large)),
+    ){
         Column(
             modifier = Modifier.padding(commonPadding),
         ){
@@ -72,7 +76,7 @@ private fun StatusCard(
                     contentDescription = "TODO"
                 )
                 Spacer(modifier = Modifier.padding(commonPadding))
-                Status()
+                Status(settingUiState = settingUiState)
             }
         }
 
@@ -82,41 +86,34 @@ private fun StatusCard(
 @Composable
 private fun Status(
     modifier: Modifier = Modifier,
-    name: String = stringResource(R.string.no_name),
-    userID: String = stringResource(R.string.no_user_id),
-    registration: LocalDate = LocalDate.now(),
-    follow: Int = 0,
-    follower: Int = 0,
+    settingUiState: SettingUiState,
 ){
-    Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.Start){
-        Text(text = "Name: $name")
-        Text(text = "UserID: $userID")
-        Text(text = "Registration: $registration")
-        Text(text = "Follow: $follow")
-        Text(text = "Follower: $follower")
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.Start,
+    ){
+        Text(text = "Name: ${settingUiState.user.name}")
+        Text(text = "UserID: ${settingUiState.user.userID}")
+        Text(text = "Registration: ${settingUiState.user.createAt}")
+        Text(text = "Follow: ${settingUiState.user.followCount}")
+        Text(text = "Follower: ${settingUiState.user.followerCount}")
     }
 }
 
 @Composable
 private fun FollowsButton(
     modifier: Modifier = Modifier,
-    commonPadding: Dp = dimensionResource(R.dimen.padding_normal),
+    commonPadding: Dp = dimensionResource(R.dimen.padding_small),
     buttonSize: Dp = dimensionResource(R.dimen.button_height_size),
 ){
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = commonPadding),
+        modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,
     ){
-        ElevatedButton(modifier = Modifier.weight(1f).height(buttonSize), onClick = {/*TODO*/}) {
-            Text("About Follow")
-        }
+        BasicButton(modifier = Modifier.weight(1f).height(buttonSize), textID = R.string.follows, onClick = {/*TODO*/})
         Spacer(modifier = Modifier.padding(commonPadding))
-        ElevatedButton(modifier = Modifier.weight(1f).height(buttonSize), onClick = {/*TODO*/}) {
-            Text("About Follower")
-        }
+        BasicButton(modifier = Modifier.weight(1f).height(buttonSize), textID = R.string.followers, onClick = {/*TODO*/})
     }
 }
 
@@ -125,20 +122,6 @@ private fun LogoutButton(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     settingUiAction: SettingUiAction,
-    commonPadding: Dp = dimensionResource(R.dimen.padding_normal),
-    buttonSize: Dp = dimensionResource(R.dimen.button_height_size)
 ){
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = commonPadding),
-        contentAlignment = Alignment.Center,
-    ){
-        ElevatedButton(
-            modifier = Modifier.fillMaxWidth().height(buttonSize),
-            onClick = { settingUiAction.onLogout(navController) }
-        ) {
-            Text(text = stringResource(R.string.logout))
-        }
-    }
+    BasicButton(modifier = Modifier.fillMaxWidth(), textID = R.string.logout, onClick = {settingUiAction.onLogout(navController)})
 }

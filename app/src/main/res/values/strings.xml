@@ -26,4 +26,7 @@
     <string name="post">Post</string>
     <string name="clear">Clear</string>
     <string name="logout">Logout</string>
+    <string name="follows">Follows</string>
+    <string name="followers">Followers</string>
+    <string name="search">Search</string>
 </resources>

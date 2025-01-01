@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -23,6 +24,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -46,6 +48,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil3.compose.rememberAsyncImagePainter
 import com.segnities007.seg.R
+import com.segnities007.seg.ui.components.button.BasicButton
 import com.segnities007.seg.ui.screens.hub.PostUiAction
 import com.segnities007.seg.ui.screens.hub.PostUiState
 
@@ -76,9 +79,6 @@ private fun InputField(
     postUiAction: PostUiAction,
 ){
 
-    val keyboardController = LocalSoftwareKeyboardController.current
-    val focusManager = LocalFocusManager.current
-
     TextField(
         modifier = modifier
             .padding(horizontal = dimensionResource(R.dimen.padding_small))
@@ -95,12 +95,6 @@ private fun InputField(
             unfocusedIndicatorColor = MaterialTheme.colorScheme.background,
         ),
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-        keyboardActions = KeyboardActions(
-            onDone = {
-                focusManager.clearFocus() // フォーカスを外す
-                keyboardController?.hide() // キーボードを閉じる
-            }
-        )
     )
 
 }
@@ -114,30 +108,17 @@ private fun TopToolBar(
 
     Card(
         shape = RoundedCornerShape(dimensionResource(R.dimen.rounded_corner_shape)),
-        modifier = modifier
-            .padding(dimensionResource(R.dimen.padding_small))
-            .fillMaxWidth(),
+        modifier = modifier.padding(dimensionResource(R.dimen.padding_small)).fillMaxWidth(),
+        elevation = CardDefaults.cardElevation(dimensionResource(R.dimen.elevation_small)),
     ){
         Row(
+            modifier = modifier.padding(dimensionResource(R.dimen.padding_small)).fillMaxWidth(),
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            ElevatedButton(
-                modifier = Modifier.padding(dimensionResource(R.dimen.padding_small)),
-                onClick = { postUiAction.onInputTextChange("") }
-            ) { Text(stringResource(R.string.clear)) }
-
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(dimensionResource(R.dimen.padding_small))
-                    .fillMaxWidth(),
-                contentAlignment = Alignment.CenterEnd,
-            ){
-                ElevatedButton(
-                    onClick = {/*TODO*/},
-                ) { Text(stringResource(R.string.post)) }
-            }
+            BasicButton(textID = R.string.clear, onClick = { postUiAction.onInputTextChange("")  })
+            Spacer(modifier = Modifier.weight(1f))
+            BasicButton(textID = R.string.post, onClick = { /*TODO*/ })
         }
     }
 }
@@ -155,10 +136,9 @@ private fun BottomToolBar(
 
 
     Card(
+        elevation = CardDefaults.cardElevation(dimensionResource(R.dimen.elevation_small)),
         shape = RoundedCornerShape(dimensionResource(R.dimen.rounded_corner_shape)),
-        modifier = modifier
-            .padding(dimensionResource(R.dimen.padding_small))
-            .fillMaxWidth(),
+        modifier = modifier.padding(dimensionResource(R.dimen.padding_small)).fillMaxWidth(),
     ) {
         Row(
             modifier = Modifier.padding(dimensionResource(R.dimen.padding_small)),
