@@ -23,6 +23,9 @@ data class User(
     @SerialName("icon_url")
     val iconUrl: String? = null,
 
+    @SerialName("follow_id_list")
+    val follows: List<Int> = listOf(),
+
     @SerialName("follow_count")
     val followCount: Int = 0,
 
@@ -35,5 +38,8 @@ data class User(
 
     @SerialName("update_at")
     @Serializable(with = LocalDateSerializer::class)
-    val updateAt: LocalDate = LocalDate.now()
+    val updateAt: LocalDate = LocalDate.now(),
+
+    @SerialName("post_id_list")
+    val posts: List<Int> = listOf(),
 )

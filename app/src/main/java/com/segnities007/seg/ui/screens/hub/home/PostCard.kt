@@ -1,6 +1,7 @@
 package com.segnities007.seg.ui.screens.hub.home
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,7 +14,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -34,14 +37,14 @@ fun PostCard(
     onIconClick: () -> Unit,
     url: String = "https://avatars.githubusercontent.com/u/174174755?v=4",
 ){
-    Card(
-        modifier = Modifier.padding(
-            start = dimensionResource(R.dimen.padding_small),
-            top = dimensionResource(R.dimen.padding_small),
-            end = dimensionResource(R.dimen.padding_small),
-        ),
-        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surface),
-        elevation =  CardDefaults.cardElevation(dimensionResource(R.dimen.elevation_smaller))
+    ElevatedCard(
+        modifier = Modifier
+            .padding(
+                start = dimensionResource(R.dimen.padding_moderate),
+                top = dimensionResource(R.dimen.padding_moderate),
+                end = dimensionResource(R.dimen.padding_moderate),
+            ),
+        elevation =  CardDefaults.cardElevation(dimensionResource(R.dimen.elevation_small)),
     ){
         Row(modifier = Modifier.clickable { onClick() }.fillMaxWidth(),){
             AsyncImage(

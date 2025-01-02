@@ -18,7 +18,6 @@ fun Home(
     Column (
         modifier = modifier
             .fillMaxSize()
-            .background(color = MaterialTheme.colorScheme.surfaceContainer)
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,

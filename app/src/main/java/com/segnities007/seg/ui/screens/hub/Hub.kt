@@ -17,6 +17,7 @@ import com.segnities007.seg.domain.presentation.DrawerAction
 import com.segnities007.seg.ui.components.bottom_bar.BottomBar
 import com.segnities007.seg.ui.components.floating_button.FloatingButton
 import com.segnities007.seg.ui.components.navigation_drawer.NavigationDrawer
+import com.segnities007.seg.ui.components.top_bar.TopStatusBar
 import com.segnities007.seg.ui.screens.hub.home.Home
 import com.segnities007.seg.ui.screens.hub.notify.Notify
 import com.segnities007.seg.ui.screens.hub.post.Post
@@ -81,19 +82,14 @@ private fun HubUi(
                     title = stringResource(R.string.app_name),
                     contentDescription = stringResource(R.string.menu_description),
                     onDrawerOpen = drawerAction.openDrawer,
-                    scrollBehavior = scrollBehavior,
                 )
                 3 -> TopBar(
                     title = stringResource(R.string.app_name),
                     contentDescription = stringResource(R.string.menu_description),
                     onDrawerOpen = drawerAction.openDrawer,
-                    scrollBehavior = scrollBehavior,
                 )
-                4 -> TopBar(
-                    title = stringResource(R.string.app_name),
-                    contentDescription = stringResource(R.string.menu_description),
-                    onDrawerOpen = drawerAction.openDrawer,
-                    scrollBehavior = scrollBehavior,
+                4 -> TopStatusBar(
+                    settingUiState = settingUiState
                 )
             }
         },
