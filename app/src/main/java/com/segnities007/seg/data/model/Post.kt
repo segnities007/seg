@@ -8,12 +8,12 @@ import java.time.LocalDate
 data class Post(
 
     @SerialName("id")
-    val id: Int,
+    val id: Int = 0,
 
     @SerialName("name")
     val name: String = "NoName",
 
-    @SerialName("user_id") val userId: String,
+    @SerialName("user_id")
     val userID: String = "NoUser",
 
     @SerialName("icon_url")
