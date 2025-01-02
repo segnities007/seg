@@ -22,12 +22,7 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    fun resetUser(): User{
-        return User()
-    }
-
     override suspend fun createUser(user: User): Boolean {
-        supabaseClient.auth.awaitInitialization()
         val id = supabaseClient.auth.currentUserOrNull()?.id
         if(id == null){
             Log.e("UserRepository", "failed to create user. id is null")
@@ -46,12 +41,13 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getUser(id: String): User {
+    override suspend fun getUser(): User {
+
         val tableName = "users"
         try {
             val result = supabaseClient
                 .from(tableName)
-                .select { filter { User::id eq id } }
+                .select { filter { User::id eq supabaseClient.auth.currentUserOrNull()?.id.toString() } }
                 .decodeSingle<User>()
             return result
         } catch (e: Exception){

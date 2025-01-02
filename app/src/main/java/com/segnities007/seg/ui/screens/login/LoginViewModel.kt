@@ -167,7 +167,9 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO){
             val isSuccess = userRepositoryImpl.createUser(user)
             if (isSuccess) {
-                navController.navigate(route = Hub)
+                withContext(Dispatchers.Main){
+                    navController.navigate(route = Hub)
+                }
             }
         }
 
