@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,13 +33,24 @@ fun TopStatusBar(
 
     Column(
         modifier = Modifier
-            .shadow(elevation = dimensionResource(R.dimen.elevation_large))
-            .fillMaxWidth()
+            .shadow(
+                elevation = dimensionResource(R.dimen.elevation_normal),
+                shape = RoundedCornerShape(
+                    bottomStart = dimensionResource(R.dimen.padding_large),
+                    bottomEnd = dimensionResource(R.dimen.padding_large),
+                )
+            )
+            .clip(
+                shape = RoundedCornerShape(
+                    bottomStart = dimensionResource(R.dimen.padding_large),
+                    bottomEnd = dimensionResource(R.dimen.padding_large),
+                )
+            )
             .background(color = MaterialTheme.colorScheme.primaryContainer)
-            .padding(commonPadding),
+            .fillMaxWidth(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
+    ) {
         Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_large)))
         AsyncImage(
             modifier = Modifier.size(dimensionResource(R.dimen.icon_large)).clip(CircleShape),

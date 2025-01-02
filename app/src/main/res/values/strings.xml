@@ -29,6 +29,7 @@
     <string name="follows">Follows</string>
     <string name="followers">Followers</string>
     <string name="search">Search</string>
+    <string name="user_info">User Information</string>
     <string name="icon_default">https://avatars.githubusercontent.com/u/174174755?v=4</string>
 </resources>
 
