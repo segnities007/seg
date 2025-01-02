@@ -106,8 +106,6 @@ private fun HubUi(
             when(navigateState.index){
                 0 -> FloatingButton(iconID = R.drawable.baseline_search_24) { }
                 1 -> FloatingButton(iconID = R.drawable.baseline_search_24) { }
-                3 -> FloatingButton(iconID = R.drawable.baseline_search_24) { }
-                4 -> FloatingButton(iconID = R.drawable.baseline_search_24) { }
             }
         }
     ){ innerPadding ->
@@ -123,7 +121,6 @@ private fun HubUi(
             3 -> Notify(modifier = Modifier.padding(innerPadding))
             4 -> Setting(
                 modifier = Modifier.padding(innerPadding),
-                settingUiState = settingUiState,
                 settingUiAction = settingUiAction,
                 navController = navController,
             )
