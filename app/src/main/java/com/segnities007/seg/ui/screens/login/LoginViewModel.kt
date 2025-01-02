@@ -1,6 +1,7 @@
 package com.segnities007.seg.ui.screens.login
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
@@ -157,13 +158,11 @@ class LoginViewModel @Inject constructor(
     private fun createUser(
         navController: NavHostController,
     ){
-
         val user = User(
             id = "",
             name = createAccountUiState.name,
             birthday = createAccountUiState.birthday,
         )
-
         viewModelScope.launch(Dispatchers.IO){
             val isSuccess = userRepositoryImpl.createUser(user)
             if (isSuccess) {

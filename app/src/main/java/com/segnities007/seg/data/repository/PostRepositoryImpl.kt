@@ -9,6 +9,7 @@ import com.segnities007.seg.domain.repository.PostRepository
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.from
+import io.github.jan.supabase.postgrest.query.Order
 import javax.inject.Inject
 
 class PostRepositoryImpl @Inject constructor(
@@ -49,9 +50,9 @@ class PostRepositoryImpl @Inject constructor(
             Log.d("UserRepositoryImpl39", "error $e")
             throw Exception() // このthrowは不要。後述
         }
-        }
+    }
 
-    override suspend fun getPosts(ids: List<Int>): List<Post> {
+    override suspend fun getMyPosts(ids: List<Int>): List<Post> {
         TODO("Not yet implemented")
     }
 
@@ -62,6 +63,7 @@ class PostRepositoryImpl @Inject constructor(
             val result = supabaseClient
                 .from(tableName)
                 .select {
+                    order("create_at", Order.DESCENDING)
                     limit(count = 10)
                 }.decodeList<Post>()
 

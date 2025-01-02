@@ -3,6 +3,7 @@ package com.segnities007.seg.data.model
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 @Serializable
 data class Post(
@@ -35,12 +36,12 @@ data class Post(
     val viewCount: Int = 0,
 
     @SerialName("create_at")
-    @Serializable(with = LocalDateSerializer::class)
-    val createAt: LocalDate = LocalDate.now(),
+    @Serializable(with = LocalDateTimeSerializer::class)
+    val createAt: LocalDateTime = LocalDateTime.now(),
 
     @SerialName("update_at")
-    @Serializable(with = LocalDateSerializer::class)
-    val updateAt: LocalDate = LocalDate.now(),
+    @Serializable(with = LocalDateTimeSerializer::class)
+    val updateAt: LocalDateTime = LocalDateTime.now(),
 
     @SerialName("image_url_list")
     val images: List<String> = listOf(),
