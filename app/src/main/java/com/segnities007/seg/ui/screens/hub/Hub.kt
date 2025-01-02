@@ -12,6 +12,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.segnities007.seg.ui.components.top_bar.TopBar
 import com.segnities007.seg.R
+import com.segnities007.seg.data.model.User
 import com.segnities007.seg.data.model.bottom_bar.HubItem
 import com.segnities007.seg.domain.presentation.DrawerAction
 import com.segnities007.seg.ui.components.bottom_bar.BottomBar
@@ -47,6 +48,7 @@ fun Hub(
             drawerAction = hubViewModel.getDrawerAction(),
             settingUiState = hubViewModel.settingUiState,
             settingUiAction = hubViewModel.getSettingUiAction(),
+            user = hubViewModel.user,
             navController = navController,
         )
     }
@@ -63,6 +65,7 @@ private fun HubUi(
     navigateAction: NavigateAction,
     settingUiState: SettingUiState,
     settingUiAction: SettingUiAction,
+    user: User,
     drawerAction: DrawerAction,
 ){
 
@@ -89,7 +92,7 @@ private fun HubUi(
                     onDrawerOpen = drawerAction.openDrawer,
                 )
                 4 -> TopStatusBar(
-                    settingUiState = settingUiState
+                    user = user,
                 )
             }
         },

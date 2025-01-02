@@ -15,6 +15,7 @@ import javax.inject.Inject
 import com.segnities007.seg.ui.screens.login.NavigateAction
 import com.segnities007.seg.ui.screens.login.NavigateState
 import io.github.jan.supabase.SupabaseClient
+import io.github.jan.supabase.auth.auth
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -45,6 +46,15 @@ class HubViewModel @Inject constructor(
     private val authRepositoryImpl: AuthRepositoryImpl,
 ) : TopLayerViewModel() {
 
+    init {
+        viewModelScope.launch {
+            onGetUser()
+        }
+    }
+
+    var user by mutableStateOf(User())
+        private set
+
     var navigateState by mutableStateOf(NavigateState())
         private set
 
@@ -72,6 +82,10 @@ class HubViewModel @Inject constructor(
         return NavigateAction(
             onIndexChange = this::onIndexChange
         )
+    }
+
+    private suspend fun onGetUser(){
+        user = userRepositoryImpl.getUser()
     }
 
     private fun onLogout(navController: NavHostController){
