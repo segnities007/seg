@@ -23,13 +23,17 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override suspend fun createUser(user: User): Boolean {
+        supabaseClient.auth.awaitInitialization()
         val id = supabaseClient.auth.currentUserOrNull()?.id
         if(id == null){
             Log.e("UserRepository", "failed to create user. id is null")
             return false
         }
+        Log.d("UserRepository", "1")
         val user = user.copy(id = id.toString())
+        Log.d("UserRepository", "2")
         val tableName = "users"
+        Log.d("UserRepository", "3")
         try {
             supabaseClient
                 .from(tableName)
@@ -37,7 +41,7 @@ class UserRepositoryImpl @Inject constructor(
             return true
         } catch (e: Exception){
             Log.d("UserRepositoryImpl39", "error $e")
-            throw Exception()
+            return false
         }
     }
 

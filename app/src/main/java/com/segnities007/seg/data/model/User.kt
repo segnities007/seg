@@ -3,6 +3,7 @@ package com.segnities007.seg.data.model
 import java.time.LocalDate
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import java.time.LocalDateTime
 
 @Serializable
 data class User(
@@ -33,12 +34,12 @@ data class User(
     val followerCount: Int = 0,
 
     @SerialName("create_at")
-    @Serializable(with = LocalDateSerializer::class)
-    val createAt: LocalDate = LocalDate.now(),
+    @Serializable(with = LocalDateTimeSerializer::class)
+    val createAt: LocalDateTime = LocalDateTime.now(),
 
     @SerialName("update_at")
-    @Serializable(with = LocalDateSerializer::class)
-    val updateAt: LocalDate = LocalDate.now(),
+    @Serializable(with = LocalDateTimeSerializer::class)
+    val updateAt: LocalDateTime = LocalDateTime.now(),
 
     @SerialName("post_id_list")
     val posts: List<Int> = listOf(),
