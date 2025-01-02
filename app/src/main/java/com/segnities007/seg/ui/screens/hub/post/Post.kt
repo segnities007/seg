@@ -26,6 +26,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -94,7 +95,6 @@ private fun InputField(
             focusedIndicatorColor = MaterialTheme.colorScheme.background,
             unfocusedIndicatorColor = MaterialTheme.colorScheme.background,
         ),
-        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
     )
 
 }
@@ -106,13 +106,8 @@ private fun TopToolBar(
     postUiAction: PostUiAction,
 ){
 
-    Card(
-        shape = RoundedCornerShape(dimensionResource(R.dimen.rounded_corner_shape)),
-        modifier = modifier.padding(dimensionResource(R.dimen.padding_small)).fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(dimensionResource(R.dimen.elevation_small)),
-    ){
         Row(
-            modifier = modifier.padding(dimensionResource(R.dimen.padding_small)).fillMaxWidth(),
+            modifier = modifier.padding(dimensionResource(R.dimen.padding_normal)).fillMaxWidth(),
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -120,7 +115,7 @@ private fun TopToolBar(
             Spacer(modifier = Modifier.weight(1f))
             BasicButton(textID = R.string.post, onClick = { /*TODO*/ })
         }
-    }
+
 }
 
 @Composable
@@ -135,7 +130,7 @@ private fun BottomToolBar(
     }
 
 
-    Card(
+    ElevatedCard(
         elevation = CardDefaults.cardElevation(dimensionResource(R.dimen.elevation_small)),
         shape = RoundedCornerShape(dimensionResource(R.dimen.rounded_corner_shape)),
         modifier = modifier.padding(dimensionResource(R.dimen.padding_small)).fillMaxWidth(),

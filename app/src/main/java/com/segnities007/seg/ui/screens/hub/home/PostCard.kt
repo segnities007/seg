@@ -1,6 +1,7 @@
 package com.segnities007.seg.ui.screens.hub.home
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,7 +12,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -27,30 +32,37 @@ import com.segnities007.seg.R
 
 @Composable
 fun PostCard(
-    modifier: Modifier = Modifier
-        .padding(dimensionResource(R.dimen.padding_small)),
+    modifier: Modifier = Modifier.padding(dimensionResource(R.dimen.padding_small)),
+    onClick: () -> Unit,
+    onIconClick: () -> Unit,
     url: String = "https://avatars.githubusercontent.com/u/174174755?v=4",
 ){
-    Row(
+    ElevatedCard(
         modifier = Modifier
-            .clickable {  }
-            .fillMaxWidth(),
+            .padding(
+                start = dimensionResource(R.dimen.padding_moderate),
+                top = dimensionResource(R.dimen.padding_moderate),
+                end = dimensionResource(R.dimen.padding_moderate),
+            ),
+        elevation =  CardDefaults.cardElevation(dimensionResource(R.dimen.elevation_small)),
     ){
-        AsyncImage(
-            modifier = Modifier
-                .padding(dimensionResource(R.dimen.padding_small))
-                .size(dimensionResource(R.dimen.icon_small))
-                .clip(CircleShape)
-                .clickable {  },
-            model = url,
-            contentDescription = url,
-            contentScale = ContentScale.Crop,
-        )
-        Column(){
-            Name(modifier = modifier)
-            Description(modifier = modifier)
-            Images(modifier = modifier)
-            ActionIcons(modifier = modifier)
+        Row(modifier = Modifier.clickable { onClick() }.fillMaxWidth(),){
+            AsyncImage(
+                modifier = Modifier
+                    .padding(dimensionResource(R.dimen.padding_small))
+                    .size(dimensionResource(R.dimen.icon_small))
+                    .clip(CircleShape)
+                    .clickable { onIconClick() },
+                model = url,
+                contentDescription = url,
+                contentScale = ContentScale.Crop,
+            )
+            Column(){
+                Name(modifier = modifier)
+                Description(modifier = modifier)
+                Images(modifier = modifier)
+                ActionIcons(modifier = modifier)
+            }
         }
     }
 }

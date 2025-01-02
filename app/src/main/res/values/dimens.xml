@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="padding_action_icon">4dp</dimen>
+    <dimen name="padding_smallest">2dp</dimen>
+    <dimen name="padding_smaller">4dp</dimen>
     <dimen name="padding_small">8dp</dimen>
+    <dimen name="padding_moderate">12dp</dimen>
     <dimen name="padding_normal">16dp</dimen>
     <dimen name="padding_large">32dp</dimen>
     <dimen name="rounded_corner_shape">8dp</dimen>
     <dimen name="icon_small">48dp</dimen>
     <dimen name="icon_normal">64dp</dimen>
+    <dimen name="icon_nl">96dp</dimen>
     <dimen name="icon_large">128dp</dimen>
     <dimen name="input_size">32dp</dimen>
     <dimen name="button_height_size">64dp</dimen>
+    <dimen name="elevation_smallest">0.1dp</dimen>
+    <dimen name="elevation_smaller">0.5dp</dimen>
     <dimen name="elevation_small">1dp</dimen>
     <dimen name="elevation_normal">2dp</dimen>
     <dimen name="elevation_large">8dp</dimen>
