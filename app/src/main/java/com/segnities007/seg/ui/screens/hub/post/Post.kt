@@ -105,7 +105,6 @@ private fun TopToolBar(
     postUiState: PostUiState,
     postUiAction: PostUiAction,
 ){
-
         Row(
             modifier = modifier.padding(dimensionResource(R.dimen.padding_normal)).fillMaxWidth(),
             horizontalArrangement = Arrangement.Start,
@@ -113,7 +112,7 @@ private fun TopToolBar(
         ) {
             BasicButton(textID = R.string.clear, onClick = { postUiAction.onInputTextChange("")  })
             Spacer(modifier = Modifier.weight(1f))
-            BasicButton(textID = R.string.post, onClick = { /*TODO*/ })
+            BasicButton(textID = R.string.post, onClick = { postUiAction.onPostCreate() })
         }
 
 }

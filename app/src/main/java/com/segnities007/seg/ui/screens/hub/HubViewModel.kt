@@ -4,10 +4,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.segnities007.seg.Login
+import com.segnities007.seg.data.model.Post
 import com.segnities007.seg.data.model.User
 import com.segnities007.seg.data.repository.AuthRepositoryImpl
+import com.segnities007.seg.data.repository.PostRepositoryImpl
 import com.segnities007.seg.data.repository.UserRepositoryImpl
 import com.segnities007.seg.domain.presentation.TopLayerViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,6 +23,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+data class HomeUiState(
+    val posts: List<Post> = listOf(),
+)
+
+data class HomeUiAction(
+    val onGetNewPosts: () -> Unit,
+)
+
 data class PostUiState(
     val inputText: String = "",
     val selectedUris: List<String> = listOf(),
@@ -28,6 +39,7 @@ data class PostUiState(
 data class PostUiAction(
     val onInputTextChange: (newInputText: String) -> Unit,
     val onSelectedUrisChange: (newUris: List<String>) -> Unit,
+    val onPostCreate: () -> Unit,
 )
 
 data class SettingUiState(
@@ -41,18 +53,22 @@ data class SettingUiAction(
 
 @HiltViewModel
 class HubViewModel @Inject constructor(
-    private val supabaseClient: SupabaseClient,
     private val userRepositoryImpl: UserRepositoryImpl,
     private val authRepositoryImpl: AuthRepositoryImpl,
+    private val postRepositoryImpl: PostRepositoryImpl,
 ) : TopLayerViewModel() {
 
     init {
         viewModelScope.launch {
             onGetUser()
+            onGetNewPosts()
         }
     }
 
     var user by mutableStateOf(User())
+        private set
+
+    var homeUiState by mutableStateOf(HomeUiState())
         private set
 
     var navigateState by mutableStateOf(NavigateState())
@@ -63,6 +79,12 @@ class HubViewModel @Inject constructor(
 
     var settingUiState by mutableStateOf(SettingUiState())
         private set
+
+    fun getHomeUiAction(): HomeUiAction{
+        return HomeUiAction(
+            onGetNewPosts = this::onGetNewPosts
+        )
+    }
 
     fun getSettingUiAction(): SettingUiAction{
         return SettingUiAction(
@@ -75,6 +97,7 @@ class HubViewModel @Inject constructor(
         return PostUiAction(
             onInputTextChange = this::onInputTextChange,
             onSelectedUrisChange = this::onSelectedUrisChange,
+            onPostCreate = this::onPostCreate,
         )
     }
 
@@ -82,6 +105,18 @@ class HubViewModel @Inject constructor(
         return NavigateAction(
             onIndexChange = this::onIndexChange
         )
+    }
+
+    private fun onPostCreate(){
+        viewModelScope.launch {
+            postRepositoryImpl.createPost(description = postUiState.inputText, user = user)
+        }
+    }
+
+    private  fun onGetNewPosts(){
+        viewModelScope.launch {
+            homeUiState = homeUiState.copy(posts = postRepositoryImpl.getNewPosts())
+        }
     }
 
     private suspend fun onGetUser(){

@@ -29,12 +29,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import coil3.compose.AsyncImage
 import com.segnities007.seg.R
+import com.segnities007.seg.data.model.Post
 
 @Composable
 fun PostCard(
     modifier: Modifier = Modifier.padding(dimensionResource(R.dimen.padding_small)),
     onClick: () -> Unit,
     onIconClick: () -> Unit,
+    post: Post,
     url: String = "https://avatars.githubusercontent.com/u/174174755?v=4",
 ){
     ElevatedCard(
@@ -53,15 +55,15 @@ fun PostCard(
                     .size(dimensionResource(R.dimen.icon_small))
                     .clip(CircleShape)
                     .clickable { onIconClick() },
-                model = url,
+                model = post.iconUrl,
                 contentDescription = url,
                 contentScale = ContentScale.Crop,
             )
             Column(){
-                Name(modifier = modifier)
-                Description(modifier = modifier)
-                Images(modifier = modifier)
-                ActionIcons(modifier = modifier)
+                Name(modifier = modifier, post = post)
+                Description(modifier = modifier, post = post)
+                Images(modifier = modifier, post = post)
+                ActionIcons(modifier = modifier, post = post)
             }
         }
     }
@@ -70,33 +72,32 @@ fun PostCard(
 @Composable
 private fun Name(
     modifier: Modifier = Modifier,
-    name: String = stringResource(R.string.no_name),
-    userId: String = stringResource(R.string.no_user_id)
+    post: Post = Post(),
 ){
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start,
     ){
-        Text(name)
-        Text(userId, color = MaterialTheme.colorScheme.secondaryContainer)
+        Text(post.name)
+        Text(post.userID, color = MaterialTheme.colorScheme.secondaryContainer)
     }
 }
 
 @Composable
 private fun Description(
     modifier: Modifier = Modifier,
-    description: String = stringResource(R.string.no_description),
+    post: Post,
 ){
-    Text(description, modifier = modifier)
+    Text(post.description, modifier = modifier)
 }
 
 @Composable
 private fun Images(
     modifier: Modifier = Modifier,
-    imageUrls: List<String> = listOf(),
+    post: Post,
 ){
-    for (element in imageUrls)
+    for (element in post.images)
         AsyncImage(
             modifier = modifier,
             model = element,
@@ -107,6 +108,7 @@ private fun Images(
 @Composable
 private fun ActionIcons(
     modifier: Modifier = Modifier,
+    post: Post,
 ){
     val painterResources = listOf(
         R.drawable.baseline_favorite_24,
@@ -122,6 +124,13 @@ private fun ActionIcons(
         R.string.view_count,
     )
 
+    val counts = listOf(
+        post.likeCount,
+        post.repostCount,
+        post.commentCount,
+        post.viewCount,
+    )
+
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
@@ -132,6 +141,7 @@ private fun ActionIcons(
                 modifier = modifier,
                 painterRes = painterResources[i],
                 contentRes = contentDescriptions[i],
+                count = counts[i],
             )
         }
     }
@@ -142,6 +152,7 @@ private fun ActionIcon(
     modifier: Modifier = Modifier,
     painterRes: Int,
     contentRes: Int,
+    count: Int,
 ){
     Row(
         modifier = modifier
@@ -155,6 +166,6 @@ private fun ActionIcon(
             colorFilter = tint(MaterialTheme.colorScheme.secondary)
         )
         Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_action_icon)))
-        Text("0")
+        Text(count.toString())
     }
 }
