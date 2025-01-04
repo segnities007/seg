@@ -20,10 +20,10 @@ import com.segnities007.seg.ui.components.bottom_bar.BottomBar
 import com.segnities007.seg.ui.components.floating_button.FloatingButton
 import com.segnities007.seg.ui.components.navigation_drawer.NavigationDrawer
 import com.segnities007.seg.ui.components.top_bar.TopStatusBar
+import com.segnities007.seg.ui.screens.hub.account.Account
 import com.segnities007.seg.ui.screens.hub.home.Home
 import com.segnities007.seg.ui.screens.hub.notify.Notify
 import com.segnities007.seg.ui.screens.hub.post.Post
-import com.segnities007.seg.ui.screens.hub.setting.Setting
 import com.segnities007.seg.ui.screens.hub.trend.Trend
 import com.segnities007.seg.ui.screens.login.NavigateAction
 import com.segnities007.seg.ui.screens.login.NavigateState
@@ -134,7 +134,7 @@ private fun HubUi(
                 postUiAction = postUiAction,
             )
             3 -> Notify(modifier = Modifier.padding(innerPadding))
-            4 -> Setting(
+            4 -> Account(
                 modifier = Modifier.padding(innerPadding),
                 settingUiAction = settingUiAction,
                 navController = navController,

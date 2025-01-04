@@ -50,6 +50,7 @@ import androidx.navigation.NavHostController
 import coil3.compose.rememberAsyncImagePainter
 import com.segnities007.seg.R
 import com.segnities007.seg.ui.components.button.BasicButton
+import com.segnities007.seg.ui.components.button.SmallButton
 import com.segnities007.seg.ui.screens.hub.PostUiAction
 import com.segnities007.seg.ui.screens.hub.PostUiState
 
@@ -81,9 +82,7 @@ private fun InputField(
 ){
 
     TextField(
-        modifier = modifier
-            .padding(horizontal = dimensionResource(R.dimen.padding_small))
-            .fillMaxSize(),
+        modifier = modifier.padding(horizontal = dimensionResource(R.dimen.padding_small)).fillMaxSize(),
         value = postUiState.inputText,
         onValueChange = { postUiAction.onInputTextChange(it) },
         label = { Text(stringResource(R.string.post_label)) },
@@ -110,9 +109,15 @@ private fun TopToolBar(
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            BasicButton(textID = R.string.clear, onClick = { postUiAction.onInputTextChange("")  })
+            SmallButton(textID = R.string.clear, onClick = { postUiAction.onInputTextChange("")  })
             Spacer(modifier = Modifier.weight(1f))
-            BasicButton(textID = R.string.post, onClick = { postUiAction.onPostCreate() })
+            SmallButton(
+                textID = R.string.post,
+                onClick = {
+                    postUiAction.onPostCreate()
+                    postUiAction.onInputTextChange("")
+                }
+            )
         }
 
 }
@@ -132,7 +137,7 @@ private fun BottomToolBar(
     ElevatedCard(
         elevation = CardDefaults.cardElevation(dimensionResource(R.dimen.elevation_small)),
         shape = RoundedCornerShape(dimensionResource(R.dimen.rounded_corner_shape)),
-        modifier = modifier.padding(dimensionResource(R.dimen.padding_small)).fillMaxWidth(),
+        modifier = modifier.padding(dimensionResource(R.dimen.padding_smaller)).fillMaxWidth(),
     ) {
         Row(
             modifier = Modifier.padding(dimensionResource(R.dimen.padding_small)),

@@ -12,6 +12,8 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -29,7 +31,7 @@ fun TopBar(
 ){
 
     CenterAlignedTopAppBar(
-            modifier = modifier,
+            modifier = modifier.shadow(elevation = dimensionResource(R.dimen.padding_moderate)),
             title = { Text(text = title, maxLines = 1,) },
             colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                 containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -44,6 +46,6 @@ fun TopBar(
                         )
                     }
             },
-        scrollBehavior = scrollBehavior
+            scrollBehavior = scrollBehavior
         )
 }

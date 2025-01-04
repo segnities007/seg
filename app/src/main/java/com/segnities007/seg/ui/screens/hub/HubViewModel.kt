@@ -42,14 +42,18 @@ data class PostUiAction(
     val onPostCreate: () -> Unit,
 )
 
-data class SettingUiState(
-    val user: User = User()
+data class AccountUiState(
+    val user: User = User(),
+    val index: Int = 0,
 )
 
-data class SettingUiAction(
+data class AccountUiAction(
     val onUserChange: (newUser:User) -> Boolean,
     val onLogout: (navController: NavHostController) -> Unit,
+    val onAccountIndexChange: (newIndex: Int) -> Unit,
 )
+
+
 
 @HiltViewModel
 class HubViewModel @Inject constructor(
@@ -77,7 +81,7 @@ class HubViewModel @Inject constructor(
     var postUiState by mutableStateOf(PostUiState())
         private set
 
-    var settingUiState by mutableStateOf(SettingUiState())
+    var accountUiState by mutableStateOf(AccountUiState())
         private set
 
     fun getHomeUiAction(): HomeUiAction{
@@ -86,10 +90,11 @@ class HubViewModel @Inject constructor(
         )
     }
 
-    fun getSettingUiAction(): SettingUiAction{
-        return SettingUiAction(
+    fun getSettingUiAction(): AccountUiAction{
+        return AccountUiAction(
             onUserChange = this::onUserChange,
             onLogout = this::onLogout,
+            onAccountIndexChange = this::onAccountIndexChange,
         )
     }
 
@@ -105,6 +110,10 @@ class HubViewModel @Inject constructor(
         return NavigateAction(
             onIndexChange = this::onIndexChange
         )
+    }
+
+    private fun onAccountIndexChange(newIndex: Int){
+        accountUiState = accountUiState.copy(index = newIndex)
     }
 
     private fun onPostCreate(){
@@ -134,7 +143,7 @@ class HubViewModel @Inject constructor(
     }
 
     private fun onUserChange(newUser:User): Boolean{
-        settingUiState = settingUiState.copy(user = newUser)
+        accountUiState = accountUiState.copy(user = newUser)
         // TODO
         return true
     }
