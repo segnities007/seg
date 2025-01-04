@@ -1,4 +1,4 @@
-package com.segnities007.seg.ui.screens.hub.setting
+package com.segnities007.seg.ui.screens.hub.account
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,13 +15,13 @@ import androidx.compose.ui.unit.Dp
 import androidx.navigation.NavHostController
 import com.segnities007.seg.R
 import com.segnities007.seg.ui.components.button.SmallButton
-import com.segnities007.seg.ui.screens.hub.SettingUiAction
+import com.segnities007.seg.ui.screens.hub.AccountUiAction
 
 @Composable
-fun Setting(
+fun Config(
     modifier: Modifier,
     navController: NavHostController,
-    settingUiAction: SettingUiAction,
+    accountUiAction: AccountUiAction,
     commonPadding: Dp = dimensionResource(R.dimen.padding_normal),
 ){
     Column(
@@ -32,16 +32,16 @@ fun Setting(
         Spacer(modifier = Modifier.padding(commonPadding))
         FollowsButton()
         Spacer(modifier = Modifier.padding(commonPadding))
-        ModifyUserInfoButton(settingUiAction = settingUiAction)
+        ModifyUserInfoButton(accountUiAction = accountUiAction)
         Spacer(modifier = Modifier.padding(commonPadding))
-        LogoutButton(navController = navController, settingUiAction = settingUiAction)
+        LogoutButton(navController = navController, accountUiAction = accountUiAction)
     }
 }
 
 @Composable
 private fun ModifyUserInfoButton(
     modifier: Modifier = Modifier,
-    settingUiAction: SettingUiAction,
+    accountUiAction: AccountUiAction,
 ){
     SmallButton(modifier = Modifier.fillMaxWidth(), textID = R.string.user_info, onClick = {/*TODO*/})
 }
@@ -67,7 +67,7 @@ private fun FollowsButton(
 private fun LogoutButton(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    settingUiAction: SettingUiAction,
+    accountUiAction: AccountUiAction,
 ){
-    SmallButton(modifier = Modifier.fillMaxWidth(), textID = R.string.logout, onClick = {settingUiAction.onLogout(navController)})
+    SmallButton(modifier = Modifier.fillMaxWidth(), textID = R.string.logout, onClick = {accountUiAction.onLogout(navController)})
 }

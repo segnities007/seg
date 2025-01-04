@@ -42,9 +42,9 @@ fun PostCard(
     ElevatedCard(
         modifier = Modifier
             .padding(
-                start = dimensionResource(R.dimen.padding_moderate),
-                top = dimensionResource(R.dimen.padding_moderate),
-                end = dimensionResource(R.dimen.padding_moderate),
+                start = dimensionResource(R.dimen.padding_small),
+                top = dimensionResource(R.dimen.padding_smaller),
+                end = dimensionResource(R.dimen.padding_small),
             ),
         elevation =  CardDefaults.cardElevation(dimensionResource(R.dimen.elevation_small)),
     ){
