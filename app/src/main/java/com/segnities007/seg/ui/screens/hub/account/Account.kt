@@ -17,13 +17,17 @@ fun Account(
     accountUiAction: AccountUiAction,
 ){
 
-    when(accountUiState.index){
+    when(accountUiState.index){// TODO change index to enum
         0 -> Config(
             modifier = modifier,
             navController = navController,
             accountUiAction = accountUiAction,
         )
-        1 -> UserInformation()
+        1 -> UserInformation(
+            modifier = modifier,
+            accountUiState = accountUiState,
+            accountUiAction = accountUiAction,
+        )
     }
 
 

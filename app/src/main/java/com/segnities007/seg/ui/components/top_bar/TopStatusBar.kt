@@ -22,7 +22,6 @@ import androidx.compose.ui.unit.Dp
 import coil3.compose.AsyncImage
 import com.segnities007.seg.R
 import com.segnities007.seg.data.model.User
-import com.segnities007.seg.ui.screens.hub.SettingUiState
 
 @Composable
 fun TopStatusBar(
@@ -34,7 +33,7 @@ fun TopStatusBar(
     Column(
         modifier = Modifier
             .shadow(
-                elevation = dimensionResource(R.dimen.elevation_normal),
+                elevation = dimensionResource(R.dimen.elevation_large),
                 shape = RoundedCornerShape(
                     bottomStart = dimensionResource(R.dimen.padding_large),
                     bottomEnd = dimensionResource(R.dimen.padding_large),
@@ -70,19 +69,24 @@ private fun Status(
     commonPadding: Dp = dimensionResource(R.dimen.padding_moderate),
     user: User,
 ){
-    Column(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.Start,
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center,
     ){
-        Row(){
+        Column(
+            horizontalAlignment = Alignment.Start,
+        ){
             Text(text = user.name)
-            Spacer(modifier = Modifier.padding(commonPadding))
-            Text(text = user.userID)
+            Text(text = "@${user.userID}")
         }
-        Row(){
+        Spacer(modifier = Modifier.padding(commonPadding))
+        Column(
+            horizontalAlignment = Alignment.Start,
+        ){
             Text(text = "Follow: ${user.followCount}")
-            Spacer(modifier = Modifier.padding(commonPadding))
             Text(text = "Follower: ${user.followerCount}")
         }
     }
+
 }

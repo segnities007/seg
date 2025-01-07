@@ -22,6 +22,10 @@ import io.github.jan.supabase.auth.auth
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.datetime.Instant
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
+import java.time.LocalDate
 
 data class HomeUiState(
     val posts: List<Post> = listOf(),
@@ -45,12 +49,16 @@ data class PostUiAction(
 data class AccountUiState(
     val user: User = User(),
     val index: Int = 0,
+    val isDatePickerDialogShow: Boolean = false,
 )
 
 data class AccountUiAction(
     val onUserChange: (newUser:User) -> Boolean,
     val onLogout: (navController: NavHostController) -> Unit,
     val onAccountIndexChange: (newIndex: Int) -> Unit,
+    val onDatePickerClose: () -> Unit,
+    val onDatePickerOpen: () -> Unit,
+    val onDateSelect: (Long?) -> Unit,
 )
 
 
@@ -90,11 +98,14 @@ class HubViewModel @Inject constructor(
         )
     }
 
-    fun getSettingUiAction(): AccountUiAction{
+    fun getAccountUiAction(): AccountUiAction{
         return AccountUiAction(
             onUserChange = this::onUserChange,
             onLogout = this::onLogout,
             onAccountIndexChange = this::onAccountIndexChange,
+            onDatePickerClose = this::onDatePickerClose,
+            onDatePickerOpen = this::onDatePickerOpen,
+            onDateSelect = this::onDateSelect,
         )
     }
 
@@ -160,4 +171,21 @@ class HubViewModel @Inject constructor(
         navigateState = navigateState.copy(index = newIndex)
     }
 
+    private fun onDatePickerClose(){
+        accountUiState = accountUiState.copy(isDatePickerDialogShow = false)
+    }
+
+    private fun onDatePickerOpen(){
+        accountUiState = accountUiState.copy(isDatePickerDialogShow = true)
+    }
+
+    private fun onDateSelect(millis: Long?){
+        val instant = Instant.fromEpochMilliseconds(millis!!)
+        val localDateTime = instant.toLocalDateTime(TimeZone.currentSystemDefault())
+        val year = localDateTime.year
+        val month = localDateTime.monthNumber
+        val day = localDateTime.dayOfMonth
+
+        //TODO
+    }
 }

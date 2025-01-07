@@ -47,8 +47,8 @@ fun Hub(
             postUiAction = hubViewModel.getPostUiAction(),
             postUiState = hubViewModel.postUiState,
             drawerAction = hubViewModel.getDrawerAction(),
-            settingUiState = hubViewModel.settingUiState,
-            settingUiAction = hubViewModel.getSettingUiAction(),
+            accountUiState = hubViewModel.accountUiState,
+            accountUiAction = hubViewModel.getAccountUiAction(),
             user = hubViewModel.user,
             homeUiAction = hubViewModel.getHomeUiAction(),
             homeUiState = hubViewModel.homeUiState,
@@ -66,8 +66,8 @@ private fun HubUi(
     postUiAction: PostUiAction,
     navigateState: NavigateState,
     navigateAction: NavigateAction,
-    settingUiState: SettingUiState,
-    settingUiAction: SettingUiAction,
+    accountUiState: AccountUiState,
+    accountUiAction: AccountUiAction,
     homeUiState: HomeUiState,
     homeUiAction: HomeUiAction,
     user: User,
@@ -136,7 +136,8 @@ private fun HubUi(
             3 -> Notify(modifier = Modifier.padding(innerPadding))
             4 -> Account(
                 modifier = Modifier.padding(innerPadding),
-                settingUiAction = settingUiAction,
+                accountUiState = accountUiState,
+                accountUiAction = accountUiAction,
                 navController = navController,
             )
         }

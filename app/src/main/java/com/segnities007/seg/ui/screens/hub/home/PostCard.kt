@@ -80,7 +80,7 @@ private fun Name(
         horizontalArrangement = Arrangement.Start,
     ){
         Text(post.name)
-        Text(post.userID, color = MaterialTheme.colorScheme.secondaryContainer)
+        Text("@${post.userID}", color = MaterialTheme.colorScheme.secondaryContainer)
     }
 }
 

@@ -43,7 +43,7 @@ private fun ModifyUserInfoButton(
     modifier: Modifier = Modifier,
     accountUiAction: AccountUiAction,
 ){
-    SmallButton(modifier = Modifier.fillMaxWidth(), textID = R.string.user_info, onClick = {/*TODO*/})
+    SmallButton(modifier = Modifier.fillMaxWidth(), textID = R.string.user_info, onClick = {accountUiAction.onAccountIndexChange(1)})
 }
 
 
