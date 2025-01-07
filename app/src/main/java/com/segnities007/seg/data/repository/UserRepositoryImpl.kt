@@ -29,11 +29,8 @@ class UserRepositoryImpl @Inject constructor(
             Log.e("UserRepository", "failed to create user. id is null")
             return false
         }
-        Log.d("UserRepository", "1")
         val user = user.copy(id = id.toString())
-        Log.d("UserRepository", "2")
         val tableName = "users"
-        Log.d("UserRepository", "3")
         try {
             supabaseClient
                 .from(tableName)
@@ -46,13 +43,18 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getUser(): User {
-
         val tableName = "users"
         try {
+            supabaseClient.auth.awaitInitialization()
+            val id = supabaseClient.auth.currentUserOrNull()?.id
             val result = supabaseClient
                 .from(tableName)
-                .select { filter { User::id eq supabaseClient.auth.currentUserOrNull()?.id.toString() } }
+                .select {
+                    filter { User::id eq id.toString() }
+                }
                 .decodeSingle<User>()
+
+            Log.d("test", "success")
             return result
         } catch (e: Exception){
             Log.e("UserRepository", "failed to get user. error message is $e")

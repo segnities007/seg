@@ -8,14 +8,13 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.segnities007.seg.ui.screens.hub.HomeUiAction
-import com.segnities007.seg.ui.screens.hub.HomeUiState
+import androidx.hilt.navigation.compose.hiltViewModel
+
 
 @Composable
 fun Home(
     modifier: Modifier,
-    homeUiState: HomeUiState,
-    homeUiAction: HomeUiAction,
+    homeViewModel: HomeViewModel = hiltViewModel()
 ){
 
     Column (
@@ -25,7 +24,7 @@ fun Home(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
     ){
-        for (post in homeUiState.posts) {
+        for (post in homeViewModel.homeUiState.posts) {
             PostCard(
                 onClick = {},
                 onIconClick = {},

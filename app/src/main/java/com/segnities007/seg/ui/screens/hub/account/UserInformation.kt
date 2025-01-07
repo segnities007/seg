@@ -30,10 +30,9 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.Dp
-import com.segnities007.seg.ui.screens.hub.AccountUiAction
 import com.segnities007.seg.R
 import com.segnities007.seg.ui.components.button.BasicButton
-import com.segnities007.seg.ui.screens.hub.AccountUiState
+import com.segnities007.seg.ui.screens.hub.HubUiState
 
 //TODO update_at auto change
 //TODO add button for changing icon
@@ -42,6 +41,7 @@ import com.segnities007.seg.ui.screens.hub.AccountUiState
 @Composable
 fun UserInformation(
     modifier: Modifier = Modifier,
+    hubUiState: HubUiState,
     accountUiState: AccountUiState,
     accountUiAction: AccountUiAction,
     commonPadding: Dp = dimensionResource(R.dimen.padding_normal)
@@ -55,12 +55,13 @@ fun UserInformation(
     }
 
     Column(
-        modifier = modifier.fillMaxSize().padding(horizontal = commonPadding),
+        modifier = modifier
+            .fillMaxSize()
+            .padding(dimensionResource(R.dimen.padding_large)),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
     ){
-        Spacer(modifier = Modifier.padding(commonPadding))
-        TextFields(accountUiAction = accountUiAction, accountUiState = accountUiState)
+        TextFields(hubUiState = hubUiState)
         Spacer(modifier = Modifier.padding(commonPadding))
 
         SelectionButtons(accountUiAction = accountUiAction)
@@ -102,18 +103,18 @@ private fun DatePickerDialog(
 @Composable
 private fun TextFields(
     modifier: Modifier = Modifier,
-    accountUiState: AccountUiState,
-    accountUiAction: AccountUiAction,
+    hubUiState: HubUiState,
     commonPadding: Dp = dimensionResource(R.dimen.padding_normal),
 ){
 
-    var name by remember { mutableStateOf(accountUiState.user.name) }
-    var userID by remember { mutableStateOf(accountUiState.user.userID) }
+    var name by remember { mutableStateOf(hubUiState.user.name) }
+    var userID by remember { mutableStateOf(hubUiState.user.userID) }
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
 
     Column(){
         OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
             value = name,
             onValueChange = { name = it },
             label = { Text(stringResource(R.string.new_name)) },
@@ -127,6 +128,7 @@ private fun TextFields(
         )
         Spacer(modifier = Modifier.padding(commonPadding))
         OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
             value = userID,
             onValueChange = { userID = it },
             label = { Text(stringResource(R.string.new_user_id)) },
@@ -154,19 +156,19 @@ private fun SelectionButtons(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,
     ){
-        Spacer(modifier = Modifier.padding(commonPadding))
         BasicButton(
             modifier = Modifier.weight(1f).fillMaxWidth(),
             textID = R.string.cancel,
-            onClick = { accountUiAction.onAccountIndexChange(0) },
+            onClick = { accountUiAction.onIndexChange(0) },
         )
         Spacer(modifier = Modifier.padding(commonPadding))
         BasicButton(
             modifier = Modifier.weight(1f).fillMaxWidth(),
             textID = R.string.enter,
-            onClick = {/*TODO*/}
+            onClick = {
+                //TODO
+            }
         )
-        Spacer(modifier = Modifier.padding(commonPadding))
     }
 
 }

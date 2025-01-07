@@ -26,7 +26,7 @@ import com.segnities007.seg.data.model.User
 @Composable
 fun TopStatusBar(
     user: User,
-    commonPadding: Dp = dimensionResource(R.dimen.padding_moderate),
+    commonPadding: Dp = dimensionResource(R.dimen.padding_sn),
     url: String = "https://avatars.githubusercontent.com/u/174174755?v=4",
 ){
 
@@ -66,7 +66,7 @@ fun TopStatusBar(
 @Composable
 private fun Status(
     modifier: Modifier = Modifier,
-    commonPadding: Dp = dimensionResource(R.dimen.padding_moderate),
+    commonPadding: Dp = dimensionResource(R.dimen.padding_sn),
     user: User,
 ){
 

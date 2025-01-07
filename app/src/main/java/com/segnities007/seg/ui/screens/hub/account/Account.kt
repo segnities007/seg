@@ -2,31 +2,29 @@ package com.segnities007.seg.ui.screens.hub.account
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.unit.Dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.segnities007.seg.R
-import com.segnities007.seg.ui.screens.hub.AccountUiAction
-import com.segnities007.seg.ui.screens.hub.AccountUiState
+import com.segnities007.seg.ui.screens.hub.HubUiState
 
 @Composable
 fun Account(
     modifier: Modifier,
     navController: NavHostController,
-    accountUiState: AccountUiState,
-    accountUiAction: AccountUiAction,
+    hubUiState: HubUiState,
+    accountViewModel: AccountViewModel = hiltViewModel(),
 ){
 
-    when(accountUiState.index){// TODO change index to enum
+    when(accountViewModel.accountUiState.index){// TODO change index to enum
         0 -> Config(
             modifier = modifier,
             navController = navController,
-            accountUiAction = accountUiAction,
+            accountUiAction = accountViewModel.getAccountUiAction(),
         )
         1 -> UserInformation(
             modifier = modifier,
-            accountUiState = accountUiState,
-            accountUiAction = accountUiAction,
+            accountUiState = accountViewModel.accountUiState,
+            accountUiAction = accountViewModel.getAccountUiAction(),
+            hubUiState = hubUiState,
         )
     }
 

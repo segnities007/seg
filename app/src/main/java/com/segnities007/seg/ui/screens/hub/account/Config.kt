@@ -15,7 +15,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.navigation.NavHostController
 import com.segnities007.seg.R
 import com.segnities007.seg.ui.components.button.SmallButton
-import com.segnities007.seg.ui.screens.hub.AccountUiAction
 
 @Composable
 fun Config(
@@ -43,7 +42,7 @@ private fun ModifyUserInfoButton(
     modifier: Modifier = Modifier,
     accountUiAction: AccountUiAction,
 ){
-    SmallButton(modifier = Modifier.fillMaxWidth(), textID = R.string.user_info, onClick = {accountUiAction.onAccountIndexChange(1)})
+    SmallButton(modifier = Modifier.fillMaxWidth(), textID = R.string.user_info, onClick = {accountUiAction.onIndexChange(1)})
 }
 
 

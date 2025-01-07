@@ -1,11 +1,9 @@
 package com.segnities007.seg.ui.screens.hub.post
 
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,18 +12,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -33,33 +26,27 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil3.compose.rememberAsyncImagePainter
 import com.segnities007.seg.R
-import com.segnities007.seg.ui.components.button.BasicButton
 import com.segnities007.seg.ui.components.button.SmallButton
-import com.segnities007.seg.ui.screens.hub.PostUiAction
-import com.segnities007.seg.ui.screens.hub.PostUiState
+import com.segnities007.seg.ui.screens.hub.HubUiState
 
 @Composable
 fun Post(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    postUiState: PostUiState,
-    postUiAction: PostUiAction,
+    hubUiState: HubUiState,
+    postViewModel: PostViewModel = hiltViewModel(),
 ) {
 
     Column(
@@ -67,9 +54,9 @@ fun Post(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween,
     ) {
-        TopToolBar(postUiAction = postUiAction, postUiState = postUiState)
-        InputField(modifier = Modifier.weight(1f), postUiState = postUiState , postUiAction = postUiAction)
-        BottomToolBar(modifier = Modifier.imePadding(), postUiState = postUiState, postUiAction = postUiAction)
+        TopToolBar(postUiAction = postViewModel.getPostUiAction(), postUiState = postViewModel.postUiState, hubUiState = hubUiState)
+        InputField(modifier = Modifier.weight(1f), postUiState = postViewModel.postUiState , postUiAction = postViewModel.getPostUiAction())
+        BottomToolBar(modifier = Modifier.imePadding(), postUiState = postViewModel.postUiState, postUiAction = postViewModel.getPostUiAction())
     }
 
 }
@@ -101,6 +88,7 @@ private fun InputField(
 @Composable
 private fun TopToolBar(
     modifier: Modifier = Modifier,
+    hubUiState: HubUiState,
     postUiState: PostUiState,
     postUiAction: PostUiAction,
 ){
@@ -114,7 +102,7 @@ private fun TopToolBar(
             SmallButton(
                 textID = R.string.post,
                 onClick = {
-                    postUiAction.onPostCreate()
+                    postUiAction.onPostCreate(hubUiState.user)
                     postUiAction.onInputTextChange("")
                 }
             )

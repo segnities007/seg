@@ -64,7 +64,7 @@ class PostRepositoryImpl @Inject constructor(
                 .from(tableName)
                 .select {
                     order("create_at", Order.DESCENDING)
-                    limit(count = 10)
+                    limit(count = 20)
                 }.decodeList<Post>()
 
             Log.d("PostRepositoryImpl", "success getNewPosts")
