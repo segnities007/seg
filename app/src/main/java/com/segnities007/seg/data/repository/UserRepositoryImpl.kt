@@ -67,9 +67,10 @@ class UserRepositoryImpl @Inject constructor(
         try {
             supabaseClient
                 .from(tableName)
-                .update({ set("user", user) }) {
+                .update<User>(user) {
                     filter { User::id eq user.id }
                 }
+            Log.d("UserRepository", "success update user")
             return true
         } catch (e: Exception){
             Log.e("UserRepository", "failed to update user. error message is $e")

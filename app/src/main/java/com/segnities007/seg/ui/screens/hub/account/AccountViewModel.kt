@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.segnities007.seg.Login
+import com.segnities007.seg.data.model.User
 import com.segnities007.seg.data.repository.AuthRepositoryImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -20,6 +21,8 @@ import javax.inject.Inject
 data class AccountUiState(
     val index: Int = 0,
     val isDatePickerDialogShow: Boolean = false,
+    val newName: String = "",
+    val newUserID: String = "",
 )
 
 data class AccountUiAction(

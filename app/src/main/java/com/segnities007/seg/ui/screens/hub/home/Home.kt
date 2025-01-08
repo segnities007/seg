@@ -14,7 +14,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 @Composable
 fun Home(
     modifier: Modifier,
-    homeViewModel: HomeViewModel = hiltViewModel()
+    homeViewModel: HomeViewModel = hiltViewModel(),
 ){
 
     Column (

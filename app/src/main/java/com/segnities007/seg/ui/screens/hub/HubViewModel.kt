@@ -33,7 +33,7 @@ data class HubUiState(
 )
 
 data class HubUiAction(
-    val onUserChange: (newUser: User) -> Boolean
+    val onGetUser: () -> Unit,
 )
 
 @HiltViewModel
@@ -42,10 +42,7 @@ class HubViewModel @Inject constructor(
 ) : TopLayerViewModel() {
 
     init {
-        viewModelScope.launch {
-            onGetUser()
-            Log.d("test", "success")
-        }
+        onGetUser()
     }
 
     var hubUiState by mutableStateOf(HubUiState())
@@ -56,21 +53,21 @@ class HubViewModel @Inject constructor(
 
     fun getNavigateAction(): NavigateAction{
         return NavigateAction(
-            onIndexChange = this::onIndexChange
+            onIndexChange = this::onIndexChange,
         )
     }
 
-    private suspend fun onGetUser(){
-        Log.d("test", "aaaaa")
-            val user = userRepositoryImpl.getUser()
-        Log.d("test", "iiii")
-            hubUiState = hubUiState.copy(user = user)
+    fun getHubUiAction(): HubUiAction{
+        return HubUiAction(
+            onGetUser = this::onGetUser
+        )
     }
 
-    private fun onUserChange(newUser: User): Boolean{
-        hubUiState = hubUiState.copy(user = newUser)
-        // TODO
-        return true
+    private fun onGetUser(){
+        viewModelScope.launch(Dispatchers.IO){
+            val user = userRepositoryImpl.getUser()
+            hubUiState = hubUiState.copy(user = user)
+        }
     }
 
     private fun onIndexChange(newIndex: Int){

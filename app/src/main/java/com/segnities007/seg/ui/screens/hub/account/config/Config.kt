@@ -1,4 +1,4 @@
-package com.segnities007.seg.ui.screens.hub.account
+package com.segnities007.seg.ui.screens.hub.account.config
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.navigation.NavHostController
 import com.segnities007.seg.R
 import com.segnities007.seg.ui.components.button.SmallButton
+import com.segnities007.seg.ui.screens.hub.account.AccountUiAction
 
 @Composable
 fun Config(

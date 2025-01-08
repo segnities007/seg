@@ -1,4 +1,4 @@
-package com.segnities007.seg.ui.screens.hub.account
+package com.segnities007.seg.ui.screens.hub.account.userinfo
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,10 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
@@ -30,9 +27,14 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.Dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.segnities007.seg.R
 import com.segnities007.seg.ui.components.button.BasicButton
+import com.segnities007.seg.ui.screens.hub.HubUiAction
 import com.segnities007.seg.ui.screens.hub.HubUiState
+import com.segnities007.seg.ui.screens.hub.account.AccountUiAction
+import com.segnities007.seg.ui.screens.hub.account.AccountUiState
+import kotlinx.coroutines.launch
 
 //TODO update_at auto change
 //TODO add button for changing icon
@@ -42,6 +44,8 @@ import com.segnities007.seg.ui.screens.hub.HubUiState
 fun UserInformation(
     modifier: Modifier = Modifier,
     hubUiState: HubUiState,
+    hubUiAction: HubUiAction,
+    userInfoViewModel: UserInfoViewModel = hiltViewModel(),
     accountUiState: AccountUiState,
     accountUiAction: AccountUiAction,
     commonPadding: Dp = dimensionResource(R.dimen.padding_normal)
@@ -61,10 +65,10 @@ fun UserInformation(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
     ){
-        TextFields(hubUiState = hubUiState)
+        TextFields(hubUiState = hubUiState, userInfoUiState = userInfoViewModel.userInfoUiState, userInfoUiAction = userInfoViewModel.getUserInfoUiAction())
         Spacer(modifier = Modifier.padding(commonPadding))
 
-        SelectionButtons(accountUiAction = accountUiAction)
+        SelectionButtons(accountUiAction = accountUiAction, userInfoUiAction = userInfoViewModel.getUserInfoUiAction(), hubUiState = hubUiState, hubUiAction = hubUiAction)
         Spacer(modifier = Modifier.padding(commonPadding))
     }
 
@@ -104,19 +108,19 @@ private fun DatePickerDialog(
 private fun TextFields(
     modifier: Modifier = Modifier,
     hubUiState: HubUiState,
+    userInfoUiState: UserInfoUiState,
+    userInfoUiAction: UserInfoUiAction,
     commonPadding: Dp = dimensionResource(R.dimen.padding_normal),
 ){
 
-    var name by remember { mutableStateOf(hubUiState.user.name) }
-    var userID by remember { mutableStateOf(hubUiState.user.userID) }
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
 
     Column(){
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
-            value = name,
-            onValueChange = { name = it },
+            value = userInfoUiState.name,
+            onValueChange = { userInfoUiAction.onNameChange(it) },
             label = { Text(stringResource(R.string.new_name)) },
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
             keyboardActions = KeyboardActions(
@@ -129,8 +133,8 @@ private fun TextFields(
         Spacer(modifier = Modifier.padding(commonPadding))
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
-            value = userID,
-            onValueChange = { userID = it },
+            value = userInfoUiState.userID,
+            onValueChange = { userInfoUiAction.onUserIDChange(it) },
             label = { Text(stringResource(R.string.new_user_id)) },
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
             keyboardActions = KeyboardActions(
@@ -148,8 +152,13 @@ private fun TextFields(
 private fun SelectionButtons(
     modifier: Modifier = Modifier,
     accountUiAction: AccountUiAction,
+    hubUiState: HubUiState,
+    hubUiAction: HubUiAction,
+    userInfoUiAction: UserInfoUiAction,
     commonPadding: Dp = dimensionResource(R.dimen.padding_normal),
 ){
+
+    val scope = rememberCoroutineScope()
 
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -166,7 +175,16 @@ private fun SelectionButtons(
             modifier = Modifier.weight(1f).fillMaxWidth(),
             textID = R.string.enter,
             onClick = {
-                //TODO
+                scope.launch {
+                    val isSuccess = userInfoUiAction.onUserUpdate(hubUiState.user)
+
+                    if(isSuccess){
+                        hubUiAction.onGetUser()
+                        accountUiAction.onIndexChange(0)
+                    }else{
+                        //TODO
+                    }
+                }
             }
         )
     }
