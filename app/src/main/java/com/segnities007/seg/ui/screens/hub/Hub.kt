@@ -5,7 +5,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
@@ -13,7 +12,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.segnities007.seg.ui.components.top_bar.TopBar
 import com.segnities007.seg.R
-import com.segnities007.seg.data.model.User
 import com.segnities007.seg.data.model.bottom_bar.HubItem
 import com.segnities007.seg.domain.presentation.DrawerAction
 import com.segnities007.seg.ui.components.bottom_bar.BottomBar
@@ -44,14 +42,9 @@ fun Hub(
         HubUi(
             navigateState = hubViewModel.navigateState,
             navigateAction = hubViewModel.getNavigateAction(),
-            postUiAction = hubViewModel.getPostUiAction(),
-            postUiState = hubViewModel.postUiState,
             drawerAction = hubViewModel.getDrawerAction(),
-            accountUiState = hubViewModel.accountUiState,
-            accountUiAction = hubViewModel.getAccountUiAction(),
-            user = hubViewModel.user,
-            homeUiAction = hubViewModel.getHomeUiAction(),
-            homeUiState = hubViewModel.homeUiState,
+            hubUiState = hubViewModel.hubUiState,
+            hubUiAction = hubViewModel.getHubUiAction(),
             navController = navController,
         )
     }
@@ -62,23 +55,12 @@ fun Hub(
 @Composable
 private fun HubUi(
     navController: NavHostController,
-    postUiState: PostUiState,
-    postUiAction: PostUiAction,
+    hubUiState: HubUiState,
+    hubUiAction: HubUiAction,
     navigateState: NavigateState,
     navigateAction: NavigateAction,
-    accountUiState: AccountUiState,
-    accountUiAction: AccountUiAction,
-    homeUiState: HomeUiState,
-    homeUiAction: HomeUiAction,
-    user: User,
     drawerAction: DrawerAction,
 ){
-
-    LaunchedEffect(navigateState.index) {
-        if(navigateState.index == 0){
-            homeUiAction.onGetNewPosts()
-        }
-    }
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
@@ -103,7 +85,7 @@ private fun HubUi(
                     onDrawerOpen = drawerAction.openDrawer,
                 )
                 4 -> TopStatusBar(
-                    user = user,
+                    user = hubUiState.user,
                 )
             }
         },
@@ -123,22 +105,19 @@ private fun HubUi(
         when(navigateState.index){
             0 -> Home(
                 modifier = Modifier.padding(innerPadding),
-                homeUiState = homeUiState,
-                homeUiAction = homeUiAction
             )
             1 -> Trend(modifier = Modifier.padding(innerPadding))
             2 -> Post(
                 modifier = Modifier.padding(innerPadding),
                 navController = navController,
-                postUiState = postUiState,
-                postUiAction = postUiAction,
+                hubUiState = hubUiState
             )
             3 -> Notify(modifier = Modifier.padding(innerPadding))
             4 -> Account(
                 modifier = Modifier.padding(innerPadding),
-                accountUiState = accountUiState,
-                accountUiAction = accountUiAction,
                 navController = navController,
+                hubUiState = hubUiState,
+                hubUiAction = hubUiAction,
             )
         }
     }

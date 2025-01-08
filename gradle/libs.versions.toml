@@ -23,6 +23,7 @@ composeBom = "2024.12.01"
 navigationCompose = "2.8.5"
 postgrestKt = "3.0.3"
 storageKt = "3.0.3"
+firebaseFirestoreKtx = "25.1.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -58,6 +59,7 @@ ktor-utils = { module = "io.ktor:ktor-utils", version.ref = "ktorUtils" }
 postgrest-kt = { module = "io.github.jan-tennert.supabase:postgrest-kt", version.ref = "postgrestKt" }
 storage-kt = { module = "io.github.jan-tennert.supabase:storage-kt", version.ref = "storageKt" }
 x-x-x = { module = "libs.kotlinx.serialization.json:1.7.3" }
+firebase-firestore-ktx = { group = "com.google.firebase", name = "firebase-firestore-ktx", version.ref = "firebaseFirestoreKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

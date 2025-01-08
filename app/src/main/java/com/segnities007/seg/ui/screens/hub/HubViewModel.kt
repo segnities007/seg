@@ -1,5 +1,6 @@
 package com.segnities007.seg.ui.screens.hub
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
@@ -27,165 +28,50 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import java.time.LocalDate
 
-data class HomeUiState(
-    val posts: List<Post> = listOf(),
-)
-
-data class HomeUiAction(
-    val onGetNewPosts: () -> Unit,
-)
-
-data class PostUiState(
-    val inputText: String = "",
-    val selectedUris: List<String> = listOf(),
-)
-
-data class PostUiAction(
-    val onInputTextChange: (newInputText: String) -> Unit,
-    val onSelectedUrisChange: (newUris: List<String>) -> Unit,
-    val onPostCreate: () -> Unit,
-)
-
-data class AccountUiState(
+data class HubUiState(
     val user: User = User(),
-    val index: Int = 0,
-    val isDatePickerDialogShow: Boolean = false,
 )
 
-data class AccountUiAction(
-    val onUserChange: (newUser:User) -> Boolean,
-    val onLogout: (navController: NavHostController) -> Unit,
-    val onAccountIndexChange: (newIndex: Int) -> Unit,
-    val onDatePickerClose: () -> Unit,
-    val onDatePickerOpen: () -> Unit,
-    val onDateSelect: (Long?) -> Unit,
+data class HubUiAction(
+    val onGetUser: () -> Unit,
 )
-
-
 
 @HiltViewModel
 class HubViewModel @Inject constructor(
     private val userRepositoryImpl: UserRepositoryImpl,
-    private val authRepositoryImpl: AuthRepositoryImpl,
-    private val postRepositoryImpl: PostRepositoryImpl,
 ) : TopLayerViewModel() {
 
     init {
-        viewModelScope.launch {
-            onGetUser()
-            onGetNewPosts()
-        }
+        onGetUser()
     }
 
-    var user by mutableStateOf(User())
-        private set
-
-    var homeUiState by mutableStateOf(HomeUiState())
+    var hubUiState by mutableStateOf(HubUiState())
         private set
 
     var navigateState by mutableStateOf(NavigateState())
         private set
 
-    var postUiState by mutableStateOf(PostUiState())
-        private set
-
-    var accountUiState by mutableStateOf(AccountUiState())
-        private set
-
-    fun getHomeUiAction(): HomeUiAction{
-        return HomeUiAction(
-            onGetNewPosts = this::onGetNewPosts
-        )
-    }
-
-    fun getAccountUiAction(): AccountUiAction{
-        return AccountUiAction(
-            onUserChange = this::onUserChange,
-            onLogout = this::onLogout,
-            onAccountIndexChange = this::onAccountIndexChange,
-            onDatePickerClose = this::onDatePickerClose,
-            onDatePickerOpen = this::onDatePickerOpen,
-            onDateSelect = this::onDateSelect,
-        )
-    }
-
-    fun getPostUiAction(): PostUiAction{
-        return PostUiAction(
-            onInputTextChange = this::onInputTextChange,
-            onSelectedUrisChange = this::onSelectedUrisChange,
-            onPostCreate = this::onPostCreate,
-        )
-    }
-
     fun getNavigateAction(): NavigateAction{
         return NavigateAction(
-            onIndexChange = this::onIndexChange
+            onIndexChange = this::onIndexChange,
         )
     }
 
-    private fun onAccountIndexChange(newIndex: Int){
-        accountUiState = accountUiState.copy(index = newIndex)
+    fun getHubUiAction(): HubUiAction{
+        return HubUiAction(
+            onGetUser = this::onGetUser
+        )
     }
 
-    private fun onPostCreate(){
-        viewModelScope.launch {
-            postRepositoryImpl.createPost(description = postUiState.inputText, user = user)
+    private fun onGetUser(){
+        viewModelScope.launch(Dispatchers.IO){
+            val user = userRepositoryImpl.getUser()
+            hubUiState = hubUiState.copy(user = user)
         }
-    }
-
-    private  fun onGetNewPosts(){
-        viewModelScope.launch {
-            homeUiState = homeUiState.copy(posts = postRepositoryImpl.getNewPosts())
-        }
-    }
-
-    private suspend fun onGetUser(){
-        user = userRepositoryImpl.getUser()
-    }
-
-    private fun onLogout(navController: NavHostController){
-        viewModelScope.launch {
-            authRepositoryImpl.logout()
-            withContext(Dispatchers.Main){
-                navController.navigate(Login)
-            }
-        }
-
-    }
-
-    private fun onUserChange(newUser:User): Boolean{
-        accountUiState = accountUiState.copy(user = newUser)
-        // TODO
-        return true
-    }
-
-    private fun onSelectedUrisChange(newUris: List<String>){
-        postUiState = postUiState.copy(selectedUris = newUris)
-    }
-
-    private fun onInputTextChange(newInputText: String){
-        postUiState = postUiState.copy(inputText = newInputText)
     }
 
     private fun onIndexChange(newIndex: Int){
         navigateState = navigateState.copy(index = newIndex)
     }
 
-    private fun onDatePickerClose(){
-        accountUiState = accountUiState.copy(isDatePickerDialogShow = false)
-    }
-
-    private fun onDatePickerOpen(){
-        accountUiState = accountUiState.copy(isDatePickerDialogShow = true)
-    }
-
-    private fun onDateSelect(millis: Long?){
-        val instant = Instant.fromEpochMilliseconds(millis!!)
-        val localDateTime = instant.toLocalDateTime(TimeZone.currentSystemDefault())
-        val year = localDateTime.year
-        val month = localDateTime.monthNumber
-        val day = localDateTime.dayOfMonth
-
-        //TODO
-    }
 }
