@@ -6,30 +6,41 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.segnities007.seg.domain.model.NavigationIndex
 
-data class DrawerAction(
-    val openDrawer: suspend () -> Unit,
-    val closeDrawer: suspend () -> Unit,
+data class TopState(
+    val index: NavigationIndex = NavigationIndex.No,
+    val drawerState: DrawerState = DrawerState(initialValue = DrawerValue.Closed),
+)
+
+data class TopAction(
+    val onNavigate: (index: NavigationIndex) -> Unit,
+    val openDrawer: () -> Unit,
+    val closeDrawer: () -> Unit,
 )
 
 open class TopLayerViewModel: ViewModel(){
 
-    var drawerState by mutableStateOf(DrawerState(initialValue = DrawerValue.Closed))
-        private set
+    var topState by mutableStateOf(TopState())
 
-    fun getDrawerAction(): DrawerAction {
-        return DrawerAction(
+    fun getTopAction(): TopAction {
+        return TopAction(
             openDrawer = this::openDrawer,
             closeDrawer = this::closeDrawer,
+            onNavigate = this::onNavigate,
         )
     }
 
-    private suspend fun openDrawer(){
-        drawerState.open()
+    protected fun onNavigate(index: NavigationIndex){
+        topState = topState.copy(index = index)
     }
 
-    private suspend fun closeDrawer(){
-        drawerState.close()
+    protected fun openDrawer(){
+        topState = topState.copy(drawerState = DrawerState(DrawerValue.Open))
+    }
+
+    protected fun closeDrawer(){
+        topState = topState.copy(drawerState = DrawerState(DrawerValue.Closed))
     }
 
 }

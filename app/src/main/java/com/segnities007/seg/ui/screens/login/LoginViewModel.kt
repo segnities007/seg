@@ -11,6 +11,7 @@ import com.segnities007.seg.Hub
 import com.segnities007.seg.data.model.User
 import com.segnities007.seg.data.repository.AuthRepositoryImpl
 import com.segnities007.seg.data.repository.UserRepositoryImpl
+import com.segnities007.seg.domain.model.NavigationIndex
 import com.segnities007.seg.domain.presentation.TopLayerViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -35,16 +36,6 @@ data class SignUiAction(
     val onLoginWithGoogle: (context: Context) -> Unit,
     val onSignUpWithEmailPassword: () -> Unit,
     val onSignInWithEmailPassword: (navController: NavHostController) -> Unit,
-)
-
-// class for navigation
-
-data class NavigateState(
-    val index: Int = 0,
-)
-
-data class NavigateAction(
-    val onIndexChange: (index: Int) -> Unit,
 )
 
 // class for ConfirmEmail UI
@@ -80,16 +71,8 @@ class LoginViewModel @Inject constructor(
 
     var signUiState by mutableStateOf(SignUiState())
         private set
-    var navigateUiState by mutableStateOf(NavigateState())
-        private set
     var createAccountUiState by mutableStateOf(CreateAccountUiState())
         private set
-
-    fun getNavigateAction(): NavigateAction{
-        return NavigateAction(
-            onIndexChange = this::onIndexChange
-        )
-    }
 
     fun getConfirmEmailUiAction(): ConfirmEmailUiAction {
         return ConfirmEmailUiAction(
@@ -105,14 +88,6 @@ class LoginViewModel @Inject constructor(
             onLoginWithGoogle = this::onLoginWithGoogle,
             onSignUpWithEmailPassword = this::onSignUpWithEmailPassword,
             onSignInWithEmailPassword = this::onSignInWithEmailPassword,
-        )
-
-    }
-
-    fun getNavigationUiAction(): NavigateAction{
-
-        return NavigateAction(
-            onIndexChange = this::onIndexChange
         )
 
     }
@@ -149,7 +124,7 @@ class LoginViewModel @Inject constructor(
                 )
             withContext(Dispatchers.Main){
                 val isConfirmed = userRepositoryImpl.confirmEmail()
-                if(isConfirmed) onIndexChange(3)
+                if(isConfirmed) super.onNavigate(NavigationIndex.LoginSignUpCreateAccount)
             }
         }
 
@@ -198,10 +173,6 @@ class LoginViewModel @Inject constructor(
         signUiState = signUiState.copy(password = newPassword)
     }
 
-    private fun onIndexChange(newIndex: Int) {
-        navigateUiState = navigateUiState.copy(index = newIndex)
-    }
-
     private fun onLoginWithGoogle(
         context: Context,
     ){
@@ -218,7 +189,7 @@ class LoginViewModel @Inject constructor(
                         email = signUiState.email,
                         password = signUiState.password
                     )
-                if(isSuccess) onIndexChange(2)
+                if(isSuccess) super.onNavigate(NavigationIndex.LoginSignUpConfirmEmail)
             }
         }
     }
