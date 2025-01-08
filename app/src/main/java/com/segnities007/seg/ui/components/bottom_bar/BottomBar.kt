@@ -7,12 +7,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
 import com.segnities007.seg.domain.model.BottomBarItem
+import com.segnities007.seg.domain.model.NavigationIndex
 
 @Composable
 fun BottomBar(
     items: BottomBarItem,
-    currentIndex: Int,
-    onClick: (Int) -> Unit,
+    indices: List<NavigationIndex>,
+    currentIndex: NavigationIndex,
+    onClick: (NavigationIndex) -> Unit,
 ){
 
     NavigationBar{
@@ -20,15 +22,15 @@ fun BottomBar(
             NavigationBarItem(
                 icon = {
                     Icon(
-                        painter = if(currentIndex == index)
+                        painter = if(currentIndex == indices[index])
                                         painterResource(items.selectedIconIDs[index]) else
                                         painterResource(items.unSelectedIconIDs[index]),
-                        contentDescription = items.labels[index],
+                        contentDescription = label,
                     )
                 },
                 label = { Text(items.labels[index]) },
-                selected = currentIndex == index,
-                onClick = {onClick(index)},
+                selected = currentIndex == indices[index],
+                onClick = {onClick(indices[index])},
             )
         }
     }

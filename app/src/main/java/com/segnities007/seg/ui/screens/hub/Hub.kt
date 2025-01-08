@@ -1,19 +1,24 @@
 package com.segnities007.seg.ui.screens.hub
 
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.segnities007.seg.ui.components.top_bar.TopBar
 import com.segnities007.seg.R
 import com.segnities007.seg.data.model.bottom_bar.HubItem
-import com.segnities007.seg.domain.presentation.DrawerAction
+import com.segnities007.seg.domain.model.NavigationIndex
+import com.segnities007.seg.domain.presentation.TopAction
+import com.segnities007.seg.domain.presentation.TopState
 import com.segnities007.seg.ui.components.bottom_bar.BottomBar
 import com.segnities007.seg.ui.components.floating_button.FloatingButton
 import com.segnities007.seg.ui.components.navigation_drawer.NavigationDrawer
@@ -23,8 +28,6 @@ import com.segnities007.seg.ui.screens.hub.home.Home
 import com.segnities007.seg.ui.screens.hub.notify.Notify
 import com.segnities007.seg.ui.screens.hub.post.Post
 import com.segnities007.seg.ui.screens.hub.trend.Trend
-import com.segnities007.seg.ui.screens.login.NavigateAction
-import com.segnities007.seg.ui.screens.login.NavigateState
 
 @Composable
 fun Hub(
@@ -33,18 +36,31 @@ fun Hub(
     hubViewModel: HubViewModel = hiltViewModel(),
 ){
 
+    LaunchedEffect(Unit) {
+        val action = hubViewModel.getTopAction()
+        action.onNavigate(NavigationIndex.HubHome)
+    }
+
+    val indices = listOf(
+        NavigationIndex.HubHome,
+        NavigationIndex.HubTrend,
+        NavigationIndex.HubPost,
+        NavigationIndex.HubNotify,
+        NavigationIndex.HubAccount
+    )
+
     NavigationDrawer(
         items = HubItem(),
-        navigateAction = hubViewModel.getNavigateAction(),
-        drawerAction = hubViewModel.getDrawerAction(),
-        drawerState = hubViewModel.drawerState,
+        indices = indices,
+        topState = hubViewModel.topState,
+        topAction = hubViewModel.getTopAction(),
     ) {
         HubUi(
-            navigateState = hubViewModel.navigateState,
-            navigateAction = hubViewModel.getNavigateAction(),
-            drawerAction = hubViewModel.getDrawerAction(),
             hubUiState = hubViewModel.hubUiState,
             hubUiAction = hubViewModel.getHubUiAction(),
+            indices = indices,
+            topState = hubViewModel.topState,
+            topAction = hubViewModel.getTopAction(),
             navController = navController,
         )
     }
@@ -55,11 +71,11 @@ fun Hub(
 @Composable
 private fun HubUi(
     navController: NavHostController,
+    indices: List<NavigationIndex>,
+    topState: TopState,
+    topAction: TopAction,
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
-    navigateState: NavigateState,
-    navigateAction: NavigateAction,
-    drawerAction: DrawerAction,
 ){
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
@@ -67,58 +83,65 @@ private fun HubUi(
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            when(navigateState.index){
-                0 -> TopBar(
+            when(topState.index){
+                NavigationIndex.HubHome -> TopBar(
                     title = stringResource(R.string.app_name),
                     contentDescription = stringResource(R.string.menu_description),
-                    onDrawerOpen = drawerAction.openDrawer,
+                    onDrawerOpen = topAction.openDrawer,
                     scrollBehavior = scrollBehavior,
+                    currentIndex = topState.index,
                 )
-                1 -> TopBar(
+                NavigationIndex.HubTrend -> TopBar(
                     title = stringResource(R.string.app_name),
                     contentDescription = stringResource(R.string.menu_description),
-                    onDrawerOpen = drawerAction.openDrawer,
+                    onDrawerOpen = topAction.openDrawer,
+                    currentIndex = topState.index,
                 )
-                3 -> TopBar(
+                NavigationIndex.HubNotify -> TopBar(
                     title = stringResource(R.string.app_name),
                     contentDescription = stringResource(R.string.menu_description),
-                    onDrawerOpen = drawerAction.openDrawer,
+                    onDrawerOpen = topAction.openDrawer,
+                    currentIndex = topState.index,
                 )
-                4 -> TopStatusBar(
+                NavigationIndex.HubAccount -> TopStatusBar(
                     user = hubUiState.user,
                 )
+                else -> Spacer(modifier = Modifier.padding(0.dp))
             }
         },
         bottomBar = {
             BottomBar(
                 items = HubItem(),
-                currentIndex = navigateState.index,
-            ) { navigateAction.onIndexChange(it) }
+                currentIndex = topState.index,
+                indices = indices,
+            ) { hubUiAction.onNavigate(it) }
         },
         floatingActionButton = {
-            when(navigateState.index){
-                0 -> FloatingButton(iconID = R.drawable.baseline_search_24) { }
-                1 -> FloatingButton(iconID = R.drawable.baseline_search_24) { }
+            when(topState.index){
+                NavigationIndex.HubHome -> FloatingButton(iconID = R.drawable.baseline_search_24) { }
+                NavigationIndex.HubTrend -> FloatingButton(iconID = R.drawable.baseline_search_24) { }
+                else -> Spacer(modifier = Modifier.padding(0.dp))
             }
         }
     ){ innerPadding ->
-        when(navigateState.index){
-            0 -> Home(
+        when(topState.index){
+            NavigationIndex.HubHome -> Home(
                 modifier = Modifier.padding(innerPadding),
             )
-            1 -> Trend(modifier = Modifier.padding(innerPadding))
-            2 -> Post(
+            NavigationIndex.HubTrend -> Trend(modifier = Modifier.padding(innerPadding))
+            NavigationIndex.HubPost -> Post(
                 modifier = Modifier.padding(innerPadding),
                 navController = navController,
                 hubUiState = hubUiState
             )
-            3 -> Notify(modifier = Modifier.padding(innerPadding))
-            4 -> Account(
+            NavigationIndex.HubNotify -> Notify(modifier = Modifier.padding(innerPadding))
+            NavigationIndex.HubAccount -> Account(
                 modifier = Modifier.padding(innerPadding),
                 navController = navController,
                 hubUiState = hubUiState,
                 hubUiAction = hubUiAction,
             )
+            else -> Spacer(modifier = Modifier.padding(0.dp))
         }
     }
 }

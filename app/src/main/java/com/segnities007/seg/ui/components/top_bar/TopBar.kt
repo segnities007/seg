@@ -1,5 +1,7 @@
 package com.segnities007.seg.ui.components.top_bar
 
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
 import com.segnities007.seg.R
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -15,6 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
+import com.segnities007.seg.domain.model.NavigationIndex
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -23,7 +27,7 @@ import kotlinx.coroutines.launch
 fun TopBar(
     modifier: Modifier = Modifier,
     title: String,
-    screenIndex: Int = 0,
+    currentIndex: NavigationIndex,
     contentDescription: String,
     onDrawerOpen: suspend () -> Unit,
     scrollBehavior:  TopAppBarScrollBehavior? = null,
@@ -38,13 +42,16 @@ fun TopBar(
                 titleContentColor = MaterialTheme.colorScheme.primary,
             ),
             navigationIcon = {
-                if(screenIndex != 2 && screenIndex != 3)
-                    IconButton(onClick = { scope.launch{ onDrawerOpen() } }) {
+                when(currentIndex){
+                    NavigationIndex.LoginSignUpCreateAccount -> Spacer(modifier = Modifier.padding(0.dp))
+                    NavigationIndex.LoginSignUpConfirmEmail -> Spacer(modifier = Modifier.padding(0.dp))
+                    else -> IconButton(onClick = { scope.launch{ onDrawerOpen() } }) {
                         Icon(
                             painter = painterResource(id = R.drawable.baseline_menu_24),
                             contentDescription = contentDescription,
                         )
                     }
+                }
             },
             scrollBehavior = scrollBehavior
         )
