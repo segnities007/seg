@@ -6,6 +6,7 @@ import com.segnities007.seg.domain.repository.UserRepository
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.from
+import io.github.jan.supabase.postgrest.query.Columns
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
@@ -58,6 +59,26 @@ class UserRepositoryImpl @Inject constructor(
             return result
         } catch (e: Exception){
             Log.e("UserRepository", "failed to get user. error message is $e")
+            throw Exception()
+        }
+    }
+
+    suspend fun getOtherUser(userID: String): User{
+        val tableName = "users"
+        try {
+            val result = supabaseClient
+                .from(tableName)
+                .select(
+                    columns = Columns.list("name,user_id,birthday,is_prime,icon_url,follow_id_list,follow_count,follower_count,create_at,post_id_list".trimIndent())
+                ) {
+                    filter { User::userID eq userID }
+                }
+                .decodeSingle<User>()
+
+            Log.d("UserRepository", "success getOtherUser")
+            return result
+        } catch (e: Exception){
+            Log.e("UserRepository", "failed to get other user. error message is $e")
             throw Exception()
         }
     }

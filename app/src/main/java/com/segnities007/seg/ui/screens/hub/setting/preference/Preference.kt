@@ -1,4 +1,4 @@
-package com.segnities007.seg.ui.screens.hub.account.config
+package com.segnities007.seg.ui.screens.hub.setting.preference
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,13 +15,13 @@ import androidx.compose.ui.unit.Dp
 import androidx.navigation.NavHostController
 import com.segnities007.seg.R
 import com.segnities007.seg.ui.components.button.SmallButton
-import com.segnities007.seg.ui.screens.hub.account.AccountUiAction
+import com.segnities007.seg.ui.screens.hub.setting.SettingUiAction
 
 @Composable
-fun Config(
+fun Preference(
     modifier: Modifier,
     navController: NavHostController,
-    accountUiAction: AccountUiAction,
+    settingUiAction: SettingUiAction,
     commonPadding: Dp = dimensionResource(R.dimen.padding_normal),
 ){
     Column(
@@ -32,18 +32,18 @@ fun Config(
         Spacer(modifier = Modifier.padding(commonPadding))
         FollowsButton()
         Spacer(modifier = Modifier.padding(commonPadding))
-        ModifyUserInfoButton(accountUiAction = accountUiAction)
+        ModifyUserInfoButton(settingUiAction = settingUiAction)
         Spacer(modifier = Modifier.padding(commonPadding))
-        LogoutButton(navController = navController, accountUiAction = accountUiAction)
+        LogoutButton(navController = navController, settingUiAction = settingUiAction)
     }
 }
 
 @Composable
 private fun ModifyUserInfoButton(
     modifier: Modifier = Modifier,
-    accountUiAction: AccountUiAction,
+    settingUiAction: SettingUiAction,
 ){
-    SmallButton(modifier = Modifier.fillMaxWidth(), textID = R.string.user_info, onClick = {accountUiAction.onIndexChange(1)})
+    SmallButton(modifier = Modifier.fillMaxWidth(), textID = R.string.user_info, onClick = {settingUiAction.onIndexChange(1)})
 }
 
 
@@ -67,7 +67,7 @@ private fun FollowsButton(
 private fun LogoutButton(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    accountUiAction: AccountUiAction,
+    settingUiAction: SettingUiAction,
 ){
-    SmallButton(modifier = Modifier.fillMaxWidth(), textID = R.string.logout, onClick = {accountUiAction.onLogout(navController)})
+    SmallButton(modifier = Modifier.fillMaxWidth(), textID = R.string.logout, onClick = {settingUiAction.onLogout(navController)})
 }

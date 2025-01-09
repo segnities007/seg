@@ -54,6 +54,7 @@ fun Post(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween,
     ) {
+        Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_normal)))
         TopToolBar(postUiAction = postViewModel.getPostUiAction(), postUiState = postViewModel.postUiState, hubUiState = hubUiState)
         InputField(modifier = Modifier.weight(1f), postUiState = postViewModel.postUiState , postUiAction = postViewModel.getPostUiAction())
         BottomToolBar(modifier = Modifier.imePadding(), postUiState = postViewModel.postUiState, postUiAction = postViewModel.getPostUiAction())

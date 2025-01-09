@@ -1,4 +1,4 @@
-package com.segnities007.seg.ui.screens.hub.account.userinfo
+package com.segnities007.seg.ui.screens.hub.setting.userinfo
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -32,8 +32,8 @@ import com.segnities007.seg.R
 import com.segnities007.seg.ui.components.button.BasicButton
 import com.segnities007.seg.ui.screens.hub.HubUiAction
 import com.segnities007.seg.ui.screens.hub.HubUiState
-import com.segnities007.seg.ui.screens.hub.account.AccountUiAction
-import com.segnities007.seg.ui.screens.hub.account.AccountUiState
+import com.segnities007.seg.ui.screens.hub.setting.SettingUiAction
+import com.segnities007.seg.ui.screens.hub.setting.SettingUiState
 import kotlinx.coroutines.launch
 
 //TODO update_at auto change
@@ -46,15 +46,15 @@ fun UserInformation(
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
     userInfoViewModel: UserInfoViewModel = hiltViewModel(),
-    accountUiState: AccountUiState,
-    accountUiAction: AccountUiAction,
+    settingUiState: SettingUiState,
+    settingUiAction: SettingUiAction,
     commonPadding: Dp = dimensionResource(R.dimen.padding_normal)
 ) {
 
-    if(accountUiState.isDatePickerDialogShow){
+    if(settingUiState.isDatePickerDialogShow){
         DatePickerDialog(
-            onDateSelected = accountUiAction.onDateSelect,
-            onDatePickerDismiss = accountUiAction.onDatePickerClose,
+            onDateSelected = settingUiAction.onDateSelect,
+            onDatePickerDismiss = settingUiAction.onDatePickerClose,
         )
     }
 
@@ -68,7 +68,7 @@ fun UserInformation(
         TextFields(hubUiState = hubUiState, userInfoUiState = userInfoViewModel.userInfoUiState, userInfoUiAction = userInfoViewModel.getUserInfoUiAction())
         Spacer(modifier = Modifier.padding(commonPadding))
 
-        SelectionButtons(accountUiAction = accountUiAction, userInfoUiAction = userInfoViewModel.getUserInfoUiAction(), hubUiState = hubUiState, hubUiAction = hubUiAction)
+        SelectionButtons(settingUiAction = settingUiAction, userInfoUiAction = userInfoViewModel.getUserInfoUiAction(), hubUiState = hubUiState, hubUiAction = hubUiAction)
         Spacer(modifier = Modifier.padding(commonPadding))
     }
 
@@ -151,7 +151,7 @@ private fun TextFields(
 @Composable
 private fun SelectionButtons(
     modifier: Modifier = Modifier,
-    accountUiAction: AccountUiAction,
+    settingUiAction: SettingUiAction,
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
     userInfoUiAction: UserInfoUiAction,
@@ -168,7 +168,7 @@ private fun SelectionButtons(
         BasicButton(
             modifier = Modifier.weight(1f).fillMaxWidth(),
             textID = R.string.cancel,
-            onClick = { accountUiAction.onIndexChange(0) },
+            onClick = { settingUiAction.onIndexChange(0) },
         )
         Spacer(modifier = Modifier.padding(commonPadding))
         BasicButton(
@@ -180,7 +180,7 @@ private fun SelectionButtons(
 
                     if(isSuccess){
                         hubUiAction.onGetUser()
-                        accountUiAction.onIndexChange(0)
+                        settingUiAction.onIndexChange(0)
                     }else{
                         //TODO
                     }
