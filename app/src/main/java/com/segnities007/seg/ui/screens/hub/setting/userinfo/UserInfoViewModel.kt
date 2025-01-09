@@ -1,4 +1,4 @@
-package com.segnities007.seg.ui.screens.hub.account.userinfo
+package com.segnities007.seg.ui.screens.hub.setting.userinfo
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

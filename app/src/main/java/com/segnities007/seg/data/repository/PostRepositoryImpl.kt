@@ -52,8 +52,26 @@ class PostRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getMyPosts(ids: List<Int>): List<Post> {
-        TODO("Not yet implemented")
+    override suspend fun getUserPosts(userID: String): List<Post> {
+        val tableName = "posts"
+
+        try {
+            val result = supabaseClient
+                .from(tableName)
+                .select {
+                    filter { Post::userID eq userID }
+                    order("create_at", Order.DESCENDING)
+                    limit(count = 20)
+                }.decodeList<Post>()
+
+            Log.d("PostRepositoryImpl", "success get user posts")
+
+            return result
+
+        } catch (e: Exception){
+            Log.e("PostRepositoryImpl/GetPost", "failed to getPost $e")
+            throw e
+        }
     }
 
     override suspend fun getNewPosts(): List<Post> {

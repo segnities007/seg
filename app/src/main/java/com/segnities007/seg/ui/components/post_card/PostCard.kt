@@ -1,7 +1,6 @@
-package com.segnities007.seg.ui.screens.hub.home
+package com.segnities007.seg.ui.components.post_card
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,11 +11,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -35,7 +32,7 @@ import com.segnities007.seg.data.model.Post
 fun PostCard(
     modifier: Modifier = Modifier.padding(dimensionResource(R.dimen.padding_small)),
     onClick: () -> Unit,
-    onIconClick: () -> Unit,
+    onIconClick: (userID: String) -> Unit,
     post: Post,
     url: String = "https://avatars.githubusercontent.com/u/174174755?v=4",
 ){
@@ -54,7 +51,7 @@ fun PostCard(
                     .padding(dimensionResource(R.dimen.padding_small))
                     .size(dimensionResource(R.dimen.icon_small))
                     .clip(CircleShape)
-                    .clickable { onIconClick() },
+                    .clickable { onIconClick(post.userID) },
                 model = post.iconUrl,
                 contentDescription = url,
                 contentScale = ContentScale.Crop,

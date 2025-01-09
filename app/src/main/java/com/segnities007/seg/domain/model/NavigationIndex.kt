@@ -10,6 +10,7 @@ enum class NavigationIndex {
     HubTrend,
     HubPost,
     HubNotify,
+    HubSetting,
     HubAccount,
     HubSearch,
 }
