@@ -25,6 +25,7 @@ fun Account(
 
     LaunchedEffect(Unit) {
         val action = accountViewModel.getAccountUiAction()
+        action.getOtherUser(hubUiState.userID)
         action.getUserPosts(hubUiState.userID)
     }
 
