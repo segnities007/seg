@@ -22,12 +22,11 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        // local.properties から Supabase の URL と Key を取得して BuildConfig に設定
         val supabaseUrl = getLocalProperty("SUPABASE_URL")
-        val supabaseKey = getLocalProperty("SUPABASE_API_KEY")
+        val supabaseKey = getLocalProperty("SUPABASE_PUBLIC_KEY")
 
         buildConfigField("String", "SUPABASE_URL", "\"$supabaseUrl\"")
-        buildConfigField("String", "SUPABASE_API_KEY", "\"$supabaseKey\"")
+        buildConfigField("String", "SUPABASE_PUBLIC_KEY", "\"$supabaseKey\"")
     }
 
     buildTypes {

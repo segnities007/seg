@@ -18,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,9 +37,6 @@ import com.segnities007.seg.ui.screens.hub.setting.SettingUiAction
 import com.segnities007.seg.ui.screens.hub.setting.SettingUiState
 import kotlinx.coroutines.launch
 
-//TODO update_at auto change
-//TODO add button for changing icon
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserInformation(
@@ -50,6 +48,12 @@ fun UserInformation(
     settingUiAction: SettingUiAction,
     commonPadding: Dp = dimensionResource(R.dimen.padding_normal)
 ) {
+
+    LaunchedEffect(Unit) {
+        val action = userInfoViewModel.getUserInfoUiAction()
+        action.onNameChange(hubUiState.user.name)
+        action.onUserIDChange(hubUiState.user.userID)
+    }
 
     if(settingUiState.isDatePickerDialogShow){
         DatePickerDialog(
@@ -67,7 +71,6 @@ fun UserInformation(
     ){
         TextFields(hubUiState = hubUiState, userInfoUiState = userInfoViewModel.userInfoUiState, userInfoUiAction = userInfoViewModel.getUserInfoUiAction())
         Spacer(modifier = Modifier.padding(commonPadding))
-
         SelectionButtons(settingUiAction = settingUiAction, userInfoUiAction = userInfoViewModel.getUserInfoUiAction(), hubUiState = hubUiState, hubUiAction = hubUiAction)
         Spacer(modifier = Modifier.padding(commonPadding))
     }

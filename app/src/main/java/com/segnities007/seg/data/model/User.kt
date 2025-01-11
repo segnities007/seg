@@ -10,10 +10,12 @@ data class User(
 
     val id: String = "", // UUID を表す文字列
 
-    val name: String = "NoName",
-
     @SerialName("user_id")
     val userID: String = "NoID", //＠は後付
+
+    val name: String = "NoName",
+
+    val description: String = "",
 
     @Serializable(with = LocalDateSerializer::class)
     val birthday: LocalDate? = null,
@@ -25,13 +27,19 @@ data class User(
     val iconUrl: String? = null,
 
     @SerialName("follow_id_list")
-    val follows: List<Int> = listOf(),
+    val follows: List<String> = listOf(),
 
     @SerialName("follow_count")
     val followCount: Int = 0,
 
+    @SerialName("Follower_id_list")
+    val followers: List<String> = listOf(),
+
     @SerialName("follower_count")
     val followerCount: Int = 0,
+
+    @SerialName("post_id_list")
+    val posts: List<Int> = listOf(),
 
     @SerialName("create_at")
     @Serializable(with = LocalDateTimeSerializer::class)
@@ -41,6 +49,4 @@ data class User(
     @Serializable(with = LocalDateTimeSerializer::class)
     val updateAt: LocalDateTime = LocalDateTime.now(),
 
-    @SerialName("post_id_list")
-    val posts: List<Int> = listOf(),
 )

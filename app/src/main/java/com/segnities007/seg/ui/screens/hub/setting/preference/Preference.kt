@@ -32,20 +32,9 @@ fun Preference(
         Spacer(modifier = Modifier.padding(commonPadding))
         FollowsButton()
         Spacer(modifier = Modifier.padding(commonPadding))
-        ModifyUserInfoButton(settingUiAction = settingUiAction)
-        Spacer(modifier = Modifier.padding(commonPadding))
         LogoutButton(navController = navController, settingUiAction = settingUiAction)
     }
 }
-
-@Composable
-private fun ModifyUserInfoButton(
-    modifier: Modifier = Modifier,
-    settingUiAction: SettingUiAction,
-){
-    SmallButton(modifier = Modifier.fillMaxWidth(), textID = R.string.user_info, onClick = {settingUiAction.onIndexChange(1)})
-}
-
 
 @Composable
 private fun FollowsButton(

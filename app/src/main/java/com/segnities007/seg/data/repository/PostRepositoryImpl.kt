@@ -34,21 +34,63 @@ class PostRepositoryImpl @Inject constructor(
                     select()
                 }.decodeSingle<Post>()
 
-            val postID = result.id // getPostID()の結果を変数に格納
-            Log.d("PostRepositoryImpl", "getPostID() returns: $postID") // ログ出力
+            val postID = result.id
 
             if(user.posts.isNotEmpty()){
                 user.copy(posts = user.posts + postID)
             }else{
                 user.copy(posts = listOf(postID))
             }
-             // ここでエラーが発生している可能性
 
             Log.d("PostRepositoryImpl", "success create post")
             return true
         } catch (e: Exception){
             Log.d("UserRepositoryImpl39", "error $e")
-            throw Exception() // このthrowは不要。後述
+        }
+        return false
+    }
+
+    suspend fun removeLikePost(post: Post){
+        val tableName = "posts"
+
+        try {
+            supabaseClient
+                .from(tableName)
+                .update({
+                    Post::likeCount setTo (post.likeCount - 1)
+                }){
+                    filter {
+                        Post::id eq post.id
+                    }
+                }
+
+            Log.d("PostRepositoryImpl", "success remove like posts")
+
+        }catch (e: Exception){
+            Log.e("PostRepositoryImpl/likePost", "failed to likePost $e")
+            throw e
+        }
+    }
+
+    suspend fun likePost(post: Post){
+        val tableName = "posts"
+
+        try {
+            supabaseClient
+                .from(tableName)
+                .update({
+                    Post::likeCount setTo (post.likeCount + 1)
+                }){
+                    filter {
+                        Post::id eq post.id
+                    }
+                }
+
+            Log.d("PostRepositoryImpl", "success like posts")
+
+        }catch (e: Exception){
+            Log.e("PostRepositoryImpl/likePost", "failed to likePost $e")
+            throw e
         }
     }
 

@@ -38,7 +38,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil3.compose.rememberAsyncImagePainter
 import com.segnities007.seg.R
+import com.segnities007.seg.domain.model.NavigationIndex
 import com.segnities007.seg.ui.components.button.SmallButton
+import com.segnities007.seg.ui.screens.hub.HubUiAction
 import com.segnities007.seg.ui.screens.hub.HubUiState
 
 @Composable
@@ -46,16 +48,17 @@ fun Post(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     hubUiState: HubUiState,
+    hubUiAction: HubUiAction,
     postViewModel: PostViewModel = hiltViewModel(),
 ) {
 
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceBetween,
     ) {
+
         Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_normal)))
-        TopToolBar(postUiAction = postViewModel.getPostUiAction(), postUiState = postViewModel.postUiState, hubUiState = hubUiState)
+        TopToolBar(postUiAction = postViewModel.getPostUiAction(), postUiState = postViewModel.postUiState, hubUiState = hubUiState, hubUiAction = hubUiAction)
         InputField(modifier = Modifier.weight(1f), postUiState = postViewModel.postUiState , postUiAction = postViewModel.getPostUiAction())
         BottomToolBar(modifier = Modifier.imePadding(), postUiState = postViewModel.postUiState, postUiAction = postViewModel.getPostUiAction())
     }
@@ -90,6 +93,7 @@ private fun InputField(
 private fun TopToolBar(
     modifier: Modifier = Modifier,
     hubUiState: HubUiState,
+    hubUiAction: HubUiAction,
     postUiState: PostUiState,
     postUiAction: PostUiAction,
 ){
@@ -105,6 +109,7 @@ private fun TopToolBar(
                 onClick = {
                     postUiAction.onPostCreate(hubUiState.user)
                     postUiAction.onInputTextChange("")
+                    hubUiAction.onNavigate(NavigationIndex.HubHome)
                 }
             )
         }

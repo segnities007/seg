@@ -11,7 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.segnities007.seg.domain.model.NavigationIndex
-import com.segnities007.seg.ui.components.post_card.PostCard
+import com.segnities007.seg.ui.components.card.PostCard
 import com.segnities007.seg.ui.screens.hub.HubUiAction
 import com.segnities007.seg.ui.screens.hub.HubUiState
 
@@ -36,12 +36,14 @@ fun Home(
     ){
         for (post in homeViewModel.homeUiState.posts) {
             PostCard(
-                onClick = {},
-                onIconClick = { userID: String ->
+                onCardClick = {},
+                onAvatarClick = { userID: String ->
                     hubUiAction.onGetUserID(userID)
                     hubUiAction.onNavigate(NavigationIndex.HubAccount)
                               },
-                post = post
+                hubUiState = hubUiState,
+                hubUiAction = hubUiAction,
+                post = post,
             )
         }
     }

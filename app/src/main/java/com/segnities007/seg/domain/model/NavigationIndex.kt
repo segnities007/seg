@@ -12,5 +12,6 @@ enum class NavigationIndex {
     HubNotify,
     HubSetting,
     HubAccount,
+    HubAccounts,
     HubSearch,
 }

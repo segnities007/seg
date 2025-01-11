@@ -32,7 +32,7 @@ fun Login(
 ){
     val indices = listOf(
         NavigationIndex.LoginSignIn,
-        NavigationIndex.LoginSignUp
+        NavigationIndex.LoginSignUp,
     )
 
     LaunchedEffect(Unit) {
@@ -84,7 +84,7 @@ private fun LoginUi(
                  },
         bottomBar = {
             when(topState.index){
-                NavigationIndex.LoginSignUp -> BottomBar(
+                NavigationIndex.LoginSignIn -> BottomBar(
                     currentIndex = topState.index,
                     items = LoginItem(),
                     onClick = topAction.onNavigate,

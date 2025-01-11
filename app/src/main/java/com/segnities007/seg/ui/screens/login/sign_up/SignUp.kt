@@ -36,9 +36,7 @@ fun SignUp(
 
 
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(dimensionResource(R.dimen.padding_large)),
+        modifier = Modifier.fillMaxSize().padding(dimensionResource(R.dimen.padding_large)),
         contentAlignment = Alignment.Center,
     ){
         Card {
@@ -60,7 +58,7 @@ fun SignUp(
                 Row{
                     BasicButton(
                         modifier = Modifier.weight(1f),
-                        textID = R.string.enter,
+                        textID = R.string.sign_up,
                         onClick = { signUiAction.onSignUpWithEmailPassword() }
                     )
                 }
