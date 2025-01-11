@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -24,6 +25,7 @@ import com.segnities007.seg.ui.components.floating_button.FloatingButton
 import com.segnities007.seg.ui.components.navigation_drawer.NavigationDrawer
 import com.segnities007.seg.ui.components.top_bar.TopStatusBar
 import com.segnities007.seg.ui.screens.hub.account.Account
+import com.segnities007.seg.ui.screens.hub.account.Accounts
 import com.segnities007.seg.ui.screens.hub.setting.Setting
 import com.segnities007.seg.ui.screens.hub.home.Home
 import com.segnities007.seg.ui.screens.hub.notify.Notify
@@ -104,9 +106,6 @@ private fun HubUi(
                     onDrawerOpen = topAction.openDrawer,
                     currentIndex = topState.index,
                 )
-                NavigationIndex.HubSetting -> TopStatusBar(
-                    user = hubUiState.user,
-                )
                 else -> Spacer(modifier = Modifier.padding(0.dp))
             }
         },
@@ -117,13 +116,13 @@ private fun HubUi(
                 indices = indices,
             ) { hubUiAction.onNavigate(it) }
         },
-        floatingActionButton = {
-            when(topState.index){
-                NavigationIndex.HubHome -> FloatingButton(iconID = R.drawable.baseline_search_24) { }
-                NavigationIndex.HubTrend -> FloatingButton(iconID = R.drawable.baseline_search_24) { }
-                else -> Spacer(modifier = Modifier.padding(0.dp))
-            }
-        }
+//        floatingActionButton = {
+//            when(topState.index){
+//                NavigationIndex.HubHome -> FloatingButton(iconID = R.drawable.baseline_search_24) { }
+//                NavigationIndex.HubTrend -> FloatingButton(iconID = R.drawable.baseline_search_24) { }
+//                else -> Spacer(modifier = Modifier.padding(0.dp))
+//            }
+//        }
     ){ innerPadding ->
         when(topState.index){
             NavigationIndex.HubHome -> Home(
@@ -135,7 +134,8 @@ private fun HubUi(
             NavigationIndex.HubPost -> Post(
                 modifier = Modifier.padding(innerPadding),
                 navController = navController,
-                hubUiState = hubUiState
+                hubUiAction =  hubUiAction,
+                hubUiState = hubUiState,
             )
             NavigationIndex.HubNotify -> Notify(modifier = Modifier.padding(innerPadding))
             NavigationIndex.HubSetting -> Setting(
@@ -149,7 +149,11 @@ private fun HubUi(
                 hubUiState = hubUiState,
                 hubUiAction = hubUiAction,
             )
-            else -> Spacer(modifier = Modifier.padding(0.dp))
+            NavigationIndex.HubAccounts -> Accounts(
+                modifier = Modifier.padding(innerPadding),
+                hubUiState = hubUiState,
+            )
+            else -> Text("maybe navigation point isn't set.")
         }
     }
 }

@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 
 data class HubUiState(
     val user: User = User(),
-    val userID: String = "",
+    val userID: String = "",// of other user
 )
 
 data class HubUiAction(

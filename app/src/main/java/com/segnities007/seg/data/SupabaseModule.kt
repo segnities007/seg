@@ -23,13 +23,12 @@ import io.github.jan.supabase.storage.storage
 @Module
 object SupabaseModule {
 
-
     @Provides
     @Singleton
     fun provideSupabaseClient(): SupabaseClient {
         return createSupabaseClient(
             supabaseUrl = BuildConfig.SUPABASE_URL,
-            supabaseKey = BuildConfig.SUPABASE_API_KEY,
+            supabaseKey = BuildConfig.SUPABASE_PUBLIC_KEY,
         ) {
             install(Postgrest)
             install(Auth)

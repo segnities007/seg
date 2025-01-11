@@ -1,4 +1,4 @@
-package com.segnities007.seg.ui.components.post_card
+package com.segnities007.seg.ui.components.card
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -27,13 +27,17 @@ import androidx.compose.ui.res.stringResource
 import coil3.compose.AsyncImage
 import com.segnities007.seg.R
 import com.segnities007.seg.data.model.Post
+import com.segnities007.seg.ui.screens.hub.HubUiAction
+import com.segnities007.seg.ui.screens.hub.HubUiState
 
 @Composable
 fun PostCard(
     modifier: Modifier = Modifier.padding(dimensionResource(R.dimen.padding_small)),
-    onClick: () -> Unit,
-    onIconClick: (userID: String) -> Unit,
+    onCardClick: () -> Unit,
+    onAvatarClick: (userID: String) -> Unit,
     post: Post,
+    hubUiState: HubUiState,
+    hubUiAction: HubUiAction,
     url: String = "https://avatars.githubusercontent.com/u/174174755?v=4",
 ){
     ElevatedCard(
@@ -45,13 +49,13 @@ fun PostCard(
             ),
         elevation =  CardDefaults.cardElevation(dimensionResource(R.dimen.elevation_small)),
     ){
-        Row(modifier = Modifier.clickable { onClick() }.fillMaxWidth(),){
+        Row(modifier = Modifier.clickable { onCardClick() }.fillMaxWidth(),){
             AsyncImage(
                 modifier = Modifier
                     .padding(dimensionResource(R.dimen.padding_small))
                     .size(dimensionResource(R.dimen.icon_small))
                     .clip(CircleShape)
-                    .clickable { onIconClick(post.userID) },
+                    .clickable { onAvatarClick(post.userID) },
                 model = post.iconUrl,
                 contentDescription = url,
                 contentScale = ContentScale.Crop,
@@ -60,7 +64,7 @@ fun PostCard(
                 Name(modifier = modifier, post = post)
                 Description(modifier = modifier, post = post)
                 Images(modifier = modifier, post = post)
-                ActionIcons(modifier = modifier, post = post)
+                ActionIcons(modifier = modifier, post = post, hubUiState = hubUiState, hubUiAction = hubUiAction)
             }
         }
     }
@@ -105,12 +109,21 @@ private fun Images(
 @Composable
 private fun ActionIcons(
     modifier: Modifier = Modifier,
+    hubUiState: HubUiState,
+    hubUiAction: HubUiAction,
     post: Post,
 ){
-    val painterResources = listOf(
+    val pushIcons = listOf(
         R.drawable.baseline_favorite_24,
         R.drawable.baseline_repeat_24,
         R.drawable.baseline_chat_bubble_24,
+        R.drawable.baseline_bar_chart_24,
+    )
+
+    val unPushIcons = listOf(
+        R.drawable.baseline_favorite_border_24,
+        R.drawable.baseline_repeat_24,
+        R.drawable.baseline_chat_bubble_outline_24,
         R.drawable.baseline_bar_chart_24,
     )
 
@@ -133,10 +146,11 @@ private fun ActionIcons(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceEvenly,
     ){
-        for(i in painterResources.indices){
+        for(i in pushIcons.indices){
+
             ActionIcon(
                 modifier = modifier,
-                painterRes = painterResources[i],
+                painterRes = pushIcons[i],
                 contentRes = contentDescriptions[i],
                 count = counts[i],
             )

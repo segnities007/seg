@@ -35,5 +35,7 @@
     <string name="new_user_id">New user id</string>
     <string name="new_birthday">New birthday</string>
     <string name="new_icon">New icon</string>
+    <string name="sign_in">Sign In</string>
+    <string name="sign_up">Sign Up</string>
 </resources>
 

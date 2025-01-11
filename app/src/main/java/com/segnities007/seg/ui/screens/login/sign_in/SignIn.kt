@@ -73,7 +73,7 @@ fun SignIn(
                 Row{
                     BasicButton(
                         modifier = Modifier.weight(1f),
-                        textID = R.string.enter,
+                        textID = R.string.sign_in,
                         onClick = { signUiAction.onSignInWithEmailPassword(navController) }
                     )
                 }

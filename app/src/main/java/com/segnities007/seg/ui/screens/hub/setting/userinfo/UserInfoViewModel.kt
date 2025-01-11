@@ -9,6 +9,7 @@ import com.segnities007.seg.data.repository.UserRepositoryImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 data class UserInfoUiState(
@@ -47,7 +48,7 @@ class UserInfoViewModel @Inject constructor(
 
     private suspend fun onUserUpdate(user: User): Boolean{
         return withContext(Dispatchers.IO){
-            val newUser = user.copy(name = userInfoUiState.name, userID = userInfoUiState.userID)
+            val newUser = user.copy(name = userInfoUiState.name, userID = userInfoUiState.userID, updateAt = LocalDateTime.now())
             userRepositoryImpl.updateUser(newUser)
         }
     }
