@@ -96,7 +96,7 @@ class PostRepositoryImpl @Inject constructor(
             val result = postgrest.from(tableName).select {
                     filter { Post::userID eq userID }
                     order("create_at", Order.DESCENDING)
-                    limit(count = 5)
+                    limit(count = 7)
                 }.decodeList<Post>()
             return result
 
@@ -124,7 +124,7 @@ class PostRepositoryImpl @Inject constructor(
         try {
             val result = postgrest.from(tableName).select {
                     order("create_at", Order.DESCENDING)
-                    limit(count = 5)
+                    limit(count = 7)
                 }.decodeList<Post>()
             return result
 

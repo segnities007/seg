@@ -134,7 +134,6 @@ private fun HubUi(
         when(topState.index){
             NavigationIndex.HubHome -> Home(
                 modifier = Modifier.padding(innerPadding),
-                hubUiState = hubUiState,
                 hubUiAction = hubUiAction,
             )
             NavigationIndex.HubTrend -> Trend(modifier = Modifier.padding(innerPadding))

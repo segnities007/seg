@@ -55,7 +55,15 @@ class ImageRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getImages(imageIDs: List<Int>): List<Image> {
-        TODO("Not yet implemented")
+        val images = mutableListOf<Image>()
+
+        if(imageIDs.isEmpty()) return listOf()
+
+        for(id in imageIDs){
+            images.add(getImage(id))
+        }
+
+        return images
     }
 
     override suspend fun updateImage(image: Image) {

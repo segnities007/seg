@@ -109,6 +109,7 @@ private fun TopToolBar(
                 textID = R.string.post,
                 onClick = {
                     postUiAction.onCreatePost(hubUiState.user, postUiState.byteArrayList)
+                    postUiAction.onGetByteArrayList(listOf())
                     postUiAction.onUpdateInputText("")
                     hubUiAction.onNavigate(NavigationIndex.HubHome)
                 }

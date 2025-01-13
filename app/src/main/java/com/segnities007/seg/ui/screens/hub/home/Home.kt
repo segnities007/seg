@@ -15,20 +15,17 @@ import com.segnities007.seg.domain.model.NavigationIndex
 import com.segnities007.seg.ui.components.card.PostCard
 import com.segnities007.seg.ui.components.card.PostCardViewModel
 import com.segnities007.seg.ui.screens.hub.HubUiAction
-import com.segnities007.seg.ui.screens.hub.HubUiState
-
 
 @Composable
 fun Home(
     modifier: Modifier,
-    hubUiState: HubUiState,
     hubUiAction: HubUiAction,
     postCardViewModel: PostCardViewModel = hiltViewModel(),
     homeViewModel: HomeViewModel = hiltViewModel(),
 ){
     LaunchedEffect(Unit) {
-        val action = homeViewModel.getHomeUiAction()
-        action.onGetNewPosts()
+        val postCardUiAction = postCardViewModel.onGetPostCardUiAction()
+        postCardUiAction.onGetNewPosts()
     }
 
     Column (
@@ -36,19 +33,13 @@ fun Home(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
     ){
-        for (i in 0 until homeViewModel.homeUiState.posts.size) {
-            val homeUiState = homeViewModel.homeUiState
-
-            LaunchedEffect(Unit) {
-                val action = homeViewModel.getHomeUiAction()
-                action.onGetIcon(homeViewModel.homeUiState.posts[i].iconID)
-            }
+        for (i in 0 until postCardViewModel.postCardUiState.posts.size) {
 
             PostCard(
-                onCardClick = {},
-                post = homeUiState.posts[i],
-                images = homeUiState.images[i],
-                icon = homeUiState.icon,
+                onCardClick = {/*TODO*/},
+                post = postCardViewModel.postCardUiState.posts[i],
+                images = postCardViewModel.postCardUiState.imageLists[i],
+                icon = postCardViewModel.postCardUiState.icons[i],
                 onInitializeAction = { post: Post ->
                     postCardViewModel.onGetPostCardUiAction().onIncrementViewCount(post)
                 },
@@ -57,6 +48,8 @@ fun Home(
                     hubUiAction.onNavigate(NavigationIndex.HubAccount)
                 },
             )
+
+
         }
     }
 
