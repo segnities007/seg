@@ -1,16 +1,20 @@
 package com.segnities007.seg.ui.components.top_bar
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -21,9 +25,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.segnities007.seg.R
 import com.segnities007.seg.data.model.User
@@ -89,28 +96,35 @@ private fun Status(
     onClickFollowsButton: () -> Unit,
     onClickFollowersButton: () -> Unit,
     commonPadding: Dp = dimensionResource(R.dimen.padding_smaller),
+    fontColor: Color = MaterialTheme.colorScheme.primary,
 ){
 
     Column(verticalArrangement = Arrangement.Center,){
-        Row(horizontalArrangement = Arrangement.Center,){
-            Text(text = user.name)
-            Text(text = "@${user.userID}")
+        Column(
+            modifier = Modifier.padding(horizontal = commonPadding)
+        ){
+                Text(text = "Name: ${user.name}", color = fontColor,)
+                Text(text = "UserID: ${user.userID}", color = fontColor,)
         }
         Spacer(modifier = Modifier.padding(commonPadding))
         Row(horizontalArrangement = Arrangement.Center,){
-            TextButton(
-                onClick = {
-                    onClickFollowsButton()
-                    hubUiAction.onNavigate(NavigationIndex.HubAccounts)
-                }
-            ){ Text(text = "Follow: ${user.followCount}") }
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(commonPadding))
+                    .clickable {
+                        onClickFollowsButton()
+                        hubUiAction.onNavigate(NavigationIndex.HubAccounts) }
+                    .padding(commonPadding)
+            ){ Text(text = "Follow: ${user.followCount}", color = fontColor,) }
             Spacer(modifier = Modifier.padding(commonPadding))
-            TextButton(
-                onClick = {
-                    onClickFollowersButton()
-                    hubUiAction.onNavigate(NavigationIndex.HubAccounts)
-                }
-            ) { Text(text = "Follower: ${user.followerCount}") }
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(commonPadding))
+                    .clickable {
+                        onClickFollowersButton()
+                        hubUiAction.onNavigate(NavigationIndex.HubAccounts) }
+                    .padding(commonPadding)
+            ) { Text(text = "Follower: ${user.followerCount}", color = fontColor) }
         }
     }
 
