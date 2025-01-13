@@ -21,7 +21,6 @@ class AuthRepositoryImpl @Inject constructor(
     ) {
         auth.awaitInitialization()
         val currentUser = auth.currentUserOrNull()
-        Log.d("SplashAuth", "currentUser is $currentUser")
         if (currentUser != null) {
             navController.navigate(route = Hub)
         } else {
@@ -45,7 +44,7 @@ class AuthRepositoryImpl @Inject constructor(
             }
             true
         } catch (e: Exception){
-            Log.e("AuthRepositoryImpl", "$e")
+            Log.e(tag, "$e")
             false
         }
     }
@@ -56,14 +55,14 @@ class AuthRepositoryImpl @Inject constructor(
         password: String,
     ): Boolean {
         return try {
-            val result = auth.signUpWith(Email){
+            auth.signUpWith(Email){
                 this.email = email
                 this.password = password
             }
-            Log.d(tag, "result is $result")
             true
+
         } catch (e: Exception){
-            Log.e("AuthRepositoryImpl", "$e")
+            Log.e(tag, "$e")
             false
         }
     }

@@ -18,15 +18,21 @@ class ImageRepositoryImpl @Inject constructor(
     override suspend fun postImage(byteArray: ByteArray): Image {
         try {
             val image = Image()
+
+            //get new image added id
             val result = postgrest.from(tableName).insert(image){
                 select()
             }.decodeSingle<Image>()
+
+            //get url
             val path = storageRepository.postImages(result, byteArray)
             val newImage = result.copy(imageUrl = path)
+
+            //set image for url
             updateImage(newImage)
 
-            Log.d(tag, "success create image")
             return newImage
+
         }catch (e: Exception){
             Log.d(tag, "failed to create image. error message is $e")
             throw e

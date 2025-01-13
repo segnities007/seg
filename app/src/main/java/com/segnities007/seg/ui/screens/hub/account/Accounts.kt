@@ -31,9 +31,9 @@ fun Accounts(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
     ){
-        TopStatusBar(accountViewModel.accountUiState.user, onSettingClick = {/*TODO*/})
+        TopStatusBar(accountViewModel.accountUiState.user, onSettingClick = {})
 
-        repeat(100){
+        repeat(20){
             AvatarCard(
                 onCardClick = {},
             )
