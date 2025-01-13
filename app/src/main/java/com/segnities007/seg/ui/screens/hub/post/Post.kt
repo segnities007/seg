@@ -29,6 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -40,6 +41,7 @@ import coil3.compose.rememberAsyncImagePainter
 import com.segnities007.seg.R
 import com.segnities007.seg.domain.model.NavigationIndex
 import com.segnities007.seg.ui.components.button.SmallButton
+import com.segnities007.seg.ui.components.card.PostCardViewModel
 import com.segnities007.seg.ui.screens.hub.HubUiAction
 import com.segnities007.seg.ui.screens.hub.HubUiState
 
@@ -56,9 +58,8 @@ fun Post(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-
         Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_normal)))
-        TopToolBar(postUiAction = postViewModel.getPostUiAction(), postUiState = postViewModel.postUiState, hubUiState = hubUiState, hubUiAction = hubUiAction)
+        TopToolBar(postUiState = postViewModel.postUiState, postUiAction = postViewModel.getPostUiAction(), hubUiState = hubUiState, hubUiAction = hubUiAction)
         InputField(modifier = Modifier.weight(1f), postUiState = postViewModel.postUiState , postUiAction = postViewModel.getPostUiAction())
         BottomToolBar(modifier = Modifier.imePadding(), postUiState = postViewModel.postUiState, postUiAction = postViewModel.getPostUiAction())
     }
@@ -75,7 +76,7 @@ private fun InputField(
     TextField(
         modifier = modifier.padding(horizontal = dimensionResource(R.dimen.padding_small)).fillMaxSize(),
         value = postUiState.inputText,
-        onValueChange = { postUiAction.onInputTextChange(it) },
+        onValueChange = { postUiAction.onUpdateInputText(it) },
         label = { Text(stringResource(R.string.post_label)) },
         textStyle = TextStyle.Default.copy(fontSize = 24.sp),
         shape = RoundedCornerShape(dimensionResource(R.dimen.rounded_corner_shape)),
@@ -102,13 +103,13 @@ private fun TopToolBar(
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            SmallButton(textID = R.string.clear, onClick = { postUiAction.onInputTextChange("")  })
+            SmallButton(textID = R.string.clear, onClick = { postUiAction.onUpdateInputText("")  })
             Spacer(modifier = Modifier.weight(1f))
             SmallButton(
                 textID = R.string.post,
                 onClick = {
-                    postUiAction.onPostCreate(hubUiState.user)
-                    postUiAction.onInputTextChange("")
+                    postUiAction.onCreatePost(hubUiState.user, postUiState.byteArrayList)
+                    postUiAction.onUpdateInputText("")
                     hubUiAction.onNavigate(NavigationIndex.HubHome)
                 }
             )
@@ -123,10 +124,20 @@ private fun BottomToolBar(
     postUiAction: PostUiAction,
 ) {
     val maxNumberOfItem = 4
-    val pickMultipleMedia = rememberLauncherForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(maxNumberOfItem)) { uris ->
-        if (uris.isNotEmpty()) postUiAction.onSelectedUrisChange(uris.map { it.toString() })
-    }
 
+    val context = LocalContext.current
+
+    // 画像選択
+    val pickMultipleMedia = rememberLauncherForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(maxNumberOfItem)) { uris ->
+        if (uris.isNotEmpty()) {
+            val byteArrayList = uris.mapNotNull { uri ->
+                context.contentResolver.openInputStream(uri)?.use { inputStream ->
+                    inputStream.readBytes() // InputStreamをByteArrayに変換
+                }
+            }
+            postUiAction.onGetByteArrayList(byteArrayList)
+        }
+    }
 
     ElevatedCard(
         elevation = CardDefaults.cardElevation(dimensionResource(R.dimen.elevation_small)),
@@ -150,29 +161,27 @@ private fun BottomToolBar(
                 IconButton(
                     iconResource = R.drawable.baseline_close_24,
                     iconDescription = R.string.image,
-                    onClick = { postUiAction.onSelectedUrisChange(listOf()) },
+                    onClick = { postUiAction.onGetUris(listOf()) },
                 )
 
                 postUiState.selectedUris.forEach { uri ->
-
                     Box(
                         modifier = Modifier
-                            .clickable { /*TODO*/ }
+                            .clickable { /*TODO: 必要なアクション*/ }
                             .size(dimensionResource(R.dimen.icon_normal))
                             .padding(dimensionResource(R.dimen.padding_small)),
-                    ){
+                    ) {
                         Image(
                             painter = rememberAsyncImagePainter(uri),
-                            contentDescription = "Selected Image",//TODO Modify
+                            contentDescription = "Selected Image",
                         )
                     }
                 }
             }
-
         }
     }
-
 }
+
 
 @Composable
 private fun IconButton(

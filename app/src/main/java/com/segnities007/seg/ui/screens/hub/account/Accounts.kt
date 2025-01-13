@@ -23,7 +23,7 @@ fun Accounts(
 
     LaunchedEffect(Unit) {
         val action = accountViewModel.getAccountUiAction()
-        action.getOtherUser(hubUiState.userID)
+        action.onGetOtherUser(hubUiState.userID)
     }
 
     Column(

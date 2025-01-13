@@ -16,6 +16,7 @@ import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,20 +27,28 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import coil3.compose.AsyncImage
 import com.segnities007.seg.R
+import com.segnities007.seg.data.model.Image
 import com.segnities007.seg.data.model.Post
+import com.segnities007.seg.data.repository.PostRepositoryImpl
 import com.segnities007.seg.ui.screens.hub.HubUiAction
 import com.segnities007.seg.ui.screens.hub.HubUiState
 
 @Composable
 fun PostCard(
     modifier: Modifier = Modifier.padding(dimensionResource(R.dimen.padding_small)),
+    onInitializeAction: (post: Post) -> Unit,
     onCardClick: () -> Unit,
     onAvatarClick: (userID: String) -> Unit,
     post: Post,
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
-    url: String = "https://avatars.githubusercontent.com/u/174174755?v=4",
+    icon: Image = Image(),
+    images: List<Image>,
 ){
+    LaunchedEffect(Unit) {
+        onInitializeAction(post)
+    }
+
     ElevatedCard(
         modifier = Modifier
             .padding(
@@ -56,14 +65,14 @@ fun PostCard(
                     .size(dimensionResource(R.dimen.icon_small))
                     .clip(CircleShape)
                     .clickable { onAvatarClick(post.userID) },
-                model = post.iconUrl,
-                contentDescription = url,
+                model = icon.imageUrl,
+                contentDescription = icon.imageUrl,
                 contentScale = ContentScale.Crop,
             )
             Column(){
                 Name(modifier = modifier, post = post)
                 Description(modifier = modifier, post = post)
-                Images(modifier = modifier, post = post)
+                Images(modifier = modifier, post = post, images = images)
                 ActionIcons(modifier = modifier, post = post, hubUiState = hubUiState, hubUiAction = hubUiAction)
             }
         }
@@ -96,14 +105,16 @@ private fun Description(
 @Composable
 private fun Images(
     modifier: Modifier = Modifier,
+    images: List<Image>,
     post: Post,
 ){
-    for (element in post.images)
+    for (image in images) {
         AsyncImage(
             modifier = modifier,
-            model = element,
+            model = image.imageUrl,
             contentDescription = ""
         )
+    }
 }
 
 @Composable

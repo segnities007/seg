@@ -1,42 +1,51 @@
 package com.segnities007.seg.data.repository
 
 import android.util.Log
-import com.segnities007.seg.Hub
-import com.segnities007.seg.Login
 import com.segnities007.seg.data.model.Post
 import com.segnities007.seg.data.model.User
+import com.segnities007.seg.domain.repository.ImageRepository
 import com.segnities007.seg.domain.repository.PostRepository
-import io.github.jan.supabase.SupabaseClient
-import io.github.jan.supabase.auth.auth
-import io.github.jan.supabase.postgrest.from
+import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.postgrest.query.Order
 import javax.inject.Inject
 
 class PostRepositoryImpl @Inject constructor(
-    private val supabaseClient: SupabaseClient,
+    private val postgrest: Postgrest,
+    private val imageRepository: ImageRepository,
 ): PostRepository {
+
+    private val tag = "PostRepositoryImpl"
+    private val tableName = "posts"
 
     override suspend fun createPost(
         description: String,
         user: User,
+        byteArrayList: List<ByteArray>,
     ): Boolean {
+
+        Log.d(tag, "$description")
         val tableName = "posts"
-        val post = Post(
-            userID = user.userID,
-            name = user.name,
-            description = description,
-        )
+        val imageIDs: MutableList<Int> = mutableListOf()
 
         try {
-            val result = supabaseClient
-                .from(tableName)
-                .upsert(post){
+            for(byteArray in byteArrayList){
+                imageIDs.add(imageRepository.postImage(byteArray).id)
+            }
+
+            val post = Post(
+                userID = user.userID,
+                name = user.name,
+                description = description,
+                imageIDs = imageIDs.toList(),
+            )
+
+            val result = postgrest.from(tableName).insert(post){
                     select()
                 }.decodeSingle<Post>()
 
             val postID = result.id
 
-            if(user.posts.isNotEmpty()){
+            if(!user.posts.isNullOrEmpty()){
                 user.copy(posts = user.posts + postID)
             }else{
                 user.copy(posts = listOf(postID))
@@ -45,7 +54,7 @@ class PostRepositoryImpl @Inject constructor(
             Log.d("PostRepositoryImpl", "success create post")
             return true
         } catch (e: Exception){
-            Log.d("UserRepositoryImpl39", "error $e")
+            Log.d("UserRepositoryImpl", "error $e")
         }
         return false
     }
@@ -54,9 +63,7 @@ class PostRepositoryImpl @Inject constructor(
         val tableName = "posts"
 
         try {
-            supabaseClient
-                .from(tableName)
-                .update({
+            postgrest.from(tableName).update({
                     Post::likeCount setTo (post.likeCount - 1)
                 }){
                     filter {
@@ -76,9 +83,7 @@ class PostRepositoryImpl @Inject constructor(
         val tableName = "posts"
 
         try {
-            supabaseClient
-                .from(tableName)
-                .update({
+            postgrest.from(tableName).update({
                     Post::likeCount setTo (post.likeCount + 1)
                 }){
                     filter {
@@ -98,12 +103,10 @@ class PostRepositoryImpl @Inject constructor(
         val tableName = "posts"
 
         try {
-            val result = supabaseClient
-                .from(tableName)
-                .select {
+            val result = postgrest.from(tableName).select {
                     filter { Post::userID eq userID }
                     order("create_at", Order.DESCENDING)
-                    limit(count = 20)
+                    limit(count = 5)
                 }.decodeList<Post>()
 
             Log.d("PostRepositoryImpl", "success get user posts")
@@ -116,23 +119,49 @@ class PostRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getNewPost(): Post {
+        try {
+            val result = postgrest.from(tableName).select {
+                order("create_at", Order.DESCENDING)
+            }.decodeSingle<Post>()
+            return result
+
+        }catch (e: Exception){
+            Log.e("PostRepositoryImpl/GetPost", "failed to get new post $e")
+            throw e
+        }
+    }
+
     override suspend fun getNewPosts(): List<Post> {
         val tableName = "posts"
 
         try {
-            val result = supabaseClient
-                .from(tableName)
-                .select {
+            val result = postgrest.from(tableName).select {
                     order("create_at", Order.DESCENDING)
-                    limit(count = 20)
+                    limit(count = 5)
                 }.decodeList<Post>()
-
-            Log.d("PostRepositoryImpl", "success getNewPosts")
-
             return result
 
         } catch (e: Exception){
-            Log.e("PostRepositoryImpl/GetPost", "failed to getPost $e")
+            Log.e("PostRepositoryImpl/GetPost", "failed to get new posts $e")
+            throw e
+        }
+    }
+
+    override suspend fun onIncrementView(post: Post) {
+        val tableName = "posts"
+
+        try {
+            postgrest.from(tableName).update({
+                Post::viewCount setTo  post.viewCount+1
+            }){
+                filter {
+                    Post::id eq post.id
+                }
+            }
+
+        } catch (e: Exception){
+            Log.e("PostRepositoryImpl", "failed to increment view $e")
             throw e
         }
     }
