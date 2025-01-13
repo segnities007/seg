@@ -29,9 +29,6 @@ import coil3.compose.AsyncImage
 import com.segnities007.seg.R
 import com.segnities007.seg.data.model.Image
 import com.segnities007.seg.data.model.Post
-import com.segnities007.seg.data.repository.PostRepositoryImpl
-import com.segnities007.seg.ui.screens.hub.HubUiAction
-import com.segnities007.seg.ui.screens.hub.HubUiState
 
 @Composable
 fun PostCard(
@@ -160,6 +157,7 @@ private fun ActionIcons(
                 contentRes = contentDescriptions[i],
                 count = counts[i],
             )
+
         }
     }
 }
