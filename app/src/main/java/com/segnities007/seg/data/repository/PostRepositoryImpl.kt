@@ -23,8 +23,6 @@ class PostRepositoryImpl @Inject constructor(
         byteArrayList: List<ByteArray>,
     ): Boolean {
 
-        Log.d(tag, "$description")
-        val tableName = "posts"
         val imageIDs: MutableList<Int> = mutableListOf()
 
         try {
@@ -51,16 +49,14 @@ class PostRepositoryImpl @Inject constructor(
                 user.copy(posts = listOf(postID))
             }
 
-            Log.d("PostRepositoryImpl", "success create post")
             return true
         } catch (e: Exception){
-            Log.d("UserRepositoryImpl", "error $e")
+            Log.d(tag, "error $e")
         }
         return false
     }
 
     suspend fun removeLikePost(post: Post){
-        val tableName = "posts"
 
         try {
             postgrest.from(tableName).update({
@@ -71,16 +67,13 @@ class PostRepositoryImpl @Inject constructor(
                     }
                 }
 
-            Log.d("PostRepositoryImpl", "success remove like posts")
-
         }catch (e: Exception){
-            Log.e("PostRepositoryImpl/likePost", "failed to likePost $e")
+            Log.e(tag, "failed to likePost $e")
             throw e
         }
     }
 
     suspend fun likePost(post: Post){
-        val tableName = "posts"
 
         try {
             postgrest.from(tableName).update({
@@ -91,16 +84,13 @@ class PostRepositoryImpl @Inject constructor(
                     }
                 }
 
-            Log.d("PostRepositoryImpl", "success like posts")
-
         }catch (e: Exception){
-            Log.e("PostRepositoryImpl/likePost", "failed to likePost $e")
+            Log.e(tag, "failed to likePost $e")
             throw e
         }
     }
 
     override suspend fun getUserPosts(userID: String): List<Post> {
-        val tableName = "posts"
 
         try {
             val result = postgrest.from(tableName).select {
@@ -108,13 +98,10 @@ class PostRepositoryImpl @Inject constructor(
                     order("create_at", Order.DESCENDING)
                     limit(count = 5)
                 }.decodeList<Post>()
-
-            Log.d("PostRepositoryImpl", "success get user posts")
-
             return result
 
         } catch (e: Exception){
-            Log.e("PostRepositoryImpl/GetPost", "failed to getPost $e")
+            Log.e(tag, "failed to getPost $e")
             throw e
         }
     }
@@ -127,13 +114,12 @@ class PostRepositoryImpl @Inject constructor(
             return result
 
         }catch (e: Exception){
-            Log.e("PostRepositoryImpl/GetPost", "failed to get new post $e")
+            Log.e(tag, "failed to get new post $e")
             throw e
         }
     }
 
     override suspend fun getNewPosts(): List<Post> {
-        val tableName = "posts"
 
         try {
             val result = postgrest.from(tableName).select {
@@ -143,13 +129,12 @@ class PostRepositoryImpl @Inject constructor(
             return result
 
         } catch (e: Exception){
-            Log.e("PostRepositoryImpl/GetPost", "failed to get new posts $e")
+            Log.e(tag, "failed to get new posts $e")
             throw e
         }
     }
 
     override suspend fun onIncrementView(post: Post) {
-        val tableName = "posts"
 
         try {
             postgrest.from(tableName).update({
@@ -161,7 +146,7 @@ class PostRepositoryImpl @Inject constructor(
             }
 
         } catch (e: Exception){
-            Log.e("PostRepositoryImpl", "failed to increment view $e")
+            Log.e(tag, "failed to increment view $e")
             throw e
         }
     }

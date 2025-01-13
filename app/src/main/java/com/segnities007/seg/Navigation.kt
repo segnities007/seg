@@ -17,8 +17,6 @@ object Splash
 object Login
 @Serializable
 object Hub
-@Serializable
-object ModifyUserInfo
 
 @Composable
 fun Navigation(

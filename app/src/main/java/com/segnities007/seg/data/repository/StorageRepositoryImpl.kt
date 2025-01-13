@@ -25,7 +25,6 @@ class StorageRepositoryImpl @Inject constructor(
             }
             val url = storage.from(bucketName).publicUrl(fileName)
 
-            Log.d(tag, "success post image: $result")
             return url
         }catch (e: Exception){
             Log.e(tag, "failed to post image. err msg is $e")
