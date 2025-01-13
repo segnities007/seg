@@ -12,12 +12,14 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.segnities007.seg.ui.components.card.AvatarCard
 import com.segnities007.seg.ui.components.top_bar.TopStatusBar
+import com.segnities007.seg.ui.screens.hub.HubUiAction
 import com.segnities007.seg.ui.screens.hub.HubUiState
 
 @Composable
 fun Accounts(
     modifier: Modifier = Modifier,
     hubUiState: HubUiState,
+    hubUiAction: HubUiAction,
     accountViewModel: AccountViewModel = hiltViewModel(),
 ){
 
@@ -31,7 +33,7 @@ fun Accounts(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
     ){
-        TopStatusBar(accountViewModel.accountUiState.user, onSettingClick = {})
+        TopStatusBar(accountViewModel.accountUiState.user, hubUiAction = hubUiAction)
 
         repeat(20){
             AvatarCard(

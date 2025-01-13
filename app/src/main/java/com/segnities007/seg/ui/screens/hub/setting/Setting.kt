@@ -32,6 +32,7 @@ fun Setting(
                 settingViewModel.getSettingUiAction().onIndexChange(index)
             },
             navigationIndex = NavigationIndex.HubSetting,
+            hubUiAction = hubUiAction,
         )
         when(settingViewModel.settingUiState.index){// TODO change index to enum
             0 -> Preference(

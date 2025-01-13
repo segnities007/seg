@@ -43,10 +43,7 @@ fun Account(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
     ){
-        TopStatusBar(accountViewModel.accountUiState.user, onSettingClick = {/*TODO*/})
-        Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_small)))
-        FollowButtons(hubUiAction = hubUiAction,)
-        Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_small)))
+        TopStatusBar(accountViewModel.accountUiState.user, hubUiAction = hubUiAction)
         for (i in 0 until accountViewModel.accountUiState.posts.size) {
 
             val accountUiState = accountViewModel.accountUiState
@@ -59,8 +56,6 @@ fun Account(
             PostCard(
                 onCardClick = {},
                 onAvatarClick = {},
-                hubUiState = hubUiState,
-                hubUiAction = hubUiAction,
                 post = accountUiState.posts[i],
                 images = accountUiState.images[i],
                 icon = accountUiState.icon,
@@ -69,35 +64,5 @@ fun Account(
             )
         }
 
-    }
-}
-
-@Composable
-private fun FollowButtons(
-    modifier: Modifier = Modifier,
-    hubUiAction: HubUiAction,
-){
-    Row(
-        modifier = modifier
-            .fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center
-    ){
-        Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_small)))
-        SmallButton(
-            modifier = Modifier.weight(1f),
-            textID = R.string.follows,
-            onClick = {
-            hubUiAction.onNavigate(NavigationIndex.HubAccounts)
-        /*TODO*/
-        })
-        Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_small)))
-        SmallButton(
-            modifier = Modifier.weight(1f),
-            textID = R.string.followers,
-            onClick = {
-            hubUiAction.onNavigate(NavigationIndex.HubAccounts)
-        /*TODO*/
-        })
-        Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_small)))
     }
 }

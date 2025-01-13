@@ -152,6 +152,7 @@ private fun HubUi(
             NavigationIndex.HubAccounts -> Accounts(
                 modifier = Modifier.padding(innerPadding),
                 hubUiState = hubUiState,
+                hubUiAction = hubUiAction
             )
             else -> Text("maybe navigation point isn't set.")
         }
