@@ -1,4 +1,4 @@
-package com.segnities007.seg.data
+package com.segnities007.seg.data.di
 
 import dagger.Module
 import dagger.Provides
@@ -8,10 +8,7 @@ import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.createSupabaseClient
 import javax.inject.Singleton
 import com.segnities007.seg.BuildConfig
-import com.segnities007.seg.data.repository.AuthRepositoryImpl
-import com.segnities007.seg.domain.repository.AuthRepository
 import io.github.jan.supabase.auth.Auth
-import io.github.jan.supabase.auth.FlowType
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.postgrest.postgrest
@@ -54,5 +51,4 @@ object SupabaseModule {
     fun provideSupabaseStorage(client: SupabaseClient): Storage {
         return client.storage
     }
-
 }

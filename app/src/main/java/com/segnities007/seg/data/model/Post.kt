@@ -16,11 +16,11 @@ data class Post(
     @SerialName("user_id")
     val userID: String = "NoUser",
 
-    @SerialName("icon_url")
-    val iconUrl: String = "https://avatars.githubusercontent.com/u/174174755?v=4",
+    @SerialName("icon_id")
+    val iconID: Int = 0,
 
     @SerialName("description")
-    val description: String = "NoDescription",
+    val description: String = "",
 
     @SerialName("like_count")
     val likeCount: Int = 0,
@@ -42,14 +42,14 @@ data class Post(
     @Serializable(with = LocalDateTimeSerializer::class)
     val updateAt: LocalDateTime = LocalDateTime.now(),
 
-    @SerialName("image_url_list")
-    val images: List<String> = listOf(),
+    @SerialName("image_id_list")
+    val imageIDs: List<Int>? = listOf(),
 
     @SerialName("comment_id_list")
-    val comments: List<Int> = listOf(),
+    val comments: List<Int>? = listOf(),
 
     @SerialName("hash_tag_id_list")
-    val hashTags: List<Int> = listOf(),
+    val hashTags: List<Int>? = listOf(),
 
 )
 

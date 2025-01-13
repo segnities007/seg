@@ -21,6 +21,7 @@ import com.segnities007.seg.ui.components.top_bar.TopStatusBar
 import com.segnities007.seg.ui.screens.hub.HubUiAction
 import com.segnities007.seg.ui.screens.hub.HubUiState
 import com.segnities007.seg.R
+import com.segnities007.seg.data.model.Post
 import com.segnities007.seg.domain.model.NavigationIndex
 
 @Composable
@@ -33,8 +34,8 @@ fun Account(
 
     LaunchedEffect(Unit) {
         val action = accountViewModel.getAccountUiAction()
-        action.getOtherUser(hubUiState.userID)
-        action.getUserPosts(hubUiState.userID)
+        action.onGetOtherUser(hubUiState.userID)
+        action.onGetUserPosts(hubUiState.userID)
     }
 
     Column(
@@ -46,13 +47,25 @@ fun Account(
         Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_small)))
         FollowButtons(hubUiAction = hubUiAction,)
         Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_small)))
-        for (post in accountViewModel.accountUiState.posts) {
+        for (i in 0 until accountViewModel.accountUiState.posts.size) {
+
+            val accountUiState = accountViewModel.accountUiState
+
+            LaunchedEffect(Unit) {
+                val action = accountViewModel.getAccountUiAction()
+                action.onGetIcon(accountUiState.posts[i].iconID)
+            }
+
             PostCard(
                 onCardClick = {},
                 onAvatarClick = {},
                 hubUiState = hubUiState,
                 hubUiAction = hubUiAction,
-                post = post,
+                post = accountUiState.posts[i],
+                images = accountUiState.images[i],
+                icon = accountUiState.icon,
+                onInitializeAction = {post: Post ->
+                }
             )
         }
 

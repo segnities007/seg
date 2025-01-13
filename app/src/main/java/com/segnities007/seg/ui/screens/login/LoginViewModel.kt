@@ -13,6 +13,9 @@ import com.segnities007.seg.data.repository.AuthRepositoryImpl
 import com.segnities007.seg.data.repository.UserRepositoryImpl
 import com.segnities007.seg.domain.model.NavigationIndex
 import com.segnities007.seg.domain.presentation.TopLayerViewModel
+import com.segnities007.seg.domain.repository.AuthRepository
+import com.segnities007.seg.domain.repository.StorageRepository
+import com.segnities007.seg.domain.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -33,7 +36,6 @@ data class SignUiState(
 data class SignUiAction(
     val onPasswordChange: (password: String) -> Unit,
     val onEmailChange: (email: String) -> Unit,
-    val onLoginWithGoogle: (context: Context) -> Unit,
     val onSignUpWithEmailPassword: () -> Unit,
     val onSignInWithEmailPassword: (navController: NavHostController) -> Unit,
 )
@@ -65,8 +67,8 @@ data class CreateAccountUiAction(
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val authRepositoryImpl: AuthRepositoryImpl,
-    private val userRepositoryImpl: UserRepositoryImpl,
+    private val authRepository: AuthRepository,
+    private val userRepository: UserRepository,
 ) : TopLayerViewModel() {
 
     var signUiState by mutableStateOf(SignUiState())
@@ -85,7 +87,6 @@ class LoginViewModel @Inject constructor(
         return SignUiAction(
             onEmailChange = this::onEmailChange,
             onPasswordChange = this::onPasswordChange,
-            onLoginWithGoogle = this::onLoginWithGoogle,
             onSignUpWithEmailPassword = this::onSignUpWithEmailPassword,
             onSignInWithEmailPassword = this::onSignInWithEmailPassword,
         )
@@ -118,12 +119,12 @@ class LoginViewModel @Inject constructor(
     private fun confirmEmail(){
 
         viewModelScope.launch(Dispatchers.IO){
-            authRepositoryImpl.signInWithEmailPassword(
+            authRepository.signInWithEmailPassword(
                     email = signUiState.email,
                     password = signUiState.password,
                 )
             withContext(Dispatchers.Main){
-                val isConfirmed = userRepositoryImpl.confirmEmail()
+                val isConfirmed = userRepository.confirmEmail()
                 if(isConfirmed) super.onNavigate(NavigationIndex.LoginSignUpCreateAccount)
             }
         }
@@ -139,7 +140,7 @@ class LoginViewModel @Inject constructor(
             birthday = createAccountUiState.birthday,
         )
         viewModelScope.launch(Dispatchers.IO){
-            val isSuccess = userRepositoryImpl.createUser(user)
+            val isSuccess = userRepository.createUser(user)
             if (isSuccess) {
                 withContext(Dispatchers.Main){
                     navController.navigate(route = Hub)
@@ -173,19 +174,10 @@ class LoginViewModel @Inject constructor(
         signUiState = signUiState.copy(password = newPassword)
     }
 
-    private fun onLoginWithGoogle(
-        context: Context,
-    ){
-        viewModelScope.launch(Dispatchers.IO){
-            authRepositoryImpl.loginWithGoogle(context = context)
-        }
-    }
-
     private fun onSignUpWithEmailPassword(){
         viewModelScope.launch(Dispatchers.IO){
             withContext(Dispatchers.Main){
-                val isSuccess = authRepositoryImpl
-                    .signUpWithEmailPassword(
+                val isSuccess = authRepository.signUpWithEmailPassword(
                         email = signUiState.email,
                         password = signUiState.password
                     )
@@ -198,8 +190,7 @@ class LoginViewModel @Inject constructor(
         navController: NavHostController,
     ){
         viewModelScope.launch(Dispatchers.IO){
-            val isSuccess = authRepositoryImpl
-                .signInWithEmailPassword(
+            val isSuccess = authRepository.signInWithEmailPassword(
                     email = signUiState.email,
                     password = signUiState.password
                 )

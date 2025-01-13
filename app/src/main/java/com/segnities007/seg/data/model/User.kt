@@ -23,23 +23,23 @@ data class User(
     @SerialName("is_prime")
     val isPrime: Boolean = false,
 
-    @SerialName("icon_url")
-    val iconUrl: String? = null,
+    @SerialName("icon_id")
+    val iconID: Int = 0,
 
-    @SerialName("follow_id_list")
-    val follows: List<String> = listOf(),
+    @SerialName("follow_user_id_list")
+    val follows: List<String>? = listOf(),
 
     @SerialName("follow_count")
     val followCount: Int = 0,
 
-    @SerialName("Follower_id_list")
-    val followers: List<String> = listOf(),
+    @SerialName("follower_user_id_list")
+    val followers: List<String>? = listOf(),
 
     @SerialName("follower_count")
     val followerCount: Int = 0,
 
     @SerialName("post_id_list")
-    val posts: List<Int> = listOf(),
+    val posts: List<Int>? = listOf(),
 
     @SerialName("create_at")
     @Serializable(with = LocalDateTimeSerializer::class)
