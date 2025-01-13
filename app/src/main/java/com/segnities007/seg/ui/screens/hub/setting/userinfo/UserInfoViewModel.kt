@@ -18,7 +18,7 @@ data class UserInfoUiState(
 )
 
 data class UserInfoUiAction(
-    val onUserUpdate: suspend (user: User) -> Boolean,
+    val onUserUpdate: suspend (user: User) -> Unit,
     val onNameChange: (newName: String) -> Unit,
     val onUserIDChange: (newUserID: String) -> Unit,
 )
@@ -46,8 +46,8 @@ class UserInfoViewModel @Inject constructor(
         userInfoUiState = userInfoUiState.copy(userID = newUserID)
     }
 
-    private suspend fun onUserUpdate(user: User): Boolean{
-        return withContext(Dispatchers.IO){
+    private suspend fun onUserUpdate(user: User){
+        withContext(Dispatchers.IO){
             val newUser = user.copy(name = userInfoUiState.name, userID = userInfoUiState.userID, updateAt = LocalDateTime.now())
             userRepositoryImpl.updateUser(newUser)
         }

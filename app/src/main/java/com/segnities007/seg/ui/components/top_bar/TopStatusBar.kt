@@ -15,6 +15,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,11 +28,14 @@ import coil3.compose.AsyncImage
 import com.segnities007.seg.R
 import com.segnities007.seg.data.model.User
 import com.segnities007.seg.domain.model.NavigationIndex
+import com.segnities007.seg.ui.screens.hub.HubUiAction
 
 @Composable
 fun TopStatusBar(
     user: User,
-    commonPadding: Dp = dimensionResource(R.dimen.padding_sn),
+    hubUiAction: HubUiAction,
+    onClickFollowsButton: () -> Unit = {},
+    onClickFollowersButton: () -> Unit = {},
     url: String = "https://avatars.githubusercontent.com/u/174174755?v=4",
     navigationIndex: NavigationIndex = NavigationIndex.No,
     onSettingClick: (index: Int) -> Unit = {},
@@ -65,14 +69,49 @@ fun TopStatusBar(
             AsyncImage(
                 modifier = Modifier.size(dimensionResource(R.dimen.icon_large)).clip(CircleShape),
                 model = url,
-                contentDescription = "TODO",
+                contentDescription = url,
             )
             Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_small)))
-            Status(user = user)
+            Status(user = user, hubUiAction = hubUiAction,  onClickFollowsButton = onClickFollowsButton, onClickFollowersButton = onClickFollowersButton, )
             Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_small)))
         }
         if(navigationIndex == NavigationIndex.HubSetting)
             SettingIconButton(Modifier.align(alignment = Alignment.TopEnd), onSettingClick = onSettingClick)
+    }
+
+}
+
+@Composable
+private fun Status(
+    modifier: Modifier = Modifier,
+    hubUiAction: HubUiAction,
+    user: User,
+    onClickFollowsButton: () -> Unit,
+    onClickFollowersButton: () -> Unit,
+    commonPadding: Dp = dimensionResource(R.dimen.padding_smaller),
+){
+
+    Column(verticalArrangement = Arrangement.Center,){
+        Row(horizontalArrangement = Arrangement.Center,){
+            Text(text = user.name)
+            Text(text = "@${user.userID}")
+        }
+        Spacer(modifier = Modifier.padding(commonPadding))
+        Row(horizontalArrangement = Arrangement.Center,){
+            TextButton(
+                onClick = {
+                    onClickFollowsButton()
+                    hubUiAction.onNavigate(NavigationIndex.HubAccounts)
+                }
+            ){ Text(text = "Follow: ${user.followCount}") }
+            Spacer(modifier = Modifier.padding(commonPadding))
+            TextButton(
+                onClick = {
+                    onClickFollowersButton()
+                    hubUiAction.onNavigate(NavigationIndex.HubAccounts)
+                }
+            ) { Text(text = "Follower: ${user.followerCount}") }
+        }
     }
 
 }
@@ -94,34 +133,6 @@ private fun SettingIconButton(
                 painter = painterResource(R.drawable.baseline_settings_24),
                 contentDescription = ""
             )
-        }
-    }
-
-}
-
-@Composable
-private fun Status(
-    modifier: Modifier = Modifier,
-    commonPadding: Dp = dimensionResource(R.dimen.padding_sn),
-    user: User,
-){
-
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center,
-    ){
-        Column(
-            horizontalAlignment = Alignment.Start,
-        ){
-            Text(text = user.name)
-            Text(text = "@${user.userID}")
-        }
-        Spacer(modifier = Modifier.padding(commonPadding))
-        Column(
-            horizontalAlignment = Alignment.Start,
-        ){
-            Text(text = "Follow: ${user.followCount}")
-            Text(text = "Follower: ${user.followerCount}")
         }
     }
 

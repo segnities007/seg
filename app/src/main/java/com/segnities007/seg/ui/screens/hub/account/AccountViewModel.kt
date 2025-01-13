@@ -19,15 +19,21 @@ import javax.inject.Inject
 
 data class AccountUiState(
     val user: User = User(),
+    val icon: Image = Image(),
+
     val posts: List<Post> = listOf(),
     val images: List<List<Image>> = listOf(),
-    val icon: Image = Image(),
+
+    val users: List<User> = listOf(),
 )
 
 data class AccountUiAction(
     val onGetOtherUser: (userID: String) -> Unit,
     val onGetUserPosts: (userID: String) -> Unit,
+    val onGetUsers: (userIDs: List<User>) -> Unit,
     val onGetIcon: (iconID: Int) -> Unit,
+    val onSetUsers: (userIDs: List<String>) -> Unit,
+    val onFollow: (myself: User, other: User) -> Unit,
 )
 
 @HiltViewModel
@@ -47,7 +53,29 @@ class AccountViewModel @Inject constructor(
             onGetOtherUser = this::onGetOtherUser,
             onGetUserPosts = this::onGetUserPosts,
             onGetIcon = this::onGetIcon,
+            onFollow = this::onFollow,
+            onSetUsers = this::onSetUsers,
+            onGetUsers = this::onGetUsers,
         )
+    }
+
+    private fun onSetUsers(userIDs: List<String>){
+        viewModelScope.launch(Dispatchers.IO){
+            val users = userRepository.getUsers(userIDs)
+            onGetUsers(users)
+        }
+    }
+
+    private fun onFollow(myself: User, other: User){
+        viewModelScope.launch(Dispatchers.IO){
+            userRepository.followUser(myself, other)
+        }
+    }
+
+    private fun onGetUsers(users: List<User>){
+        viewModelScope.launch(Dispatchers.IO){
+            accountUiState = accountUiState.copy(users = users)
+        }
     }
 
     private fun onGetOtherUser(userID: String){

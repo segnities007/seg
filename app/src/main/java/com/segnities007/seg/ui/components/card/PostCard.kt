@@ -40,8 +40,6 @@ fun PostCard(
     onCardClick: () -> Unit,
     onAvatarClick: (userID: String) -> Unit,
     post: Post,
-    hubUiState: HubUiState,
-    hubUiAction: HubUiAction,
     icon: Image = Image(),
     images: List<Image>,
 ){
@@ -72,8 +70,8 @@ fun PostCard(
             Column(){
                 Name(modifier = modifier, post = post)
                 Description(modifier = modifier, post = post)
-                Images(modifier = modifier, post = post, images = images)
-                ActionIcons(modifier = modifier, post = post, hubUiState = hubUiState, hubUiAction = hubUiAction)
+                Images(modifier = modifier, images = images)
+                ActionIcons(modifier = modifier, post = post)
             }
         }
     }
@@ -106,7 +104,6 @@ private fun Description(
 private fun Images(
     modifier: Modifier = Modifier,
     images: List<Image>,
-    post: Post,
 ){
     for (image in images) {
         AsyncImage(
@@ -120,8 +117,6 @@ private fun Images(
 @Composable
 private fun ActionIcons(
     modifier: Modifier = Modifier,
-    hubUiState: HubUiState,
-    hubUiAction: HubUiAction,
     post: Post,
 ){
     val pushIcons = listOf(

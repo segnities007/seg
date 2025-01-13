@@ -3,6 +3,7 @@ package com.segnities007.seg.ui.screens.login.sign_up
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
@@ -50,10 +51,15 @@ fun CreateAccount(
         horizontalAlignment = Alignment.CenterHorizontally,
     ){
         InputForm(
-            modifier = Modifier.padding(dimensionResource(R.dimen.padding_normal)),
             text = createAccountUiState.name,
             label = stringResource(id = R.string.name),
             onValueChange = createAccountUiAction.onNameChange
+        )
+        Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_normal)))
+        InputForm(
+            text = createAccountUiState.userID,
+            label = stringResource(id = R.string.new_user_id),
+            onValueChange = createAccountUiAction.onChangeUserID
         )
         ElevatedButton(
             onClick = createAccountUiAction.onDatePickerOpen,

@@ -22,9 +22,15 @@ class AuthRepositoryImpl @Inject constructor(
         auth.awaitInitialization()
         val currentUser = auth.currentUserOrNull()
         if (currentUser != null) {
-            navController.navigate(route = Hub)
+            navController.navigate(route = Hub){
+                popUpTo(0)
+                launchSingleTop = true
+            }
         } else {
-            navController.navigate(route = Login)
+            navController.navigate(route = Login){
+                popUpTo(0)
+                launchSingleTop = true
+            }
         }
     }
 

@@ -26,7 +26,6 @@ fun Home(
     postCardViewModel: PostCardViewModel = hiltViewModel(),
     homeViewModel: HomeViewModel = hiltViewModel(),
 ){
-
     LaunchedEffect(Unit) {
         val action = homeViewModel.getHomeUiAction()
         action.onGetNewPosts()
@@ -47,8 +46,6 @@ fun Home(
 
             PostCard(
                 onCardClick = {},
-                hubUiState = hubUiState,
-                hubUiAction = hubUiAction,
                 post = homeUiState.posts[i],
                 images = homeUiState.images[i],
                 icon = homeUiState.icon,

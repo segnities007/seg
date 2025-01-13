@@ -23,8 +23,8 @@ import com.segnities007.seg.domain.presentation.TopState
 import com.segnities007.seg.ui.components.bottom_bar.BottomBar
 import com.segnities007.seg.ui.components.floating_button.FloatingButton
 import com.segnities007.seg.ui.components.navigation_drawer.NavigationDrawer
-import com.segnities007.seg.ui.components.top_bar.TopStatusBar
 import com.segnities007.seg.ui.screens.hub.account.Account
+import com.segnities007.seg.ui.screens.hub.account.AccountViewModel
 import com.segnities007.seg.ui.screens.hub.account.Accounts
 import com.segnities007.seg.ui.screens.hub.setting.Setting
 import com.segnities007.seg.ui.screens.hub.home.Home
@@ -79,6 +79,7 @@ private fun HubUi(
     topAction: TopAction,
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
+    accountViewModel: AccountViewModel = hiltViewModel(),
 ){
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
@@ -106,6 +107,12 @@ private fun HubUi(
                     onDrawerOpen = topAction.openDrawer,
                     currentIndex = topState.index,
                 )
+                NavigationIndex.HubAccounts -> TopBar(
+                    title = stringResource(R.string.app_name),
+                    contentDescription = stringResource(R.string.menu_description),
+                    onDrawerOpen = topAction.openDrawer,
+                    currentIndex = topState.index,
+                )
                 else -> Spacer(modifier = Modifier.padding(0.dp))
             }
         },
@@ -116,13 +123,13 @@ private fun HubUi(
                 indices = indices,
             ) { hubUiAction.onNavigate(it) }
         },
-//        floatingActionButton = {
-//            when(topState.index){
-//                NavigationIndex.HubHome -> FloatingButton(iconID = R.drawable.baseline_search_24) { }
-//                NavigationIndex.HubTrend -> FloatingButton(iconID = R.drawable.baseline_search_24) { }
-//                else -> Spacer(modifier = Modifier.padding(0.dp))
-//            }
-//        }
+        floatingActionButton = {
+            when(topState.index){
+                NavigationIndex.HubHome -> FloatingButton(iconID = R.drawable.baseline_search_24) { }
+                NavigationIndex.HubTrend -> FloatingButton(iconID = R.drawable.baseline_search_24) { }
+                else -> Spacer(modifier = Modifier.padding(0.dp))
+            }
+        }
     ){ innerPadding ->
         when(topState.index){
             NavigationIndex.HubHome -> Home(
@@ -143,15 +150,18 @@ private fun HubUi(
                 navController = navController,
                 hubUiState = hubUiState,
                 hubUiAction = hubUiAction,
+                accountUiAction = accountViewModel.getAccountUiAction(),
             )
             NavigationIndex.HubAccount -> Account(
                 modifier = Modifier.padding(innerPadding),
                 hubUiState = hubUiState,
                 hubUiAction = hubUiAction,
+                accountUiState = accountViewModel.accountUiState,
+                accountUiAction = accountViewModel.getAccountUiAction(),
             )
             NavigationIndex.HubAccounts -> Accounts(
                 modifier = Modifier.padding(innerPadding),
-                hubUiState = hubUiState,
+                accountViewModel = accountViewModel,
             )
             else -> Text("maybe navigation point isn't set.")
         }
