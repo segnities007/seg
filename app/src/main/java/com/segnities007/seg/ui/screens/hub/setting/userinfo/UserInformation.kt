@@ -179,14 +179,9 @@ private fun SelectionButtons(
             textID = R.string.enter,
             onClick = {
                 scope.launch {
-                    val isSuccess = userInfoUiAction.onUserUpdate(hubUiState.user)
-
-                    if(isSuccess){
+                        userInfoUiAction.onUserUpdate(hubUiState.user)
                         hubUiAction.onGetUser()
                         settingUiAction.onIndexChange(0)
-                    }else{
-                        //TODO
-                    }
                 }
             }
         )

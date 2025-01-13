@@ -18,26 +18,24 @@ import com.segnities007.seg.ui.screens.hub.HubUiState
 @Composable
 fun Accounts(
     modifier: Modifier = Modifier,
-    hubUiState: HubUiState,
-    hubUiAction: HubUiAction,
     accountViewModel: AccountViewModel = hiltViewModel(),
 ){
-
-    LaunchedEffect(Unit) {
-        val action = accountViewModel.getAccountUiAction()
-        action.onGetOtherUser(hubUiState.userID)
-    }
 
     Column(
         modifier = modifier.fillMaxSize().verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
     ){
-        TopStatusBar(accountViewModel.accountUiState.user, hubUiAction = hubUiAction)
+        for (user in accountViewModel.accountUiState.users){
 
-        repeat(20){
+            LaunchedEffect(Unit) {
+                accountViewModel.getAccountUiAction().onGetIcon(user.iconID)
+            }
+
             AvatarCard(
                 onCardClick = {},
+                url = accountViewModel.accountUiState.icon.imageUrl,
+                user = user,
             )
         }
     }

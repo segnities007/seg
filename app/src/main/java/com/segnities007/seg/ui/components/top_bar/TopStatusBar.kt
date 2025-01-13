@@ -33,8 +33,9 @@ import com.segnities007.seg.ui.screens.hub.HubUiAction
 @Composable
 fun TopStatusBar(
     user: User,
-    commonPadding: Dp = dimensionResource(R.dimen.padding_sn),
     hubUiAction: HubUiAction,
+    onClickFollowsButton: () -> Unit = {},
+    onClickFollowersButton: () -> Unit = {},
     url: String = "https://avatars.githubusercontent.com/u/174174755?v=4",
     navigationIndex: NavigationIndex = NavigationIndex.No,
     onSettingClick: (index: Int) -> Unit = {},
@@ -71,7 +72,7 @@ fun TopStatusBar(
                 contentDescription = url,
             )
             Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_small)))
-            Status(user = user, hubUiAction = hubUiAction)
+            Status(user = user, hubUiAction = hubUiAction,  onClickFollowsButton = onClickFollowsButton, onClickFollowersButton = onClickFollowersButton, )
             Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_small)))
         }
         if(navigationIndex == NavigationIndex.HubSetting)
@@ -85,6 +86,8 @@ private fun Status(
     modifier: Modifier = Modifier,
     hubUiAction: HubUiAction,
     user: User,
+    onClickFollowsButton: () -> Unit,
+    onClickFollowersButton: () -> Unit,
     commonPadding: Dp = dimensionResource(R.dimen.padding_smaller),
 ){
 
@@ -97,14 +100,14 @@ private fun Status(
         Row(horizontalArrangement = Arrangement.Center,){
             TextButton(
                 onClick = {
-                    //TODO
+                    onClickFollowsButton()
                     hubUiAction.onNavigate(NavigationIndex.HubAccounts)
                 }
             ){ Text(text = "Follow: ${user.followCount}") }
             Spacer(modifier = Modifier.padding(commonPadding))
             TextButton(
                 onClick = {
-                    //TODO
+                    onClickFollowersButton()
                     hubUiAction.onNavigate(NavigationIndex.HubAccounts)
                 }
             ) { Text(text = "Follower: ${user.followerCount}") }

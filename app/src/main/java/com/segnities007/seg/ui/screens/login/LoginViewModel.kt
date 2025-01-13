@@ -51,6 +51,7 @@ data class ConfirmEmailUiAction(
 data class CreateAccountUiState(
     val isShow: Boolean = false,
     val name: String = "",
+    val userID: String = "",
     val birthday: LocalDate = LocalDate.now(),
 )
 
@@ -59,6 +60,7 @@ data class CreateAccountUiAction(
     val onDatePickerClose: () -> Unit,
     val onDateSelect: (Long?) -> Unit,
     val onNameChange: (name: String) -> Unit,
+    val onChangeUserID: (userID: String) -> Unit,
     val onBirthdayChange: (birthday: LocalDate) -> Unit,
     val createUser: (navController: NavHostController) -> Unit,
 )
@@ -102,8 +104,13 @@ class LoginViewModel @Inject constructor(
             onNameChange = this::onNameChange,
             onBirthdayChange = this::onBirthdayChange,
             createUser = this::createUser,
+            onChangeUserID = this::onChangeUserID,
         )
 
+    }
+
+    private fun onChangeUserID(userID: String){
+        createAccountUiState = createAccountUiState.copy(userID = userID)
     }
 
     private fun onDateSelect(millis: Long?){
@@ -136,16 +143,15 @@ class LoginViewModel @Inject constructor(
     ){
         val user = User(
             id = "",
+            userID = createAccountUiState.userID,
             name = createAccountUiState.name,
             birthday = createAccountUiState.birthday,
         )
         viewModelScope.launch(Dispatchers.IO){
-            val isSuccess = userRepository.createUser(user)
-            if (isSuccess) {
+            userRepository.createUser(user)
                 withContext(Dispatchers.Main){
                     navController.navigate(route = Hub)
                 }
-            }
         }
 
     }

@@ -19,26 +19,24 @@ class UserRepositoryImpl @Inject constructor(
     private val tag = "UserRepository"
     private val tableName = "users"
 
-    override fun confirmEmail(): Boolean {
-        return try {
+    override fun confirmEmail(): Boolean{
+        try {
             val currentUser = auth.currentUserOrNull()
-            currentUser?.emailConfirmedAt != null
+            return currentUser?.emailConfirmedAt != null
         } catch (e: Exception) {
             Log.e(tag,"Error checking email confirmation: $e")
-            false
         }
+        return false
     }
 
-    override suspend fun createUser(user: User): Boolean {
+    override suspend fun createUser(user: User){
         auth.awaitInitialization()
         val id = auth.currentUserOrNull()?.id
         val user = user.copy(id = id.toString())
         try {
             postgrest.from(tableName).insert(user)
-            return true
         } catch (e: Exception){
-            Log.d("UserRepositoryImpl39", "error $e")
-            return false
+            Log.d(tag, "error $e")
         }
     }
 
@@ -58,6 +56,14 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getUsers(userIDs: List<String>): List<User> {
+        val users: MutableList<User> = mutableListOf()
+        for(id in userIDs){
+            users.add(getOtherUser(id))
+        }
+        return users.toList()
+    }
+
     override suspend fun getOtherUser(userID: String): User{
         try {
             val result = postgrest.from(tableName).select(
@@ -74,29 +80,89 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun updateUser(user: User): Boolean {
+    override suspend fun updateUser(user: User){
         try {
             postgrest.from(tableName).update<User>(user) {
                 filter { User::id eq user.id }
             }
-            return true
         } catch (e: Exception){
             Log.e(tag, "failed to update user. error message is $e")
         }
-        return false
     }
 
-    override suspend fun deleteUser(id: String): Boolean {
+    override suspend fun deleteUser(id: String){
         try {
             postgrest.from(tableName).delete {
                 select()
                 filter { eq("id", id) }
             }.decodeSingle<User>()
-            return true
         } catch (e: Exception){
             Log.e(tag, "failed to delete user. error message is $e")
         }
-        return false
+    }
+
+    override suspend fun followUser(myself: User, other: User) {
+
+        Log.d(tag, "Starting followUser process")
+
+        // フォローリストが空の場合は初期化し、それ以外の場合は直接使用
+        val updateOther = other.copy(followers = other.followers.orEmpty())
+        val updatedMyself = myself.copy(follows = myself.follows.orEmpty())
+
+        // すでにフォロー済みの場合は何もしない
+        if (updatedMyself.follows?.contains(updateOther.userID) == true) {
+            Log.d(tag, "User ${updateOther.userID} is already followed.")
+            return
+        }
+
+        try {
+            val newMyself = updatedMyself.copy(follows = updatedMyself.follows?.plus(updateOther.userID))
+            val newOther = updateOther.copy(followers = updateOther.followers?.plus(myself.userID))
+
+
+            postgrest.from(tableName).update({
+                 set("follow_user_id_list",newMyself.follows)
+            }){
+                filter { User::userID eq newMyself.userID }
+            }
+
+            postgrest.from(tableName).update({
+                set("follower_user_id_list", newOther.followers)
+            }){
+                filter { User::userID eq newOther.userID }
+            }
+            Log.d(tag, newOther.followers.toString())
+
+            onIncrementFollowCount(newMyself)
+            onIncrementFollowerCount(newOther)
+
+        } catch (e: Exception){
+            Log.e(tag, "failed to follow user: $e")
+        }
+    }
+
+    override suspend fun onIncrementFollowCount(user: User) {
+        try {
+            postgrest.from(tableName).update({
+                User::followCount setTo user.followCount+1
+            }){
+                filter { User::userID eq user.userID }
+            }
+        }catch (e: Exception){
+            Log.e(tag, "failed to follow increment: $e")
+        }
+    }
+
+    override suspend fun onIncrementFollowerCount(user: User) {
+        try {
+            postgrest.from(tableName).update({
+                User::followerCount setTo user.followerCount+1
+            }){
+                filter { User::userID eq user.userID }
+            }
+        }catch (e: Exception){
+            Log.e(tag, "failed to follower increment: $e")
+        }
     }
 
 }

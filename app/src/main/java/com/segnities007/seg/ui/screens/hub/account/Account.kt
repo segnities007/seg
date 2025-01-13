@@ -1,5 +1,6 @@
 package com.segnities007.seg.ui.screens.hub.account
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,21 +22,19 @@ import com.segnities007.seg.ui.components.top_bar.TopStatusBar
 import com.segnities007.seg.ui.screens.hub.HubUiAction
 import com.segnities007.seg.ui.screens.hub.HubUiState
 import com.segnities007.seg.R
-import com.segnities007.seg.data.model.Post
-import com.segnities007.seg.domain.model.NavigationIndex
 
 @Composable
 fun Account(
     modifier: Modifier = Modifier,
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
-    accountViewModel: AccountViewModel = hiltViewModel(),
+    accountUiState: AccountUiState,
+    accountUiAction: AccountUiAction
 ){
 
     LaunchedEffect(Unit) {
-        val action = accountViewModel.getAccountUiAction()
-        action.onGetOtherUser(hubUiState.userID)
-        action.onGetUserPosts(hubUiState.userID)
+        accountUiAction.onGetOtherUser(hubUiState.userID)
+        accountUiAction.onGetUserPosts(hubUiState.userID)
     }
 
     Column(
@@ -43,26 +42,57 @@ fun Account(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
     ){
-        TopStatusBar(accountViewModel.accountUiState.user, hubUiAction = hubUiAction)
-        for (i in 0 until accountViewModel.accountUiState.posts.size) {
+        TopStatusBar(
+            user = accountUiState.user,
+            hubUiAction = hubUiAction,
+            onClickFollowsButton = {
+                if (!accountUiState.user.follows.isNullOrEmpty())
+                    accountUiAction.onSetUsers(accountUiState.user.follows)
+                                   },
+            onClickFollowersButton = {
+                if (!accountUiState.user.followers.isNullOrEmpty())
+                    accountUiAction.onSetUsers(accountUiState.user.followers)
+            }
+        )
+        if(hubUiState.user.userID != accountUiState.user.userID)
+            FollowButtons(hubUiState = hubUiState, accountUiState = accountUiState, accountUiAction = accountUiAction)
 
-            val accountUiState = accountViewModel.accountUiState
+        for (i in 0 until accountUiState.posts.size) {
 
             LaunchedEffect(Unit) {
-                val action = accountViewModel.getAccountUiAction()
-                action.onGetIcon(accountUiState.posts[i].iconID)
+                accountUiAction.onGetIcon(accountUiState.posts[i].iconID)
             }
-
             PostCard(
                 onCardClick = {},
                 onAvatarClick = {},
                 post = accountUiState.posts[i],
                 images = accountUiState.images[i],
                 icon = accountUiState.icon,
-                onInitializeAction = {post: Post ->
-                }
+                onInitializeAction = {}
             )
         }
 
+    }
+}
+
+@Composable
+private fun FollowButtons(
+    modifier: Modifier = Modifier,
+    hubUiState: HubUiState,
+    accountUiState: AccountUiState,
+    accountUiAction: AccountUiAction,
+){
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center
+    ){
+        Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_normal)))
+        SmallButton(
+            modifier = Modifier.weight(1f),
+            textID = R.string.follows,
+            onClick = {
+                accountUiAction.onFollow(hubUiState.user, accountUiState.user)
+            })
+        Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_normal)))
     }
 }
