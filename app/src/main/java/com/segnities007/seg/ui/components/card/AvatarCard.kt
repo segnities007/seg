@@ -68,10 +68,10 @@ private fun Name(
     modifier: Modifier = Modifier,
     user: User,
 ){
-    Column(
+    Row(
         modifier = modifier,
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Start,
     ){
         Text(user.name)
         Text("@${user.userID}", color = MaterialTheme.colorScheme.secondaryContainer)

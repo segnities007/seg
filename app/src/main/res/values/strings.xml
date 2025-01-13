@@ -33,6 +33,7 @@
     <string name="icon_default">https://avatars.githubusercontent.com/u/174174755?v=4</string>
     <string name="new_name">New name</string>
     <string name="new_user_id">New user id</string>
+    <string name="new_description">New description</string>
     <string name="new_birthday">New birthday</string>
     <string name="new_icon">New icon</string>
     <string name="sign_in">Sign In</string>

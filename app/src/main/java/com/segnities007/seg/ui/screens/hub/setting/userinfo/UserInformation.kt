@@ -6,9 +6,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DatePickerState
@@ -22,12 +25,15 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.segnities007.seg.R
 import com.segnities007.seg.ui.components.button.BasicButton
@@ -65,11 +71,12 @@ fun UserInformation(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(dimensionResource(R.dimen.padding_large)),
+            .padding(dimensionResource(R.dimen.padding_large))
+            .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
     ){
-        TextFields(hubUiState = hubUiState, userInfoUiState = userInfoViewModel.userInfoUiState, userInfoUiAction = userInfoViewModel.getUserInfoUiAction())
+        TextFields(userInfoUiState = userInfoViewModel.userInfoUiState, userInfoUiAction = userInfoViewModel.getUserInfoUiAction())
         Spacer(modifier = Modifier.padding(commonPadding))
         SelectionButtons(settingUiAction = settingUiAction, userInfoUiAction = userInfoViewModel.getUserInfoUiAction(), hubUiState = hubUiState, hubUiAction = hubUiAction)
         Spacer(modifier = Modifier.padding(commonPadding))
@@ -110,7 +117,6 @@ private fun DatePickerDialog(
 @Composable
 private fun TextFields(
     modifier: Modifier = Modifier,
-    hubUiState: HubUiState,
     userInfoUiState: UserInfoUiState,
     userInfoUiAction: UserInfoUiAction,
     commonPadding: Dp = dimensionResource(R.dimen.padding_normal),
@@ -118,6 +124,10 @@ private fun TextFields(
 
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
+
+    val lineHeight = 20.sp // 1行分の高さを指定（フォントサイズに応じて調整可能）
+    val maxLines = 5
+    val lineHeightDp = with(LocalDensity.current) { lineHeight.toDp() } // spをdpに変換
 
     Column(){
         OutlinedTextField(
@@ -146,6 +156,16 @@ private fun TextFields(
                     keyboardController?.hide() // キーボードを閉じる
                 }
             )
+        )
+        Spacer(modifier = Modifier.padding(commonPadding))
+        OutlinedTextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(min = lineHeightDp * maxLines), // 高さを`maxLines`に合わせる
+        maxLines = maxLines,
+        value = userInfoUiState.description,
+        onValueChange = { userInfoUiAction.onDescription(it) },
+        label = { Text(stringResource(R.string.new_description)) },
         )
     }
 

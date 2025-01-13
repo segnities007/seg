@@ -30,25 +30,7 @@ fun Preference(
         verticalArrangement = Arrangement.Top,
     ){
         Spacer(modifier = Modifier.padding(commonPadding))
-        FollowsButton()
-        Spacer(modifier = Modifier.padding(commonPadding))
         LogoutButton(navController = navController, settingUiAction = settingUiAction)
-    }
-}
-
-@Composable
-private fun FollowsButton(
-    modifier: Modifier = Modifier,
-    commonPadding: Dp = dimensionResource(R.dimen.padding_small),
-){
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center,
-    ){
-        SmallButton(modifier = Modifier.weight(1f), textID = R.string.follows, onClick = {/*TODO*/})
-        Spacer(modifier = Modifier.padding(commonPadding))
-        SmallButton(modifier = Modifier.weight(1f), textID = R.string.followers, onClick = {/*TODO*/})
     }
 }
 
