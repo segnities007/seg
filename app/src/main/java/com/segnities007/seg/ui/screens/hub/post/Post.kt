@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
@@ -55,12 +54,10 @@ fun Post(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_normal)))
         TopToolBar(postUiState = postViewModel.postUiState, postUiAction = postViewModel.getPostUiAction(), hubUiState = hubUiState, onNavigate = onNavigate)
         InputField(modifier = Modifier.weight(1f), postUiState = postViewModel.postUiState , postUiAction = postViewModel.getPostUiAction())
-        BottomToolBar(modifier = Modifier.imePadding(), postUiState = postViewModel.postUiState, postUiAction = postViewModel.getPostUiAction())
+        BottomToolBar(postUiState = postViewModel.postUiState, postUiAction = postViewModel.getPostUiAction())
     }
-
 }
 
 @Composable

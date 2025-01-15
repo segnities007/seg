@@ -34,7 +34,6 @@ fun TopBar(
 ){
 
     CenterAlignedTopAppBar(
-        modifier = modifier.shadow(elevation = dimensionResource(R.dimen.padding_sn)),
         title = { Text(text = title, maxLines = 1,) },
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer,

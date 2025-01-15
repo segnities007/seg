@@ -24,6 +24,7 @@ fun NavigationSetting(
     accountUiAction: AccountUiAction,
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
+    onHubNavigate: (Route) -> Unit,
     onNavigate: (Route) -> Unit, // go to login
 ){
     Setting(
@@ -31,6 +32,7 @@ fun NavigationSetting(
         onNavigate = {route: Route ->  settingNavHostController.navigate(route) },
         hubUiState = hubUiState,
         hubUiAction = hubUiAction,
+        onHubNavigate = onHubNavigate,
         accountUiAction = accountUiAction,
     ){
         NavHost(navController = settingNavHostController, startDestination = NavigationSettingRoute.Preference,) {

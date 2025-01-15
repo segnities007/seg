@@ -18,6 +18,7 @@ import com.segnities007.seg.ui.screens.hub.account.AccountUiAction
 fun Setting(
     modifier: Modifier,
     onNavigate: (Route) -> Unit,
+    onHubNavigate:(Route) -> Unit,
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
     accountUiAction: AccountUiAction,
@@ -35,17 +36,20 @@ fun Setting(
         TopStatusBar(
             user = hubUiState.user,
             onClickFollowsButton = {
-                if (!hubUiState.user.follows.isNullOrEmpty())
+                if (!hubUiState.user.follows.isNullOrEmpty()){
                     accountUiAction.onSetUsers(hubUiState.user.follows)
+                }
+                onHubNavigate(NavigationHubRoute.Accounts)
             },
             onClickFollowersButton = {
-                if (!hubUiState.user.followers.isNullOrEmpty())
+                if (!hubUiState.user.followers.isNullOrEmpty()){
                     accountUiAction.onSetUsers(hubUiState.user.followers)
+                }
+                onHubNavigate(NavigationHubRoute.Accounts)
             },
             onNavigate = onNavigate,//go to userInfo
             currentRouteName = NavigationHubRoute.Setting.routeName,
         )
-
         content()
     }
 }
