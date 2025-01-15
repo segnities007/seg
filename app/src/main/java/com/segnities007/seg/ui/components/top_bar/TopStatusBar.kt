@@ -39,7 +39,8 @@ fun TopStatusBar(
     url: String = "https://avatars.githubusercontent.com/u/174174755?v=4",
     onClickFollowsButton: () -> Unit = {},
     onClickFollowersButton: () -> Unit = {},
-    onNavigate: (Route) -> Unit,
+    onHubNavigate: (Route) -> Unit,
+    onSettingNavigate: (Route) -> Unit = {},// UserInfoに遷移したい場合にのみ使用
 ){
 
     Box(
@@ -73,13 +74,13 @@ fun TopStatusBar(
                 contentDescription = url,
             )
             Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_small)))
-            Status(user = user, onClickFollowsButton = onClickFollowsButton, onClickFollowersButton = onClickFollowersButton, onNavigate = onNavigate)
+            Status(user = user, onClickFollowsButton = onClickFollowsButton, onClickFollowersButton = onClickFollowersButton, onHubNavigate = onHubNavigate)
             Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_small)))
         }
         if(currentRouteName == NavigationHubRoute.Setting.routeName)
             SettingIconButton(
                 Modifier.align(alignment = Alignment.TopEnd),
-                onNavigate = onNavigate
+                onSettingNavigate = onSettingNavigate
         )
     }
 
@@ -91,7 +92,7 @@ private fun Status(
     user: User,
     commonPadding: Dp = dimensionResource(R.dimen.padding_smaller),
     fontColor: Color = MaterialTheme.colorScheme.primary,
-    onNavigate: (Route) -> Unit,
+    onHubNavigate: (Route) -> Unit,
     onClickFollowsButton: () -> Unit,
     onClickFollowersButton: () -> Unit,
 ){
@@ -110,7 +111,7 @@ private fun Status(
                     .clip(RoundedCornerShape(commonPadding))
                     .clickable {
                         onClickFollowsButton()
-                        onNavigate(NavigationHubRoute.Accounts) }
+                        onHubNavigate(NavigationHubRoute.Accounts) }
                     .padding(commonPadding)
             ){ Text(text = "Follow: ${user.followCount}", color = fontColor,) }
             Spacer(modifier = Modifier.padding(commonPadding))
@@ -119,7 +120,7 @@ private fun Status(
                     .clip(RoundedCornerShape(commonPadding))
                     .clickable {
                         onClickFollowersButton()
-                        onNavigate(NavigationHubRoute.Accounts) }
+                        onHubNavigate(NavigationHubRoute.Accounts) }
                     .padding(commonPadding)
             ) { Text(text = "Follower: ${user.followerCount}", color = fontColor) }
         }
@@ -130,7 +131,7 @@ private fun Status(
 @Composable
 private fun SettingIconButton(
     modifier: Modifier = Modifier,
-    onNavigate: (Route) -> Unit,
+    onSettingNavigate: (Route) -> Unit,
 ){
     Column(
         modifier = modifier,
@@ -138,7 +139,7 @@ private fun SettingIconButton(
         Spacer(modifier = modifier.padding(dimensionResource(R.dimen.padding_normal)))
         IconButton(
             modifier = modifier,
-            onClick  = {onNavigate(NavigationSettingRoute.UserInfo)},
+            onClick  = {onSettingNavigate(NavigationSettingRoute.UserInfo)},
         ) {
             Icon(
                 painter = painterResource(R.drawable.baseline_settings_24),

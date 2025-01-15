@@ -27,7 +27,7 @@ fun TopNavigation(
         }
         composable<NavigationRoute.Hub>{
             NavigationHub(
-                onNavigate = {route: Route ->  //go to login
+                onTopNavigate = {route: Route ->  //go to login
                     topNavController.navigate(route)
                 }
             )
