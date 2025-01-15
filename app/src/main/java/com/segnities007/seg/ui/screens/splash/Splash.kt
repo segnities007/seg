@@ -4,14 +4,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.segnities007.seg.navigation.NavigationRoute
+import com.segnities007.seg.navigation.login.NavigationLoginRoute
 
 @Composable
 fun Splash(
     splashViewModel: SplashViewModel = hiltViewModel(),
-    navController: NavHostController,
+    navHostController: NavHostController,
 ){
     LaunchedEffect(Unit) {
-        splashViewModel.hasLogged(navController)
+        splashViewModel.hasLogged(
+            onNavigateToHost = {navHostController.navigate(NavigationRoute.Hub)},
+            onNavigateToLogin = {navHostController.navigate(NavigationRoute.Login)},
+        )
     }
 }
 

@@ -1,8 +1,5 @@
 package com.segnities007.seg.ui.screens.login.sign_in
 
-import android.content.Context
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,41 +7,31 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Card
-import androidx.compose.material3.ElevatedButton
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import androidx.navigation.NavHostController
-import coil3.compose.AsyncImage
-import com.segnities007.seg.ui.screens.login.SignUiState
 import com.segnities007.seg.R
 import com.segnities007.seg.ui.components.button.BasicButton
-import com.segnities007.seg.ui.screens.login.SignUiAction
+import com.segnities007.seg.ui.screens.login.LoginUiAction
+import com.segnities007.seg.ui.screens.login.LoginUiState
 
 @Composable
 fun SignIn(
     modifier: Modifier = Modifier,
-    signUiState: SignUiState,
-    signUiAction: SignUiAction,
-    navController: NavHostController,
+    loginUiState: LoginUiState,
+    loginUiAction: LoginUiAction,
+    onNavigate: () -> Unit,// go to Hub/home
     padding: Dp = dimensionResource(R.dimen.padding_normal),
 ){
 
@@ -61,20 +48,20 @@ fun SignIn(
                 verticalArrangement = Arrangement.Center,
             ) {
                 InputForm(
-                    text = signUiState.email,
+                    text = loginUiState.email,
                     label = stringResource(R.string.email),
-                ) { signUiAction.onEmailChange(it) }
+                ) { loginUiAction.onEmailChange(it) }
                 Spacer(Modifier.padding(padding))
                 InputForm(
-                    text = signUiState.password,
+                    text = loginUiState.password,
                     label = stringResource(R.string.password),
-                ) { signUiAction.onPasswordChange(it) }
+                ) { loginUiAction.onPasswordChange(it) }
                 Spacer(Modifier.padding(padding))
                 Row{
                     BasicButton(
                         modifier = Modifier.weight(1f),
                         textID = R.string.sign_in,
-                        onClick = { signUiAction.onSignInWithEmailPassword(navController) }
+                        onClick = { loginUiAction.onSignInWithEmailPassword(onNavigate) }
                     )
                 }
             }
@@ -109,27 +96,3 @@ private fun InputForm(
         )
     }
 }
-
-@Composable
-private fun LoginButtonWithGoogle(
-    modifier: Modifier = Modifier,
-    onClick: (Context) -> Unit,
-    context: Context = LocalContext.current
-){
-
-    Box(
-        modifier = Modifier
-            .clip(shape = RoundedCornerShape(16.dp))
-            .clickable(onClick = {onClick(context)})
-            .background(color = Color.Black)
-    ){
-        Row {
-            AsyncImage(
-                model = stringResource(R.string.google_icon_url),
-                contentDescription = stringResource(R.string.google_icon_url),
-            )
-            Text(text = stringResource(R.string.google_login_label))
-        }
-    }
-}
-

@@ -14,15 +14,17 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.Dp
 import androidx.navigation.NavHostController
 import com.segnities007.seg.R
+import com.segnities007.seg.domain.presentation.Route
+import com.segnities007.seg.navigation.NavigationRoute
 import com.segnities007.seg.ui.components.button.SmallButton
 import com.segnities007.seg.ui.screens.hub.setting.SettingUiAction
 
 @Composable
 fun Preference(
-    modifier: Modifier,
-    navController: NavHostController,
+    modifier: Modifier = Modifier,
     settingUiAction: SettingUiAction,
     commonPadding: Dp = dimensionResource(R.dimen.padding_normal),
+    onNavigate: (Route) -> Unit,
 ){
     Column(
         modifier = modifier.fillMaxSize().padding(horizontal = commonPadding),
@@ -30,15 +32,22 @@ fun Preference(
         verticalArrangement = Arrangement.Top,
     ){
         Spacer(modifier = Modifier.padding(commonPadding))
-        LogoutButton(navController = navController, settingUiAction = settingUiAction)
+        LogoutButton(settingUiAction = settingUiAction, onNavigate = onNavigate)
     }
 }
 
 @Composable
 private fun LogoutButton(
     modifier: Modifier = Modifier,
-    navController: NavHostController,
     settingUiAction: SettingUiAction,
+    onNavigate: (Route) -> Unit,
 ){
-    SmallButton(modifier = Modifier.fillMaxWidth(), textID = R.string.logout, onClick = {settingUiAction.onLogout(navController)})
+    SmallButton(
+        modifier = Modifier.fillMaxWidth(),
+        textID = R.string.logout,
+        onClick = {
+            settingUiAction.onLogout()
+            onNavigate(NavigationRoute.Login)
+        }
+    )
 }

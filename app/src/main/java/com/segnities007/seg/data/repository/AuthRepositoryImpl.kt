@@ -1,9 +1,6 @@
 package com.segnities007.seg.data.repository
 
 import android.util.Log
-import androidx.navigation.NavHostController
-import com.segnities007.seg.Hub
-import com.segnities007.seg.Login
 import com.segnities007.seg.domain.repository.AuthRepository
 import io.github.jan.supabase.auth.Auth
 import io.github.jan.supabase.auth.providers.builtin.Email
@@ -17,20 +14,17 @@ class AuthRepositoryImpl @Inject constructor(
 
     //前回ログインしていたかを確認
     suspend fun hasLogged(
-        navController: NavHostController
+        onNavigateToLogin: () -> Unit,
+        onNavigateToHost: () -> Unit,
     ) {
+
         auth.awaitInitialization()
         val currentUser = auth.currentUserOrNull()
+
         if (currentUser != null) {
-            navController.navigate(route = Hub){
-                popUpTo(0)
-                launchSingleTop = true
-            }
+            onNavigateToHost()
         } else {
-            navController.navigate(route = Login){
-                popUpTo(0)
-                launchSingleTop = true
-            }
+            onNavigateToLogin()
         }
     }
 

@@ -6,7 +6,6 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.segnities007.seg.data.model.Image
 import com.segnities007.seg.data.model.User
-import com.segnities007.seg.domain.model.NavigationIndex
 import com.segnities007.seg.domain.presentation.TopLayerViewModel
 import com.segnities007.seg.domain.repository.ImageRepository
 import com.segnities007.seg.domain.repository.UserRepository
@@ -19,12 +18,13 @@ data class HubUiState(
     val user: User = User(),
     val userID: String = "", // of other user
     val icon: Image = Image(),
+    val currentRouteName: String = "Home"
 )
 
 data class HubUiAction(
     val onGetUser: () -> Unit,
-    val onNavigate: (index: NavigationIndex) -> Unit,
     val onGetUserID: (userID: String) -> Unit,
+    val onChangeCurrentRouteName: (newRouteName: String) -> Unit,
 )
 
 @HiltViewModel
@@ -43,8 +43,8 @@ class HubViewModel @Inject constructor(
     fun getHubUiAction(): HubUiAction{
         return HubUiAction(
             onGetUser = this::onGetUser,
-            onNavigate = this::onNavigate,
             onGetUserID = this::onGetUserID,
+            onChangeCurrentRouteName = this::onChangeCurrentRouteName,
         )
     }
 
@@ -58,6 +58,10 @@ class HubViewModel @Inject constructor(
             val image = imageRepository.getImage(user.iconID)
             hubUiState = hubUiState.copy(user = user, userID = user.userID, icon = image)
         }
+    }
+
+    private fun onChangeCurrentRouteName(newRouteName: String){
+        hubUiState = hubUiState.copy(currentRouteName = newRouteName)
     }
 
 }

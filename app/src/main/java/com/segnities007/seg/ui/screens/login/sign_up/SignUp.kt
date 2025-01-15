@@ -21,19 +21,19 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.Dp
-import com.segnities007.seg.ui.screens.login.SignUiState
+import com.segnities007.seg.ui.screens.login.LoginUiState
 import com.segnities007.seg.R
 import com.segnities007.seg.ui.components.button.BasicButton
-import com.segnities007.seg.ui.screens.login.SignUiAction
+import com.segnities007.seg.ui.screens.login.LoginUiAction
 
 @Composable
 fun SignUp(
     modifier: Modifier = Modifier,
     padding: Dp = dimensionResource(R.dimen.padding_normal),
-    signUiState: SignUiState,
-    signUiAction: SignUiAction,
+    onNavigateToConfirmEmail: () -> Unit,
+    loginUiState: LoginUiState,
+    loginUiAction: LoginUiAction,
 ){
-
 
     Box(
         modifier = Modifier.fillMaxSize().padding(dimensionResource(R.dimen.padding_large)),
@@ -46,20 +46,20 @@ fun SignUp(
                 verticalArrangement = Arrangement.Center,
             ) {
                 InputForm(
-                    text = signUiState.email,
+                    text = loginUiState.email,
                     label = stringResource(R.string.email),
-                ) { signUiAction.onEmailChange(it) }
+                ) { loginUiAction.onEmailChange(it) }
                 Spacer(Modifier.padding(padding))
                 InputForm(
-                    text = signUiState.password,
+                    text = loginUiState.password,
                     label = stringResource(R.string.password),
-                ) { signUiAction.onPasswordChange(it) }
+                ) { loginUiAction.onPasswordChange(it) }
                 Spacer(Modifier.padding(padding))
                 Row{
                     BasicButton(
                         modifier = Modifier.weight(1f),
                         textID = R.string.sign_up,
-                        onClick = { signUiAction.onSignUpWithEmailPassword() }
+                        onClick = onNavigateToConfirmEmail
                     )
                 }
             }

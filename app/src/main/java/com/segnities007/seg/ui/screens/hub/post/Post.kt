@@ -39,18 +39,15 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil3.compose.rememberAsyncImagePainter
 import com.segnities007.seg.R
-import com.segnities007.seg.domain.model.NavigationIndex
+import com.segnities007.seg.navigation.hub.NavigationHubRoute
 import com.segnities007.seg.ui.components.button.SmallButton
-import com.segnities007.seg.ui.components.card.PostCardViewModel
-import com.segnities007.seg.ui.screens.hub.HubUiAction
 import com.segnities007.seg.ui.screens.hub.HubUiState
 
 @Composable
 fun Post(
     modifier: Modifier = Modifier,
-    navController: NavHostController,
     hubUiState: HubUiState,
-    hubUiAction: HubUiAction,
+    hubNavHostController: NavHostController,
     postViewModel: PostViewModel = hiltViewModel(),
 ) {
 
@@ -59,7 +56,7 @@ fun Post(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_normal)))
-        TopToolBar(postUiState = postViewModel.postUiState, postUiAction = postViewModel.getPostUiAction(), hubUiState = hubUiState, hubUiAction = hubUiAction)
+        TopToolBar(postUiState = postViewModel.postUiState, postUiAction = postViewModel.getPostUiAction(), hubUiState = hubUiState, hubNavHostController = hubNavHostController)
         InputField(modifier = Modifier.weight(1f), postUiState = postViewModel.postUiState , postUiAction = postViewModel.getPostUiAction())
         BottomToolBar(modifier = Modifier.imePadding(), postUiState = postViewModel.postUiState, postUiAction = postViewModel.getPostUiAction())
     }
@@ -93,8 +90,8 @@ private fun InputField(
 @Composable
 private fun TopToolBar(
     modifier: Modifier = Modifier,
+    hubNavHostController: NavHostController,
     hubUiState: HubUiState,
-    hubUiAction: HubUiAction,
     postUiState: PostUiState,
     postUiAction: PostUiAction,
 ){
@@ -111,7 +108,7 @@ private fun TopToolBar(
                     postUiAction.onCreatePost(hubUiState.user, postUiState.byteArrayList)
                     postUiAction.onGetByteArrayList(listOf())
                     postUiAction.onUpdateInputText("")
-                    hubUiAction.onNavigate(NavigationIndex.HubHome)
+                    hubNavHostController.navigate(NavigationHubRoute.Home)
                 }
             )
         }

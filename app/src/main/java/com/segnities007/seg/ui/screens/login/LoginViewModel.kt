@@ -1,20 +1,12 @@
 package com.segnities007.seg.ui.screens.login
 
-import android.content.Context
-import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavHostController
-import com.segnities007.seg.Hub
 import com.segnities007.seg.data.model.User
-import com.segnities007.seg.data.repository.AuthRepositoryImpl
-import com.segnities007.seg.data.repository.UserRepositoryImpl
-import com.segnities007.seg.domain.model.NavigationIndex
 import com.segnities007.seg.domain.presentation.TopLayerViewModel
 import com.segnities007.seg.domain.repository.AuthRepository
-import com.segnities007.seg.domain.repository.StorageRepository
 import com.segnities007.seg.domain.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -28,22 +20,22 @@ import javax.inject.Inject
 
 // class for SignIn and SignUp UI
 
-data class SignUiState(
+data class LoginUiState(
     val email: String = "",
     val password: String = "",
 )
 
-data class SignUiAction(
+data class LoginUiAction(
     val onPasswordChange: (password: String) -> Unit,
     val onEmailChange: (email: String) -> Unit,
-    val onSignUpWithEmailPassword: () -> Unit,
-    val onSignInWithEmailPassword: (navController: NavHostController) -> Unit,
+    val onSignUpWithEmailPassword: (onNavigate: () -> Unit,) -> Unit,
+    val onSignInWithEmailPassword: (onNavigate: () -> Unit,) -> Unit,
 )
 
 // class for ConfirmEmail UI
 
 data class ConfirmEmailUiAction(
-    val confirmEmail: () -> Unit,
+    val confirmEmail: (onNavigate: () -> Unit,) -> Unit,
 )
 
 // class for CreateAccount UI
@@ -62,7 +54,7 @@ data class CreateAccountUiAction(
     val onNameChange: (name: String) -> Unit,
     val onChangeUserID: (userID: String) -> Unit,
     val onBirthdayChange: (birthday: LocalDate) -> Unit,
-    val createUser: (navController: NavHostController) -> Unit,
+    val createUser: (onNavigate: () -> Unit,) -> Unit,
 )
 
 //
@@ -73,7 +65,7 @@ class LoginViewModel @Inject constructor(
     private val userRepository: UserRepository,
 ) : TopLayerViewModel() {
 
-    var signUiState by mutableStateOf(SignUiState())
+    var loginUiState by mutableStateOf(LoginUiState())
         private set
     var createAccountUiState by mutableStateOf(CreateAccountUiState())
         private set
@@ -84,9 +76,9 @@ class LoginViewModel @Inject constructor(
         )
     }
 
-    fun getSignUiAction(): SignUiAction {
+    fun getLoginAction(): LoginUiAction {
 
-        return SignUiAction(
+        return LoginUiAction(
             onEmailChange = this::onEmailChange,
             onPasswordChange = this::onPasswordChange,
             onSignUpWithEmailPassword = this::onSignUpWithEmailPassword,
@@ -123,24 +115,21 @@ class LoginViewModel @Inject constructor(
         onBirthdayChange(LocalDate.of(year, month, day))
     }
 
-    private fun confirmEmail(){
-
+    private fun confirmEmail(onNavigate: () -> Unit, ){
         viewModelScope.launch(Dispatchers.IO){
             authRepository.signInWithEmailPassword(
-                    email = signUiState.email,
-                    password = signUiState.password,
+                    email = loginUiState.email,
+                    password = loginUiState.password,
                 )
             withContext(Dispatchers.Main){
                 val isConfirmed = userRepository.confirmEmail()
-                if(isConfirmed) super.onNavigate(NavigationIndex.LoginSignUpCreateAccount)
+                if(isConfirmed) onNavigate()
             }
         }
 
     }
 
-    private fun createUser(
-        navController: NavHostController,
-    ){
+    private fun createUser(onNavigate: () -> Unit, ){
         val user = User(
             id = "",
             userID = createAccountUiState.userID,
@@ -150,7 +139,7 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO){
             userRepository.createUser(user)
                 withContext(Dispatchers.Main){
-                    navController.navigate(route = Hub)
+                    onNavigate()
                 }
         }
 
@@ -173,35 +162,33 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun onEmailChange(newEmail: String) {
-        signUiState = signUiState.copy(email = newEmail)
+        loginUiState = loginUiState.copy(email = newEmail)
     }
 
     private fun onPasswordChange(newPassword: String) {
-        signUiState = signUiState.copy(password = newPassword)
+        loginUiState = loginUiState.copy(password = newPassword)
     }
 
-    private fun onSignUpWithEmailPassword(){
+    private fun onSignUpWithEmailPassword(onNavigate: () -> Unit,){
         viewModelScope.launch(Dispatchers.IO){
             withContext(Dispatchers.Main){
                 val isSuccess = authRepository.signUpWithEmailPassword(
-                        email = signUiState.email,
-                        password = signUiState.password
+                        email = loginUiState.email,
+                        password = loginUiState.password
                     )
-                if(isSuccess) super.onNavigate(NavigationIndex.LoginSignUpConfirmEmail)
+                if(isSuccess) onNavigate()
             }
         }
     }
 
-    private fun onSignInWithEmailPassword(
-        navController: NavHostController,
-    ){
+    private fun onSignInWithEmailPassword(onNavigate: () -> Unit, ){
         viewModelScope.launch(Dispatchers.IO){
             val isSuccess = authRepository.signInWithEmailPassword(
-                    email = signUiState.email,
-                    password = signUiState.password
+                    email = loginUiState.email,
+                    password = loginUiState.password
                 )
             withContext(Dispatchers.Main){
-                if(isSuccess) navController.navigate(route = Hub)
+                if(isSuccess) onNavigate()
             }
         }
     }

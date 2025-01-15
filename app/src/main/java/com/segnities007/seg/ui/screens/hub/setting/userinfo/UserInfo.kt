@@ -32,10 +32,11 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.segnities007.seg.R
+import com.segnities007.seg.domain.presentation.Route
+import com.segnities007.seg.navigation.hub.setting.NavigationSettingRoute
 import com.segnities007.seg.ui.components.button.BasicButton
 import com.segnities007.seg.ui.screens.hub.HubUiAction
 import com.segnities007.seg.ui.screens.hub.HubUiState
@@ -45,14 +46,15 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UserInformation(
+fun UserInfo(
     modifier: Modifier = Modifier,
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
-    userInfoViewModel: UserInfoViewModel = hiltViewModel(),
     settingUiState: SettingUiState,
     settingUiAction: SettingUiAction,
-    commonPadding: Dp = dimensionResource(R.dimen.padding_normal)
+    userInfoViewModel: UserInfoViewModel = hiltViewModel(),
+    commonPadding: Dp = dimensionResource(R.dimen.padding_normal),
+    onNavigate: (Route) -> Unit,
 ) {
 
     LaunchedEffect(Unit) {
@@ -78,7 +80,7 @@ fun UserInformation(
     ){
         TextFields(userInfoUiState = userInfoViewModel.userInfoUiState, userInfoUiAction = userInfoViewModel.getUserInfoUiAction())
         Spacer(modifier = Modifier.padding(commonPadding))
-        SelectionButtons(settingUiAction = settingUiAction, userInfoUiAction = userInfoViewModel.getUserInfoUiAction(), hubUiState = hubUiState, hubUiAction = hubUiAction)
+        SelectionButtons(onNavigate = onNavigate, userInfoUiAction = userInfoViewModel.getUserInfoUiAction(), hubUiState = hubUiState, hubUiAction = hubUiAction)
         Spacer(modifier = Modifier.padding(commonPadding))
     }
 
@@ -174,11 +176,11 @@ private fun TextFields(
 @Composable
 private fun SelectionButtons(
     modifier: Modifier = Modifier,
-    settingUiAction: SettingUiAction,
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
     userInfoUiAction: UserInfoUiAction,
     commonPadding: Dp = dimensionResource(R.dimen.padding_normal),
+    onNavigate: (Route) -> Unit,
 ){
 
     val scope = rememberCoroutineScope()
@@ -191,7 +193,7 @@ private fun SelectionButtons(
         BasicButton(
             modifier = Modifier.weight(1f).fillMaxWidth(),
             textID = R.string.cancel,
-            onClick = { settingUiAction.onIndexChange(0) },
+            onClick = { onNavigate(NavigationSettingRoute.Preference) },
         )
         Spacer(modifier = Modifier.padding(commonPadding))
         BasicButton(
@@ -199,9 +201,9 @@ private fun SelectionButtons(
             textID = R.string.enter,
             onClick = {
                 scope.launch {
-                        userInfoUiAction.onUserUpdate(hubUiState.user)
-                        hubUiAction.onGetUser()
-                        settingUiAction.onIndexChange(0)
+                    userInfoUiAction.onUserUpdate(hubUiState.user)
+                    hubUiAction.onGetUser()
+                    onNavigate(NavigationSettingRoute.Preference)
                 }
             }
         )

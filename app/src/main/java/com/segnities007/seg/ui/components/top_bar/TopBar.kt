@@ -18,7 +18,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.segnities007.seg.domain.model.NavigationIndex
+import com.segnities007.seg.navigation.login.NavigationLoginRoute
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -27,32 +27,32 @@ import kotlinx.coroutines.launch
 fun TopBar(
     modifier: Modifier = Modifier,
     title: String,
-    currentIndex: NavigationIndex,
-    contentDescription: String,
+    routeName: String,
     onDrawerOpen: suspend () -> Unit,
     scrollBehavior:  TopAppBarScrollBehavior? = null,
     scope: CoroutineScope = rememberCoroutineScope(),
 ){
 
     CenterAlignedTopAppBar(
-            modifier = modifier.shadow(elevation = dimensionResource(R.dimen.padding_sn)),
-            title = { Text(text = title, maxLines = 1,) },
-            colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                titleContentColor = MaterialTheme.colorScheme.primary,
+        modifier = modifier.shadow(elevation = dimensionResource(R.dimen.padding_sn)),
+        title = { Text(text = title, maxLines = 1,) },
+        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            titleContentColor = MaterialTheme.colorScheme.primary,
             ),
-            navigationIcon = {
-                when(currentIndex){
-                    NavigationIndex.LoginSignUpCreateAccount -> Spacer(modifier = Modifier.padding(0.dp))
-                    NavigationIndex.LoginSignUpConfirmEmail -> Spacer(modifier = Modifier.padding(0.dp))
-                    else -> IconButton(onClick = { scope.launch{ onDrawerOpen() } }) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.baseline_menu_24),
-                            contentDescription = contentDescription,
-                        )
-                    }
+        navigationIcon = {
+            when(routeName){
+                NavigationLoginRoute.CreateAccount.toString() -> Spacer(modifier = Modifier.padding(0.dp))
+                NavigationLoginRoute.ConfirmEmail.toString() -> Spacer(modifier = Modifier.padding(0.dp))
+
+                else -> IconButton(onClick = { scope.launch{ onDrawerOpen() } }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.baseline_menu_24),
+                        contentDescription = routeName,
+                    )
                 }
-            },
-            scrollBehavior = scrollBehavior
-        )
+            }
+        },
+        scrollBehavior = scrollBehavior
+    )
 }
