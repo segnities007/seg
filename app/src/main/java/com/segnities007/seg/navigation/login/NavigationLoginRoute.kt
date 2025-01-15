@@ -1,27 +1,30 @@
 package com.segnities007.seg.navigation.login
 
-
 import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.domain.presentation.Routes
 import kotlinx.serialization.Serializable
 
 @Serializable
-object NavigationLoginRoute: Routes {
+sealed class NavigationLoginRoute(val routeName: String) : Route {
 
     @Serializable
-    object SignIn: Route
-    @Serializable
-    object SignUp: Route
-    @Serializable
-    object ConfirmEmail: Route
-    @Serializable
-    object CreateAccount: Route
+    data object SignIn : NavigationLoginRoute("SignIn")
 
-    override val routeList = listOf(
-        SignIn,
-        SignUp,
-        ConfirmEmail,
-        CreateAccount,
-    )
+    @Serializable
+    data object SignUp : NavigationLoginRoute("SignUp")
 
+    @Serializable
+    data object ConfirmEmail : NavigationLoginRoute("ConfirmEmail")
+
+    @Serializable
+    data object CreateAccount : NavigationLoginRoute("CreateAccount")
+
+    companion object : Routes {
+        override val routeList: List<NavigationLoginRoute> = listOf(
+            SignIn,
+            SignUp,
+            ConfirmEmail,
+            CreateAccount
+        )
+    }
 }

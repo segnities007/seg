@@ -36,9 +36,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import coil3.compose.rememberAsyncImagePainter
 import com.segnities007.seg.R
+import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.navigation.hub.NavigationHubRoute
 import com.segnities007.seg.ui.components.button.SmallButton
 import com.segnities007.seg.ui.screens.hub.HubUiState
@@ -47,8 +47,8 @@ import com.segnities007.seg.ui.screens.hub.HubUiState
 fun Post(
     modifier: Modifier = Modifier,
     hubUiState: HubUiState,
-    hubNavHostController: NavHostController,
     postViewModel: PostViewModel = hiltViewModel(),
+    onNavigate: (Route) -> Unit,// go to home
 ) {
 
     Column(
@@ -56,7 +56,7 @@ fun Post(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_normal)))
-        TopToolBar(postUiState = postViewModel.postUiState, postUiAction = postViewModel.getPostUiAction(), hubUiState = hubUiState, hubNavHostController = hubNavHostController)
+        TopToolBar(postUiState = postViewModel.postUiState, postUiAction = postViewModel.getPostUiAction(), hubUiState = hubUiState, onNavigate = onNavigate)
         InputField(modifier = Modifier.weight(1f), postUiState = postViewModel.postUiState , postUiAction = postViewModel.getPostUiAction())
         BottomToolBar(modifier = Modifier.imePadding(), postUiState = postViewModel.postUiState, postUiAction = postViewModel.getPostUiAction())
     }
@@ -90,10 +90,10 @@ private fun InputField(
 @Composable
 private fun TopToolBar(
     modifier: Modifier = Modifier,
-    hubNavHostController: NavHostController,
     hubUiState: HubUiState,
     postUiState: PostUiState,
     postUiAction: PostUiAction,
+    onNavigate: (Route) -> Unit,
 ){
         Row(
             modifier = modifier.padding(dimensionResource(R.dimen.padding_normal)).fillMaxWidth(),
@@ -108,7 +108,7 @@ private fun TopToolBar(
                     postUiAction.onCreatePost(hubUiState.user, postUiState.byteArrayList)
                     postUiAction.onGetByteArrayList(listOf())
                     postUiAction.onUpdateInputText("")
-                    hubNavHostController.navigate(NavigationHubRoute.Home)
+                    onNavigate(NavigationHubRoute.Home)
                 }
             )
         }

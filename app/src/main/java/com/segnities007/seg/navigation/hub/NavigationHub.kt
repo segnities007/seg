@@ -1,6 +1,5 @@
 package com.segnities007.seg.navigation.hub
 
-import android.util.Log
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.segnities007.seg.ui.components.card.PostCardViewModel
@@ -61,7 +60,11 @@ fun NavigationHub(
                 Post(
                     modifier = modifier,
                     hubUiState = hubViewModel.hubUiState,
-                    hubNavHostController = hubNavHostController,
+                    onNavigate = {route: Route ->
+                        hubNavHostController.navigate(route)
+                        hubViewModel.getHubUiAction().onChangeCurrentRouteName(route::class.simpleName.toString())
+                        postCardViewModel.onGetPostCardUiAction().onGetNewPosts()
+                    }
                 )
             }
             composable<NavigationHubRoute.Notify>{

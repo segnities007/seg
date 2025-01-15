@@ -23,9 +23,11 @@ import javax.inject.Inject
 data class LoginUiState(
     val email: String = "",
     val password: String = "",
+    val currentRouteName: String = "SignIn",
 )
 
 data class LoginUiAction(
+    val onChangeCurrentRouteName: (newCurrentRouteName: String) -> Unit,
     val onPasswordChange: (password: String) -> Unit,
     val onEmailChange: (email: String) -> Unit,
     val onSignUpWithEmailPassword: (onNavigate: () -> Unit,) -> Unit,
@@ -79,6 +81,7 @@ class LoginViewModel @Inject constructor(
     fun getLoginAction(): LoginUiAction {
 
         return LoginUiAction(
+            onChangeCurrentRouteName = this::onChangeCurrentRouteName,
             onEmailChange = this::onEmailChange,
             onPasswordChange = this::onPasswordChange,
             onSignUpWithEmailPassword = this::onSignUpWithEmailPassword,
@@ -99,6 +102,10 @@ class LoginViewModel @Inject constructor(
             onChangeUserID = this::onChangeUserID,
         )
 
+    }
+
+    private fun onChangeCurrentRouteName(newCurrentRouteName: String){
+        loginUiState = loginUiState.copy(currentRouteName = newCurrentRouteName)
     }
 
     private fun onChangeUserID(userID: String){

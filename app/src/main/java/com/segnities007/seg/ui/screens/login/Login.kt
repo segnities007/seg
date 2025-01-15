@@ -23,25 +23,23 @@ import com.segnities007.seg.ui.components.navigation_drawer.NavigationDrawer
 @Composable
 fun Login(
     modifier: Modifier = Modifier,
-    navHostController: NavHostController,
-    loginNavHostController: NavHostController = rememberNavController(),
     topAction: TopAction,
     topState: TopState,
+    onNavigate: (Route) -> Unit,
+    currentRouteName: String,
     content: @Composable (Modifier) -> Unit,
 ){
 
     NavigationDrawer(
         items = LoginItem(),
         drawerState = topState.drawerState,
-        onNavigate = {route: Route ->
-            loginNavHostController.navigate(route)
-        },
+        onNavigate = onNavigate,
         onDrawerClose = topAction.closeDrawer,
     ) {
         LoginUi(
-            navHostController = navHostController,
-            loginNavHostController = loginNavHostController,
             topAction = topAction,
+            currentRouteName = currentRouteName,
+            onNavigate = onNavigate,
             content = content,
         )
     }
@@ -50,34 +48,30 @@ fun Login(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun LoginUi(
-    navHostController: NavHostController,
-    loginNavHostController: NavHostController,
     topAction: TopAction,
+    currentRouteName: String,
+    onNavigate: (Route) -> Unit,
     content: @Composable (Modifier) -> Unit,
 ){
     Scaffold(
         topBar = {
             TopBar(
                 title = stringResource(R.string.login_screen_title),
-                routeName = navHostController.currentDestination?.route.toString(),
+                routeName = currentRouteName,
                 onDrawerOpen = topAction.openDrawer,
             )
         },
         bottomBar = {
-            when(navHostController.currentDestination?.route){
-                NavigationLoginRoute.SignIn.toString() -> BottomBar(
+            when(currentRouteName){
+                NavigationLoginRoute.SignIn.routeName -> BottomBar(
                     items = LoginItem(),
-                    currentRouteName = NavigationLoginRoute.SignIn::class.simpleName.toString(),
-                    onNavigate = {route: Route ->
-                        loginNavHostController.navigate(route)
-                    },
+                    currentRouteName = currentRouteName,
+                    onNavigate = onNavigate,
                 )
-                NavigationLoginRoute.SignUp.toString() -> BottomBar(
+                NavigationLoginRoute.SignUp.routeName -> BottomBar(
                     items = LoginItem(),
-                    currentRouteName = NavigationLoginRoute.SignIn::class.simpleName.toString(),
-                    onNavigate = {route: Route ->
-                        loginNavHostController.navigate(route)
-                    },
+                    currentRouteName = currentRouteName,
+                    onNavigate = onNavigate,
                 )
                 else -> Spacer(modifier = Modifier.padding(0.dp))
             }

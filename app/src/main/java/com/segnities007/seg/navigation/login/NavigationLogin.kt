@@ -7,6 +7,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.navigation.NavigationRoute
 import com.segnities007.seg.ui.screens.login.Login
 import com.segnities007.seg.ui.screens.login.LoginViewModel
@@ -22,69 +23,58 @@ fun NavigationLogin(
     loginNavHostController: NavHostController = rememberNavController(),
     loginViewModel: LoginViewModel = hiltViewModel(),
 ){
-    NavHost(
-        navController = loginNavHostController,
-        startDestination = NavigationLoginRoute.SignIn,
-    ) {
-        composable<NavigationLoginRoute.SignIn> {
-            Login(
-                navHostController = navHostController,
-                loginNavHostController = loginNavHostController,
-                topAction = loginViewModel.onGetTopAction(),
-                topState = loginViewModel.topState
-            ) { modifier: Modifier ->
-                SignIn(
-                    modifier = modifier,
-                    loginUiState = loginViewModel.loginUiState,
-                    loginUiAction = loginViewModel.getLoginAction(),
-                    onNavigate = {navHostController.navigate(NavigationRoute.Hub)}
-                )
-            }
+    Login(
+        topAction = loginViewModel.onGetTopAction(),
+        currentRouteName = loginViewModel.loginUiState.currentRouteName,
+        topState = loginViewModel.topState,
+        onNavigate = {route: Route ->
+            loginNavHostController.navigate(route)
+            loginViewModel.getLoginAction().onChangeCurrentRouteName(route::class.simpleName.toString())
         }
-        composable<NavigationLoginRoute.SignUp> {
-            Login(
-                navHostController = navHostController,
-                loginNavHostController = loginNavHostController,
-                topAction = loginViewModel.onGetTopAction(),
-                topState = loginViewModel.topState
-            ) { modifier: Modifier ->
+    ) { modifier: Modifier ->
+            NavHost(
+                navController = loginNavHostController,
+                startDestination = NavigationLoginRoute.SignIn,
+            ) {
+                composable<NavigationLoginRoute.SignIn> {
+                    SignIn(
+                        modifier = modifier,
+                        loginUiState = loginViewModel.loginUiState,
+                        loginUiAction = loginViewModel.getLoginAction(),
+                        onNavigate = { navHostController.navigate(NavigationRoute.Hub) }
+                    )
+                }
+            composable<NavigationLoginRoute.SignUp> {
                 SignUp(
                     modifier = modifier,
                     loginUiState = loginViewModel.loginUiState,
                     loginUiAction = loginViewModel.getLoginAction(),
-                    onNavigateToConfirmEmail = {loginNavHostController.navigate(NavigationLoginRoute.ConfirmEmail)}
+                    onNavigateToConfirmEmail = {
+                        loginNavHostController.navigate(
+                            NavigationLoginRoute.ConfirmEmail
+                        )
+                    }
                 )
             }
-        }
-        composable<NavigationLoginRoute.ConfirmEmail>{
-            Login(
-                navHostController = navHostController,
-                loginNavHostController = loginNavHostController,
-                topAction = loginViewModel.onGetTopAction(),
-                topState = loginViewModel.topState
-            ) { modifier: Modifier ->
+            composable<NavigationLoginRoute.ConfirmEmail> {
                 ConfirmEmail(
                     modifier = modifier,
                     confirmEmailUiAction = loginViewModel.getConfirmEmailUiAction(),
-                    onNavigateToCreateAccount = {loginNavHostController.navigate(NavigationLoginRoute.CreateAccount)},
+                    onNavigateToCreateAccount = {
+                        loginNavHostController.navigate(
+                            NavigationLoginRoute.CreateAccount
+                        )
+                    },
                 )
             }
-        }
-        composable<NavigationLoginRoute.CreateAccount>{
-            Login(
-                navHostController = navHostController,
-                loginNavHostController = loginNavHostController,
-                topAction = loginViewModel.onGetTopAction(),
-                topState = loginViewModel.topState
-            ) { modifier: Modifier ->
+            composable<NavigationLoginRoute.CreateAccount> {
                 CreateAccount(
                     modifier = modifier,
                     createAccountUiState = loginViewModel.createAccountUiState,
                     createAccountUiAction = loginViewModel.getCreateAccountUiAction(),
-                    onNavigateToHub = {navHostController.navigate(NavigationRoute.Hub)},
+                    onNavigateToHub = { navHostController.navigate(NavigationRoute.Hub) },
                 )
             }
         }
-
     }
 }
