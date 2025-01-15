@@ -28,7 +28,7 @@ fun NavigationHub(
     postCardViewModel: PostCardViewModel = hiltViewModel(),//GetPostの実行を必要最低限にするためここに設置
     accountViewModel: AccountViewModel = hiltViewModel(),
     hubViewModel: HubViewModel = hiltViewModel(),
-    onNavigate: (route: Route) -> Unit,//go to login
+    onTopNavigate: (route: Route) -> Unit,//go to login
 ){
 
     LaunchedEffect(Unit) {
@@ -80,7 +80,7 @@ fun NavigationHub(
                         hubViewModel.getHubUiAction().onChangeCurrentRouteName(NavigationHubRoute.Accounts.routeName)
                         hubNavHostController.navigate(route)
                     },
-                    onNavigate = onNavigate
+                    onTopNavigate = onTopNavigate
                 )
             }
             composable<NavigationHubRoute.Account>{
@@ -90,7 +90,7 @@ fun NavigationHub(
                     hubUiAction = hubViewModel.getHubUiAction(),
                     accountUiState = accountViewModel.accountUiState,
                     accountUiAction = accountViewModel.getAccountUiAction(),
-                    onNavigate = {route: Route ->
+                    onHubNavigate = {route: Route ->
                         hubViewModel.getHubUiAction().onChangeCurrentRouteName(NavigationHubRoute.Accounts.routeName)
                         hubNavHostController.navigate(route)
                     },

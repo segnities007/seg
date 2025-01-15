@@ -25,21 +25,21 @@ fun NavigationSetting(
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
     onHubNavigate: (Route) -> Unit,
-    onNavigate: (Route) -> Unit, // go to login
+    onTopNavigate: (Route) -> Unit, // go to login
 ){
     Setting(
         modifier = modifier,
-        onNavigate = {route: Route ->  settingNavHostController.navigate(route) },
+        onSettingNavigate = {route: Route ->  settingNavHostController.navigate(route) },
+        onHubNavigate = onHubNavigate,
         hubUiState = hubUiState,
         hubUiAction = hubUiAction,
-        onHubNavigate = onHubNavigate,
         accountUiAction = accountUiAction,
     ){
         NavHost(navController = settingNavHostController, startDestination = NavigationSettingRoute.Preference,) {
             composable<NavigationSettingRoute.Preference> {
                 Preference(
                     settingUiAction = settingViewModel.getSettingUiAction(),
-                    onNavigate = onNavigate, //logout
+                    onTopNavigate = onTopNavigate, //logout
                 )
             }
             composable<NavigationSettingRoute.UserInfo> {

@@ -31,7 +31,8 @@ fun Account(
     hubUiAction: HubUiAction,
     accountUiState: AccountUiState,
     accountUiAction: AccountUiAction,
-    onNavigate: (route: Route) -> Unit,
+//    onSettingNavigate: (Route) -> Unit,
+    onHubNavigate:(Route) -> Unit,
 ){
 
     LaunchedEffect(Unit) {
@@ -50,16 +51,16 @@ fun Account(
                 if (!accountUiState.user.follows.isNullOrEmpty()){
                     accountUiAction.onSetUsers(accountUiState.user.follows)
                 }
-                onNavigate(NavigationHubRoute.Accounts)
+                onHubNavigate(NavigationHubRoute.Accounts)
             },
             onClickFollowersButton = {
                 if (!accountUiState.user.followers.isNullOrEmpty()){
                     accountUiAction.onSetUsers(accountUiState.user.followers)
                 }
-                onNavigate(NavigationHubRoute.Accounts)
+                onHubNavigate(NavigationHubRoute.Accounts)
             },
             currentRouteName = hubUiState.currentRouteName,
-            onNavigate = onNavigate,
+            onHubNavigate = onHubNavigate,
         )
 
         if(hubUiState.user.userID != accountUiState.user.userID)

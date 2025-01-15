@@ -24,7 +24,7 @@ fun Preference(
     modifier: Modifier = Modifier,
     settingUiAction: SettingUiAction,
     commonPadding: Dp = dimensionResource(R.dimen.padding_normal),
-    onNavigate: (Route) -> Unit,
+    onTopNavigate: (Route) -> Unit,
 ){
     Column(
         modifier = modifier.fillMaxSize().padding(horizontal = commonPadding),
@@ -32,7 +32,7 @@ fun Preference(
         verticalArrangement = Arrangement.Top,
     ){
         Spacer(modifier = Modifier.padding(commonPadding))
-        LogoutButton(settingUiAction = settingUiAction, onNavigate = onNavigate)
+        LogoutButton(settingUiAction = settingUiAction, onTopNavigate = onTopNavigate)
     }
 }
 
@@ -40,14 +40,14 @@ fun Preference(
 private fun LogoutButton(
     modifier: Modifier = Modifier,
     settingUiAction: SettingUiAction,
-    onNavigate: (Route) -> Unit,
+    onTopNavigate: (Route) -> Unit,
 ){
     SmallButton(
         modifier = Modifier.fillMaxWidth(),
         textID = R.string.logout,
         onClick = {
             settingUiAction.onLogout()
-            onNavigate(NavigationRoute.Login)
+            onTopNavigate(NavigationRoute.Login)
         }
     )
 }

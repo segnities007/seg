@@ -17,7 +17,7 @@ import com.segnities007.seg.ui.screens.hub.account.AccountUiAction
 @Composable
 fun Setting(
     modifier: Modifier,
-    onNavigate: (Route) -> Unit,
+    onSettingNavigate: (Route) -> Unit = {},
     onHubNavigate:(Route) -> Unit,
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
@@ -47,7 +47,8 @@ fun Setting(
                 }
                 onHubNavigate(NavigationHubRoute.Accounts)
             },
-            onNavigate = onNavigate,//go to userInfo
+            onSettingNavigate = onSettingNavigate,//go to userInfo
+            onHubNavigate = onHubNavigate,
             currentRouteName = NavigationHubRoute.Setting.routeName,
         )
         content()
