@@ -76,6 +76,10 @@ fun NavigationHub(
                     accountUiAction = accountViewModel.getAccountUiAction(),
                     hubUiState = hubViewModel.hubUiState,
                     hubUiAction = hubViewModel.getHubUiAction(),
+                    onHubNavigate = { route: Route ->
+                        hubViewModel.getHubUiAction().onChangeCurrentRouteName(NavigationHubRoute.Accounts.routeName)
+                        hubNavHostController.navigate(route)
+                    },
                     onNavigate = onNavigate
                 )
             }
@@ -86,11 +90,23 @@ fun NavigationHub(
                     hubUiAction = hubViewModel.getHubUiAction(),
                     accountUiState = accountViewModel.accountUiState,
                     accountUiAction = accountViewModel.getAccountUiAction(),
-                    onNavigate = onNavigate,
+                    onNavigate = {route: Route ->
+                        hubViewModel.getHubUiAction().onChangeCurrentRouteName(NavigationHubRoute.Accounts.routeName)
+                        hubNavHostController.navigate(route)
+                    },
                 )
             }
             composable<NavigationHubRoute.Accounts>{
-                Accounts(modifier = modifier,)
+                Accounts(
+                    modifier = modifier,
+                    hubUiAction = hubViewModel.getHubUiAction(),
+                    accountUiState = accountViewModel.accountUiState,
+                    accountUiAction = accountViewModel.getAccountUiAction(),
+                    onNavigate = { route: Route ->
+                            hubViewModel.getHubUiAction().onChangeCurrentRouteName(NavigationHubRoute.Account.routeName)
+                            hubNavHostController.navigate(route)
+                        }
+                    )
             }
             composable<NavigationHubRoute.Search>{
                 Search(modifier = modifier,)

@@ -63,23 +63,28 @@ private fun HubUi(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             when(currentRouteName){
-                NavigationHubRoute.Home::class.simpleName.toString() -> TopBar(
+                NavigationHubRoute.Home.routeName -> TopBar(
                     title = stringResource(R.string.app_name),
                     onDrawerOpen = topAction.openDrawer,
                     scrollBehavior = scrollBehavior,
                     routeName = NavigationHubRoute.Home.routeName
                 )
-                NavigationHubRoute.Trend::class.simpleName.toString() -> TopBar(
+                NavigationHubRoute.Trend.routeName -> TopBar(
                     title = stringResource(R.string.app_name),
                     onDrawerOpen = topAction.openDrawer,
                     routeName = NavigationHubRoute.Trend.routeName
                 )
-                NavigationHubRoute.Notify::class.simpleName.toString() -> TopBar(
+                NavigationHubRoute.Post.routeName -> TopBar(
                     title = stringResource(R.string.app_name),
                     onDrawerOpen = topAction.openDrawer,
                     routeName = NavigationHubRoute.Notify.routeName
                 )
-                NavigationHubRoute.Accounts::class.simpleName.toString() -> TopBar(
+                NavigationHubRoute.Notify.routeName -> TopBar(
+                    title = stringResource(R.string.app_name),
+                    onDrawerOpen = topAction.openDrawer,
+                    routeName = NavigationHubRoute.Notify.routeName
+                )
+                NavigationHubRoute.Accounts.routeName -> TopBar(
                     title = stringResource(R.string.app_name),
                     onDrawerOpen = topAction.openDrawer,
                     routeName = NavigationHubRoute.Accounts.routeName

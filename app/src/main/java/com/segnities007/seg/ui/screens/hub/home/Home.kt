@@ -41,6 +41,7 @@ fun Home(
                 },
                 onAvatarClick = { userID: String ->
                     hubUiAction.onGetUserID(userID)
+                    hubUiAction.onChangeCurrentRouteName(NavigationHubRoute.Account.routeName)
                     hubNavController.navigate(NavigationHubRoute.Account)
                 },
             )

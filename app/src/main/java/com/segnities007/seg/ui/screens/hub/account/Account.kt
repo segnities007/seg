@@ -14,7 +14,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
-import androidx.navigation.NavHostController
 import com.segnities007.seg.ui.components.button.SmallButton
 import com.segnities007.seg.ui.components.card.PostCard
 import com.segnities007.seg.ui.components.top_bar.TopStatusBar
@@ -22,6 +21,7 @@ import com.segnities007.seg.ui.screens.hub.HubUiAction
 import com.segnities007.seg.ui.screens.hub.HubUiState
 import com.segnities007.seg.R
 import com.segnities007.seg.domain.presentation.Route
+import com.segnities007.seg.navigation.hub.NavigationHubRoute
 
 
 @Composable
@@ -47,16 +47,21 @@ fun Account(
         TopStatusBar(
             user = accountUiState.user,
             onClickFollowsButton = {
-                if (!accountUiState.user.follows.isNullOrEmpty())
+                if (!accountUiState.user.follows.isNullOrEmpty()){
                     accountUiAction.onSetUsers(accountUiState.user.follows)
+                }
+                onNavigate(NavigationHubRoute.Accounts)
             },
             onClickFollowersButton = {
-                if (!accountUiState.user.followers.isNullOrEmpty())
+                if (!accountUiState.user.followers.isNullOrEmpty()){
                     accountUiAction.onSetUsers(accountUiState.user.followers)
+                }
+                onNavigate(NavigationHubRoute.Accounts)
             },
             currentRouteName = hubUiState.currentRouteName,
             onNavigate = onNavigate,
         )
+
         if(hubUiState.user.userID != accountUiState.user.userID)
             FollowButtons(hubUiState = hubUiState, accountUiState = accountUiState, accountUiAction = accountUiAction)
 

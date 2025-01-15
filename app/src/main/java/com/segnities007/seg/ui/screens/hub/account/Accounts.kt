@@ -10,6 +10,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.segnities007.seg.domain.presentation.Route
+import com.segnities007.seg.navigation.hub.NavigationHubRoute
 import com.segnities007.seg.ui.components.card.AvatarCard
 import com.segnities007.seg.ui.components.top_bar.TopStatusBar
 import com.segnities007.seg.ui.screens.hub.HubUiAction
@@ -18,7 +20,10 @@ import com.segnities007.seg.ui.screens.hub.HubUiState
 @Composable
 fun Accounts(
     modifier: Modifier = Modifier,
-    accountViewModel: AccountViewModel = hiltViewModel(),
+    accountUiState: AccountUiState,
+    accountUiAction: AccountUiAction,
+    hubUiAction: HubUiAction,
+    onNavigate: (Route) -> Unit,
 ){
 
     Column(
@@ -26,15 +31,19 @@ fun Accounts(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
     ){
-        for (user in accountViewModel.accountUiState.users){
+        for (user in accountUiState.users){
 
             LaunchedEffect(Unit) {
-                accountViewModel.getAccountUiAction().onGetIcon(user.iconID)
+                accountUiAction.onGetIcon(user.iconID)
             }
 
             AvatarCard(
-                onCardClick = {},
-                url = accountViewModel.accountUiState.icon.imageUrl,
+                onCardClick = {
+                    hubUiAction.onGetUserID(user.userID)
+                    hubUiAction.onChangeCurrentRouteName(NavigationHubRoute.Account.routeName)
+                    onNavigate(NavigationHubRoute.Account)
+                },
+                url = accountUiState.icon.imageUrl,
                 user = user,
             )
         }

@@ -11,12 +11,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.navigation.NavHostController
 import com.segnities007.seg.domain.model.BottomBarItem
 import com.segnities007.seg.domain.presentation.Route
-import com.segnities007.seg.domain.presentation.Routes
-import com.segnities007.seg.domain.presentation.TopAction
-import com.segnities007.seg.domain.presentation.TopState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -65,7 +61,8 @@ private fun DrawerSheet(
     NavigationDrawerItem(
         modifier = modifier,
         label = { Text(text = route::class.simpleName.toString(), maxLines = 1) },
-        icon = { Icon(painter = painterResource(painterResourceID), contentDescription = route::class.simpleName.toString(),) },
+        icon = { Icon(painter = painterResource(painterResourceID), contentDescription = route::class.simpleName.toString(),)
+               },
         selected = false,
         onClick = {
             onNavigate(route)
