@@ -15,10 +15,12 @@ import javax.inject.Inject
 data class UserInfoUiState(
     val name: String = "",
     val userID: String = "",
+    val description: String = "",
 )
 
 data class UserInfoUiAction(
     val onUserUpdate: suspend (user: User) -> Unit,
+    val onDescription: (newDescription: String) -> Unit,
     val onNameChange: (newName: String) -> Unit,
     val onUserIDChange: (newUserID: String) -> Unit,
 )
@@ -35,6 +37,7 @@ class UserInfoViewModel @Inject constructor(
             onUserUpdate = this::onUserUpdate,
             onUserIDChange = this::onUserIDChange,
             onNameChange = this::onNameChange,
+            onDescription = this::onDescriptionChange,
         )
     }
 
@@ -46,9 +49,13 @@ class UserInfoViewModel @Inject constructor(
         userInfoUiState = userInfoUiState.copy(userID = newUserID)
     }
 
+    private fun onDescriptionChange(newDescription: String){
+        userInfoUiState = userInfoUiState.copy(description = newDescription)
+    }
+
     private suspend fun onUserUpdate(user: User){
         withContext(Dispatchers.IO){
-            val newUser = user.copy(name = userInfoUiState.name, userID = userInfoUiState.userID, updateAt = LocalDateTime.now())
+            val newUser = user.copy(name = userInfoUiState.name, description = userInfoUiState.description, userID = userInfoUiState.userID, updateAt = LocalDateTime.now())
             userRepositoryImpl.updateUser(newUser)
         }
     }

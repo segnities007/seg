@@ -1,5 +1,6 @@
 package com.segnities007.seg.ui.components.bottom_bar
 
+import android.util.Log
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -7,30 +8,30 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
 import com.segnities007.seg.domain.model.BottomBarItem
-import com.segnities007.seg.domain.model.NavigationIndex
+import com.segnities007.seg.domain.presentation.Route
 
 @Composable
 fun BottomBar(
     items: BottomBarItem,
-    indices: List<NavigationIndex>,
-    currentIndex: NavigationIndex,
-    onClick: (NavigationIndex) -> Unit,
+    currentRouteName: String,
+    onNavigate: (Route) -> Unit,
 ){
 
     NavigationBar{
-        items.labels.forEachIndexed { index, label ->
+        items.unSelectedIconIDs.forEachIndexed { index, _ ->
+            val routeName = items.routes.routeList[index]::class.simpleName.toString()
             NavigationBarItem(
                 icon = {
                     Icon(
-                        painter = if(currentIndex == indices[index])
+                        painter = if(routeName == currentRouteName)
                                         painterResource(items.selectedIconIDs[index]) else
                                         painterResource(items.unSelectedIconIDs[index]),
-                        contentDescription = label,
+                        contentDescription = currentRouteName,
                     )
                 },
-                label = { Text(items.labels[index]) },
-                selected = currentIndex == indices[index],
-                onClick = {onClick(indices[index])},
+                label = { Text(routeName) },
+                selected = routeName == currentRouteName,
+                onClick = { onNavigate(items.routes.routeList[index]) },
             )
         }
     }

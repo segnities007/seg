@@ -5,28 +5,23 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavHostController
-import com.segnities007.seg.Login
 import com.segnities007.seg.data.repository.AuthRepositoryImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import javax.inject.Inject
 
 data class SettingUiState(
-    val index: Int = 0,
     val isDatePickerDialogShow: Boolean = false,
     val newName: String = "",
     val newUserID: String = "",
 )
 
 data class SettingUiAction(
-    val onLogout: (navController: NavHostController) -> Unit,
-    val onIndexChange: (newIndex: Int) -> Unit,
+    val onLogout: () -> Unit,
     val onDatePickerClose: () -> Unit,
     val onDatePickerOpen: () -> Unit,
     val onDateSelect: (Long?) -> Unit,
@@ -43,16 +38,12 @@ class SettingViewModel @Inject constructor(
     fun getSettingUiAction(): SettingUiAction {
         return SettingUiAction(
             onLogout = this::onLogout,
-            onIndexChange = this::onIndexChange,
             onDatePickerClose = this::onDatePickerClose,
             onDatePickerOpen = this::onDatePickerOpen,
             onDateSelect = this::onDateSelect,
         )
     }
 
-    private fun onIndexChange(newIndex: Int){
-        settingUiState = settingUiState.copy(index = newIndex)
-    }
     private fun onDatePickerClose(){
         settingUiState = settingUiState.copy(isDatePickerDialogShow = false)
     }
@@ -61,12 +52,9 @@ class SettingViewModel @Inject constructor(
         settingUiState = settingUiState.copy(isDatePickerDialogShow = true)
     }
 
-    private fun onLogout(navController: NavHostController){
-        viewModelScope.launch {
+    private fun onLogout(){
+        viewModelScope.launch(Dispatchers.IO){
             authRepositoryImpl.logout()
-            withContext(Dispatchers.Main){
-                navController.navigate(Login)
-            }
         }
     }
 

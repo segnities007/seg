@@ -1,6 +1,5 @@
 package com.segnities007.seg.ui.screens.hub.account
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,13 +14,15 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.segnities007.seg.ui.components.button.SmallButton
 import com.segnities007.seg.ui.components.card.PostCard
 import com.segnities007.seg.ui.components.top_bar.TopStatusBar
 import com.segnities007.seg.ui.screens.hub.HubUiAction
 import com.segnities007.seg.ui.screens.hub.HubUiState
 import com.segnities007.seg.R
+import com.segnities007.seg.domain.presentation.Route
+
 
 @Composable
 fun Account(
@@ -29,7 +30,8 @@ fun Account(
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
     accountUiState: AccountUiState,
-    accountUiAction: AccountUiAction
+    accountUiAction: AccountUiAction,
+    onNavigate: (route: Route) -> Unit,
 ){
 
     LaunchedEffect(Unit) {
@@ -44,15 +46,16 @@ fun Account(
     ){
         TopStatusBar(
             user = accountUiState.user,
-            hubUiAction = hubUiAction,
             onClickFollowsButton = {
                 if (!accountUiState.user.follows.isNullOrEmpty())
                     accountUiAction.onSetUsers(accountUiState.user.follows)
-                                   },
+            },
             onClickFollowersButton = {
                 if (!accountUiState.user.followers.isNullOrEmpty())
                     accountUiAction.onSetUsers(accountUiState.user.followers)
-            }
+            },
+            currentRouteName = hubUiState.currentRouteName,
+            onNavigate = onNavigate,
         )
         if(hubUiState.user.userID != accountUiState.user.userID)
             FollowButtons(hubUiState = hubUiState, accountUiState = accountUiState, accountUiAction = accountUiAction)

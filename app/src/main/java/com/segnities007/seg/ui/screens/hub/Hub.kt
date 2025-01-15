@@ -4,67 +4,46 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import com.segnities007.seg.ui.components.top_bar.TopBar
 import com.segnities007.seg.R
 import com.segnities007.seg.data.model.bottom_bar.HubItem
-import com.segnities007.seg.domain.model.NavigationIndex
+import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.domain.presentation.TopAction
-import com.segnities007.seg.domain.presentation.TopState
+import com.segnities007.seg.navigation.hub.NavigationHubRoute
 import com.segnities007.seg.ui.components.bottom_bar.BottomBar
 import com.segnities007.seg.ui.components.floating_button.FloatingButton
 import com.segnities007.seg.ui.components.navigation_drawer.NavigationDrawer
-import com.segnities007.seg.ui.screens.hub.account.Account
-import com.segnities007.seg.ui.screens.hub.account.AccountViewModel
-import com.segnities007.seg.ui.screens.hub.account.Accounts
-import com.segnities007.seg.ui.screens.hub.setting.Setting
-import com.segnities007.seg.ui.screens.hub.home.Home
-import com.segnities007.seg.ui.screens.hub.notify.Notify
-import com.segnities007.seg.ui.screens.hub.post.Post
-import com.segnities007.seg.ui.screens.hub.trend.Trend
 
+
+//drawerとnavigationを使用するためにこのようなツリー構造にしてる
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Hub(
-    modifier: Modifier = Modifier,
-    navController: NavHostController,
     hubViewModel: HubViewModel = hiltViewModel(),
+    onNavigate: (Route) -> Unit,
+    currentRouteName: String,
+    content: @Composable (Modifier) -> Unit
 ){
-
-    LaunchedEffect(Unit) {
-        val action = hubViewModel.getTopAction()
-        action.onNavigate(NavigationIndex.HubHome)
-    }
-
-    val indices = listOf(
-        NavigationIndex.HubHome,
-        NavigationIndex.HubTrend,
-        NavigationIndex.HubPost,
-        NavigationIndex.HubNotify,
-        NavigationIndex.HubSetting
-    )
 
     NavigationDrawer(
         items = HubItem(),
-        indices = indices,
-        topState = hubViewModel.topState,
-        topAction = hubViewModel.getTopAction(),
+        drawerState = hubViewModel.topState.drawerState,
+        onNavigate = onNavigate,
+        onDrawerClose = hubViewModel.onGetTopAction().closeDrawer,
     ) {
         HubUi(
-            hubUiState = hubViewModel.hubUiState,
-            hubUiAction = hubViewModel.getHubUiAction(),
-            indices = indices,
-            topState = hubViewModel.topState,
-            topAction = hubViewModel.getTopAction(),
-            navController = navController,
+            topAction = hubViewModel.onGetTopAction(),
+            content = content,
+            currentRouteName = currentRouteName,
+            onNavigate = onNavigate,
         )
     }
 
@@ -73,45 +52,37 @@ fun Hub(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun HubUi(
-    navController: NavHostController,
-    indices: List<NavigationIndex>,
-    topState: TopState,
     topAction: TopAction,
-    hubUiState: HubUiState,
-    hubUiAction: HubUiAction,
-    accountViewModel: AccountViewModel = hiltViewModel(),
+    currentRouteName: String,
+    onNavigate: (Route) -> Unit,
+    scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(),
+    content: @Composable (modifier: Modifier) -> Unit,
 ){
-
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            when(topState.index){
-                NavigationIndex.HubHome -> TopBar(
+            when(currentRouteName){
+                NavigationHubRoute.Home::class.simpleName.toString() -> TopBar(
                     title = stringResource(R.string.app_name),
-                    contentDescription = stringResource(R.string.menu_description),
                     onDrawerOpen = topAction.openDrawer,
                     scrollBehavior = scrollBehavior,
-                    currentIndex = topState.index,
+                    routeName = NavigationHubRoute.Home.routeName
                 )
-                NavigationIndex.HubTrend -> TopBar(
+                NavigationHubRoute.Trend::class.simpleName.toString() -> TopBar(
                     title = stringResource(R.string.app_name),
-                    contentDescription = stringResource(R.string.menu_description),
                     onDrawerOpen = topAction.openDrawer,
-                    currentIndex = topState.index,
+                    routeName = NavigationHubRoute.Trend.routeName
                 )
-                NavigationIndex.HubNotify -> TopBar(
+                NavigationHubRoute.Notify::class.simpleName.toString() -> TopBar(
                     title = stringResource(R.string.app_name),
-                    contentDescription = stringResource(R.string.menu_description),
                     onDrawerOpen = topAction.openDrawer,
-                    currentIndex = topState.index,
+                    routeName = NavigationHubRoute.Notify.routeName
                 )
-                NavigationIndex.HubAccounts -> TopBar(
+                NavigationHubRoute.Accounts::class.simpleName.toString() -> TopBar(
                     title = stringResource(R.string.app_name),
-                    contentDescription = stringResource(R.string.menu_description),
                     onDrawerOpen = topAction.openDrawer,
-                    currentIndex = topState.index,
+                    routeName = NavigationHubRoute.Accounts.routeName
                 )
                 else -> Spacer(modifier = Modifier.padding(0.dp))
             }
@@ -119,51 +90,19 @@ private fun HubUi(
         bottomBar = {
             BottomBar(
                 items = HubItem(),
-                currentIndex = topState.index,
-                indices = indices,
-            ) { hubUiAction.onNavigate(it) }
+                currentRouteName = currentRouteName,
+                onNavigate = onNavigate,
+            )
         },
         floatingActionButton = {
-            when(topState.index){
-                NavigationIndex.HubHome -> FloatingButton(iconID = R.drawable.baseline_search_24) { }
-                NavigationIndex.HubTrend -> FloatingButton(iconID = R.drawable.baseline_search_24) { }
+            when(currentRouteName){
+                NavigationHubRoute.Home.routeName -> FloatingButton(iconID = R.drawable.baseline_search_24) { }
+                NavigationHubRoute.Trend.routeName -> FloatingButton(iconID = R.drawable.baseline_search_24) { }
                 else -> Spacer(modifier = Modifier.padding(0.dp))
             }
         }
     ){ innerPadding ->
-        when(topState.index){
-            NavigationIndex.HubHome -> Home(
-                modifier = Modifier.padding(innerPadding),
-                hubUiAction = hubUiAction,
-            )
-            NavigationIndex.HubTrend -> Trend(modifier = Modifier.padding(innerPadding))
-            NavigationIndex.HubPost -> Post(
-                modifier = Modifier.padding(innerPadding),
-                navController = navController,
-                hubUiAction =  hubUiAction,
-                hubUiState = hubUiState,
-            )
-            NavigationIndex.HubNotify -> Notify(modifier = Modifier.padding(innerPadding))
-            NavigationIndex.HubSetting -> Setting(
-                modifier = Modifier.padding(innerPadding),
-                navController = navController,
-                hubUiState = hubUiState,
-                hubUiAction = hubUiAction,
-                accountUiAction = accountViewModel.getAccountUiAction(),
-            )
-            NavigationIndex.HubAccount -> Account(
-                modifier = Modifier.padding(innerPadding),
-                hubUiState = hubUiState,
-                hubUiAction = hubUiAction,
-                accountUiState = accountViewModel.accountUiState,
-                accountUiAction = accountViewModel.getAccountUiAction(),
-            )
-            NavigationIndex.HubAccounts -> Accounts(
-                modifier = Modifier.padding(innerPadding),
-                accountViewModel = accountViewModel,
-            )
-            else -> Text("maybe navigation point isn't set.")
-        }
+        content(Modifier.padding(innerPadding))
     }
 }
 

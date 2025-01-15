@@ -15,14 +15,17 @@ import javax.inject.Inject
 class SplashViewModel @Inject constructor(
     private val authRepositoryImpl: AuthRepositoryImpl,
 ): ViewModel(){
+
     fun hasLogged(
-        navController: NavHostController,
+        onNavigateToLogin: () -> Unit,
+        onNavigateToHost: () -> Unit,
     ){
         Log.d("check splash", "run hasLogged")
         viewModelScope.launch{
             withContext(Dispatchers.Main){
-                authRepositoryImpl.hasLogged(navController)
+                authRepositoryImpl.hasLogged(onNavigateToHost = onNavigateToHost, onNavigateToLogin = onNavigateToLogin)
             }
         }
     }
+
 }

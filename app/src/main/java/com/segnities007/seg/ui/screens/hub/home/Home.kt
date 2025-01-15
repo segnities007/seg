@@ -6,50 +6,44 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.segnities007.seg.data.model.Post
-import com.segnities007.seg.domain.model.NavigationIndex
+import com.segnities007.seg.navigation.hub.NavigationHubRoute
 import com.segnities007.seg.ui.components.card.PostCard
-import com.segnities007.seg.ui.components.card.PostCardViewModel
+import com.segnities007.seg.ui.components.card.PostCardUiAction
+import com.segnities007.seg.ui.components.card.PostCardUiState
 import com.segnities007.seg.ui.screens.hub.HubUiAction
 
 @Composable
 fun Home(
     modifier: Modifier,
+    hubNavController: NavController,
     hubUiAction: HubUiAction,
-    postCardViewModel: PostCardViewModel = hiltViewModel(),
-    homeViewModel: HomeViewModel = hiltViewModel(),
+    postCardUiState: PostCardUiState,
+    postCardUiAction: PostCardUiAction,
 ){
-    LaunchedEffect(Unit) {
-        val postCardUiAction = postCardViewModel.onGetPostCardUiAction()
-        postCardUiAction.onGetNewPosts()
-    }
-
     Column (
         modifier = modifier.fillMaxSize().verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
     ){
-        for (i in 0 until postCardViewModel.postCardUiState.posts.size) {
+        for (i in 0 until postCardUiState.posts.size) {
 
             PostCard(
                 onCardClick = {/*TODO*/},
-                post = postCardViewModel.postCardUiState.posts[i],
-                images = postCardViewModel.postCardUiState.imageLists[i],
-                icon = postCardViewModel.postCardUiState.icons[i],
+                post = postCardUiState.posts[i],
+                images = postCardUiState.imageLists[i],
+                icon = postCardUiState.icons[i],
                 onInitializeAction = { post: Post ->
-                    postCardViewModel.onGetPostCardUiAction().onIncrementViewCount(post)
+                    postCardUiAction.onIncrementViewCount(post)
                 },
                 onAvatarClick = { userID: String ->
                     hubUiAction.onGetUserID(userID)
-                    hubUiAction.onNavigate(NavigationIndex.HubAccount)
+                    hubNavController.navigate(NavigationHubRoute.Account)
                 },
             )
-
-
         }
     }
 

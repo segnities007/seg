@@ -1,5 +1,6 @@
 package com.segnities007.seg.ui.components.navigation_drawer
 
+import androidx.compose.material3.DrawerState
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalDrawerSheet
@@ -10,8 +11,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import com.segnities007.seg.domain.model.NavigationIndex
+import androidx.navigation.NavHostController
 import com.segnities007.seg.domain.model.BottomBarItem
+import com.segnities007.seg.domain.presentation.Route
+import com.segnities007.seg.domain.presentation.Routes
 import com.segnities007.seg.domain.presentation.TopAction
 import com.segnities007.seg.domain.presentation.TopState
 import kotlinx.coroutines.CoroutineScope
@@ -20,26 +23,25 @@ import kotlinx.coroutines.launch
 @Composable
 fun NavigationDrawer(
     modifier: Modifier = Modifier,
+    drawerState: DrawerState,
     items: BottomBarItem,
-    indices: List<NavigationIndex>,
-    topState: TopState,
-    topAction: TopAction,
+    onNavigate: (route: Route) -> Unit,
+    onDrawerClose: suspend () -> Unit,
     content: @Composable () -> Unit,
 ){
 
     ModalNavigationDrawer(
         modifier = modifier,
-        drawerState = topState.drawerState,
+        drawerState = drawerState,
         gesturesEnabled = false,
         drawerContent = {
             ModalDrawerSheet {
-                items.labels.forEachIndexed{ index, label ->
+                items.unSelectedIconIDs.forEachIndexed{ index, iconID ->
                     DrawerSheet(
-                        label = label,
-                        index = indices[index],
-                        painterResourceID = items.unSelectedIconIDs[index],
-                        onIndexChange = topAction.onNavigate,
-                        onDrawerClose = topAction.closeDrawer,
+                        route = items.routes.routeList[index],
+                        painterResourceID = iconID,
+                        onDrawerClose = onDrawerClose,
+                        onNavigate = onNavigate,
                     )
                 }
             }
@@ -52,22 +54,21 @@ fun NavigationDrawer(
 @Composable
 private fun DrawerSheet(
     modifier: Modifier = Modifier,
-    label: String,
-    index: NavigationIndex,
+    route: Route,
     painterResourceID: Int,
-    onIndexChange: (NavigationIndex) -> Unit,
+    scope: CoroutineScope = rememberCoroutineScope(),
+    onNavigate: (route: Route) -> Unit,
     onDrawerClose: suspend () -> Unit,
-    scope: CoroutineScope = rememberCoroutineScope()
 ){
 
     HorizontalDivider()
     NavigationDrawerItem(
         modifier = modifier,
-        label = { Text(text = label, maxLines = 1) },
-        icon = { Icon(painter = painterResource(painterResourceID), contentDescription = label,) },
+        label = { Text(text = route::class.simpleName.toString(), maxLines = 1) },
+        icon = { Icon(painter = painterResource(painterResourceID), contentDescription = route::class.simpleName.toString(),) },
         selected = false,
         onClick = {
-            onIndexChange(index)
+            onNavigate(route)
             scope.launch{
                 onDrawerClose()
             }

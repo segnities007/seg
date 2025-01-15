@@ -29,12 +29,13 @@ import androidx.navigation.NavHostController
 import com.segnities007.seg.ui.screens.login.CreateAccountUiAction
 import com.segnities007.seg.ui.screens.login.CreateAccountUiState
 import com.segnities007.seg.R
+import com.segnities007.seg.navigation.NavigationRoute
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateAccount(
     modifier: Modifier = Modifier,
-    navController: NavHostController,
+    onNavigateToHub: () -> Unit,
     createAccountUiState: CreateAccountUiState,
     createAccountUiAction: CreateAccountUiAction,
 ){
@@ -68,7 +69,7 @@ fun CreateAccount(
             Text(stringResource(id = R.string.select))
         }
         ElevatedButton(
-            onClick = { createAccountUiAction.createUser(navController) },
+            onClick = { createAccountUiAction.createUser(onNavigateToHub) },
             modifier = Modifier.padding(dimensionResource(R.dimen.padding_normal)),
         ) {
             Text(stringResource(id = R.string.enter))
