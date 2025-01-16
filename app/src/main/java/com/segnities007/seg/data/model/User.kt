@@ -41,6 +41,15 @@ data class User(
     @SerialName("post_id_list")
     val posts: List<Int>? = listOf(),
 
+    @SerialName("post_like_id_list")
+    val likes: List<Int>? = listOf(),
+
+    @SerialName("post_repost_id_list")
+    val reposts: List<Int>? = listOf(),
+
+    @SerialName("post_comment_id_list")
+    val comments: List<Int>? = listOf(),
+
     @SerialName("create_at")
     @Serializable(with = LocalDateTimeSerializer::class)
     val createAt: LocalDateTime = LocalDateTime.now(),

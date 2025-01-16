@@ -29,6 +29,8 @@ import coil3.compose.AsyncImage
 import com.segnities007.seg.R
 import com.segnities007.seg.data.model.Image
 import com.segnities007.seg.data.model.Post
+import com.segnities007.seg.data.model.User
+import com.segnities007.seg.ui.screens.hub.HubUiAction
 
 @Composable
 fun PostCard(
@@ -37,8 +39,11 @@ fun PostCard(
     onCardClick: () -> Unit,
     onAvatarClick: (userID: String) -> Unit,
     post: Post,
+    myself: User,
     icon: Image = Image(),
     images: List<Image>,
+    hubUiAction: HubUiAction,
+    postCardUiAction: PostCardUiAction,
 ){
     LaunchedEffect(Unit) {
         onInitializeAction(post)
@@ -68,7 +73,7 @@ fun PostCard(
                 Name(modifier = modifier, post = post)
                 Description(modifier = modifier, post = post)
                 Images(modifier = modifier, images = images)
-                ActionIcons(modifier = modifier, post = post)
+                ActionIcons(modifier = modifier, post = post, myself = myself, postCardUiAction = postCardUiAction, hubUiAction = hubUiAction)
             }
         }
     }
@@ -114,9 +119,13 @@ private fun Images(
 @Composable
 private fun ActionIcons(
     modifier: Modifier = Modifier,
+    myself: User,
     post: Post,
+    hubUiAction: HubUiAction,
+    postCardUiAction: PostCardUiAction,
 ){
     val pushIcons = listOf(
+
         R.drawable.baseline_favorite_24,
         R.drawable.baseline_repeat_24,
         R.drawable.baseline_chat_bubble_24,
@@ -149,16 +158,43 @@ private fun ActionIcons(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceEvenly,
     ){
-        for(i in pushIcons.indices){
+        ActionIcon(
+            painterRes = if(myself.likes!!.contains(post.id)) pushIcons[0] else unPushIcons[0],
+            contentRes = contentDescriptions[0],
+            count = counts[0],
+            onClick = {
+                postCardUiAction.onPushLikeButton(post, myself, hubUiAction.onGetUser)
 
-            ActionIcon(
-                modifier = modifier,
-                painterRes = pushIcons[i],
-                contentRes = contentDescriptions[i],
-                count = counts[i],
-            )
+            }
+        )
+        ActionIcon(
+            painterRes = if(myself.reposts!!.contains(post.id)) pushIcons[1] else unPushIcons[1],
+            contentRes = contentDescriptions[1],
+            count = counts[1],
+            onClick = {
+                postCardUiAction.onPushRepostButton(post, myself, hubUiAction.onGetUser)
 
-        }
+            }
+        )
+        ActionIcon(
+            painterRes = if(myself.comments!!.contains(post.id)) pushIcons[2] else unPushIcons[2],
+            contentRes = contentDescriptions[2],
+            count = counts[2],
+            onClick = {
+                //TODO
+            }
+        )
+        ActionIcon(
+            painterRes = pushIcons[3],
+            contentRes = contentDescriptions[3],
+            count = counts[3],
+            onClick = {
+            //Nothing
+            }
+        )
+
+
+
     }
 }
 
@@ -168,11 +204,12 @@ private fun ActionIcon(
     painterRes: Int,
     contentRes: Int,
     count: Int,
+    onClick: () -> Unit,
 ){
     Row(
         modifier = modifier
             .clip(RoundedCornerShape(dimensionResource(R.dimen.padding_small)))
-            .clickable {  }
+            .clickable { onClick() }
             .padding(dimensionResource(R.dimen.padding_action_icon)),
     ){
         Image(

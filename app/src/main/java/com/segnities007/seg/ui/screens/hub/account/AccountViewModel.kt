@@ -11,6 +11,7 @@ import com.segnities007.seg.data.model.User
 import com.segnities007.seg.domain.repository.ImageRepository
 import com.segnities007.seg.domain.repository.PostRepository
 import com.segnities007.seg.domain.repository.UserRepository
+import com.segnities007.seg.ui.components.card.PostCardUiAction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -57,6 +58,30 @@ class AccountViewModel @Inject constructor(
             onSetUsers = this::onSetUsers,
             onGetUsers = this::onGetUsers,
         )
+    }
+
+    fun getPostUiAction(): PostCardUiAction{
+        return PostCardUiAction(
+            onGetNewPosts = {/*nothing*/},
+            onGetImagesOfPostCard = {/*nothing*/},
+            onPushLikeButton = this::onPushLikeButton,
+            onPushRepostButton = this::onPushRepostButton,
+            onPushCommentButton = this::onPushCommentButton,
+            onIncrementViewCount = this::onIncrementViewCount,
+        )
+    }
+
+    private fun onUpdatePosts(postID: Int){
+        viewModelScope.launch(Dispatchers.IO){
+            val newPost = postRepository.getPost(postID)
+
+            val newPosts = accountUiState.posts.map { post ->
+                if (newPost.id == post.id) newPost else post
+            }
+
+            accountUiState = accountUiState.copy(posts = newPosts)
+
+        }
     }
 
     private fun onSetUsers(userIDs: List<String>){
@@ -114,6 +139,46 @@ class AccountViewModel @Inject constructor(
             }
 
             accountUiState = accountUiState.copy(posts = posts, images = images)
+        }
+    }
+
+    private fun onIncrementViewCount(post: Post){
+        viewModelScope.launch(Dispatchers.IO){
+            postRepository.onIncrementView(post)
+        }
+    }
+
+    private fun onPushLikeButton(post: Post, myself: User, updateMyself: () -> Unit,){
+        viewModelScope.launch(Dispatchers.IO){
+
+            if(myself.likes!!.contains(post.id)){
+                postRepository.onLike(post = post, user = myself)
+            }else{
+                postRepository.onCancelLike(post = post, user = myself)
+            }
+            onUpdatePosts(post.id)
+            updateMyself()
+        }
+    }
+
+    private fun onPushRepostButton(post: Post, myself: User, updateMyself: () -> Unit,){
+        viewModelScope.launch(Dispatchers.IO){
+
+            if(myself.reposts!!.contains(post.id)){
+                postRepository.onRepost(post = post, user = myself)
+            }else{
+                postRepository.onCancelRepost(post = post, user = myself)
+            }
+            onUpdatePosts(post.id)
+            updateMyself()
+        }
+    }
+
+    private fun onPushCommentButton(post: Post, comment: Post, myself: User, updateMyself: () -> Unit,){
+        viewModelScope.launch(Dispatchers.IO){
+
+            //TODO
+
         }
     }
 

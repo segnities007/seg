@@ -1,5 +1,6 @@
 package com.segnities007.seg.ui.components.card
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -7,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.segnities007.seg.data.model.Image
 import com.segnities007.seg.data.model.Post
+import com.segnities007.seg.data.model.User
 import com.segnities007.seg.domain.repository.ImageRepository
 import com.segnities007.seg.domain.repository.PostRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,12 +25,9 @@ data class PostCardUiState(
 data class PostCardUiAction(
     val onGetNewPosts: () -> Unit,
     val onGetImagesOfPostCard: (post: Post) -> Unit,
-    val onIncrementLikeCount: (post: Post) -> Unit,
-    val onDecrementLikeCount: (post: Post) -> Unit,
-    val onIncrementRepostCount: (post: Post) -> Unit,
-    val onDecrementRepostCount: (post: Post) -> Unit,
-    val onIncrementCommentCount: (post: Post) -> Unit,
-    val onDecrementCommentCount: (post: Post) -> Unit,
+    val onPushLikeButton: (post: Post, myself: User, updateMyself: () -> Unit,) -> Unit,
+    val onPushRepostButton: (post: Post, myself: User, updateMyself: () -> Unit,) -> Unit,
+    val onPushCommentButton: (post: Post, comment: Post, myself: User, updateMyself: () -> Unit,) -> Unit,
     val onIncrementViewCount: (post: Post) -> Unit,
 )
 
@@ -45,15 +44,14 @@ class PostCardViewModel @Inject constructor(
         return PostCardUiAction(
             onGetNewPosts = this::onGetNewPosts,
             onGetImagesOfPostCard = this::onGetImagesOfPostCard,
-            onIncrementLikeCount = this::onIncrementLikeCount,
-            onDecrementLikeCount = this::onDecrementLikeCount,
-            onIncrementRepostCount = this::onIncrementRepostCount,
-            onDecrementRepostCount = this::onDecrementRepostCount,
-            onIncrementCommentCount = this::onIncrementCommentCount,
-            onDecrementCommentCount = this::onDecrementCommentCount,
+            onPushLikeButton = this::onPushLikeButton,
+            onPushRepostButton = this::onPushRepostButton,
+            onPushCommentButton = this::onPushCommentButton,
             onIncrementViewCount = this::onIncrementViewCount,
         )
     }
+
+
 
     private fun onGetNewPosts(){
         viewModelScope.launch(Dispatchers.IO){
@@ -87,6 +85,19 @@ class PostCardViewModel @Inject constructor(
         }
     }
 
+    private fun onUpdatePosts(postID: Int){
+        viewModelScope.launch(Dispatchers.IO){
+            val newPost = postRepository.getPost(postID)
+
+            val newPosts = postCardUiState.posts.map { post ->
+                if (newPost.id == post.id) newPost else post
+            }
+
+            postCardUiState = postCardUiState.copy(posts = newPosts)
+
+        }
+    }
+
     private fun onGetImagesOfPostCard(post: Post){
         viewModelScope.launch(Dispatchers.IO){
             if (post.imageIDs.isNullOrEmpty()){
@@ -101,29 +112,46 @@ class PostCardViewModel @Inject constructor(
         }
     }
 
-    private fun onIncrementLikeCount(post: Post){
-    }
-
-    private fun onDecrementLikeCount(post: Post){
-    }
-
-    private fun onIncrementRepostCount(post: Post){
-    }
-
-    private fun onDecrementRepostCount(post: Post){
-    }
-
-    private fun onIncrementCommentCount(post: Post){
-    }
-
-    private fun onDecrementCommentCount(post: Post){
-    }
-
     private fun onIncrementViewCount(post: Post){
         viewModelScope.launch(Dispatchers.IO){
             postRepository.onIncrementView(post)
         }
     }
+
+    private fun onPushLikeButton(post: Post, myself: User, updateMyself: () -> Unit,){
+        viewModelScope.launch(Dispatchers.IO){
+            if(!myself.likes!!.contains(post.id)){
+                postRepository.onLike(post = post, user = myself)
+            }else{
+                postRepository.onCancelLike(post = post, user = myself)
+            }
+            onUpdatePosts(post.id)
+            updateMyself()
+        }
+    }
+
+    private fun onPushRepostButton(post: Post, myself: User, updateMyself: () -> Unit,){
+        viewModelScope.launch(Dispatchers.IO){
+
+            if(!myself.reposts!!.contains(post.id)){
+                postRepository.onRepost(post = post, user = myself)
+            }else{
+                postRepository.onCancelRepost(post = post, user = myself)
+            }
+            onUpdatePosts(post.id)
+            updateMyself()
+        }
+    }
+
+    private fun onPushCommentButton(post: Post, comment: Post, myself: User, updateMyself: () -> Unit,){
+        viewModelScope.launch(Dispatchers.IO){
+
+            //TODO
+
+        }
+    }
+
+
 
 }
 

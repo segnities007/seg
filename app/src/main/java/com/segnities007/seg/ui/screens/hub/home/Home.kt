@@ -1,11 +1,10 @@
 package com.segnities007.seg.ui.screens.hub.home
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
@@ -15,27 +14,34 @@ import com.segnities007.seg.ui.components.card.PostCard
 import com.segnities007.seg.ui.components.card.PostCardUiAction
 import com.segnities007.seg.ui.components.card.PostCardUiState
 import com.segnities007.seg.ui.screens.hub.HubUiAction
+import com.segnities007.seg.ui.screens.hub.HubUiState
 
 @Composable
 fun Home(
     modifier: Modifier,
     hubNavController: NavController,
+    hubUiState: HubUiState,
     hubUiAction: HubUiAction,
     postCardUiState: PostCardUiState,
     postCardUiAction: PostCardUiAction,
 ){
-    Column (
-        modifier = modifier.fillMaxSize().verticalScroll(rememberScrollState()),
+
+    LazyColumn(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
     ){
-        for (i in 0 until postCardUiState.posts.size) {
-
+        items(
+            postCardUiState.posts.size,
+            key = { index: Int ->  postCardUiState.posts[index].id},
+        ){i ->
             PostCard(
-                onCardClick = {/*TODO*/},
                 post = postCardUiState.posts[i],
                 images = postCardUiState.imageLists[i],
                 icon = postCardUiState.icons[i],
+                myself = hubUiState.user,
+                hubUiAction = hubUiAction,
+                postCardUiAction = postCardUiAction,
+                onCardClick = {/*TODO*/ },
                 onInitializeAction = { post: Post ->
                     postCardUiAction.onIncrementViewCount(post)
                 },
@@ -44,6 +50,7 @@ fun Home(
                     hubUiAction.onChangeCurrentRouteName(NavigationHubRoute.Account.routeName)
                     hubNavController.navigate(NavigationHubRoute.Account)
                 },
+
             )
         }
     }
