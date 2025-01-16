@@ -47,6 +47,7 @@ fun NavigationHub(
             composable<NavigationHubRoute.Home> {
                 Home(
                     modifier = modifier,
+                    hubUiState = hubViewModel.hubUiState,
                     hubUiAction = hubViewModel.getHubUiAction(),
                     postCardUiState = postCardViewModel.postCardUiState,
                     postCardUiAction = postCardViewModel.onGetPostCardUiAction(),
@@ -94,6 +95,7 @@ fun NavigationHub(
                         hubViewModel.getHubUiAction().onChangeCurrentRouteName(NavigationHubRoute.Accounts.routeName)
                         hubNavHostController.navigate(route)
                     },
+                    postCardUiAction = accountViewModel.getPostUiAction()
                 )
             }
             composable<NavigationHubRoute.Accounts>{

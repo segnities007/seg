@@ -22,6 +22,7 @@ import com.segnities007.seg.ui.screens.hub.HubUiState
 import com.segnities007.seg.R
 import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.navigation.hub.NavigationHubRoute
+import com.segnities007.seg.ui.components.card.PostCardUiAction
 
 
 @Composable
@@ -31,6 +32,7 @@ fun Account(
     hubUiAction: HubUiAction,
     accountUiState: AccountUiState,
     accountUiAction: AccountUiAction,
+    postCardUiAction: PostCardUiAction,
 //    onSettingNavigate: (Route) -> Unit,
     onHubNavigate:(Route) -> Unit,
 ){
@@ -77,7 +79,10 @@ fun Account(
                 post = accountUiState.posts[i],
                 images = accountUiState.images[i],
                 icon = accountUiState.icon,
-                onInitializeAction = {}
+                onInitializeAction = {},
+                myself = hubUiState.user,
+                hubUiAction = hubUiAction,
+                postCardUiAction = postCardUiAction,
             )
         }
 
