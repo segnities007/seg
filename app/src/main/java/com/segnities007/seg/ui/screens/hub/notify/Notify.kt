@@ -12,22 +12,21 @@ import androidx.compose.ui.res.dimensionResource
 import com.segnities007.seg.R
 
 @Composable
-fun Notify(
-    modifier: Modifier,
-){
+fun Notify(modifier: Modifier) {
     Column(
-        modifier = modifier
-            .fillMaxSize(),
+        modifier =
+            modifier
+                .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
-    ){
+    ) {
         BulletinBoard()
     }
 }
 
 @Composable
-private fun BulletinBoard(){
+private fun BulletinBoard() {
     ElevatedCard(
-        modifier = Modifier.fillMaxSize().padding(dimensionResource(R.dimen.padding_normal))
+        modifier = Modifier.fillMaxSize().padding(dimensionResource(R.dimen.padding_normal)),
     ) { }
 }

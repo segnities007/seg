@@ -24,15 +24,14 @@ fun NavigationDrawer(
     onNavigate: (route: Route) -> Unit,
     onDrawerClose: suspend () -> Unit,
     content: @Composable () -> Unit,
-){
-
+) {
     ModalNavigationDrawer(
         modifier = modifier,
         drawerState = drawerState,
         gesturesEnabled = false,
         drawerContent = {
             ModalDrawerSheet {
-                items.unSelectedIconIDs.forEachIndexed{ index, iconID ->
+                items.unSelectedIconIDs.forEachIndexed { index, iconID ->
                     DrawerSheet(
                         route = items.routes.routeList[index],
                         painterResourceID = iconID,
@@ -41,7 +40,7 @@ fun NavigationDrawer(
                     )
                 }
             }
-        }
+        },
     ) {
         content()
     }
@@ -55,20 +54,20 @@ private fun DrawerSheet(
     scope: CoroutineScope = rememberCoroutineScope(),
     onNavigate: (route: Route) -> Unit,
     onDrawerClose: suspend () -> Unit,
-){
-
+) {
     HorizontalDivider()
     NavigationDrawerItem(
         modifier = modifier,
         label = { Text(text = route::class.simpleName.toString(), maxLines = 1) },
-        icon = { Icon(painter = painterResource(painterResourceID), contentDescription = route::class.simpleName.toString(),)
-               },
+        icon = {
+            Icon(painter = painterResource(painterResourceID), contentDescription = route::class.simpleName.toString())
+        },
         selected = false,
         onClick = {
             onNavigate(route)
-            scope.launch{
+            scope.launch {
                 onDrawerClose()
             }
-        }
+        },
     )
 }

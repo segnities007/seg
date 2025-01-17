@@ -1,5 +1,6 @@
 package com.segnities007.seg.ui.screens.hub.post
 
+import android.content.Context
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -40,22 +41,29 @@ import com.segnities007.seg.R
 import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.navigation.hub.NavigationHubRoute
 import com.segnities007.seg.ui.components.button.SmallButton
+import com.segnities007.seg.ui.components.card.PostCardUiAction
 import com.segnities007.seg.ui.screens.hub.HubUiState
 
 @Composable
 fun Post(
     modifier: Modifier = Modifier,
     hubUiState: HubUiState,
+    postCardUiAction: PostCardUiAction,
     postViewModel: PostViewModel = hiltViewModel(),
-    onNavigate: (Route) -> Unit,// go to home
+    onNavigate: (Route) -> Unit, // go to home
 ) {
-
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        TopToolBar(postUiState = postViewModel.postUiState, postUiAction = postViewModel.getPostUiAction(), hubUiState = hubUiState, onNavigate = onNavigate)
-        InputField(modifier = Modifier.weight(1f), postUiState = postViewModel.postUiState , postUiAction = postViewModel.getPostUiAction())
+        TopToolBar(
+            postUiState = postViewModel.postUiState,
+            postUiAction = postViewModel.getPostUiAction(),
+            hubUiState = hubUiState,
+            onNavigate = onNavigate,
+            postCardUiAction = postCardUiAction,
+        )
+        InputField(modifier = Modifier.weight(1f), postUiState = postViewModel.postUiState, postUiAction = postViewModel.getPostUiAction())
         BottomToolBar(postUiState = postViewModel.postUiState, postUiAction = postViewModel.getPostUiAction())
     }
 }
@@ -65,8 +73,7 @@ private fun InputField(
     modifier: Modifier = Modifier,
     postUiState: PostUiState,
     postUiAction: PostUiAction,
-){
-
+) {
     TextField(
         modifier = modifier.padding(horizontal = dimensionResource(R.dimen.padding_small)).fillMaxSize(),
         value = postUiState.inputText,
@@ -74,14 +81,14 @@ private fun InputField(
         label = { Text(stringResource(R.string.post_label)) },
         textStyle = TextStyle.Default.copy(fontSize = 24.sp),
         shape = RoundedCornerShape(dimensionResource(R.dimen.rounded_corner_shape)),
-        colors = TextFieldDefaults.colors(
-            focusedContainerColor = MaterialTheme.colorScheme.background,
-            unfocusedContainerColor = MaterialTheme.colorScheme.background,
-            focusedIndicatorColor = MaterialTheme.colorScheme.background,
-            unfocusedIndicatorColor = MaterialTheme.colorScheme.background,
-        ),
+        colors =
+            TextFieldDefaults.colors(
+                focusedContainerColor = MaterialTheme.colorScheme.background,
+                unfocusedContainerColor = MaterialTheme.colorScheme.background,
+                focusedIndicatorColor = MaterialTheme.colorScheme.background,
+                unfocusedIndicatorColor = MaterialTheme.colorScheme.background,
+            ),
     )
-
 }
 
 @Composable
@@ -90,26 +97,27 @@ private fun TopToolBar(
     hubUiState: HubUiState,
     postUiState: PostUiState,
     postUiAction: PostUiAction,
+    postCardUiAction: PostCardUiAction,
     onNavigate: (Route) -> Unit,
-){
-        Row(
-            modifier = modifier.padding(dimensionResource(R.dimen.padding_normal)).fillMaxWidth(),
-            horizontalArrangement = Arrangement.Start,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            SmallButton(textID = R.string.clear, onClick = { postUiAction.onUpdateInputText("")  })
-            Spacer(modifier = Modifier.weight(1f))
-            SmallButton(
-                textID = R.string.post,
-                onClick = {
-                    postUiAction.onCreatePost(hubUiState.user, postUiState.byteArrayList)
-                    postUiAction.onGetByteArrayList(listOf())
-                    postUiAction.onUpdateInputText("")
-                    onNavigate(NavigationHubRoute.Home)
-                }
-            )
-        }
-
+) {
+    Row(
+        modifier = modifier.padding(dimensionResource(R.dimen.padding_normal)).fillMaxWidth(),
+        horizontalArrangement = Arrangement.Start,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        SmallButton(textID = R.string.clear, onClick = { postUiAction.onUpdateInputText("") })
+        Spacer(modifier = Modifier.weight(1f))
+        SmallButton(
+            textID = R.string.post,
+            onClick = {
+                postUiAction.onCreatePost(hubUiState.user, postUiState.byteArrayList)
+                postUiAction.onGetByteArrayList(listOf())
+                postUiAction.onUpdateInputText("")
+                onNavigate(NavigationHubRoute.Home)
+                postCardUiAction.onGetNewPosts()
+            },
+        )
+    }
 }
 
 @Composable
@@ -117,22 +125,22 @@ private fun BottomToolBar(
     modifier: Modifier = Modifier,
     postUiState: PostUiState,
     postUiAction: PostUiAction,
+    maxNumberOfItem: Int = 4,
+    context: Context = LocalContext.current,
 ) {
-    val maxNumberOfItem = 4
-
-    val context = LocalContext.current
-
     // 画像選択
-    val pickMultipleMedia = rememberLauncherForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(maxNumberOfItem)) { uris ->
-        if (uris.isNotEmpty()) {
-            val byteArrayList = uris.mapNotNull { uri ->
-                context.contentResolver.openInputStream(uri)?.use { inputStream ->
-                    inputStream.readBytes() // InputStreamをByteArrayに変換
-                }
+    val pickMultipleMedia =
+        rememberLauncherForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(maxNumberOfItem)) { uris ->
+            if (uris.isNotEmpty()) {
+                val byteArrayList =
+                    uris.mapNotNull { uri ->
+                        context.contentResolver.openInputStream(uri)?.use { inputStream ->
+                            inputStream.readBytes() // InputStreamをByteArrayに変換
+                        }
+                    }
+                postUiAction.onGetByteArrayList(byteArrayList)
             }
-            postUiAction.onGetByteArrayList(byteArrayList)
         }
-    }
 
     ElevatedCard(
         elevation = CardDefaults.cardElevation(dimensionResource(R.dimen.elevation_small)),
@@ -161,10 +169,11 @@ private fun BottomToolBar(
 
                 postUiState.selectedUris.forEach { uri ->
                     Box(
-                        modifier = Modifier
-                            .clickable { /*TODO: 必要なアクション*/ }
-                            .size(dimensionResource(R.dimen.icon_normal))
-                            .padding(dimensionResource(R.dimen.padding_small)),
+                        modifier =
+                            Modifier
+                                .clickable { /*TODO: 必要なアクション*/ }
+                                .size(dimensionResource(R.dimen.icon_normal))
+                                .padding(dimensionResource(R.dimen.padding_small)),
                     ) {
                         Image(
                             painter = rememberAsyncImagePainter(uri),
@@ -177,20 +186,20 @@ private fun BottomToolBar(
     }
 }
 
-
 @Composable
 private fun IconButton(
     modifier: Modifier = Modifier,
     iconResource: Int,
     iconDescription: Int,
     onClick: () -> Unit,
-){
+) {
     Box(
-        modifier = modifier
-            .wrapContentSize()
-            .clip(CircleShape)
-            .clickable { onClick() }
-    ){
+        modifier =
+            modifier
+                .wrapContentSize()
+                .clip(CircleShape)
+                .clickable { onClick() },
+    ) {
         Icon(
             modifier = modifier.size(dimensionResource(R.dimen.icon_small)),
             painter = painterResource(iconResource),
@@ -198,4 +207,3 @@ private fun IconButton(
         )
     }
 }
-

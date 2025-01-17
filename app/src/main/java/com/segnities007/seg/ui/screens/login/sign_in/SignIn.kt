@@ -31,16 +31,16 @@ fun SignIn(
     modifier: Modifier = Modifier,
     loginUiState: LoginUiState,
     loginUiAction: LoginUiAction,
-    onNavigate: () -> Unit,// go to Hub/home
+    onNavigate: () -> Unit, // go to Hub/home
     padding: Dp = dimensionResource(R.dimen.padding_normal),
-){
-
+) {
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(dimensionResource(R.dimen.padding_large)),
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .padding(dimensionResource(R.dimen.padding_large)),
         contentAlignment = Alignment.Center,
-    ){
+    ) {
         Card {
             Column(
                 modifier = Modifier.padding(dimensionResource(R.dimen.padding_large)),
@@ -57,11 +57,11 @@ fun SignIn(
                     label = stringResource(R.string.password),
                 ) { loginUiAction.onPasswordChange(it) }
                 Spacer(Modifier.padding(padding))
-                Row{
+                Row {
                     BasicButton(
                         modifier = Modifier.weight(1f),
                         textID = R.string.sign_in,
-                        onClick = { loginUiAction.onSignInWithEmailPassword(onNavigate) }
+                        onClick = { loginUiAction.onSignInWithEmailPassword(onNavigate) },
                     )
                 }
             }
@@ -75,24 +75,24 @@ private fun InputForm(
     text: String,
     label: String,
     onValueChange: (String) -> Unit,
-){
-
+) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
 
-    Box(modifier = modifier){
+    Box(modifier = modifier) {
         OutlinedTextField(
             value = text,
             onValueChange = onValueChange,
             label = { Text(label) },
             maxLines = 1,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-            keyboardActions = KeyboardActions(
-                onDone = {
-                    focusManager.clearFocus() // フォーカスを外す
-                    keyboardController?.hide() // キーボードを閉じる
-                }
-            )
+            keyboardActions =
+                KeyboardActions(
+                    onDone = {
+                        focusManager.clearFocus() // フォーカスを外す
+                        keyboardController?.hide() // キーボードを閉じる
+                    },
+                ),
         )
     }
 }

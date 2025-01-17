@@ -56,14 +56,13 @@ fun UserInfo(
     commonPadding: Dp = dimensionResource(R.dimen.padding_normal),
     onNavigate: (Route) -> Unit,
 ) {
-
     LaunchedEffect(Unit) {
         val action = userInfoViewModel.getUserInfoUiAction()
         action.onNameChange(hubUiState.user.name)
         action.onUserIDChange(hubUiState.user.userID)
     }
 
-    if(settingUiState.isDatePickerDialogShow){
+    if (settingUiState.isDatePickerDialogShow) {
         DatePickerDialog(
             onDateSelected = settingUiAction.onDateSelect,
             onDatePickerDismiss = settingUiAction.onDatePickerClose,
@@ -71,19 +70,24 @@ fun UserInfo(
     }
 
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(dimensionResource(R.dimen.padding_large))
-            .verticalScroll(rememberScrollState()),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .padding(dimensionResource(R.dimen.padding_large))
+                .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
-    ){
+    ) {
         TextFields(userInfoUiState = userInfoViewModel.userInfoUiState, userInfoUiAction = userInfoViewModel.getUserInfoUiAction())
         Spacer(modifier = Modifier.padding(commonPadding))
-        SelectionButtons(onNavigate = onNavigate, userInfoUiAction = userInfoViewModel.getUserInfoUiAction(), hubUiState = hubUiState, hubUiAction = hubUiAction)
+        SelectionButtons(
+            onNavigate = onNavigate,
+            userInfoUiAction = userInfoViewModel.getUserInfoUiAction(),
+            hubUiState = hubUiState,
+            hubUiAction = hubUiAction,
+        )
         Spacer(modifier = Modifier.padding(commonPadding))
     }
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -93,7 +97,7 @@ private fun DatePickerDialog(
     datePickerState: DatePickerState = rememberDatePickerState(),
     onDateSelected: (Long?) -> Unit,
     onDatePickerDismiss: () -> Unit,
-){
+) {
     DatePickerDialog(
         modifier = Modifier.fillMaxSize(),
         onDismissRequest = onDatePickerDismiss,
@@ -102,15 +106,16 @@ private fun DatePickerDialog(
                 onClick = {
                     onDateSelected(datePickerState.selectedDateMillis)
                     onDatePickerDismiss()
-                }
+                },
             ) {
-                Text(text = stringResource(R.string.ok)) }
+                Text(text = stringResource(R.string.ok))
+            }
         },
         dismissButton = {
             TextButton(onClick = onDatePickerDismiss) {
                 Text(text = stringResource(R.string.cancel))
             }
-        }
+        },
     ) {
         DatePicker(state = datePickerState)
     }
@@ -122,8 +127,7 @@ private fun TextFields(
     userInfoUiState: UserInfoUiState,
     userInfoUiAction: UserInfoUiAction,
     commonPadding: Dp = dimensionResource(R.dimen.padding_normal),
-){
-
+) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
 
@@ -131,19 +135,20 @@ private fun TextFields(
     val maxLines = 5
     val lineHeightDp = with(LocalDensity.current) { lineHeight.toDp() } // spをdpに変換
 
-    Column(){
+    Column {
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
             value = userInfoUiState.name,
             onValueChange = { userInfoUiAction.onNameChange(it) },
             label = { Text(stringResource(R.string.new_name)) },
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-            keyboardActions = KeyboardActions(
-                onDone = {
-                    focusManager.clearFocus() // フォーカスを外す
-                    keyboardController?.hide() // キーボードを閉じる
-                }
-            )
+            keyboardActions =
+                KeyboardActions(
+                    onDone = {
+                        focusManager.clearFocus() // フォーカスを外す
+                        keyboardController?.hide() // キーボードを閉じる
+                    },
+                ),
         )
         Spacer(modifier = Modifier.padding(commonPadding))
         OutlinedTextField(
@@ -152,25 +157,27 @@ private fun TextFields(
             onValueChange = { userInfoUiAction.onUserIDChange(it) },
             label = { Text(stringResource(R.string.new_user_id)) },
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-            keyboardActions = KeyboardActions(
-                onDone = {
-                    focusManager.clearFocus() // フォーカスを外す
-                    keyboardController?.hide() // キーボードを閉じる
-                }
-            )
+            keyboardActions =
+                KeyboardActions(
+                    onDone = {
+                        focusManager.clearFocus() // フォーカスを外す
+                        keyboardController?.hide() // キーボードを閉じる
+                    },
+                ),
         )
         Spacer(modifier = Modifier.padding(commonPadding))
         OutlinedTextField(
-                modifier = Modifier
+            modifier =
+                Modifier
                     .fillMaxWidth()
-                    .heightIn(min = lineHeightDp * maxLines), // 高さを`maxLines`に合わせる
-        maxLines = maxLines,
-        value = userInfoUiState.description,
-        onValueChange = { userInfoUiAction.onDescription(it) },
-        label = { Text(stringResource(R.string.new_description)) },
+                    .heightIn(min = lineHeightDp * maxLines),
+            // 高さを`maxLines`に合わせる
+            maxLines = maxLines,
+            value = userInfoUiState.description,
+            onValueChange = { userInfoUiAction.onDescription(it) },
+            label = { Text(stringResource(R.string.new_description)) },
         )
     }
-
 }
 
 @Composable
@@ -181,15 +188,14 @@ private fun SelectionButtons(
     userInfoUiAction: UserInfoUiAction,
     commonPadding: Dp = dimensionResource(R.dimen.padding_normal),
     onNavigate: (Route) -> Unit,
-){
-
+) {
     val scope = rememberCoroutineScope()
 
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,
-    ){
+    ) {
         BasicButton(
             modifier = Modifier.weight(1f).fillMaxWidth(),
             textID = R.string.cancel,
@@ -205,9 +211,7 @@ private fun SelectionButtons(
                     hubUiAction.onGetUser()
                     onNavigate(NavigationSettingRoute.Preference)
                 }
-            }
+            },
         )
     }
-
 }
-

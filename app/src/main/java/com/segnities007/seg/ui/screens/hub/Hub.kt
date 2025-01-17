@@ -12,7 +12,6 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.segnities007.seg.ui.components.top_bar.TopBar
 import com.segnities007.seg.R
 import com.segnities007.seg.data.model.bottom_bar.HubItem
 import com.segnities007.seg.domain.presentation.Route
@@ -21,18 +20,17 @@ import com.segnities007.seg.navigation.hub.NavigationHubRoute
 import com.segnities007.seg.ui.components.bottom_bar.BottomBar
 import com.segnities007.seg.ui.components.floating_button.FloatingButton
 import com.segnities007.seg.ui.components.navigation_drawer.NavigationDrawer
+import com.segnities007.seg.ui.components.top_bar.TopBar
 
-
-//drawerとnavigationを使用するためにこのようなツリー構造にしてる
+// drawerとnavigationを使用するためにこのようなツリー構造にしてる
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Hub(
     hubViewModel: HubViewModel = hiltViewModel(),
     onNavigate: (Route) -> Unit,
     currentRouteName: String,
-    content: @Composable (Modifier) -> Unit
-){
-
+    content: @Composable (Modifier) -> Unit,
+) {
     NavigationDrawer(
         items = HubItem(),
         drawerState = hubViewModel.topState.drawerState,
@@ -46,7 +44,6 @@ fun Hub(
             onNavigate = onNavigate,
         )
     }
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -57,38 +54,42 @@ private fun HubUi(
     onNavigate: (Route) -> Unit,
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(),
     content: @Composable (modifier: Modifier) -> Unit,
-){
-
+) {
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            when(currentRouteName){
-                NavigationHubRoute.Home.routeName -> TopBar(
-                    title = stringResource(R.string.app_name),
-                    onDrawerOpen = topAction.openDrawer,
-                    scrollBehavior = scrollBehavior,
-                    routeName = NavigationHubRoute.Home.routeName
-                )
-                NavigationHubRoute.Trend.routeName -> TopBar(
-                    title = stringResource(R.string.app_name),
-                    onDrawerOpen = topAction.openDrawer,
-                    routeName = NavigationHubRoute.Trend.routeName
-                )
-                NavigationHubRoute.Post.routeName -> TopBar(
-                    title = stringResource(R.string.app_name),
-                    onDrawerOpen = topAction.openDrawer,
-                    routeName = NavigationHubRoute.Notify.routeName
-                )
-                NavigationHubRoute.Notify.routeName -> TopBar(
-                    title = stringResource(R.string.app_name),
-                    onDrawerOpen = topAction.openDrawer,
-                    routeName = NavigationHubRoute.Notify.routeName
-                )
-                NavigationHubRoute.Accounts.routeName -> TopBar(
-                    title = stringResource(R.string.app_name),
-                    onDrawerOpen = topAction.openDrawer,
-                    routeName = NavigationHubRoute.Accounts.routeName
-                )
+            when (currentRouteName) {
+                NavigationHubRoute.Home.routeName ->
+                    TopBar(
+                        title = stringResource(R.string.app_name),
+                        onDrawerOpen = topAction.openDrawer,
+                        scrollBehavior = scrollBehavior,
+                        routeName = NavigationHubRoute.Home.routeName,
+                    )
+                NavigationHubRoute.Trend.routeName ->
+                    TopBar(
+                        title = stringResource(R.string.app_name),
+                        onDrawerOpen = topAction.openDrawer,
+                        routeName = NavigationHubRoute.Trend.routeName,
+                    )
+                NavigationHubRoute.Post.routeName ->
+                    TopBar(
+                        title = stringResource(R.string.app_name),
+                        onDrawerOpen = topAction.openDrawer,
+                        routeName = NavigationHubRoute.Notify.routeName,
+                    )
+                NavigationHubRoute.Notify.routeName ->
+                    TopBar(
+                        title = stringResource(R.string.app_name),
+                        onDrawerOpen = topAction.openDrawer,
+                        routeName = NavigationHubRoute.Notify.routeName,
+                    )
+                NavigationHubRoute.Accounts.routeName ->
+                    TopBar(
+                        title = stringResource(R.string.app_name),
+                        onDrawerOpen = topAction.openDrawer,
+                        routeName = NavigationHubRoute.Accounts.routeName,
+                    )
                 else -> Spacer(modifier = Modifier.padding(0.dp))
             }
         },
@@ -100,15 +101,13 @@ private fun HubUi(
             )
         },
         floatingActionButton = {
-            when(currentRouteName){
+            when (currentRouteName) {
                 NavigationHubRoute.Home.routeName -> FloatingButton(iconID = R.drawable.baseline_search_24) { }
                 NavigationHubRoute.Trend.routeName -> FloatingButton(iconID = R.drawable.baseline_search_24) { }
                 else -> Spacer(modifier = Modifier.padding(0.dp))
             }
-        }
-    ){ innerPadding ->
+        },
+    ) { innerPadding ->
         content(Modifier.padding(innerPadding))
     }
 }
-
-

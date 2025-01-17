@@ -26,38 +26,43 @@ data class UserInfoUiAction(
 )
 
 @HiltViewModel
-class UserInfoViewModel @Inject constructor(
-    private val userRepositoryImpl: UserRepositoryImpl,
-): ViewModel() {
+class UserInfoViewModel
+    @Inject
+    constructor(
+        private val userRepositoryImpl: UserRepositoryImpl,
+    ) : ViewModel() {
+        var userInfoUiState by mutableStateOf(UserInfoUiState())
 
-    var userInfoUiState by mutableStateOf(UserInfoUiState())
+        fun getUserInfoUiAction(): UserInfoUiAction =
+            UserInfoUiAction(
+                onUserUpdate = this::onUserUpdate,
+                onUserIDChange = this::onUserIDChange,
+                onNameChange = this::onNameChange,
+                onDescription = this::onDescriptionChange,
+            )
 
-    fun getUserInfoUiAction(): UserInfoUiAction{
-        return UserInfoUiAction(
-            onUserUpdate = this::onUserUpdate,
-            onUserIDChange = this::onUserIDChange,
-            onNameChange = this::onNameChange,
-            onDescription = this::onDescriptionChange,
-        )
-    }
+        private fun onNameChange(newName: String) {
+            userInfoUiState = userInfoUiState.copy(name = newName)
+        }
 
-    private fun onNameChange(newName: String){
-        userInfoUiState = userInfoUiState.copy(name = newName)
-    }
+        private fun onUserIDChange(newUserID: String) {
+            userInfoUiState = userInfoUiState.copy(userID = newUserID)
+        }
 
-    private fun onUserIDChange(newUserID: String){
-        userInfoUiState = userInfoUiState.copy(userID = newUserID)
-    }
+        private fun onDescriptionChange(newDescription: String) {
+            userInfoUiState = userInfoUiState.copy(description = newDescription)
+        }
 
-    private fun onDescriptionChange(newDescription: String){
-        userInfoUiState = userInfoUiState.copy(description = newDescription)
-    }
-
-    private suspend fun onUserUpdate(user: User){
-        withContext(Dispatchers.IO){
-            val newUser = user.copy(name = userInfoUiState.name, description = userInfoUiState.description, userID = userInfoUiState.userID, updateAt = LocalDateTime.now())
-            userRepositoryImpl.updateUser(newUser)
+        private suspend fun onUserUpdate(user: User) {
+            withContext(Dispatchers.IO) {
+                val newUser =
+                    user.copy(
+                        name = userInfoUiState.name,
+                        description = userInfoUiState.description,
+                        userID = userInfoUiState.userID,
+                        updateAt = LocalDateTime.now(),
+                    )
+                userRepositoryImpl.updateUser(newUser)
+            }
         }
     }
-
-}

@@ -9,13 +9,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.navigation.hub.NavigationHubRoute
 import com.segnities007.seg.ui.components.card.AvatarCard
-import com.segnities007.seg.ui.components.top_bar.TopStatusBar
 import com.segnities007.seg.ui.screens.hub.HubUiAction
-import com.segnities007.seg.ui.screens.hub.HubUiState
 
 @Composable
 fun Accounts(
@@ -24,15 +21,13 @@ fun Accounts(
     accountUiAction: AccountUiAction,
     hubUiAction: HubUiAction,
     onNavigate: (Route) -> Unit,
-){
-
+) {
     Column(
         modifier = modifier.fillMaxSize().verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
-    ){
-        for (user in accountUiState.users){
-
+    ) {
+        for (user in accountUiState.users) {
             LaunchedEffect(Unit) {
                 accountUiAction.onGetIcon(user.iconID)
             }

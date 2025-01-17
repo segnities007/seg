@@ -40,28 +40,28 @@ fun TopStatusBar(
     onClickFollowsButton: () -> Unit = {},
     onClickFollowersButton: () -> Unit = {},
     onHubNavigate: (Route) -> Unit,
-    onSettingNavigate: (Route) -> Unit = {},// UserInfoに遷移したい場合にのみ使用
-){
-
+    onSettingNavigate: (Route) -> Unit = {}, // UserInfoに遷移したい場合にのみ使用
+) {
     Box(
-        modifier = Modifier
-            .shadow(
-                elevation = dimensionResource(R.dimen.elevation_large),
-                shape = RoundedCornerShape(
-                    bottomStart = dimensionResource(R.dimen.padding_large),
-                    bottomEnd = dimensionResource(R.dimen.padding_large),
-                )
-            )
-            .clip(
-                shape = RoundedCornerShape(
-                    bottomStart = dimensionResource(R.dimen.padding_large),
-                    bottomEnd = dimensionResource(R.dimen.padding_large),
-                )
-            )
-            .background(color = MaterialTheme.colorScheme.primaryContainer)
-            .fillMaxWidth()
-            .padding(dimensionResource(R.dimen.padding_normal)),
-    ){
+        modifier =
+            Modifier
+                .shadow(
+                    elevation = dimensionResource(R.dimen.elevation_large),
+                    shape =
+                        RoundedCornerShape(
+                            bottomStart = dimensionResource(R.dimen.padding_large),
+                            bottomEnd = dimensionResource(R.dimen.padding_large),
+                        ),
+                ).clip(
+                    shape =
+                        RoundedCornerShape(
+                            bottomStart = dimensionResource(R.dimen.padding_large),
+                            bottomEnd = dimensionResource(R.dimen.padding_large),
+                        ),
+                ).background(color = MaterialTheme.colorScheme.primaryContainer)
+                .fillMaxWidth()
+                .padding(dimensionResource(R.dimen.padding_normal)),
+    ) {
         Column(
             Modifier.align(alignment = Alignment.Center),
             verticalArrangement = Arrangement.Center,
@@ -74,16 +74,21 @@ fun TopStatusBar(
                 contentDescription = url,
             )
             Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_small)))
-            Status(user = user, onClickFollowsButton = onClickFollowsButton, onClickFollowersButton = onClickFollowersButton, onHubNavigate = onHubNavigate)
+            Status(
+                user = user,
+                onClickFollowsButton = onClickFollowsButton,
+                onClickFollowersButton = onClickFollowersButton,
+                onHubNavigate = onHubNavigate,
+            )
             Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_small)))
         }
-        if(currentRouteName == NavigationHubRoute.Setting.routeName)
+        if (currentRouteName == NavigationHubRoute.Setting.routeName) {
             SettingIconButton(
                 Modifier.align(alignment = Alignment.TopEnd),
-                onSettingNavigate = onSettingNavigate
-        )
+                onSettingNavigate = onSettingNavigate,
+            )
+        }
     }
-
 }
 
 @Composable
@@ -95,57 +100,56 @@ private fun Status(
     onHubNavigate: (Route) -> Unit,
     onClickFollowsButton: () -> Unit,
     onClickFollowersButton: () -> Unit,
-){
-
-    Column(verticalArrangement = Arrangement.Center,){
+) {
+    Column(verticalArrangement = Arrangement.Center) {
         Column(
-            modifier = Modifier.padding(horizontal = commonPadding)
-        ){
-                Text(text = "Name: ${user.name}", color = fontColor,)
-                Text(text = "UserID: ${user.userID}", color = fontColor,)
+            modifier = Modifier.padding(horizontal = commonPadding),
+        ) {
+            Text(text = "Name: ${user.name}", color = fontColor)
+            Text(text = "UserID: ${user.userID}", color = fontColor)
         }
         Spacer(modifier = Modifier.padding(commonPadding))
-        Row(horizontalArrangement = Arrangement.Center,){
+        Row(horizontalArrangement = Arrangement.Center) {
             Box(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(commonPadding))
-                    .clickable {
-                        onClickFollowsButton()
-                        onHubNavigate(NavigationHubRoute.Accounts) }
-                    .padding(commonPadding)
-            ){ Text(text = "Follow: ${user.followCount}", color = fontColor,) }
+                modifier =
+                    Modifier
+                        .clip(RoundedCornerShape(commonPadding))
+                        .clickable {
+                            onClickFollowsButton()
+                            onHubNavigate(NavigationHubRoute.Accounts)
+                        }.padding(commonPadding),
+            ) { Text(text = "Follow: ${user.followCount}", color = fontColor) }
             Spacer(modifier = Modifier.padding(commonPadding))
             Box(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(commonPadding))
-                    .clickable {
-                        onClickFollowersButton()
-                        onHubNavigate(NavigationHubRoute.Accounts) }
-                    .padding(commonPadding)
+                modifier =
+                    Modifier
+                        .clip(RoundedCornerShape(commonPadding))
+                        .clickable {
+                            onClickFollowersButton()
+                            onHubNavigate(NavigationHubRoute.Accounts)
+                        }.padding(commonPadding),
             ) { Text(text = "Follower: ${user.followerCount}", color = fontColor) }
         }
     }
-
 }
 
 @Composable
 private fun SettingIconButton(
     modifier: Modifier = Modifier,
     onSettingNavigate: (Route) -> Unit,
-){
+) {
     Column(
         modifier = modifier,
-    ){
+    ) {
         Spacer(modifier = modifier.padding(dimensionResource(R.dimen.padding_normal)))
         IconButton(
             modifier = modifier,
-            onClick  = {onSettingNavigate(NavigationSettingRoute.UserInfo)},
+            onClick = { onSettingNavigate(NavigationSettingRoute.UserInfo) },
         ) {
             Icon(
                 painter = painterResource(R.drawable.baseline_settings_24),
-                contentDescription = ""
+                contentDescription = "",
             )
         }
     }
-
 }

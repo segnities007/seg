@@ -26,38 +26,41 @@ data class PostUiAction(
 )
 
 @HiltViewModel
-class PostViewModel @Inject constructor(
-    private val postRepository: PostRepository,
-): ViewModel() {
+class PostViewModel
+    @Inject
+    constructor(
+        private val postRepository: PostRepository,
+    ) : ViewModel() {
+        var postUiState by mutableStateOf(PostUiState())
+            private set
 
-    var postUiState by mutableStateOf(PostUiState())
-        private set
+        private fun onGetByteArrayList(byteArrayList: List<ByteArray>) {
+            postUiState = postUiState.copy(byteArrayList = byteArrayList)
+        }
 
-    private fun onGetByteArrayList(byteArrayList: List<ByteArray>){
-        postUiState = postUiState.copy(byteArrayList = byteArrayList)
-    }
+        fun getPostUiAction(): PostUiAction =
+            PostUiAction(
+                onUpdateInputText = this::onUpdateInputText,
+                onGetUris = this::onGetUris,
+                onCreatePost = this::onCreatePost,
+                onGetByteArrayList = this::onGetByteArrayList,
+            )
 
-    fun getPostUiAction(): PostUiAction{
-        return PostUiAction(
-            onUpdateInputText = this::onUpdateInputText,
-            onGetUris = this::onGetUris,
-            onCreatePost = this::onCreatePost,
-            onGetByteArrayList = this::onGetByteArrayList,
-        )
-    }
-    private fun onCreatePost(user: User, byteArrayList: List<ByteArray>){
-        val description = postUiState.inputText
-        viewModelScope.launch(Dispatchers.IO){
-            postRepository.createPost(description = description, user = user, byteArrayList = byteArrayList)
+        private fun onCreatePost(
+            user: User,
+            byteArrayList: List<ByteArray>,
+        ) {
+            val description = postUiState.inputText
+            viewModelScope.launch(Dispatchers.IO) {
+                postRepository.createPost(description = description, user = user, byteArrayList = byteArrayList)
+            }
+        }
+
+        private fun onGetUris(newUris: List<String>) {
+            postUiState = postUiState.copy(selectedUris = newUris)
+        }
+
+        private fun onUpdateInputText(newInputText: String) {
+            postUiState = postUiState.copy(inputText = newInputText)
         }
     }
-
-    private fun onGetUris(newUris: List<String>){
-        postUiState = postUiState.copy(selectedUris = newUris)
-    }
-
-    private fun onUpdateInputText(newInputText: String){
-        postUiState = postUiState.copy(inputText = newInputText)
-    }
-
-}

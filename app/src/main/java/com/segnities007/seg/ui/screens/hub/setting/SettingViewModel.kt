@@ -28,43 +28,43 @@ data class SettingUiAction(
 )
 
 @HiltViewModel
-class SettingViewModel @Inject constructor(
-    private val authRepositoryImpl: AuthRepositoryImpl,
-): ViewModel() {
+class SettingViewModel
+    @Inject
+    constructor(
+        private val authRepositoryImpl: AuthRepositoryImpl,
+    ) : ViewModel() {
+        var settingUiState by mutableStateOf(SettingUiState())
+            private set
 
-    var settingUiState by mutableStateOf(SettingUiState())
-        private set
+        fun getSettingUiAction(): SettingUiAction =
+            SettingUiAction(
+                onLogout = this::onLogout,
+                onDatePickerClose = this::onDatePickerClose,
+                onDatePickerOpen = this::onDatePickerOpen,
+                onDateSelect = this::onDateSelect,
+            )
 
-    fun getSettingUiAction(): SettingUiAction {
-        return SettingUiAction(
-            onLogout = this::onLogout,
-            onDatePickerClose = this::onDatePickerClose,
-            onDatePickerOpen = this::onDatePickerOpen,
-            onDateSelect = this::onDateSelect,
-        )
-    }
+        private fun onDatePickerClose() {
+            settingUiState = settingUiState.copy(isDatePickerDialogShow = false)
+        }
 
-    private fun onDatePickerClose(){
-        settingUiState = settingUiState.copy(isDatePickerDialogShow = false)
-    }
+        private fun onDatePickerOpen() {
+            settingUiState = settingUiState.copy(isDatePickerDialogShow = true)
+        }
 
-    private fun onDatePickerOpen(){
-        settingUiState = settingUiState.copy(isDatePickerDialogShow = true)
-    }
+        private fun onLogout() {
+            viewModelScope.launch(Dispatchers.IO) {
+                authRepositoryImpl.logout()
+            }
+        }
 
-    private fun onLogout(){
-        viewModelScope.launch(Dispatchers.IO){
-            authRepositoryImpl.logout()
+        private fun onDateSelect(millis: Long?) {
+            val instant = Instant.fromEpochMilliseconds(millis!!)
+            val localDateTime = instant.toLocalDateTime(TimeZone.currentSystemDefault())
+            val year = localDateTime.year
+            val month = localDateTime.monthNumber
+            val day = localDateTime.dayOfMonth
+
+            // TODO
         }
     }
-
-    private fun onDateSelect(millis: Long?){
-        val instant = Instant.fromEpochMilliseconds(millis!!)
-        val localDateTime = instant.toLocalDateTime(TimeZone.currentSystemDefault())
-        val year = localDateTime.year
-        val month = localDateTime.monthNumber
-        val day = localDateTime.dayOfMonth
-
-        //TODO
-    }
-}

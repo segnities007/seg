@@ -1,7 +1,7 @@
 package com.segnities007.seg.ui.screens.login
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.segnities007.seg.data.model.User
@@ -30,14 +30,14 @@ data class LoginUiAction(
     val onChangeCurrentRouteName: (newCurrentRouteName: String) -> Unit,
     val onPasswordChange: (password: String) -> Unit,
     val onEmailChange: (email: String) -> Unit,
-    val onSignUpWithEmailPassword: (onNavigate: () -> Unit,) -> Unit,
-    val onSignInWithEmailPassword: (onNavigate: () -> Unit,) -> Unit,
+    val onSignUpWithEmailPassword: (onNavigate: () -> Unit) -> Unit,
+    val onSignInWithEmailPassword: (onNavigate: () -> Unit) -> Unit,
 )
 
 // class for ConfirmEmail UI
 
 data class ConfirmEmailUiAction(
-    val confirmEmail: (onNavigate: () -> Unit,) -> Unit,
+    val confirmEmail: (onNavigate: () -> Unit) -> Unit,
 )
 
 // class for CreateAccount UI
@@ -56,148 +56,142 @@ data class CreateAccountUiAction(
     val onNameChange: (name: String) -> Unit,
     val onChangeUserID: (userID: String) -> Unit,
     val onBirthdayChange: (birthday: LocalDate) -> Unit,
-    val createUser: (onNavigate: () -> Unit,) -> Unit,
+    val createUser: (onNavigate: () -> Unit) -> Unit,
 )
 
 //
 
 @HiltViewModel
-class LoginViewModel @Inject constructor(
-    private val authRepository: AuthRepository,
-    private val userRepository: UserRepository,
-) : TopLayerViewModel() {
+class LoginViewModel
+    @Inject
+    constructor(
+        private val authRepository: AuthRepository,
+        private val userRepository: UserRepository,
+    ) : TopLayerViewModel() {
+        var loginUiState by mutableStateOf(LoginUiState())
+            private set
+        var createAccountUiState by mutableStateOf(CreateAccountUiState())
+            private set
 
-    var loginUiState by mutableStateOf(LoginUiState())
-        private set
-    var createAccountUiState by mutableStateOf(CreateAccountUiState())
-        private set
+        fun getConfirmEmailUiAction(): ConfirmEmailUiAction =
+            ConfirmEmailUiAction(
+                confirmEmail = this::confirmEmail,
+            )
 
-    fun getConfirmEmailUiAction(): ConfirmEmailUiAction {
-        return ConfirmEmailUiAction(
-            confirmEmail = this::confirmEmail
-        )
-    }
+        fun getLoginAction(): LoginUiAction =
+            LoginUiAction(
+                onChangeCurrentRouteName = this::onChangeCurrentRouteName,
+                onEmailChange = this::onEmailChange,
+                onPasswordChange = this::onPasswordChange,
+                onSignUpWithEmailPassword = this::onSignUpWithEmailPassword,
+                onSignInWithEmailPassword = this::onSignInWithEmailPassword,
+            )
 
-    fun getLoginAction(): LoginUiAction {
+        fun getCreateAccountUiAction(): CreateAccountUiAction =
+            CreateAccountUiAction(
+                onDatePickerOpen = this::onDatePickerOpen,
+                onDatePickerClose = this::onDatePickerClose,
+                onDateSelect = this::onDateSelect,
+                onNameChange = this::onNameChange,
+                onBirthdayChange = this::onBirthdayChange,
+                createUser = this::createUser,
+                onChangeUserID = this::onChangeUserID,
+            )
 
-        return LoginUiAction(
-            onChangeCurrentRouteName = this::onChangeCurrentRouteName,
-            onEmailChange = this::onEmailChange,
-            onPasswordChange = this::onPasswordChange,
-            onSignUpWithEmailPassword = this::onSignUpWithEmailPassword,
-            onSignInWithEmailPassword = this::onSignInWithEmailPassword,
-        )
+        private fun onChangeCurrentRouteName(newCurrentRouteName: String) {
+            loginUiState = loginUiState.copy(currentRouteName = newCurrentRouteName)
+        }
 
-    }
+        private fun onChangeUserID(userID: String) {
+            createAccountUiState = createAccountUiState.copy(userID = userID)
+        }
 
-    fun getCreateAccountUiAction(): CreateAccountUiAction{
+        private fun onDateSelect(millis: Long?) {
+            val instant = Instant.fromEpochMilliseconds(millis!!)
+            val localDateTime = instant.toLocalDateTime(TimeZone.currentSystemDefault())
+            val year = localDateTime.year
+            val month = localDateTime.monthNumber
+            val day = localDateTime.dayOfMonth
 
-        return CreateAccountUiAction(
-            onDatePickerOpen = this::onDatePickerOpen,
-            onDatePickerClose = this::onDatePickerClose,
-            onDateSelect = this::onDateSelect,
-            onNameChange = this::onNameChange,
-            onBirthdayChange = this::onBirthdayChange,
-            createUser = this::createUser,
-            onChangeUserID = this::onChangeUserID,
-        )
+            onBirthdayChange(LocalDate.of(year, month, day))
+        }
 
-    }
-
-    private fun onChangeCurrentRouteName(newCurrentRouteName: String){
-        loginUiState = loginUiState.copy(currentRouteName = newCurrentRouteName)
-    }
-
-    private fun onChangeUserID(userID: String){
-        createAccountUiState = createAccountUiState.copy(userID = userID)
-    }
-
-    private fun onDateSelect(millis: Long?){
-        val instant = Instant.fromEpochMilliseconds(millis!!)
-        val localDateTime = instant.toLocalDateTime(TimeZone.currentSystemDefault())
-        val year = localDateTime.year
-        val month = localDateTime.monthNumber
-        val day = localDateTime.dayOfMonth
-
-        onBirthdayChange(LocalDate.of(year, month, day))
-    }
-
-    private fun confirmEmail(onNavigate: () -> Unit, ){
-        viewModelScope.launch(Dispatchers.IO){
-            authRepository.signInWithEmailPassword(
+        private fun confirmEmail(onNavigate: () -> Unit) {
+            viewModelScope.launch(Dispatchers.IO) {
+                authRepository.signInWithEmailPassword(
                     email = loginUiState.email,
                     password = loginUiState.password,
                 )
-            withContext(Dispatchers.Main){
-                val isConfirmed = userRepository.confirmEmail()
-                if(isConfirmed) onNavigate()
+                withContext(Dispatchers.Main) {
+                    val isConfirmed = userRepository.confirmEmail()
+                    if (isConfirmed) onNavigate()
+                }
             }
         }
 
-    }
-
-    private fun createUser(onNavigate: () -> Unit, ){
-        val user = User(
-            id = "",
-            userID = createAccountUiState.userID,
-            name = createAccountUiState.name,
-            birthday = createAccountUiState.birthday,
-        )
-        viewModelScope.launch(Dispatchers.IO){
-            userRepository.createUser(user)
-                withContext(Dispatchers.Main){
+        private fun createUser(onNavigate: () -> Unit) {
+            val user =
+                User(
+                    id = "",
+                    userID = createAccountUiState.userID,
+                    name = createAccountUiState.name,
+                    birthday = createAccountUiState.birthday,
+                )
+            viewModelScope.launch(Dispatchers.IO) {
+                userRepository.createUser(user)
+                withContext(Dispatchers.Main) {
                     onNavigate()
                 }
+            }
         }
 
-    }
+        private fun onDatePickerOpen() {
+            createAccountUiState = createAccountUiState.copy(isShow = true)
+        }
 
-    private fun onDatePickerOpen(){
-        createAccountUiState = createAccountUiState.copy(isShow = true)
-    }
+        private fun onDatePickerClose() {
+            createAccountUiState = createAccountUiState.copy(isShow = false)
+        }
 
-    private fun onDatePickerClose(){
-        createAccountUiState = createAccountUiState.copy(isShow = false)
-    }
+        private fun onBirthdayChange(newBirthday: LocalDate) {
+            createAccountUiState = createAccountUiState.copy(birthday = newBirthday)
+        }
 
-    private fun onBirthdayChange(newBirthday: LocalDate){
-        createAccountUiState = createAccountUiState.copy(birthday = newBirthday)
-    }
+        private fun onNameChange(newName: String) {
+            createAccountUiState = createAccountUiState.copy(name = newName)
+        }
 
-    private fun onNameChange(newName: String){
-        createAccountUiState = createAccountUiState.copy(name = newName)
-    }
+        private fun onEmailChange(newEmail: String) {
+            loginUiState = loginUiState.copy(email = newEmail)
+        }
 
-    private fun onEmailChange(newEmail: String) {
-        loginUiState = loginUiState.copy(email = newEmail)
-    }
+        private fun onPasswordChange(newPassword: String) {
+            loginUiState = loginUiState.copy(password = newPassword)
+        }
 
-    private fun onPasswordChange(newPassword: String) {
-        loginUiState = loginUiState.copy(password = newPassword)
-    }
+        private fun onSignUpWithEmailPassword(onNavigate: () -> Unit) {
+            viewModelScope.launch(Dispatchers.IO) {
+                withContext(Dispatchers.Main) {
+                    val isSuccess =
+                        authRepository.signUpWithEmailPassword(
+                            email = loginUiState.email,
+                            password = loginUiState.password,
+                        )
+                    if (isSuccess) onNavigate()
+                }
+            }
+        }
 
-    private fun onSignUpWithEmailPassword(onNavigate: () -> Unit,){
-        viewModelScope.launch(Dispatchers.IO){
-            withContext(Dispatchers.Main){
-                val isSuccess = authRepository.signUpWithEmailPassword(
+        private fun onSignInWithEmailPassword(onNavigate: () -> Unit) {
+            viewModelScope.launch(Dispatchers.IO) {
+                val isSuccess =
+                    authRepository.signInWithEmailPassword(
                         email = loginUiState.email,
-                        password = loginUiState.password
+                        password = loginUiState.password,
                     )
-                if(isSuccess) onNavigate()
+                withContext(Dispatchers.Main) {
+                    if (isSuccess) onNavigate()
+                }
             }
         }
     }
-
-    private fun onSignInWithEmailPassword(onNavigate: () -> Unit, ){
-        viewModelScope.launch(Dispatchers.IO){
-            val isSuccess = authRepository.signInWithEmailPassword(
-                    email = loginUiState.email,
-                    password = loginUiState.password
-                )
-            withContext(Dispatchers.Main){
-                if(isSuccess) onNavigate()
-            }
-        }
-    }
-
-}

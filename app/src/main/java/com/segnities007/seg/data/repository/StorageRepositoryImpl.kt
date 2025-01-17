@@ -7,32 +7,37 @@ import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.storage.Storage
 import javax.inject.Inject
 
-class StorageRepositoryImpl @Inject constructor(
-    private val postgrest: Postgrest,
-    private val storage: Storage,
-): StorageRepository {
+class StorageRepositoryImpl
+    @Inject
+    constructor(
+        private val postgrest: Postgrest,
+        private val storage: Storage,
+    ) : StorageRepository {
+        private val tag = "StorageRepositoryImpl"
+        private val bucketName = "avatars"
 
-    private val tag = "StorageRepositoryImpl"
-    private val bucketName = "avatars"
+        override suspend fun postImages(
+            image: Image,
+            byteArray: ByteArray,
+        ): String {
+            try {
+                val bucket = storage.from(bucketName)
+                val fileName = "${image.id}.png"
 
-    override suspend fun postImages(image: Image, byteArray: ByteArray): String {
-        try {
-            val bucket = storage.from(bucketName)
-            val fileName = "${image.id}.png"
+                val result =
+                    bucket.upload(fileName, byteArray) {
+                        upsert = false
+                    }
+                val url = storage.from(bucketName).publicUrl(fileName)
 
-            val result = bucket.upload(fileName, byteArray) {
-                upsert = false
+                return url
+            } catch (e: Exception) {
+                Log.e(tag, "failed to post image. err msg is $e")
+                throw e
             }
-            val url = storage.from(bucketName).publicUrl(fileName)
+        }
 
-            return url
-        }catch (e: Exception){
-            Log.e(tag, "failed to post image. err msg is $e")
-            throw e
+        override suspend fun deleteImage(imageID: Int) {
+            TODO("Not yet implemented")
         }
     }
-
-    override suspend fun deleteImage(imageID: Int) {
-        TODO("Not yet implemented")
-    }
-}

@@ -5,8 +5,9 @@ import com.segnities007.seg.domain.presentation.Routes
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed class NavigationRoute(val routeName: String) : Route {
-
+sealed class NavigationRoute(
+    val routeName: String,
+) : Route {
     @Serializable
     data object Splash : NavigationRoute("Splash")
 
@@ -17,7 +18,7 @@ sealed class NavigationRoute(val routeName: String) : Route {
     data object Hub : NavigationRoute("Hub")
 
     companion object : Routes {
-        override val routeList: List<NavigationRoute> = listOf(
-        )
+        override val routeList: List<NavigationRoute> =
+            listOf()
     }
 }

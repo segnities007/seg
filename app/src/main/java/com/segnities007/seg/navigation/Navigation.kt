@@ -11,27 +11,24 @@ import com.segnities007.seg.navigation.login.NavigationLogin
 import com.segnities007.seg.ui.screens.splash.Splash
 
 @Composable
-fun TopNavigation(
-    topNavController: NavHostController = rememberNavController(),
-){
-
+fun TopNavigation(topNavController: NavHostController = rememberNavController()) {
     NavHost(
         navController = topNavController,
         startDestination = NavigationRoute.Splash,
     ) {
         composable<NavigationRoute.Splash> {
-            Splash(navHostController = topNavController,)
+            Splash(navHostController = topNavController)
         }
         composable<NavigationRoute.Login> {
             NavigationLogin(navHostController = topNavController)
         }
-        composable<NavigationRoute.Hub>{
+        composable<NavigationRoute.Hub> {
             NavigationHub(
-                onTopNavigate = {route: Route ->  //go to login
+                onTopNavigate = { route: Route ->
+                    // go to login
                     topNavController.navigate(route)
-                }
+                },
             )
         }
     }
-
 }

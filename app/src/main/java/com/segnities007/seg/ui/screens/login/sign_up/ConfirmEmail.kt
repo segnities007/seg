@@ -15,36 +15,33 @@ import androidx.compose.ui.res.stringResource
 import com.segnities007.seg.R
 import com.segnities007.seg.ui.screens.login.ConfirmEmailUiAction
 
-
 @Composable
 fun ConfirmEmail(
     modifier: Modifier = Modifier,
     onNavigateToCreateAccount: () -> Unit,
     confirmEmailUiAction: ConfirmEmailUiAction,
-){
+) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
-    ){
-        ElevatedCard(modifier = modifier.padding(dimensionResource(R.dimen.padding_normal))){
+    ) {
+        ElevatedCard(modifier = modifier.padding(dimensionResource(R.dimen.padding_normal))) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
-                ) {
+            ) {
                 Text(
                     modifier = Modifier.padding(dimensionResource(R.dimen.padding_normal)),
-                    text = stringResource(R.string.confirm_prompt_message)
+                    text = stringResource(R.string.confirm_prompt_message),
                 )
                 ElevatedButton(
                     modifier = Modifier.padding(dimensionResource(R.dimen.padding_normal)),
-                    onClick = { confirmEmailUiAction.confirmEmail(onNavigateToCreateAccount) }
+                    onClick = { confirmEmailUiAction.confirmEmail(onNavigateToCreateAccount) },
                 ) {
                     Text(text = stringResource(R.string.confirm))
                 }
             }
         }
     }
-
 }
-
