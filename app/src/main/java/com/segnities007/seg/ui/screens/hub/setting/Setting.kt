@@ -1,6 +1,5 @@
 package com.segnities007.seg.ui.screens.hub.setting
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
@@ -18,13 +17,12 @@ import com.segnities007.seg.ui.screens.hub.account.AccountUiAction
 fun Setting(
     modifier: Modifier,
     onSettingNavigate: (Route) -> Unit = {},
-    onHubNavigate:(Route) -> Unit,
+    onHubNavigate: (Route) -> Unit,
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
     accountUiAction: AccountUiAction,
     content: @Composable () -> Unit,
-){
-
+) {
     LaunchedEffect(Unit) {
         hubUiAction.onGetUser()
     }
@@ -36,18 +34,18 @@ fun Setting(
         TopStatusBar(
             user = hubUiState.user,
             onClickFollowsButton = {
-                if (!hubUiState.user.follows.isNullOrEmpty()){
+                if (!hubUiState.user.follows.isNullOrEmpty()) {
                     accountUiAction.onSetUsers(hubUiState.user.follows)
                 }
                 onHubNavigate(NavigationHubRoute.Accounts)
             },
             onClickFollowersButton = {
-                if (!hubUiState.user.followers.isNullOrEmpty()){
+                if (!hubUiState.user.followers.isNullOrEmpty()) {
                     accountUiAction.onSetUsers(hubUiState.user.followers)
                 }
                 onHubNavigate(NavigationHubRoute.Accounts)
             },
-            onSettingNavigate = onSettingNavigate,//go to userInfo
+            onSettingNavigate = onSettingNavigate, // go to userInfo
             onHubNavigate = onHubNavigate,
             currentRouteName = NavigationHubRoute.Setting.routeName,
         )

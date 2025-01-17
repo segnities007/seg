@@ -22,55 +22,43 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object RepositoryModule {
-
     @Provides
     @Singleton
-    fun provideAuthRepository(
-        auth: Auth,
-    ): AuthRepository{
-        return AuthRepositoryImpl(auth = auth)
-    }
+    fun provideAuthRepository(auth: Auth): AuthRepository = AuthRepositoryImpl(auth = auth)
 
     @Provides
     @Singleton
     fun provideUserRepository(
         auth: Auth,
         postgrest: Postgrest,
-    ): UserRepository{
-        return UserRepositoryImpl(auth = auth, postgrest = postgrest)
-    }
+    ): UserRepository = UserRepositoryImpl(auth = auth, postgrest = postgrest)
 
     @Provides
     @Singleton
     fun provideImageRepository(
         postgrest: Postgrest,
-        storageRepository: StorageRepository
-    ): ImageRepository {
-        return ImageRepositoryImpl(postgrest, storageRepository)
-    }
+        storageRepository: StorageRepository,
+    ): ImageRepository = ImageRepositoryImpl(postgrest, storageRepository)
 
     @Provides
     @Singleton
     fun providePostRepository(
         postgrest: Postgrest,
         imageRepository: ImageRepository,
-    ): PostRepository{
-        return PostRepositoryImpl(
+    ): PostRepository =
+        PostRepositoryImpl(
             postgrest = postgrest,
-            imageRepository = imageRepository
+            imageRepository = imageRepository,
         )
-    }
 
     @Provides
     @Singleton
     fun provideStorageRepository(
         postgrest: Postgrest,
         storage: Storage,
-    ): StorageRepository{
-        return StorageRepositoryImpl(
+    ): StorageRepository =
+        StorageRepositoryImpl(
             postgrest = postgrest,
             storage = storage,
         )
-    }
-
 }

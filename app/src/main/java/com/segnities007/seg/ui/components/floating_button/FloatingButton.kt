@@ -19,12 +19,12 @@ fun FloatingButton(
     iconID: Int,
     iconDescription: String = stringResource(R.string.search),
     onClick: () -> Unit,
-){
+) {
     FloatingActionButton(
         modifier = Modifier.size(dimensionResource(R.dimen.floating_action_button_default)),
         onClick = onClick,
         shape = CircleShape,
-        elevation = FloatingActionButtonDefaults.elevation(dimensionResource(R.dimen.elevation_small))
+        elevation = FloatingActionButtonDefaults.elevation(dimensionResource(R.dimen.elevation_small)),
     ) {
         Image(
             modifier = Modifier.size(dimensionResource(R.dimen.floating_action_button_image_default)),

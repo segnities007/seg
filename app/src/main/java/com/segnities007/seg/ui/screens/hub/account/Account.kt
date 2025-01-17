@@ -1,5 +1,6 @@
 package com.segnities007.seg.ui.screens.hub.account
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,16 +15,16 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
-import com.segnities007.seg.ui.components.button.SmallButton
-import com.segnities007.seg.ui.components.card.PostCard
-import com.segnities007.seg.ui.components.top_bar.TopStatusBar
-import com.segnities007.seg.ui.screens.hub.HubUiAction
-import com.segnities007.seg.ui.screens.hub.HubUiState
+import androidx.compose.ui.unit.Dp
 import com.segnities007.seg.R
 import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.navigation.hub.NavigationHubRoute
+import com.segnities007.seg.ui.components.button.SmallButton
+import com.segnities007.seg.ui.components.card.PostCard
 import com.segnities007.seg.ui.components.card.PostCardUiAction
-
+import com.segnities007.seg.ui.components.top_bar.TopStatusBar
+import com.segnities007.seg.ui.screens.hub.HubUiAction
+import com.segnities007.seg.ui.screens.hub.HubUiState
 
 @Composable
 fun Account(
@@ -33,10 +34,9 @@ fun Account(
     accountUiState: AccountUiState,
     accountUiAction: AccountUiAction,
     postCardUiAction: PostCardUiAction,
-//    onSettingNavigate: (Route) -> Unit,
-    onHubNavigate:(Route) -> Unit,
-){
-
+    commonPadding: Dp = dimensionResource(R.dimen.padding_normal),
+    onHubNavigate: (Route) -> Unit,
+) {
     LaunchedEffect(Unit) {
         accountUiAction.onGetOtherUser(hubUiState.userID)
         accountUiAction.onGetUserPosts(hubUiState.userID)
@@ -46,17 +46,17 @@ fun Account(
         modifier = modifier.fillMaxSize().verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
-    ){
+    ) {
         TopStatusBar(
             user = accountUiState.user,
             onClickFollowsButton = {
-                if (!accountUiState.user.follows.isNullOrEmpty()){
+                if (!accountUiState.user.follows.isNullOrEmpty()) {
                     accountUiAction.onSetUsers(accountUiState.user.follows)
                 }
                 onHubNavigate(NavigationHubRoute.Accounts)
             },
             onClickFollowersButton = {
-                if (!accountUiState.user.followers.isNullOrEmpty()){
+                if (!accountUiState.user.followers.isNullOrEmpty()) {
                     accountUiAction.onSetUsers(accountUiState.user.followers)
                 }
                 onHubNavigate(NavigationHubRoute.Accounts)
@@ -65,11 +65,13 @@ fun Account(
             onHubNavigate = onHubNavigate,
         )
 
-        if(hubUiState.user.userID != accountUiState.user.userID)
-            FollowButtons(hubUiState = hubUiState, accountUiState = accountUiState, accountUiAction = accountUiAction)
+        if(hubUiState.userID != accountUiState.user.userID){
+            Spacer(modifier = Modifier.padding(commonPadding))
+            FollowButtons(hubUiState = hubUiState, hubUiAction = hubUiAction, accountUiState = accountUiState, accountUiAction = accountUiAction)
+            Spacer(modifier = Modifier.padding(commonPadding))
+        }
 
         for (i in 0 until accountUiState.posts.size) {
-
             LaunchedEffect(Unit) {
                 accountUiAction.onGetIcon(accountUiState.posts[i].iconID)
             }
@@ -85,7 +87,6 @@ fun Account(
                 postCardUiAction = postCardUiAction,
             )
         }
-
     }
 }
 
@@ -93,20 +94,27 @@ fun Account(
 private fun FollowButtons(
     modifier: Modifier = Modifier,
     hubUiState: HubUiState,
+    hubUiAction: HubUiAction,
     accountUiState: AccountUiState,
     accountUiAction: AccountUiAction,
-){
+) {
     Row(
         modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center
-    ){
+        horizontalArrangement = Arrangement.Center,
+    ) {
         Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_normal)))
         SmallButton(
             modifier = Modifier.weight(1f),
-            textID = R.string.follows,
+            textID = if(!hubUiState.user.follows.isNullOrEmpty() && hubUiState.user.follows.contains(accountUiState.user.userID)) R.string.followed else R.string.follow,
             onClick = {
-                accountUiAction.onFollow(hubUiState.user, accountUiState.user)
-            })
+                //リストがNullじゃないかつ、IDがある場合unfollow
+                if(!hubUiState.user.follows.isNullOrEmpty() && hubUiState.user.follows.contains(accountUiState.user.userID)){
+                    accountUiAction.onUnFollow(hubUiState.user, accountUiState.user, hubUiAction.onGetUser)
+                }else{
+                    accountUiAction.onFollow(hubUiState.user, accountUiState.user, hubUiAction.onGetUser)
+                }
+            },
+        )
         Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_normal)))
     }
 }

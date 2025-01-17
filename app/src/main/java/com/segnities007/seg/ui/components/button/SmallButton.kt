@@ -1,7 +1,6 @@
 package com.segnities007.seg.ui.components.button
 
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Text
@@ -29,7 +28,7 @@ fun SmallButton(
     ) {
         Text(
             text = stringResource(textID),
-            fontSize = fontSize.sp
+            fontSize = fontSize.sp,
         )
     }
 }

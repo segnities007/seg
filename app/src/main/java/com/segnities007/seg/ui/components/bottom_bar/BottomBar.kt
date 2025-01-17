@@ -1,6 +1,5 @@
 package com.segnities007.seg.ui.components.bottom_bar
 
-import android.util.Log
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -15,17 +14,19 @@ fun BottomBar(
     items: BottomBarItem,
     currentRouteName: String,
     onNavigate: (Route) -> Unit,
-){
-
-    NavigationBar{
+) {
+    NavigationBar {
         items.unSelectedIconIDs.forEachIndexed { index, _ ->
             val routeName = items.routes.routeList[index]::class.simpleName.toString()
             NavigationBarItem(
                 icon = {
                     Icon(
-                        painter = if(routeName == currentRouteName)
-                                        painterResource(items.selectedIconIDs[index]) else
-                                        painterResource(items.unSelectedIconIDs[index]),
+                        painter =
+                            if (routeName == currentRouteName) {
+                                painterResource(items.selectedIconIDs[index])
+                            } else {
+                                painterResource(items.unSelectedIconIDs[index])
+                            },
                         contentDescription = currentRouteName,
                     )
                 },
@@ -35,5 +36,4 @@ fun BottomBar(
             )
         }
     }
-
 }

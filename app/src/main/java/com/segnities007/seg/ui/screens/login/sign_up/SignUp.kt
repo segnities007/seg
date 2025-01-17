@@ -21,10 +21,10 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.Dp
-import com.segnities007.seg.ui.screens.login.LoginUiState
 import com.segnities007.seg.R
 import com.segnities007.seg.ui.components.button.BasicButton
 import com.segnities007.seg.ui.screens.login.LoginUiAction
+import com.segnities007.seg.ui.screens.login.LoginUiState
 
 @Composable
 fun SignUp(
@@ -33,12 +33,11 @@ fun SignUp(
     onNavigateToConfirmEmail: () -> Unit,
     loginUiState: LoginUiState,
     loginUiAction: LoginUiAction,
-){
-
+) {
     Box(
         modifier = Modifier.fillMaxSize().padding(dimensionResource(R.dimen.padding_large)),
         contentAlignment = Alignment.Center,
-    ){
+    ) {
         Card {
             Column(
                 modifier = Modifier.padding(dimensionResource(R.dimen.padding_large)),
@@ -55,17 +54,16 @@ fun SignUp(
                     label = stringResource(R.string.password),
                 ) { loginUiAction.onPasswordChange(it) }
                 Spacer(Modifier.padding(padding))
-                Row{
+                Row {
                     BasicButton(
                         modifier = Modifier.weight(1f),
                         textID = R.string.sign_up,
-                        onClick = onNavigateToConfirmEmail
+                        onClick = onNavigateToConfirmEmail,
                     )
                 }
             }
         }
     }
-
 }
 
 @Composable
@@ -74,24 +72,24 @@ private fun InputForm(
     text: String,
     label: String,
     onValueChange: (String) -> Unit,
-){
-
+) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
 
-    Box(modifier = modifier){
+    Box(modifier = modifier) {
         OutlinedTextField(
             value = text,
             onValueChange = onValueChange,
             label = { Text(label) },
             maxLines = 1,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-            keyboardActions = KeyboardActions(
-                onDone = {
-                    focusManager.clearFocus() // フォーカスを外す
-                    keyboardController?.hide() // キーボードを閉じる
-                }
-            )
+            keyboardActions =
+                KeyboardActions(
+                    onDone = {
+                        focusManager.clearFocus() // フォーカスを外す
+                        keyboardController?.hide() // キーボードを閉じる
+                    },
+                ),
         )
     }
 }

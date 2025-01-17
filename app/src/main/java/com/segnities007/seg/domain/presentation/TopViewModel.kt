@@ -18,29 +18,28 @@ data class TopAction(
     val closeDrawer: () -> Unit,
 )
 
-open class TopLayerViewModel: ViewModel(){
-
+open class TopLayerViewModel : ViewModel() {
     var topState by mutableStateOf(TopState())
 
-    fun onGetTopAction(): TopAction {
-        return TopAction(
+    fun onGetTopAction(): TopAction =
+        TopAction(
             onNavigate = this::onNavigate,
             openDrawer = this::openDrawer,
             closeDrawer = this::closeDrawer,
         )
-    }
 
-    protected fun onNavigate(navHostController: NavHostController, route: Route){
+    protected fun onNavigate(
+        navHostController: NavHostController,
+        route: Route,
+    ) {
         navHostController.navigate(route)
     }
 
-    protected fun openDrawer(){
+    protected fun openDrawer() {
         topState = topState.copy(drawerState = DrawerState(DrawerValue.Open))
     }
 
-    protected fun closeDrawer(){
+    protected fun closeDrawer() {
         topState = topState.copy(drawerState = DrawerState(DrawerValue.Closed))
     }
-
 }
-

@@ -7,17 +7,14 @@ import com.segnities007.seg.navigation.login.NavigationLoginRoute
 
 data class LoginItem(
     override val routes: Routes = NavigationLoginRoute,
-    override val selectedIconIDs: List<Int> = listOf(
-        R.drawable.baseline_login_24,
-        R.drawable.baseline_create_24,
-    ),
-    override val unSelectedIconIDs: List<Int> = listOf(
-        R.drawable.outline_login_24,
-        R.drawable.outline_create_24,
-    ),
-): BottomBarItem
-
-
-
-
-
+    override val selectedIconIDs: List<Int> =
+        listOf(
+            R.drawable.baseline_login_24,
+            R.drawable.baseline_create_24,
+        ),
+    override val unSelectedIconIDs: List<Int> =
+        listOf(
+            R.drawable.outline_login_24,
+            R.drawable.outline_create_24,
+        ),
+) : BottomBarItem

@@ -34,7 +34,7 @@ android {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }
@@ -88,12 +88,11 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
 
     implementation(libs.androidx.credentials)
-    implementation (libs.googleid)
+    implementation(libs.googleid)
 
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
-
 }
 
 fun getLocalProperty(key: String): String? {
@@ -106,4 +105,3 @@ fun getLocalProperty(key: String): String? {
     }
     return properties.getProperty(key)
 }
-

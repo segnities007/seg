@@ -2,7 +2,6 @@ package com.segnities007.seg.ui.components.top_bar
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
-import com.segnities007.seg.R
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -14,10 +13,9 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.segnities007.seg.R
 import com.segnities007.seg.navigation.login.NavigationLoginRoute
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -29,29 +27,30 @@ fun TopBar(
     title: String,
     routeName: String,
     onDrawerOpen: suspend () -> Unit,
-    scrollBehavior:  TopAppBarScrollBehavior? = null,
+    scrollBehavior: TopAppBarScrollBehavior? = null,
     scope: CoroutineScope = rememberCoroutineScope(),
-){
-
+) {
     CenterAlignedTopAppBar(
-        title = { Text(text = title, maxLines = 1,) },
-        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            titleContentColor = MaterialTheme.colorScheme.primary,
+        title = { Text(text = title, maxLines = 1) },
+        colors =
+            TopAppBarDefaults.centerAlignedTopAppBarColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                titleContentColor = MaterialTheme.colorScheme.primary,
             ),
         navigationIcon = {
-            when(routeName){
+            when (routeName) {
                 NavigationLoginRoute.CreateAccount.toString() -> Spacer(modifier = Modifier.padding(0.dp))
                 NavigationLoginRoute.ConfirmEmail.toString() -> Spacer(modifier = Modifier.padding(0.dp))
 
-                else -> IconButton(onClick = { scope.launch{ onDrawerOpen() } }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.baseline_menu_24),
-                        contentDescription = routeName,
-                    )
-                }
+                else ->
+                    IconButton(onClick = { scope.launch { onDrawerOpen() } }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.baseline_menu_24),
+                            contentDescription = routeName,
+                        )
+                    }
             }
         },
-        scrollBehavior = scrollBehavior
+        scrollBehavior = scrollBehavior,
     )
 }

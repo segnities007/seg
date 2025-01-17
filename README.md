@@ -7,6 +7,10 @@ This project is SNS such as Twitter(X), Facebook, etc...
 - MVVM
 - Clean Architecture
 
+## 使用ツール
+
+- Ktlint
+
 ## 設計パターン
 - UDF (単方向データフロー)
 
