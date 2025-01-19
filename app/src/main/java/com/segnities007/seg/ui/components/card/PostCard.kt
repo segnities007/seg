@@ -1,5 +1,6 @@
 package com.segnities007.seg.ui.components.card
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -34,23 +35,23 @@ import com.segnities007.seg.R
 import com.segnities007.seg.data.model.Image
 import com.segnities007.seg.data.model.Post
 import com.segnities007.seg.data.model.User
+import com.segnities007.seg.domain.presentation.Route
+import com.segnities007.seg.navigation.hub.NavigationHubRoute
 import com.segnities007.seg.ui.screens.hub.HubUiAction
 
 @Composable
 fun PostCard(
     modifier: Modifier = Modifier.padding(dimensionResource(R.dimen.padding_small)),
-    onInitializeAction: (post: Post) -> Unit,
-    onCardClick: () -> Unit,
-    onAvatarClick: (userID: String) -> Unit,
     post: Post,
     myself: User,
     icon: Image = Image(),
     images: List<Image>,
+    onHubNavigate: (Route) -> Unit,
     hubUiAction: HubUiAction,
     postCardUiAction: PostCardUiAction,
 ) {
     LaunchedEffect(Unit) {
-        onInitializeAction(post)
+        postCardUiAction.onIncrementViewCount(post)
     }
 
     ElevatedCard(
@@ -63,14 +64,18 @@ fun PostCard(
                 ),
         elevation = CardDefaults.cardElevation(dimensionResource(R.dimen.elevation_small)),
     ) {
-        Row(modifier = Modifier.clickable { onCardClick() }.fillMaxWidth()) {
+        Row(modifier = Modifier.clickable { postCardUiAction.onClickPostCard(onHubNavigate) }.fillMaxWidth()) {
             AsyncImage(
                 modifier =
                     Modifier
                         .padding(dimensionResource(R.dimen.padding_small))
                         .size(dimensionResource(R.dimen.icon_small))
                         .clip(CircleShape)
-                        .clickable { onAvatarClick(post.userID) },
+                        .clickable {
+                            hubUiAction.onGetUserID(post.userID)
+                            hubUiAction.onChangeCurrentRouteName(NavigationHubRoute.Account.routeName)
+                            onHubNavigate(NavigationHubRoute.Account)
+                                   },
                 model = icon.imageUrl,
                 contentDescription = icon.imageUrl,
                 contentScale = ContentScale.Crop,
@@ -181,7 +186,11 @@ private fun ActionIcons(
             contentRes = contentDescriptions[0],
             count = counts[0],
             onClick = {
-                postCardUiAction.onLike(post, myself, hubUiAction.onGetUser)
+                if (myself.likes.contains(post.id)){
+                    postCardUiAction.onLike(post, myself){hubUiAction.onRemovePostIDFromLikeList(post.id)}
+                }else{
+                    postCardUiAction.onLike(post, myself){hubUiAction.onAddPostIDToLikeList(post.id)}
+                }
             },
         )
         ActionIcon(
@@ -189,7 +198,12 @@ private fun ActionIcons(
             contentRes = contentDescriptions[1],
             count = counts[1],
             onClick = {
-                postCardUiAction.onRepost(post, myself, hubUiAction.onGetUser)
+                Log.d("postcard", post.id.toString())
+                if (myself.reposts.contains(post.id)){
+                    postCardUiAction.onRepost(post, myself){hubUiAction.onRemovePostIDFromRepostList(post.id)}
+                }else{
+                    postCardUiAction.onRepost(post, myself){hubUiAction.onAddPostIDToRepostList(post.id)}
+                }
             },
         )
         ActionIcon(

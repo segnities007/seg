@@ -76,14 +76,12 @@ fun Account(
                 accountUiAction.onGetIcon(accountUiState.posts[i].iconID)
             }
             PostCard(
-                onCardClick = {},
-                onAvatarClick = {},
                 post = accountUiState.posts[i],
                 images = accountUiState.images[i],
                 icon = accountUiState.icon,
-                onInitializeAction = {},
                 myself = hubUiState.user,
                 hubUiAction = hubUiAction,
+                onHubNavigate = onHubNavigate,
                 postCardUiAction = postCardUiAction,
             )
         }

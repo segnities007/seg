@@ -8,6 +8,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.segnities007.seg.data.model.Post
+import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.navigation.hub.NavigationHubRoute
 import com.segnities007.seg.ui.components.card.PostCard
 import com.segnities007.seg.ui.components.card.PostCardUiAction
@@ -38,17 +39,9 @@ fun Home(
                 images = postCardUiState.imageLists[i],
                 icon = postCardUiState.icons[i],
                 myself = hubUiState.user,
+                onHubNavigate = {route: Route -> hubNavController.navigate(route) },
                 hubUiAction = hubUiAction,
                 postCardUiAction = postCardUiAction,
-                onCardClick = { /*TODO*/ },
-                onInitializeAction = { post: Post ->
-                    postCardUiAction.onIncrementViewCount(post)
-                },
-                onAvatarClick = { userID: String ->
-                    hubUiAction.onGetUserID(userID)
-                    hubUiAction.onChangeCurrentRouteName(NavigationHubRoute.Account.routeName)
-                    hubNavController.navigate(NavigationHubRoute.Account)
-                },
             )
         }
     }

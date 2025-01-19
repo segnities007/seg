@@ -32,7 +32,10 @@ sealed class NavigationHubRoute(
     @Serializable
     data object Search : NavigationHubRoute("Search")
 
-    companion object : Routes {
+    @Serializable
+    data object Comment: NavigationHubRoute("Comment")
+
+    companion object: Routes {
         override val routeList: List<NavigationHubRoute> =
             listOf(
                 Home,
@@ -40,9 +43,13 @@ sealed class NavigationHubRoute(
                 Post,
                 Notify,
                 Setting,
+
                 Account,
                 Accounts,
                 Search,
+                Comment,
             )
     }
+
+
 }
