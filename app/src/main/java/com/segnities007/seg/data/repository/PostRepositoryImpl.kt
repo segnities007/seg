@@ -190,7 +190,7 @@ class PostRepositoryImpl
             try {
                 // increment like count
                 postgrest.from(posts).update({
-                    Post::likeCount setTo (post.likeCount + 1)
+                    Post::likeCount setTo (post.likeCount)
                 }) {
                     filter {
                         Post::id eq post.id
@@ -215,6 +215,8 @@ class PostRepositoryImpl
                     }
                 }
 
+
+
                 Log.d(tag, "success like")
             } catch (e: Exception) {
                 Log.e(tag, "like: $e")
@@ -228,7 +230,7 @@ class PostRepositoryImpl
             try {
                 // decrement like count
                 postgrest.from(posts).update({
-                    Post::likeCount setTo post.likeCount - 1
+                    Post::likeCount setTo post.likeCount
                 }) {
                     filter {
                         Post::id eq post.id
@@ -262,7 +264,7 @@ class PostRepositoryImpl
             try {
                 // increment post count
                 postgrest.from(posts).update({
-                    Post::repostCount setTo post.repostCount + 1
+                    Post::repostCount setTo post.repostCount
                 }) {
                     filter {
                         Post::id eq post.id
@@ -297,7 +299,7 @@ class PostRepositoryImpl
             try {
                 // decrement post count
                 postgrest.from(posts).update({
-                    Post::repostCount setTo post.repostCount - 1
+                    Post::repostCount setTo post.repostCount
                 }) {
                     filter {
                         Post::id eq post.id

@@ -17,6 +17,7 @@ import com.segnities007.seg.ui.screens.hub.account.Account
 import com.segnities007.seg.ui.screens.hub.account.AccountViewModel
 import com.segnities007.seg.ui.screens.hub.account.Accounts
 import com.segnities007.seg.ui.screens.hub.home.Home
+import com.segnities007.seg.ui.screens.hub.home.comment.Comment
 import com.segnities007.seg.ui.screens.hub.notify.Notify
 import com.segnities007.seg.ui.screens.hub.post.Post
 import com.segnities007.seg.ui.screens.hub.search.Search
@@ -112,6 +113,12 @@ fun NavigationHub(
             }
             composable<NavigationHubRoute.Search> {
                 Search(modifier = modifier)
+            }
+            composable<NavigationHubRoute.Search> {
+                Search(modifier = modifier)
+            }
+            composable<NavigationHubRoute.Comment> {
+//                Comment(modifier = modifier)
             }
         }
     }

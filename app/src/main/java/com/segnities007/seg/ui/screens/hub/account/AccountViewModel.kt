@@ -8,9 +8,11 @@ import androidx.lifecycle.viewModelScope
 import com.segnities007.seg.data.model.Image
 import com.segnities007.seg.data.model.Post
 import com.segnities007.seg.data.model.User
+import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.domain.repository.ImageRepository
 import com.segnities007.seg.domain.repository.PostRepository
 import com.segnities007.seg.domain.repository.UserRepository
+import com.segnities007.seg.navigation.hub.NavigationHubRoute
 import com.segnities007.seg.ui.components.card.PostCardUiAction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -67,8 +69,18 @@ class AccountViewModel
                 onLike = this::onLike,
                 onRepost = this::onRepost,
                 onComment = this::onComment,
+                onClickIcon = this::onClickIcon,
+                onClickPostCard = this::onClickPostCard,
                 onIncrementViewCount = this::onIncrementViewCount,
             )
+
+    private fun onClickIcon(onHubNavigate: (Route) -> Unit){
+        onHubNavigate(NavigationHubRoute.Account)
+    }
+
+    private fun onClickPostCard(onHubNavigate: (Route) -> Unit,){
+        onHubNavigate(NavigationHubRoute.Comment)
+    }
 
         private fun onUpdatePosts(postID: Int) {
             viewModelScope.launch(Dispatchers.IO) {
