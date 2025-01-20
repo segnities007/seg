@@ -17,10 +17,13 @@ import javax.inject.Inject
 
 data class PostCardUiState(
     val posts: List<Post> = listOf(),
+    val post: Post = Post(),// for comment
 )
 
 data class PostCardUiAction(
     val onGetNewPosts: () -> Unit,
+    val onGetPost: (postID: Int) -> Unit,
+    val onUpdatePost: (post: Post) -> Unit,
     val onClickIcon: (onHubNavigate: (Route) -> Unit) -> Unit,
     val onClickPostCard: (onHubNavigate: (Route) -> Unit) -> Unit,
     val onLike: (post: Post, myself: User, onGetUser: () -> Unit) -> Unit,
@@ -41,13 +44,28 @@ class PostCardViewModel
         fun onGetPostCardUiAction(): PostCardUiAction =
             PostCardUiAction(
                 onGetNewPosts = this::onGetNewPosts,
+                onGetPost = this::onGetPost,
                 onClickIcon = this::onClickIcon,
                 onClickPostCard = this::onClickPostCard,
                 onLike = this::onLike,
                 onRepost = this::onRepost,
                 onComment = this::onComment,
+                onUpdatePost = this::onUpdatePost,
                 onIncrementViewCount = this::onIncrementViewCount,
             )
+
+        private fun onUpdatePost(post: Post){
+                viewModelScope.launch(Dispatchers.IO) {
+                postCardUiState = postCardUiState.copy(post = post)
+            }
+        }
+
+        private fun onGetPost(postID: Int){
+            viewModelScope.launch(Dispatchers.IO) {
+                val post = postRepository.getPost(postID)
+                postCardUiState = postCardUiState.copy(post = post)
+            }
+        }
 
         private fun onGetNewPosts() {
             viewModelScope.launch(Dispatchers.IO) {
@@ -70,7 +88,9 @@ class PostCardViewModel
         }
 
         private fun onClickPostCard(onHubNavigate: (Route) -> Unit) {
+
             onHubNavigate(NavigationHubRoute.Comment())
+
         }
 
         private fun onIncrementViewCount(post: Post) {

@@ -36,12 +36,14 @@ fun NavigationHub(
         postCardUiAction.onGetNewPosts()
     }
 
+    val onHubNavigate = { route: Route ->
+        hubViewModel.getHubUiAction().onChangeCurrentRouteName(route.name)
+        hubNavHostController.navigate(route)
+    }
+
     Hub(
         currentRouteName = hubViewModel.hubUiState.currentRouteName,
-        onHubNavigate = { route: Route ->
-            hubNavHostController.navigate(route)
-            hubViewModel.getHubUiAction().onChangeCurrentRouteName(route.name)
-        },
+        onHubNavigate = onHubNavigate,
         hubUiState = hubViewModel.hubUiState,
         accountUiState = accountViewModel.accountUiState,
         accountUiAction = accountViewModel.getAccountUiAction(),
@@ -90,10 +92,7 @@ fun NavigationHub(
                     hubUiAction = hubViewModel.getHubUiAction(),
                     accountUiState = accountViewModel.accountUiState,
                     accountUiAction = accountViewModel.getAccountUiAction(),
-                    onHubNavigate = { route: Route ->
-                        hubViewModel.getHubUiAction().onChangeCurrentRouteName(route.name)
-                        hubNavHostController.navigate(route)
-                    },
+                    onHubNavigate = onHubNavigate,
                     postCardUiAction = accountViewModel.getPostUiAction(),
                 )
             }
@@ -103,10 +102,7 @@ fun NavigationHub(
                     hubUiAction = hubViewModel.getHubUiAction(),
                     accountUiState = accountViewModel.accountUiState,
                     accountUiAction = accountViewModel.getAccountUiAction(),
-                    onNavigate = { route: Route ->
-                        hubViewModel.getHubUiAction().onChangeCurrentRouteName(route.name)
-                        hubNavHostController.navigate(route)
-                    },
+                    onNavigate = onHubNavigate,
                 )
             }
             composable<NavigationHubRoute.Search> {
@@ -116,7 +112,14 @@ fun NavigationHub(
                 Search(modifier = modifier)
             }
             composable<NavigationHubRoute.Comment> {
-//                Comment(modifier = modifier)
+                Comment(
+                    modifier = modifier,
+                    hubUiState = hubViewModel.hubUiState,
+                    hubUiAction = hubViewModel.getHubUiAction(),
+                    postCardUiState = postCardViewModel.postCardUiState,
+                    postCardUiAction = postCardViewModel.onGetPostCardUiAction(),
+                    onHubNavigate = onHubNavigate,
+                )
             }
         }
     }
