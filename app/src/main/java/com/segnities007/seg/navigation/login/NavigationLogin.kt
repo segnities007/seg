@@ -29,12 +29,12 @@ fun NavigationLogin(
         topState = loginViewModel.topState,
         onNavigate = { route: Route ->
             loginNavHostController.navigate(route)
-            loginViewModel.getLoginAction().onChangeCurrentRouteName(route::class.simpleName.toString())
+            loginViewModel.getLoginAction().onChangeCurrentRouteName(route.name)
         },
     ) { modifier: Modifier ->
         NavHost(
             navController = loginNavHostController,
-            startDestination = NavigationLoginRoute.SignIn,
+            startDestination = NavigationLoginRoute.SignIn(),
         ) {
             composable<NavigationLoginRoute.SignIn> {
                 SignIn(

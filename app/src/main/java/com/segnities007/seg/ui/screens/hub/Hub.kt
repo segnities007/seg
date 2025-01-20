@@ -59,36 +59,36 @@ private fun HubUi(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             when (currentRouteName) {
-                NavigationHubRoute.Home.routeName ->
+                NavigationHubRoute.Home().name ->
                     TopBar(
                         title = stringResource(R.string.app_name),
                         onDrawerOpen = topAction.openDrawer,
                         scrollBehavior = scrollBehavior,
-                        routeName = NavigationHubRoute.Home.routeName,
+                        routeName = NavigationHubRoute.Home().name,
                     )
-                NavigationHubRoute.Trend.routeName ->
+                NavigationHubRoute.Trend().name ->
                     TopBar(
                         title = stringResource(R.string.app_name),
                         onDrawerOpen = topAction.openDrawer,
-                        routeName = NavigationHubRoute.Trend.routeName,
+                        routeName = NavigationHubRoute.Trend().name,
                     )
-                NavigationHubRoute.Post.routeName ->
+                NavigationHubRoute.Post().name ->
                     TopBar(
                         title = stringResource(R.string.app_name),
                         onDrawerOpen = topAction.openDrawer,
-                        routeName = NavigationHubRoute.Notify.routeName,
+                        routeName = NavigationHubRoute.Notify().name,
                     )
-                NavigationHubRoute.Notify.routeName ->
+                NavigationHubRoute.Notify().name ->
                     TopBar(
                         title = stringResource(R.string.app_name),
                         onDrawerOpen = topAction.openDrawer,
-                        routeName = NavigationHubRoute.Notify.routeName,
+                        routeName = NavigationHubRoute.Notify().name,
                     )
-                NavigationHubRoute.Accounts.routeName ->
+                NavigationHubRoute.Accounts().name ->
                     TopBar(
                         title = stringResource(R.string.app_name),
                         onDrawerOpen = topAction.openDrawer,
-                        routeName = NavigationHubRoute.Accounts.routeName,
+                        routeName = NavigationHubRoute.Accounts().name,
                     )
                 else -> Spacer(modifier = Modifier.padding(0.dp))
             }
@@ -102,8 +102,8 @@ private fun HubUi(
         },
         floatingActionButton = {
             when (currentRouteName) {
-                NavigationHubRoute.Home.routeName -> FloatingButton(iconID = R.drawable.baseline_search_24) { }
-                NavigationHubRoute.Trend.routeName -> FloatingButton(iconID = R.drawable.baseline_search_24) { }
+                NavigationHubRoute.Home().name -> FloatingButton(iconID = R.drawable.baseline_search_24) { }
+                NavigationHubRoute.Trend().name -> FloatingButton(iconID = R.drawable.baseline_search_24) { }
                 else -> Spacer(modifier = Modifier.padding(0.dp))
             }
         },

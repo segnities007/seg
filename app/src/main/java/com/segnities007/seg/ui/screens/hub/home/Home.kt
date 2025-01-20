@@ -7,9 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
-import com.segnities007.seg.data.model.Post
 import com.segnities007.seg.domain.presentation.Route
-import com.segnities007.seg.navigation.hub.NavigationHubRoute
 import com.segnities007.seg.ui.components.card.PostCard
 import com.segnities007.seg.ui.components.card.PostCardUiAction
 import com.segnities007.seg.ui.components.card.PostCardUiState
@@ -39,7 +37,7 @@ fun Home(
                 images = postCardUiState.imageLists[i],
                 icon = postCardUiState.icons[i],
                 myself = hubUiState.user,
-                onHubNavigate = {route: Route -> hubNavController.navigate(route) },
+                onHubNavigate = { route: Route -> hubNavController.navigate(route) },
                 hubUiAction = hubUiAction,
                 postCardUiAction = postCardUiAction,
             )

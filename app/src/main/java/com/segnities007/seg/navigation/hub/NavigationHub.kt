@@ -40,10 +40,10 @@ fun NavigationHub(
         currentRouteName = hubViewModel.hubUiState.currentRouteName,
         onNavigate = { route: Route ->
             hubNavHostController.navigate(route)
-            hubViewModel.getHubUiAction().onChangeCurrentRouteName(route::class.simpleName.toString())
+            hubViewModel.getHubUiAction().onChangeCurrentRouteName(route.name)
         },
     ) { modifier: Modifier ->
-        NavHost(navController = hubNavHostController, startDestination = NavigationHubRoute.Home) {
+        NavHost(navController = hubNavHostController, startDestination = NavigationHubRoute.Home()) {
             composable<NavigationHubRoute.Home> {
                 Home(
                     modifier = modifier,
@@ -64,7 +64,7 @@ fun NavigationHub(
                     postCardUiAction = postCardViewModel.onGetPostCardUiAction(),
                     onNavigate = { route: Route ->
                         hubNavHostController.navigate(route)
-                        hubViewModel.getHubUiAction().onChangeCurrentRouteName(route::class.simpleName.toString())
+                        hubViewModel.getHubUiAction().onChangeCurrentRouteName(route.name)
                         postCardViewModel.onGetPostCardUiAction().onGetNewPosts()
                     },
                 )
@@ -79,7 +79,7 @@ fun NavigationHub(
                     hubUiState = hubViewModel.hubUiState,
                     hubUiAction = hubViewModel.getHubUiAction(),
                     onHubNavigate = { route: Route ->
-                        hubViewModel.getHubUiAction().onChangeCurrentRouteName(NavigationHubRoute.Accounts.routeName)
+                        hubViewModel.getHubUiAction().onChangeCurrentRouteName(route.name)
                         hubNavHostController.navigate(route)
                     },
                     onTopNavigate = onTopNavigate,
@@ -93,7 +93,7 @@ fun NavigationHub(
                     accountUiState = accountViewModel.accountUiState,
                     accountUiAction = accountViewModel.getAccountUiAction(),
                     onHubNavigate = { route: Route ->
-                        hubViewModel.getHubUiAction().onChangeCurrentRouteName(NavigationHubRoute.Accounts.routeName)
+                        hubViewModel.getHubUiAction().onChangeCurrentRouteName(route.name)
                         hubNavHostController.navigate(route)
                     },
                     postCardUiAction = accountViewModel.getPostUiAction(),
@@ -106,7 +106,7 @@ fun NavigationHub(
                     accountUiState = accountViewModel.accountUiState,
                     accountUiAction = accountViewModel.getAccountUiAction(),
                     onNavigate = { route: Route ->
-                        hubViewModel.getHubUiAction().onChangeCurrentRouteName(NavigationHubRoute.Account.routeName)
+                        hubViewModel.getHubUiAction().onChangeCurrentRouteName(route.name)
                         hubNavHostController.navigate(route)
                     },
                 )

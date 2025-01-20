@@ -199,7 +199,7 @@ private fun SelectionButtons(
         BasicButton(
             modifier = Modifier.weight(1f).fillMaxWidth(),
             textID = R.string.cancel,
-            onClick = { onNavigate(NavigationSettingRoute.Preference) },
+            onClick = { onNavigate(NavigationSettingRoute.Preference()) },
         )
         Spacer(modifier = Modifier.padding(commonPadding))
         BasicButton(
@@ -209,7 +209,7 @@ private fun SelectionButtons(
                 scope.launch {
                     userInfoUiAction.onUserUpdate(hubUiState.user)
                     hubUiAction.onGetUser()
-                    onNavigate(NavigationSettingRoute.Preference)
+                    onNavigate(NavigationSettingRoute.Preference())
                 }
             },
         )

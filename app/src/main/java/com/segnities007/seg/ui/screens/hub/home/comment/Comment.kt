@@ -13,13 +13,11 @@ fun Comment(
     post: Post,
     hubUiAction: HubUiAction,
     postCardUiAction: PostCardUiAction,
-){
-    Column(){
-
+) {
+    Column {
     }
 }
 
 @Composable
-private fun comments(){
-
+private fun comments() {
 }

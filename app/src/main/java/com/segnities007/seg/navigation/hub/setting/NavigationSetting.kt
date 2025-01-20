@@ -25,7 +25,7 @@ fun NavigationSetting(
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
     onHubNavigate: (Route) -> Unit,
-    onTopNavigate: (Route) -> Unit, // go to login
+    onTopNavigate: (Route) -> Unit,
 ) {
     Setting(
         modifier = modifier,
@@ -35,7 +35,7 @@ fun NavigationSetting(
         hubUiAction = hubUiAction,
         accountUiAction = accountUiAction,
     ) {
-        NavHost(navController = settingNavHostController, startDestination = NavigationSettingRoute.Preference) {
+        NavHost(navController = settingNavHostController, startDestination = NavigationSettingRoute.Preference()) {
             composable<NavigationSettingRoute.Preference> {
                 Preference(
                     settingUiAction = settingViewModel.getSettingUiAction(),

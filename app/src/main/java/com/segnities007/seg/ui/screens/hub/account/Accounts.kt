@@ -35,8 +35,8 @@ fun Accounts(
             AvatarCard(
                 onCardClick = {
                     hubUiAction.onGetUserID(user.userID)
-                    hubUiAction.onChangeCurrentRouteName(NavigationHubRoute.Account.routeName)
-                    onNavigate(NavigationHubRoute.Account)
+                    hubUiAction.onChangeCurrentRouteName(NavigationHubRoute.Account().name)
+                    onNavigate(NavigationHubRoute.Account())
                 },
                 url = accountUiState.icon.imageUrl,
                 user = user,

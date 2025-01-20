@@ -13,8 +13,8 @@ fun Splash(
 ) {
     LaunchedEffect(Unit) {
         splashViewModel.hasLogged(
-            onNavigateToHost = { navHostController.navigate(NavigationRoute.Hub) },
-            onNavigateToLogin = { navHostController.navigate(NavigationRoute.Login) },
+            onNavigateToHost = { navHostController.navigate(NavigationRoute.Hub()) },
+            onNavigateToLogin = { navHostController.navigate(NavigationRoute.Login()) },
         )
     }
 }

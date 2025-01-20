@@ -2,11 +2,11 @@ package com.segnities007.seg.data.model.bottom_bar
 
 import com.segnities007.seg.R
 import com.segnities007.seg.domain.model.BottomBarItem
-import com.segnities007.seg.domain.presentation.Routes
+import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.navigation.hub.NavigationHubRoute
 
 data class HubItem(
-    override val routes: Routes = NavigationHubRoute,
+    override val routes: List<Route> = NavigationHubRoute.routes,
     override val selectedIconIDs: List<Int> =
         listOf(
             R.drawable.baseline_home_24,

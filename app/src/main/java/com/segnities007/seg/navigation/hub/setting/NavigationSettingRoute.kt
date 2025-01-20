@@ -1,24 +1,26 @@
 package com.segnities007.seg.navigation.hub.setting
 
 import com.segnities007.seg.domain.presentation.Route
-import com.segnities007.seg.domain.presentation.Routes
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed class NavigationSettingRoute(
-    val routeName: String,
-) : Route {
-    @Serializable
-    data object Preference : NavigationSettingRoute("Preference")
+sealed class NavigationSettingRoute : Route {
 
     @Serializable
-    data object UserInfo : NavigationSettingRoute("UserInfo")
+    data class Preference(
+        override val name: String = "Preference",
+    ) : NavigationSettingRoute()
 
-    companion object : Routes {
-        override val routeList: List<NavigationSettingRoute> =
+    @Serializable
+    data class UserInfo(
+        override val name: String = "UserInfo",
+    ) : NavigationSettingRoute()
+
+    companion object{
+        val routes: List<Route> =
             listOf(
-                Preference,
-                UserInfo,
+                Preference(),
+                UserInfo(),
             )
     }
 }
