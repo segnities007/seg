@@ -45,7 +45,6 @@ fun PostCard(
     myself: User,
     hubUiAction: HubUiAction,
     postCardUiAction: PostCardUiAction,
-    defaultIconURL: String = "https://avatars.githubusercontent.com/u/174174755?v=4",
     onHubNavigate: (Route) -> Unit,
 ) {
     LaunchedEffect(Unit) {
@@ -62,7 +61,10 @@ fun PostCard(
                 ),
         elevation = CardDefaults.cardElevation(dimensionResource(R.dimen.elevation_small)),
     ) {
-        Row(modifier = Modifier.clickable { postCardUiAction.onClickPostCard(onHubNavigate) }.fillMaxWidth()) {
+        Row(modifier = Modifier.clickable {
+            postCardUiAction.onUpdatePost(post)
+            postCardUiAction.onClickPostCard(onHubNavigate)
+        }.fillMaxWidth()) {
             AsyncImage(
                 modifier =
                     Modifier
@@ -74,7 +76,7 @@ fun PostCard(
                             hubUiAction.onChangeCurrentRouteName(NavigationHubRoute.Account().name)
                             onHubNavigate(NavigationHubRoute.Account())
                         },
-                model = if (post.iconURL != "") post.iconURL else defaultIconURL,
+                model = post.iconURL,
                 contentDescription = post.iconURL,
                 contentScale = ContentScale.Crop,
             )
