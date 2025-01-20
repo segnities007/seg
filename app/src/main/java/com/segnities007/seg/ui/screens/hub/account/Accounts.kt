@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.segnities007.seg.domain.presentation.Route
@@ -28,17 +27,12 @@ fun Accounts(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         for (user in accountUiState.users) {
-            LaunchedEffect(Unit) {
-                accountUiAction.onGetIcon(user.iconID)
-            }
-
             AvatarCard(
                 onCardClick = {
                     hubUiAction.onGetUserID(user.userID)
                     hubUiAction.onChangeCurrentRouteName(NavigationHubRoute.Account().name)
                     onNavigate(NavigationHubRoute.Account())
                 },
-                url = accountUiState.icon.imageUrl,
                 user = user,
             )
         }

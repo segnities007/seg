@@ -38,10 +38,13 @@ fun NavigationHub(
 
     Hub(
         currentRouteName = hubViewModel.hubUiState.currentRouteName,
-        onNavigate = { route: Route ->
+        onHubNavigate = { route: Route ->
             hubNavHostController.navigate(route)
             hubViewModel.getHubUiAction().onChangeCurrentRouteName(route.name)
         },
+        hubUiState = hubViewModel.hubUiState,
+        accountUiState = accountViewModel.accountUiState,
+        accountUiAction = accountViewModel.getAccountUiAction(),
     ) { modifier: Modifier ->
         NavHost(navController = hubNavHostController, startDestination = NavigationHubRoute.Home()) {
             composable<NavigationHubRoute.Home> {
@@ -75,13 +78,8 @@ fun NavigationHub(
             composable<NavigationHubRoute.Setting> {
                 NavigationSetting(
                     modifier = modifier,
-                    accountUiAction = accountViewModel.getAccountUiAction(),
                     hubUiState = hubViewModel.hubUiState,
                     hubUiAction = hubViewModel.getHubUiAction(),
-                    onHubNavigate = { route: Route ->
-                        hubViewModel.getHubUiAction().onChangeCurrentRouteName(route.name)
-                        hubNavHostController.navigate(route)
-                    },
                     onTopNavigate = onTopNavigate,
                 )
             }

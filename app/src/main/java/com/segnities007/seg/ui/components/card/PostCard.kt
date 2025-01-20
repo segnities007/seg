@@ -32,7 +32,6 @@ import coil3.ImageLoader
 import coil3.compose.AsyncImage
 import coil3.imageLoader
 import com.segnities007.seg.R
-import com.segnities007.seg.data.model.Image
 import com.segnities007.seg.data.model.Post
 import com.segnities007.seg.data.model.User
 import com.segnities007.seg.domain.presentation.Route
@@ -44,11 +43,10 @@ fun PostCard(
     modifier: Modifier = Modifier.padding(dimensionResource(R.dimen.padding_small)),
     post: Post,
     myself: User,
-    icon: Image = Image(),
-    images: List<Image>,
-    onHubNavigate: (Route) -> Unit,
     hubUiAction: HubUiAction,
     postCardUiAction: PostCardUiAction,
+    defaultIconURL: String = "https://avatars.githubusercontent.com/u/174174755?v=4",
+    onHubNavigate: (Route) -> Unit,
 ) {
     LaunchedEffect(Unit) {
         postCardUiAction.onIncrementViewCount(post)
@@ -76,14 +74,14 @@ fun PostCard(
                             hubUiAction.onChangeCurrentRouteName(NavigationHubRoute.Account().name)
                             onHubNavigate(NavigationHubRoute.Account())
                         },
-                model = icon.imageUrl,
-                contentDescription = icon.imageUrl,
+                model = if (post.iconURL != "") post.iconURL else defaultIconURL,
+                contentDescription = post.iconURL,
                 contentScale = ContentScale.Crop,
             )
             Column {
                 Name(modifier = modifier, post = post)
                 Description(modifier = modifier, post = post)
-                Images(modifier = modifier, images = images)
+                Images(modifier = modifier, imageURLs = post.imageURLs)
                 ActionIcons(
                     modifier = modifier,
                     post = post,
@@ -122,13 +120,13 @@ private fun Description(
 @Composable
 private fun Images(
     modifier: Modifier = Modifier,
-    images: List<Image>,
+    imageURLs: List<String>,
     imageLoader: ImageLoader = LocalContext.current.imageLoader,
 ) {
-    for (image in images) {
+    for (url in imageURLs) {
         AsyncImage(
             modifier = modifier,
-            model = image.imageUrl,
+            model = url,
             imageLoader = imageLoader,
             contentDescription = "",
         )

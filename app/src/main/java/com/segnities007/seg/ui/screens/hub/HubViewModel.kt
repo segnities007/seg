@@ -4,10 +4,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
-import com.segnities007.seg.data.model.Image
 import com.segnities007.seg.data.model.User
 import com.segnities007.seg.domain.presentation.TopLayerViewModel
-import com.segnities007.seg.domain.repository.ImageRepository
 import com.segnities007.seg.domain.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -17,7 +15,6 @@ import javax.inject.Inject
 data class HubUiState(
     val user: User = User(),
     val userID: String = "", // of other user
-    val icon: Image = Image(),
     val currentRouteName: String = "Home",
 )
 
@@ -36,7 +33,6 @@ class HubViewModel
     @Inject
     constructor(
         private val userRepository: UserRepository,
-        private val imageRepository: ImageRepository,
     ) : TopLayerViewModel() {
         init {
             onGetUser()
@@ -63,8 +59,7 @@ class HubViewModel
         private fun onGetUser() {
             viewModelScope.launch(Dispatchers.IO) {
                 val user = userRepository.getUser()
-                val image = imageRepository.getImage(user.iconID)
-                hubUiState = hubUiState.copy(user = user, userID = user.userID, icon = image)
+                hubUiState = hubUiState.copy(user = user, userID = user.userID)
             }
         }
 
@@ -74,23 +69,23 @@ class HubViewModel
 
         // TODO
         private fun onAddPostIDToLikeList(postID: Int) {
-            val updatedUser = hubUiState.user.copy(likes = hubUiState.user.likes?.plus(postID))
+            val updatedUser = hubUiState.user.copy(likes = hubUiState.user.likes.plus(postID))
             hubUiState = hubUiState.copy(user = updatedUser)
         }
 
         private fun onRemovePostIDFromLikeList(postID: Int) {
-            val updatedUser = hubUiState.user.copy(likes = hubUiState.user.likes?.minus(postID))
+            val updatedUser = hubUiState.user.copy(likes = hubUiState.user.likes.minus(postID))
             hubUiState = hubUiState.copy(user = updatedUser)
         }
 
         private fun onAddPostIDToRepostList(postID: Int) {
-            val newPosts = hubUiState.user.reposts?.plus(postID)
+            val newPosts = hubUiState.user.reposts.plus(postID)
             val updatedUser = hubUiState.user.copy(reposts = newPosts)
             hubUiState = hubUiState.copy(user = updatedUser)
         }
 
         private fun onRemovePostIDFromRepostList(postID: Int) {
-            val newPosta = hubUiState.user.reposts?.minus(postID)
+            val newPosta = hubUiState.user.reposts.minus(postID)
             val updatedUser = hubUiState.user.copy(reposts = newPosta)
 
             hubUiState = hubUiState.copy(user = updatedUser)

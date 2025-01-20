@@ -25,7 +25,7 @@ sealed class NavigationLoginRoute : Route {
         override val name: String = "CreateAccount",
     ) : NavigationLoginRoute()
 
-    companion object{
+    companion object {
         val routes: List<Route> =
             listOf(
                 SignIn(),

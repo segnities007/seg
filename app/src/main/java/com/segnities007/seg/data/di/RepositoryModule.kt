@@ -38,7 +38,7 @@ object RepositoryModule {
     fun provideImageRepository(
         postgrest: Postgrest,
         storageRepository: StorageRepository,
-    ): ImageRepository = ImageRepositoryImpl(postgrest, storageRepository)
+    ): ImageRepository = ImageRepositoryImpl(storageRepository = storageRepository)
 
     @Provides
     @Singleton
@@ -53,12 +53,8 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideStorageRepository(
-        postgrest: Postgrest,
-        storage: Storage,
-    ): StorageRepository =
+    fun provideStorageRepository(storage: Storage): StorageRepository =
         StorageRepositoryImpl(
-            postgrest = postgrest,
             storage = storage,
         )
 }

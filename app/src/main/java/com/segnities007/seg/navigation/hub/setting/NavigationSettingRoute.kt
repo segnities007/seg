@@ -5,7 +5,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 sealed class NavigationSettingRoute : Route {
-
     @Serializable
     data class Preference(
         override val name: String = "Preference",
@@ -16,7 +15,7 @@ sealed class NavigationSettingRoute : Route {
         override val name: String = "UserInfo",
     ) : NavigationSettingRoute()
 
-    companion object{
+    companion object {
         val routes: List<Route> =
             listOf(
                 Preference(),

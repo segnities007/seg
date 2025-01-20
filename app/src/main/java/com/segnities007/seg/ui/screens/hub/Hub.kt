@@ -21,27 +21,35 @@ import com.segnities007.seg.ui.components.bottom_bar.BottomBar
 import com.segnities007.seg.ui.components.floating_button.FloatingButton
 import com.segnities007.seg.ui.components.navigation_drawer.NavigationDrawer
 import com.segnities007.seg.ui.components.top_bar.TopBar
+import com.segnities007.seg.ui.components.top_bar.TopStatusBar
+import com.segnities007.seg.ui.screens.hub.account.AccountUiAction
+import com.segnities007.seg.ui.screens.hub.account.AccountUiState
 
-// drawerとnavigationを使用するためにこのようなツリー構造にしてる
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Hub(
     hubViewModel: HubViewModel = hiltViewModel(),
-    onNavigate: (Route) -> Unit,
+    onHubNavigate: (Route) -> Unit,
     currentRouteName: String,
+    hubUiState: HubUiState,
+    accountUiState: AccountUiState,
+    accountUiAction: AccountUiAction,
     content: @Composable (Modifier) -> Unit,
 ) {
     NavigationDrawer(
         items = HubItem(),
         drawerState = hubViewModel.topState.drawerState,
-        onNavigate = onNavigate,
+        onNavigate = onHubNavigate,
         onDrawerClose = hubViewModel.onGetTopAction().closeDrawer,
     ) {
         HubUi(
             topAction = hubViewModel.onGetTopAction(),
             content = content,
             currentRouteName = currentRouteName,
-            onNavigate = onNavigate,
+            onHubNavigate = onHubNavigate,
+            hubUiState = hubUiState,
+            accountUiState = accountUiState,
+            accountUiAction = accountUiAction,
         )
     }
 }
@@ -51,8 +59,11 @@ fun Hub(
 private fun HubUi(
     topAction: TopAction,
     currentRouteName: String,
-    onNavigate: (Route) -> Unit,
+    hubUiState: HubUiState,
+    accountUiState: AccountUiState,
+    accountUiAction: AccountUiAction,
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(),
+    onHubNavigate: (Route) -> Unit,
     content: @Composable (modifier: Modifier) -> Unit,
 ) {
     Scaffold(
@@ -64,31 +75,57 @@ private fun HubUi(
                         title = stringResource(R.string.app_name),
                         onDrawerOpen = topAction.openDrawer,
                         scrollBehavior = scrollBehavior,
-                        routeName = NavigationHubRoute.Home().name,
+                        routeName = currentRouteName,
                     )
                 NavigationHubRoute.Trend().name ->
                     TopBar(
                         title = stringResource(R.string.app_name),
                         onDrawerOpen = topAction.openDrawer,
-                        routeName = NavigationHubRoute.Trend().name,
+                        routeName = currentRouteName,
                     )
                 NavigationHubRoute.Post().name ->
                     TopBar(
                         title = stringResource(R.string.app_name),
                         onDrawerOpen = topAction.openDrawer,
-                        routeName = NavigationHubRoute.Notify().name,
+                        routeName = currentRouteName,
                     )
                 NavigationHubRoute.Notify().name ->
                     TopBar(
                         title = stringResource(R.string.app_name),
                         onDrawerOpen = topAction.openDrawer,
-                        routeName = NavigationHubRoute.Notify().name,
+                        routeName = currentRouteName,
+                    )
+                NavigationHubRoute.Account().name ->
+                    TopStatusBar(
+                        user = accountUiState.user,
+                        onClickFollowsButton = {
+                            accountUiAction.onSetUsers(accountUiState.user.follows)
+                            onHubNavigate(NavigationHubRoute.Accounts())
+                        },
+                        onClickFollowersButton = {
+                            accountUiAction.onSetUsers(accountUiState.user.followers)
+                            onHubNavigate(NavigationHubRoute.Accounts())
+                        },
+                        onHubNavigate = onHubNavigate,
                     )
                 NavigationHubRoute.Accounts().name ->
                     TopBar(
                         title = stringResource(R.string.app_name),
                         onDrawerOpen = topAction.openDrawer,
-                        routeName = NavigationHubRoute.Accounts().name,
+                        routeName = currentRouteName,
+                    )
+                NavigationHubRoute.Setting().name ->
+                    TopStatusBar(
+                        user = hubUiState.user,
+                        onClickFollowsButton = {
+                            accountUiAction.onSetUsers(hubUiState.user.follows)
+                            onHubNavigate(NavigationHubRoute.Accounts())
+                        },
+                        onClickFollowersButton = {
+                            accountUiAction.onSetUsers(hubUiState.user.followers)
+                            onHubNavigate(NavigationHubRoute.Accounts())
+                        },
+                        onHubNavigate = onHubNavigate,
                     )
                 else -> Spacer(modifier = Modifier.padding(0.dp))
             }
@@ -97,7 +134,7 @@ private fun HubUi(
             BottomBar(
                 items = HubItem(),
                 currentRouteName = currentRouteName,
-                onNavigate = onNavigate,
+                onNavigate = onHubNavigate,
             )
         },
         floatingActionButton = {

@@ -17,11 +17,9 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.Dp
 import com.segnities007.seg.R
 import com.segnities007.seg.domain.presentation.Route
-import com.segnities007.seg.navigation.hub.NavigationHubRoute
 import com.segnities007.seg.ui.components.button.SmallButton
 import com.segnities007.seg.ui.components.card.PostCard
 import com.segnities007.seg.ui.components.card.PostCardUiAction
-import com.segnities007.seg.ui.components.top_bar.TopStatusBar
 import com.segnities007.seg.ui.screens.hub.HubUiAction
 import com.segnities007.seg.ui.screens.hub.HubUiState
 
@@ -46,24 +44,6 @@ fun Account(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        TopStatusBar(
-            user = accountUiState.user,
-            onClickFollowsButton = {
-                if (!accountUiState.user.follows.isNullOrEmpty()) {
-                    accountUiAction.onSetUsers(accountUiState.user.follows)
-                }
-                onHubNavigate(NavigationHubRoute.Accounts())
-            },
-            onClickFollowersButton = {
-                if (!accountUiState.user.followers.isNullOrEmpty()) {
-                    accountUiAction.onSetUsers(accountUiState.user.followers)
-                }
-                onHubNavigate(NavigationHubRoute.Accounts())
-            },
-            currentRouteName = hubUiState.currentRouteName,
-            onHubNavigate = onHubNavigate,
-        )
-
         if (hubUiState.userID != accountUiState.user.userID) {
             Spacer(modifier = Modifier.padding(commonPadding))
             FollowButtons(
@@ -76,13 +56,8 @@ fun Account(
         }
 
         for (i in 0 until accountUiState.posts.size) {
-            LaunchedEffect(Unit) {
-                accountUiAction.onGetIcon(accountUiState.posts[i].iconID)
-            }
             PostCard(
                 post = accountUiState.posts[i],
-                images = accountUiState.images[i],
-                icon = accountUiState.icon,
                 myself = hubUiState.user,
                 hubUiAction = hubUiAction,
                 onHubNavigate = onHubNavigate,
@@ -108,7 +83,7 @@ private fun FollowButtons(
         SmallButton(
             modifier = Modifier.weight(1f),
             textID =
-                if (!hubUiState.user.follows.isNullOrEmpty() &&
+                if (
                     hubUiState.user.follows.contains(accountUiState.user.userID)
                 ) {
                     R.string.followed
@@ -117,7 +92,7 @@ private fun FollowButtons(
                 },
             onClick = {
                 // リストがNullじゃないかつ、IDがある場合unfollow
-                if (!hubUiState.user.follows.isNullOrEmpty() && hubUiState.user.follows.contains(accountUiState.user.userID)) {
+                if (hubUiState.user.follows.contains(accountUiState.user.userID)) {
                     accountUiAction.onUnFollow(hubUiState.user, accountUiState.user, hubUiAction.onGetUser)
                 } else {
                     accountUiAction.onFollow(hubUiState.user, accountUiState.user, hubUiAction.onGetUser)

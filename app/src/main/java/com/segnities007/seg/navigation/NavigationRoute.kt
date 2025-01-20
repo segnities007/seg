@@ -20,7 +20,7 @@ sealed class NavigationRoute : Route {
         override val name: String = "Hub",
     ) : NavigationRoute()
 
-    companion object{
+    companion object {
         val routes: List<Route> =
             listOf(
                 Splash(),

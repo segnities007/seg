@@ -27,7 +27,6 @@ fun AvatarCard(
     modifier: Modifier = Modifier,
     user: User,
     onCardClick: () -> Unit,
-    url: String = "https://avatars.githubusercontent.com/u/174174755?v=4",
 ) {
     ElevatedCard(
         modifier =
@@ -51,8 +50,8 @@ fun AvatarCard(
                     Modifier
                         .size(dimensionResource(R.dimen.icon_small))
                         .clip(CircleShape),
-                contentDescription = url,
-                model = url,
+                model = user.iconURL,
+                contentDescription = user.iconURL,
                 contentScale = ContentScale.Crop,
             )
             Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_small)))
