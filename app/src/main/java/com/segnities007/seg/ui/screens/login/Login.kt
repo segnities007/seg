@@ -60,13 +60,13 @@ private fun LoginUi(
         },
         bottomBar = {
             when (currentRouteName) {
-                NavigationLoginRoute.SignIn.routeName ->
+                NavigationLoginRoute.SignIn().name ->
                     BottomBar(
                         items = LoginItem(),
                         currentRouteName = currentRouteName,
                         onNavigate = onNavigate,
                     )
-                NavigationLoginRoute.SignUp.routeName ->
+                NavigationLoginRoute.SignUp().name ->
                     BottomBar(
                         items = LoginItem(),
                         currentRouteName = currentRouteName,

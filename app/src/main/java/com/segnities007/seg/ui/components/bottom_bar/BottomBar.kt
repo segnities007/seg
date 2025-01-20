@@ -17,7 +17,7 @@ fun BottomBar(
 ) {
     NavigationBar {
         items.unSelectedIconIDs.forEachIndexed { index, _ ->
-            val routeName = items.routes.routeList[index]::class.simpleName.toString()
+            val routeName = items.routes[index].name
             NavigationBarItem(
                 icon = {
                     Icon(
@@ -32,7 +32,7 @@ fun BottomBar(
                 },
                 label = { Text(routeName) },
                 selected = routeName == currentRouteName,
-                onClick = { onNavigate(items.routes.routeList[index]) },
+                onClick = { onNavigate(items.routes[index]) },
             )
         }
     }

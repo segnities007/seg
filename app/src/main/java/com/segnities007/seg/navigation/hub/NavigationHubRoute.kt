@@ -1,55 +1,66 @@
 package com.segnities007.seg.navigation.hub
 
 import com.segnities007.seg.domain.presentation.Route
-import com.segnities007.seg.domain.presentation.Routes
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed class NavigationHubRoute(
-    val routeName: String,
-) : Route {
+sealed class NavigationHubRoute : Route {
     @Serializable
-    data object Home : NavigationHubRoute("Home")
-
-    @Serializable
-    data object Trend : NavigationHubRoute("Trend")
+    data class Home(
+        override val name: String = "Home",
+    ) : NavigationHubRoute()
 
     @Serializable
-    data object Post : NavigationHubRoute("Post")
+    data class Trend(
+        override val name: String = "Trend",
+    ) : NavigationHubRoute()
 
     @Serializable
-    data object Notify : NavigationHubRoute("Notify")
+    data class Post(
+        override val name: String = "Post",
+    ) : NavigationHubRoute()
 
     @Serializable
-    data object Setting : NavigationHubRoute("Setting")
+    data class Notify(
+        override val name: String = "Notify",
+    ) : NavigationHubRoute()
 
     @Serializable
-    data object Account : NavigationHubRoute("Account")
+    data class Setting(
+        override val name: String = "Setting",
+    ) : NavigationHubRoute()
 
     @Serializable
-    data object Accounts : NavigationHubRoute("Accounts")
+    data class Account(
+        override val name: String = "Account",
+    ) : NavigationHubRoute()
 
     @Serializable
-    data object Search : NavigationHubRoute("Search")
+    data class Accounts(
+        override val name: String = "Accounts",
+    ) : NavigationHubRoute()
 
     @Serializable
-    data object Comment: NavigationHubRoute("Comment")
+    data class Search(
+        override val name: String = "Search",
+    ) : NavigationHubRoute()
 
-    companion object: Routes {
-        override val routeList: List<NavigationHubRoute> =
-            listOf(
-                Home,
-                Trend,
-                Post,
-                Notify,
-                Setting,
+    @Serializable
+    data class Comment(
+        override val name: String = "Comment",
+    ) : NavigationHubRoute()
 
-                Account,
-                Accounts,
-                Search,
-                Comment,
-            )
+    companion object {
+        val routes: List<Route> = listOf(
+            Home(),
+            Trend(),
+            Post(),
+            Notify(),
+            Setting(),
+            Account(),
+            Accounts(),
+            Search(),
+            Comment(),
+        )
     }
-
-
 }

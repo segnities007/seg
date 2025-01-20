@@ -37,17 +37,17 @@ fun Setting(
                 if (!hubUiState.user.follows.isNullOrEmpty()) {
                     accountUiAction.onSetUsers(hubUiState.user.follows)
                 }
-                onHubNavigate(NavigationHubRoute.Accounts)
+                onHubNavigate(NavigationHubRoute.Accounts())
             },
             onClickFollowersButton = {
                 if (!hubUiState.user.followers.isNullOrEmpty()) {
                     accountUiAction.onSetUsers(hubUiState.user.followers)
                 }
-                onHubNavigate(NavigationHubRoute.Accounts)
+                onHubNavigate(NavigationHubRoute.Accounts())
             },
             onSettingNavigate = onSettingNavigate, // go to userInfo
             onHubNavigate = onHubNavigate,
-            currentRouteName = NavigationHubRoute.Setting.routeName,
+            currentRouteName = NavigationHubRoute.Setting().name,
         )
         content()
     }

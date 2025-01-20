@@ -73,9 +73,9 @@ fun PostCard(
                         .clip(CircleShape)
                         .clickable {
                             hubUiAction.onGetUserID(post.userID)
-                            hubUiAction.onChangeCurrentRouteName(NavigationHubRoute.Account.routeName)
-                            onHubNavigate(NavigationHubRoute.Account)
-                                   },
+                            hubUiAction.onChangeCurrentRouteName(NavigationHubRoute.Account().name)
+                            onHubNavigate(NavigationHubRoute.Account())
+                        },
                 model = icon.imageUrl,
                 contentDescription = icon.imageUrl,
                 contentScale = ContentScale.Crop,
@@ -186,10 +186,10 @@ private fun ActionIcons(
             contentRes = contentDescriptions[0],
             count = counts[0],
             onClick = {
-                if (myself.likes.contains(post.id)){
-                    postCardUiAction.onLike(post, myself){hubUiAction.onRemovePostIDFromLikeList(post.id)}
-                }else{
-                    postCardUiAction.onLike(post, myself){hubUiAction.onAddPostIDToLikeList(post.id)}
+                if (myself.likes.contains(post.id)) {
+                    postCardUiAction.onLike(post, myself) { hubUiAction.onRemovePostIDFromLikeList(post.id) }
+                } else {
+                    postCardUiAction.onLike(post, myself) { hubUiAction.onAddPostIDToLikeList(post.id) }
                 }
             },
         )
@@ -199,10 +199,10 @@ private fun ActionIcons(
             count = counts[1],
             onClick = {
                 Log.d("postcard", post.id.toString())
-                if (myself.reposts.contains(post.id)){
-                    postCardUiAction.onRepost(post, myself){hubUiAction.onRemovePostIDFromRepostList(post.id)}
-                }else{
-                    postCardUiAction.onRepost(post, myself){hubUiAction.onAddPostIDToRepostList(post.id)}
+                if (myself.reposts.contains(post.id)) {
+                    postCardUiAction.onRepost(post, myself) { hubUiAction.onRemovePostIDFromRepostList(post.id) }
+                } else {
+                    postCardUiAction.onRepost(post, myself) { hubUiAction.onAddPostIDToRepostList(post.id) }
                 }
             },
         )

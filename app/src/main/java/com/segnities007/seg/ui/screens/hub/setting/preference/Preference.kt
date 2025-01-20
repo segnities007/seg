@@ -45,7 +45,7 @@ private fun LogoutButton(
         textID = R.string.logout,
         onClick = {
             settingUiAction.onLogout()
-            onTopNavigate(NavigationRoute.Login)
+            onTopNavigate(NavigationRoute.Login())
         },
     )
 }

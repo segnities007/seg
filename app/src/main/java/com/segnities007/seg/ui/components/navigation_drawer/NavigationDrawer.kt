@@ -33,7 +33,7 @@ fun NavigationDrawer(
             ModalDrawerSheet {
                 items.unSelectedIconIDs.forEachIndexed { index, iconID ->
                     DrawerSheet(
-                        route = items.routes.routeList[index],
+                        route = items.routes[index],
                         painterResourceID = iconID,
                         onDrawerClose = onDrawerClose,
                         onNavigate = onNavigate,

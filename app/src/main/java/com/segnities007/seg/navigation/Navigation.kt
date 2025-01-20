@@ -14,7 +14,7 @@ import com.segnities007.seg.ui.screens.splash.Splash
 fun TopNavigation(topNavController: NavHostController = rememberNavController()) {
     NavHost(
         navController = topNavController,
-        startDestination = NavigationRoute.Splash,
+        startDestination = NavigationRoute.Splash(),
     ) {
         composable<NavigationRoute.Splash> {
             Splash(navHostController = topNavController)

@@ -82,7 +82,7 @@ fun TopStatusBar(
             )
             Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_small)))
         }
-        if (currentRouteName == NavigationHubRoute.Setting.routeName) {
+        if (currentRouteName == NavigationHubRoute.Setting().name) {
             SettingIconButton(
                 Modifier.align(alignment = Alignment.TopEnd),
                 onSettingNavigate = onSettingNavigate,
@@ -116,7 +116,7 @@ private fun Status(
                         .clip(RoundedCornerShape(commonPadding))
                         .clickable {
                             onClickFollowsButton()
-                            onHubNavigate(NavigationHubRoute.Accounts)
+                            onHubNavigate(NavigationHubRoute.Accounts())
                         }.padding(commonPadding),
             ) { Text(text = "Follow: ${user.followCount}", color = fontColor) }
             Spacer(modifier = Modifier.padding(commonPadding))
@@ -126,7 +126,7 @@ private fun Status(
                         .clip(RoundedCornerShape(commonPadding))
                         .clickable {
                             onClickFollowersButton()
-                            onHubNavigate(NavigationHubRoute.Accounts)
+                            onHubNavigate(NavigationHubRoute.Accounts())
                         }.padding(commonPadding),
             ) { Text(text = "Follower: ${user.followerCount}", color = fontColor) }
         }
@@ -144,7 +144,7 @@ private fun SettingIconButton(
         Spacer(modifier = modifier.padding(dimensionResource(R.dimen.padding_normal)))
         IconButton(
             modifier = modifier,
-            onClick = { onSettingNavigate(NavigationSettingRoute.UserInfo) },
+            onClick = { onSettingNavigate(NavigationSettingRoute.UserInfo()) },
         ) {
             Icon(
                 painter = painterResource(R.drawable.baseline_settings_24),

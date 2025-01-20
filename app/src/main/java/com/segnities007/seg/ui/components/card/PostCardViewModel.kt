@@ -1,6 +1,5 @@
 package com.segnities007.seg.ui.components.card
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -27,8 +26,8 @@ data class PostCardUiState(
 data class PostCardUiAction(
     val onGetNewPosts: () -> Unit,
     val onGetImagesOfPostCard: (post: Post) -> Unit,
-    val onClickIcon: (onHubNavigate: (Route) -> Unit,) -> Unit,
-    val onClickPostCard: (onHubNavigate: (Route) -> Unit,) -> Unit,
+    val onClickIcon: (onHubNavigate: (Route) -> Unit) -> Unit,
+    val onClickPostCard: (onHubNavigate: (Route) -> Unit) -> Unit,
     val onLike: (post: Post, myself: User, onGetUser: () -> Unit) -> Unit,
     val onRepost: (post: Post, myself: User, onGetUser: () -> Unit) -> Unit,
     val onComment: (post: Post, comment: Post, myself: User, onGetUser: () -> Unit) -> Unit,
@@ -89,12 +88,12 @@ class PostCardViewModel
         }
 
         private fun onUpdatePosts(newPost: Post) {
-                val newPosts =
-                    postCardUiState.posts.map { post ->
-                        if (newPost.id == post.id) newPost else post
-                    }
+            val newPosts =
+                postCardUiState.posts.map { post ->
+                    if (newPost.id == post.id) newPost else post
+                }
 
-                postCardUiState = postCardUiState.copy(posts = newPosts)
+            postCardUiState = postCardUiState.copy(posts = newPosts)
         }
 
         private fun onGetImagesOfPostCard(post: Post) {
@@ -111,12 +110,12 @@ class PostCardViewModel
             }
         }
 
-        private fun onClickIcon(onHubNavigate: (Route) -> Unit){
-            onHubNavigate(NavigationHubRoute.Account)
+        private fun onClickIcon(onHubNavigate: (Route) -> Unit) {
+            onHubNavigate(NavigationHubRoute.Account())
         }
 
-        private fun onClickPostCard(onHubNavigate: (Route) -> Unit,){
-            onHubNavigate(NavigationHubRoute.Comment)
+        private fun onClickPostCard(onHubNavigate: (Route) -> Unit) {
+            onHubNavigate(NavigationHubRoute.Comment())
         }
 
         private fun onIncrementViewCount(post: Post) {
@@ -130,16 +129,16 @@ class PostCardViewModel
             myself: User,
             onGetUser: () -> Unit,
         ) {
-                val newPost: Post
-                if (!myself.likes!!.contains(post.id)) {
-                    newPost = post.copy(likeCount = post.likeCount+1)
-                    viewModelScope.launch(Dispatchers.IO) {
-                        postRepository.onLike(post = newPost, user = myself)
-                    }
-                } else {
-                    newPost = post.copy(likeCount = post.likeCount-1)
-                    viewModelScope.launch(Dispatchers.IO) {
-                        postRepository.onUnLike(post = newPost, user = myself)
+            val newPost: Post
+            if (!myself.likes!!.contains(post.id)) {
+                newPost = post.copy(likeCount = post.likeCount + 1)
+                viewModelScope.launch(Dispatchers.IO) {
+                    postRepository.onLike(post = newPost, user = myself)
+                }
+            } else {
+                newPost = post.copy(likeCount = post.likeCount - 1)
+                viewModelScope.launch(Dispatchers.IO) {
+                    postRepository.onUnLike(post = newPost, user = myself)
                 }
             }
             onUpdatePosts(newPost)
@@ -151,17 +150,17 @@ class PostCardViewModel
             myself: User,
             onGetUser: () -> Unit,
         ) {
-                val newPost: Post
-                if (!myself.reposts!!.contains(post.id)) {
-                    newPost = post.copy(repostCount = post.repostCount+1)
-                    viewModelScope.launch(Dispatchers.IO) {
-                        postRepository.onRepost(post = newPost, user = myself)
-                    }
-                } else {
-                    newPost = post.copy(repostCount = post.repostCount-1)
-                    viewModelScope.launch(Dispatchers.IO) {
-                        postRepository.onUnRepost(post = newPost, user = myself)
-                    }
+            val newPost: Post
+            if (!myself.reposts!!.contains(post.id)) {
+                newPost = post.copy(repostCount = post.repostCount + 1)
+                viewModelScope.launch(Dispatchers.IO) {
+                    postRepository.onRepost(post = newPost, user = myself)
+                }
+            } else {
+                newPost = post.copy(repostCount = post.repostCount - 1)
+                viewModelScope.launch(Dispatchers.IO) {
+                    postRepository.onUnRepost(post = newPost, user = myself)
+                }
             }
             onUpdatePosts(newPost)
             onGetUser()

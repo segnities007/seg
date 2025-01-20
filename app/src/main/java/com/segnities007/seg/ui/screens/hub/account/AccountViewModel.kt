@@ -74,13 +74,13 @@ class AccountViewModel
                 onIncrementViewCount = this::onIncrementViewCount,
             )
 
-    private fun onClickIcon(onHubNavigate: (Route) -> Unit){
-        onHubNavigate(NavigationHubRoute.Account)
-    }
+        private fun onClickIcon(onHubNavigate: (Route) -> Unit) {
+            onHubNavigate(NavigationHubRoute.Account())
+        }
 
-    private fun onClickPostCard(onHubNavigate: (Route) -> Unit,){
-        onHubNavigate(NavigationHubRoute.Comment)
-    }
+        private fun onClickPostCard(onHubNavigate: (Route) -> Unit) {
+            onHubNavigate(NavigationHubRoute.Comment())
+        }
 
         private fun onUpdatePosts(postID: Int) {
             viewModelScope.launch(Dispatchers.IO) {
@@ -117,8 +117,8 @@ class AccountViewModel
             myself: User,
             other: User,
             onGetUser: () -> Unit,
-        ){
-            viewModelScope.launch(Dispatchers.IO){
+        ) {
+            viewModelScope.launch(Dispatchers.IO) {
                 userRepository.unFollowUser(myself, other)
                 onGetUser()
             }

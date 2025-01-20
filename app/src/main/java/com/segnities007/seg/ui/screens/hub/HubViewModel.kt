@@ -1,6 +1,5 @@
 package com.segnities007.seg.ui.screens.hub
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -73,30 +72,27 @@ class HubViewModel
             hubUiState = hubUiState.copy(currentRouteName = newRouteName)
         }
 
-        //TODO
-        private fun onAddPostIDToLikeList(postID: Int){
+        // TODO
+        private fun onAddPostIDToLikeList(postID: Int) {
             val updatedUser = hubUiState.user.copy(likes = hubUiState.user.likes?.plus(postID))
             hubUiState = hubUiState.copy(user = updatedUser)
         }
 
-        private fun onRemovePostIDFromLikeList(postID: Int){
+        private fun onRemovePostIDFromLikeList(postID: Int) {
             val updatedUser = hubUiState.user.copy(likes = hubUiState.user.likes?.minus(postID))
             hubUiState = hubUiState.copy(user = updatedUser)
         }
 
-        private fun onAddPostIDToRepostList(postID: Int){
+        private fun onAddPostIDToRepostList(postID: Int) {
             val newPosts = hubUiState.user.reposts?.plus(postID)
             val updatedUser = hubUiState.user.copy(reposts = newPosts)
             hubUiState = hubUiState.copy(user = updatedUser)
         }
 
-        private fun onRemovePostIDFromRepostList(postID: Int){
-
+        private fun onRemovePostIDFromRepostList(postID: Int) {
             val newPosta = hubUiState.user.reposts?.minus(postID)
             val updatedUser = hubUiState.user.copy(reposts = newPosta)
 
             hubUiState = hubUiState.copy(user = updatedUser)
         }
-
-
     }

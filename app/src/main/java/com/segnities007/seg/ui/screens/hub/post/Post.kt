@@ -113,7 +113,7 @@ private fun TopToolBar(
                 postUiAction.onCreatePost(hubUiState.user, postUiState.byteArrayList)
                 postUiAction.onGetByteArrayList(listOf())
                 postUiAction.onUpdateInputText("")
-                onNavigate(NavigationHubRoute.Home)
+                onNavigate(NavigationHubRoute.Home())
                 postCardUiAction.onGetNewPosts()
             },
         )

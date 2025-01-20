@@ -1,6 +1,5 @@
 package com.segnities007.seg.ui.screens.hub.account
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -53,21 +52,26 @@ fun Account(
                 if (!accountUiState.user.follows.isNullOrEmpty()) {
                     accountUiAction.onSetUsers(accountUiState.user.follows)
                 }
-                onHubNavigate(NavigationHubRoute.Accounts)
+                onHubNavigate(NavigationHubRoute.Accounts())
             },
             onClickFollowersButton = {
                 if (!accountUiState.user.followers.isNullOrEmpty()) {
                     accountUiAction.onSetUsers(accountUiState.user.followers)
                 }
-                onHubNavigate(NavigationHubRoute.Accounts)
+                onHubNavigate(NavigationHubRoute.Accounts())
             },
             currentRouteName = hubUiState.currentRouteName,
             onHubNavigate = onHubNavigate,
         )
 
-        if(hubUiState.userID != accountUiState.user.userID){
+        if (hubUiState.userID != accountUiState.user.userID) {
             Spacer(modifier = Modifier.padding(commonPadding))
-            FollowButtons(hubUiState = hubUiState, hubUiAction = hubUiAction, accountUiState = accountUiState, accountUiAction = accountUiAction)
+            FollowButtons(
+                hubUiState = hubUiState,
+                hubUiAction = hubUiAction,
+                accountUiState = accountUiState,
+                accountUiAction = accountUiAction,
+            )
             Spacer(modifier = Modifier.padding(commonPadding))
         }
 
@@ -103,12 +107,19 @@ private fun FollowButtons(
         Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_normal)))
         SmallButton(
             modifier = Modifier.weight(1f),
-            textID = if(!hubUiState.user.follows.isNullOrEmpty() && hubUiState.user.follows.contains(accountUiState.user.userID)) R.string.followed else R.string.follow,
+            textID =
+                if (!hubUiState.user.follows.isNullOrEmpty() &&
+                    hubUiState.user.follows.contains(accountUiState.user.userID)
+                ) {
+                    R.string.followed
+                } else {
+                    R.string.follow
+                },
             onClick = {
-                //リストがNullじゃないかつ、IDがある場合unfollow
-                if(!hubUiState.user.follows.isNullOrEmpty() && hubUiState.user.follows.contains(accountUiState.user.userID)){
+                // リストがNullじゃないかつ、IDがある場合unfollow
+                if (!hubUiState.user.follows.isNullOrEmpty() && hubUiState.user.follows.contains(accountUiState.user.userID)) {
                     accountUiAction.onUnFollow(hubUiState.user, accountUiState.user, hubUiAction.onGetUser)
-                }else{
+                } else {
                     accountUiAction.onFollow(hubUiState.user, accountUiState.user, hubUiAction.onGetUser)
                 }
             },
