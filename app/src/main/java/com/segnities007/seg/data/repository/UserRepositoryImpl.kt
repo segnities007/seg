@@ -4,9 +4,7 @@ import android.util.Log
 import com.segnities007.seg.data.model.User
 import com.segnities007.seg.domain.repository.UserRepository
 import io.github.jan.supabase.auth.Auth
-import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.Postgrest
-import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Columns
 import javax.inject.Inject
 
@@ -32,9 +30,9 @@ class UserRepositoryImpl
         override suspend fun createUser(user: User) {
             auth.awaitInitialization()
             val id = auth.currentUserOrNull()?.id
-            val user = user.copy(id = id.toString())
+            val updatedUser = user.copy(id = id.toString())
             try {
-                postgrest.from(tableName).insert(user)
+                postgrest.from(tableName).insert(updatedUser)
             } catch (e: Exception) {
                 Log.d(tag, "error $e")
             }
@@ -74,8 +72,19 @@ class UserRepositoryImpl
                         .select(
                             columns =
                                 Columns.list(
-                                    "name,user_id,birthday,is_prime,icon_id,follow_user_id_list,follow_count,follower_user_id_list,follower_count,create_at,post_id_list"
-                                        .trimIndent(),
+                                    (
+                                        "name," +
+                                            "user_id," +
+                                            "birthday," +
+                                            "is_prime," +
+                                            "icon_url," +
+                                            "follow_user_id_list," +
+                                            "follow_count," +
+                                            "follower_user_id_list," +
+                                            "follower_count," +
+                                            "create_at," +
+                                            "post_id_list"
+                                    ).trimIndent(),
                                 ),
                         ) {
                             filter { User::userID eq userID }
@@ -115,13 +124,9 @@ class UserRepositoryImpl
             myself: User,
             other: User,
         ) {
-            // フォローリストが空の場合は初期化し、それ以外の場合は直接使用
-            val updateOther = other.copy(followers = other.followers.orEmpty())
-            val updatedMyself = myself.copy(follows = myself.follows.orEmpty())
-
             try {
-                val newMyself = updatedMyself.copy(follows = updatedMyself.follows?.plus(updateOther.userID))
-                val newOther = updateOther.copy(followers = updateOther.followers?.plus(myself.userID))
+                val newMyself = myself.copy(follows = myself.follows.plus(other.userID))
+                val newOther = other.copy(followers = other.followers.plus(myself.userID))
 
                 postgrest.from(tableName).update({
                     set("follow_user_id_list", newMyself.follows)
@@ -146,19 +151,17 @@ class UserRepositoryImpl
             myself: User,
             other: User,
         ) {
-            val updatedMyself = myself.copy(follows = myself.follows?.minus(other.userID))
-            val updatedOther = other.copy(followers = other.followers?.minus(myself.userID))
             try {
                 postgrest.from(tableName).update({
-                    set("follow_user_id_list", updatedMyself.follows)
+                    set("follow_user_id_list", myself.follows)
                 }) {
-                    filter { User::userID eq updatedMyself.userID }
+                    filter { User::userID eq myself.userID }
                 }
 
                 postgrest.from(tableName).update({
-                    set("follower_user_id_list", updatedOther.followers)
+                    set("follower_user_id_list", other.followers)
                 }) {
-                    filter { User::userID eq updatedOther.userID }
+                    filter { User::userID eq other.userID }
                 }
 
                 onDecrementFollowCount(myself)

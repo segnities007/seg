@@ -51,16 +51,17 @@ sealed class NavigationHubRoute : Route {
     ) : NavigationHubRoute()
 
     companion object {
-        val routes: List<Route> = listOf(
-            Home(),
-            Trend(),
-            Post(),
-            Notify(),
-            Setting(),
-            Account(),
-            Accounts(),
-            Search(),
-            Comment(),
-        )
+        val routes: List<Route> =
+            listOf(
+                Home(),
+                Trend(),
+                Post(),
+                Notify(),
+                Setting(),
+                Account(),
+                Accounts(),
+                Search(),
+                Comment(),
+            )
     }
 }

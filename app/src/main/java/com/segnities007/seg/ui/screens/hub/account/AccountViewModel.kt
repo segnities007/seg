@@ -5,11 +5,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.segnities007.seg.data.model.Image
 import com.segnities007.seg.data.model.Post
 import com.segnities007.seg.data.model.User
 import com.segnities007.seg.domain.presentation.Route
-import com.segnities007.seg.domain.repository.ImageRepository
 import com.segnities007.seg.domain.repository.PostRepository
 import com.segnities007.seg.domain.repository.UserRepository
 import com.segnities007.seg.navigation.hub.NavigationHubRoute
@@ -22,9 +20,7 @@ import javax.inject.Inject
 
 data class AccountUiState(
     val user: User = User(),
-    val icon: Image = Image(),
     val posts: List<Post> = listOf(),
-    val images: List<List<Image>> = listOf(),
     val users: List<User> = listOf(),
 )
 
@@ -32,7 +28,6 @@ data class AccountUiAction(
     val onGetOtherUser: (userID: String) -> Unit,
     val onGetUserPosts: (userID: String) -> Unit,
     val onGetUsers: (userIDs: List<User>) -> Unit,
-    val onGetIcon: (iconID: Int) -> Unit,
     val onSetUsers: (userIDs: List<String>) -> Unit,
     val onFollow: (myself: User, other: User, onGetUser: () -> Unit) -> Unit,
     val onUnFollow: (myself: User, other: User, onGetUser: () -> Unit) -> Unit,
@@ -44,7 +39,6 @@ class AccountViewModel
     constructor(
         private val userRepository: UserRepository,
         private val postRepository: PostRepository,
-        private val imageRepository: ImageRepository,
     ) : ViewModel() {
         private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 
@@ -55,7 +49,6 @@ class AccountViewModel
             AccountUiAction(
                 onGetOtherUser = this::onGetOtherUser,
                 onGetUserPosts = this::onGetUserPosts,
-                onGetIcon = this::onGetIcon,
                 onFollow = this::onFollow,
                 onSetUsers = this::onSetUsers,
                 onGetUsers = this::onGetUsers,
@@ -65,7 +58,6 @@ class AccountViewModel
         fun getPostUiAction(): PostCardUiAction =
             PostCardUiAction(
                 onGetNewPosts = { /*nothing*/ },
-                onGetImagesOfPostCard = { /*nothing*/ },
                 onLike = this::onLike,
                 onRepost = this::onRepost,
                 onComment = this::onComment,
@@ -137,33 +129,10 @@ class AccountViewModel
             }
         }
 
-        private fun onGetIcon(iconID: Int) {
-            viewModelScope.launch(Dispatchers.IO) {
-                val icon = imageRepository.getImage(iconID)
-                accountUiState = accountUiState.copy(icon = icon)
-            }
-        }
-
         private fun onGetUserPosts(userID: String) {
             viewModelScope.launch(ioDispatcher) {
                 val posts = postRepository.getUserPosts(userID)
-                val images: MutableList<List<Image>> = mutableListOf()
-                for (post in posts) {
-                    val imageList = mutableListOf<Image>()
-                    if (!post.imageIDs.isNullOrEmpty()) {
-                        for (imageID in post.imageIDs) {
-                            imageList.add(
-                                imageRepository.getImage(imageID),
-                            )
-                        }
-                    }
-                    imageList.toList()
-                    images.add(
-                        imageList,
-                    )
-                }
-
-                accountUiState = accountUiState.copy(posts = posts, images = images)
+                accountUiState = accountUiState.copy(posts = posts)
             }
         }
 
@@ -179,7 +148,7 @@ class AccountViewModel
             onGetUser: () -> Unit,
         ) {
             viewModelScope.launch(Dispatchers.IO) {
-                if (myself.likes!!.contains(post.id)) {
+                if (myself.likes.contains(post.id)) {
                     postRepository.onLike(post = post, user = myself)
                 } else {
                     postRepository.onUnLike(post = post, user = myself)
@@ -195,7 +164,7 @@ class AccountViewModel
             onGetUser: () -> Unit,
         ) {
             viewModelScope.launch(Dispatchers.IO) {
-                if (myself.reposts!!.contains(post.id)) {
+                if (myself.reposts.contains(post.id)) {
                     postRepository.onRepost(post = post, user = myself)
                 } else {
                     postRepository.onUnRepost(post = post, user = myself)

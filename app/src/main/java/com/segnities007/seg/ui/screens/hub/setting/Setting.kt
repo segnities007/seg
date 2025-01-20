@@ -1,54 +1,45 @@
 package com.segnities007.seg.ui.screens.hub.setting
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.Dp
+import com.segnities007.seg.R
 import com.segnities007.seg.domain.presentation.Route
-import com.segnities007.seg.navigation.hub.NavigationHubRoute
-import com.segnities007.seg.ui.components.top_bar.TopStatusBar
+import com.segnities007.seg.navigation.hub.setting.NavigationSettingRoute
 import com.segnities007.seg.ui.screens.hub.HubUiAction
-import com.segnities007.seg.ui.screens.hub.HubUiState
-import com.segnities007.seg.ui.screens.hub.account.AccountUiAction
 
 @Composable
 fun Setting(
-    modifier: Modifier,
-    onSettingNavigate: (Route) -> Unit = {},
-    onHubNavigate: (Route) -> Unit,
-    hubUiState: HubUiState,
+    modifier: Modifier = Modifier,
     hubUiAction: HubUiAction,
-    accountUiAction: AccountUiAction,
+    onSettingNavigate: (Route) -> Unit,
+    commonPadding: Dp = dimensionResource(R.dimen.padding_normal),
     content: @Composable () -> Unit,
 ) {
     LaunchedEffect(Unit) {
         hubUiAction.onGetUser()
     }
 
-    Column(
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally,
+    Box(
+        Modifier.fillMaxSize(),
     ) {
-        TopStatusBar(
-            user = hubUiState.user,
-            onClickFollowsButton = {
-                if (!hubUiState.user.follows.isNullOrEmpty()) {
-                    accountUiAction.onSetUsers(hubUiState.user.follows)
-                }
-                onHubNavigate(NavigationHubRoute.Accounts())
-            },
-            onClickFollowersButton = {
-                if (!hubUiState.user.followers.isNullOrEmpty()) {
-                    accountUiAction.onSetUsers(hubUiState.user.followers)
-                }
-                onHubNavigate(NavigationHubRoute.Accounts())
-            },
-            onSettingNavigate = onSettingNavigate, // go to userInfo
-            onHubNavigate = onHubNavigate,
-            currentRouteName = NavigationHubRoute.Setting().name,
-        )
-        content()
+        Column(
+            modifier = modifier,
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            content()
+        }
     }
 }

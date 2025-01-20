@@ -20,7 +20,7 @@ data class UserInfoUiState(
 
 data class UserInfoUiAction(
     val onUserUpdate: suspend (user: User) -> Unit,
-    val onDescription: (newDescription: String) -> Unit,
+    val onDescriptionChange: (newDescription: String) -> Unit,
     val onNameChange: (newName: String) -> Unit,
     val onUserIDChange: (newUserID: String) -> Unit,
 )
@@ -38,7 +38,7 @@ class UserInfoViewModel
                 onUserUpdate = this::onUserUpdate,
                 onUserIDChange = this::onUserIDChange,
                 onNameChange = this::onNameChange,
-                onDescription = this::onDescriptionChange,
+                onDescriptionChange = this::onDescriptionChange,
             )
 
         private fun onNameChange(newName: String) {

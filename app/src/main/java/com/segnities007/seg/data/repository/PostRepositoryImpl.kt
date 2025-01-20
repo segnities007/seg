@@ -7,6 +7,7 @@ import com.segnities007.seg.domain.repository.ImageRepository
 import com.segnities007.seg.domain.repository.PostRepository
 import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.postgrest.query.Order
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 class PostRepositoryImpl
@@ -27,11 +28,15 @@ class PostRepositoryImpl
             user: User,
             byteArrayList: List<ByteArray>,
         ): Boolean {
-            val imageIDs: MutableList<Int> = mutableListOf()
-
             try {
-                for (byteArray in byteArrayList) {
-                    imageIDs.add(imageRepository.postImage(byteArray).id)
+                val urls: List<String> = listOf()
+                for (i in byteArrayList.indices) {
+                    urls.plus(
+                        imageRepository.postImage(
+                            byteArrayList[i],
+                            fileName = "$i",
+                        ),
+                    )
                 }
 
                 val post =
@@ -39,23 +44,14 @@ class PostRepositoryImpl
                         userID = user.userID,
                         name = user.name,
                         description = description,
-                        imageIDs = imageIDs.toList(),
+                        imageURLs = urls,
                     )
 
-                val result =
-                    postgrest
-                        .from(posts)
-                        .insert(post) {
-                            select()
-                        }.decodeSingle<Post>()
-
-                val postID = result.id
-
-                if (!user.posts.isNullOrEmpty()) {
-                    user.copy(posts = user.posts + postID)
-                } else {
-                    user.copy(posts = listOf(postID))
-                }
+                postgrest
+                    .from(posts)
+                    .insert(post) {
+                        select()
+                    }.decodeSingle<Post>()
 
                 return true
             } catch (e: Exception) {
@@ -113,7 +109,7 @@ class PostRepositoryImpl
             }
         }
 
-        override suspend fun getBeforePost(afterPostCreateAt: java.time.LocalDateTime): Post {
+        override suspend fun getBeforePost(afterPostCreateAt: LocalDateTime): Post {
             try {
                 val result =
                     postgrest
@@ -198,13 +194,7 @@ class PostRepositoryImpl
                 }
 
                 // add like list of user
-                val updatedUser: User
-
-                if (!user.likes.isNullOrEmpty()) {
-                    updatedUser = user.copy(likes = user.likes.plus(post.id))
-                } else {
-                    updatedUser = user.copy(likes = listOf(post.id))
-                }
+                val updatedUser = user.copy(likes = user.likes.plus(post.id))
 
                 postgrest.from(users).update({
                     val columnName = "post_like_id_list"
@@ -236,7 +226,7 @@ class PostRepositoryImpl
                 }
 
                 // remove like list of user
-                val updatedUser = user.copy(likes = user.likes?.minus(post.id))
+                val updatedUser = user.copy(likes = user.likes.minus(post.id))
 
                 postgrest.from(users).update({
                     val columnName = "post_like_id_list"
@@ -270,12 +260,7 @@ class PostRepositoryImpl
                 }
 
                 // add repost list of user
-                val updatedUser: User
-                if (!user.reposts.isNullOrEmpty()) {
-                    updatedUser = user.copy(reposts = user.reposts.plus(post.id))
-                } else {
-                    updatedUser = user.copy(reposts = listOf(post.id))
-                }
+                val updatedUser = user.copy(reposts = user.reposts.plus(post.id))
 
                 postgrest.from(users).update({
                     val columnName = "post_repost_id_list"
@@ -305,7 +290,7 @@ class PostRepositoryImpl
                 }
 
                 // add repost list of user
-                val updatedUser = user.copy(reposts = user.reposts?.minus(post.id))
+                val updatedUser = user.copy(reposts = user.reposts.minus(post.id))
 
                 postgrest.from(users).update({
                     val columnName = "post_repost_id_list"
@@ -328,10 +313,6 @@ class PostRepositoryImpl
             user: User,
         ) {
             TODO("Not yet implemented")
-            try {
-            } catch (e: Exception) {
-                Log.e(tag, e.toString())
-            }
         }
 
         override suspend fun onUnComment(
@@ -340,9 +321,5 @@ class PostRepositoryImpl
             user: User,
         ) {
             TODO("Not yet implemented")
-            try {
-            } catch (e: Exception) {
-                Log.e(tag, e.toString())
-            }
         }
     }

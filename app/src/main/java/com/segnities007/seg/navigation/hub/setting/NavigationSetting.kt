@@ -10,7 +10,6 @@ import androidx.navigation.compose.rememberNavController
 import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.ui.screens.hub.HubUiAction
 import com.segnities007.seg.ui.screens.hub.HubUiState
-import com.segnities007.seg.ui.screens.hub.account.AccountUiAction
 import com.segnities007.seg.ui.screens.hub.setting.Setting
 import com.segnities007.seg.ui.screens.hub.setting.SettingViewModel
 import com.segnities007.seg.ui.screens.hub.setting.preference.Preference
@@ -21,25 +20,23 @@ fun NavigationSetting(
     modifier: Modifier = Modifier,
     settingNavHostController: NavHostController = rememberNavController(),
     settingViewModel: SettingViewModel = hiltViewModel(),
-    accountUiAction: AccountUiAction,
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
-    onHubNavigate: (Route) -> Unit,
     onTopNavigate: (Route) -> Unit,
 ) {
     Setting(
         modifier = modifier,
-        onSettingNavigate = { route: Route -> settingNavHostController.navigate(route) },
-        onHubNavigate = onHubNavigate,
-        hubUiState = hubUiState,
+        onSettingNavigate = { route: Route ->
+            settingNavHostController.navigate(route)
+        },
         hubUiAction = hubUiAction,
-        accountUiAction = accountUiAction,
     ) {
         NavHost(navController = settingNavHostController, startDestination = NavigationSettingRoute.Preference()) {
             composable<NavigationSettingRoute.Preference> {
                 Preference(
                     settingUiAction = settingViewModel.getSettingUiAction(),
                     onTopNavigate = onTopNavigate, // logout
+                    onSettingNavigate = {route: Route -> settingNavHostController.navigate(route) },
                 )
             }
             composable<NavigationSettingRoute.UserInfo> {

@@ -60,6 +60,7 @@ fun UserInfo(
         val action = userInfoViewModel.getUserInfoUiAction()
         action.onNameChange(hubUiState.user.name)
         action.onUserIDChange(hubUiState.user.userID)
+        action.onDescriptionChange(hubUiState.user.description)
     }
 
     if (settingUiState.isDatePickerDialogShow) {
@@ -174,7 +175,7 @@ private fun TextFields(
             // 高さを`maxLines`に合わせる
             maxLines = maxLines,
             value = userInfoUiState.description,
-            onValueChange = { userInfoUiAction.onDescription(it) },
+            onValueChange = { userInfoUiAction.onDescriptionChange(it) },
             label = { Text(stringResource(R.string.new_description)) },
         )
     }

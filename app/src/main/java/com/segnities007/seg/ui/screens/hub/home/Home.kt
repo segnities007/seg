@@ -34,8 +34,6 @@ fun Home(
         ) { i ->
             PostCard(
                 post = postCardUiState.posts[i],
-                images = postCardUiState.imageLists[i],
-                icon = postCardUiState.icons[i],
                 myself = hubUiState.user,
                 onHubNavigate = { route: Route -> hubNavController.navigate(route) },
                 hubUiAction = hubUiAction,
