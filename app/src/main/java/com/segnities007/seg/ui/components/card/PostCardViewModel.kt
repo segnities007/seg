@@ -23,6 +23,7 @@ data class PostCardUiState(
 data class PostCardUiAction(
     val onGetNewPosts: () -> Unit,
     val onGetPost: (postID: Int) -> Unit,
+    val onGetBeforePosts: (afterPostCreateAt: java.time.LocalDateTime) -> Unit,
     val onUpdatePost: (post: Post) -> Unit,
     val onClickIcon: (onHubNavigate: (Route) -> Unit) -> Unit,
     val onClickPostCard: (onHubNavigate: (Route) -> Unit) -> Unit,
@@ -45,6 +46,7 @@ class PostCardViewModel
             PostCardUiAction(
                 onGetNewPosts = this::onGetNewPosts,
                 onGetPost = this::onGetPost,
+                onGetBeforePosts = this::onGetBeforePosts,
                 onClickIcon = this::onClickIcon,
                 onClickPostCard = this::onClickPostCard,
                 onLike = this::onLike,
@@ -73,6 +75,15 @@ class PostCardViewModel
                 postCardUiState = postCardUiState.copy(posts = posts)
             }
         }
+
+        private fun onGetBeforePosts(afterPostCreateAt: java.time.LocalDateTime){
+            viewModelScope.launch(Dispatchers.IO) {
+                val posts = postRepository.getBeforePosts(afterPostCreateAt)
+                postCardUiState = postCardUiState.copy(posts = postCardUiState.posts.plus(posts))
+            }
+        }
+
+
 
         private fun onUpdatePosts(newPost: Post) {
             val newPosts =
