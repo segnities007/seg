@@ -3,11 +3,13 @@ package com.segnities007.seg.navigation.hub
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.navigation.hub.setting.NavigationSetting
@@ -32,19 +34,25 @@ fun NavigationHub(
     hubViewModel: HubViewModel = hiltViewModel(),
     onTopNavigate: (route: Route) -> Unit, // go to login
 ) {
+
+    val navBackStackEntry by hubNavHostController.currentBackStackEntryAsState()
+    val currentRoute =
+        navBackStackEntry?.destination?.route
+        ?.substringBefore("?") // クエリパラメータを除去
+        ?.substringAfterLast(".") // 最後のドット以降を取得
+
     LaunchedEffect(Unit) {
         val postCardUiAction = postCardViewModel.onGetPostCardUiAction()
         postCardUiAction.onGetNewPosts()
     }
 
     val onHubNavigate = { route: Route ->
-        Log.d("NavigationHub", route.name)
         hubViewModel.getHubUiAction().onChangeCurrentRouteName(route.name)
         hubNavHostController.navigate(route)
     }
 
     Hub(
-        currentRouteName = hubViewModel.hubUiState.currentRouteName,
+        currentRouteName = currentRoute.toString(),
         onHubNavigate = onHubNavigate,
         hubUiState = hubViewModel.hubUiState,
         accountUiState = accountViewModel.accountUiState,
