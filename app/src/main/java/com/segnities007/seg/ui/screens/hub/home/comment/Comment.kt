@@ -4,9 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import com.segnities007.seg.data.model.Post
 import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.ui.components.card.PostCard
 import com.segnities007.seg.ui.components.card.PostCardUiAction
@@ -25,19 +23,18 @@ fun Comment(
 ) {
     Column(
         modifier = modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Top
-    ){
+        verticalArrangement = Arrangement.Top,
+    ) {
         PostCard(
             post = postCardUiState.post,
             myself = hubUiState.user,
             hubUiAction = hubUiAction,
             postCardUiAction = postCardUiAction,
-            onHubNavigate = onHubNavigate
+            onHubNavigate = onHubNavigate,
         )
     }
 }
 
 @Composable
 private fun comments() {
-
 }

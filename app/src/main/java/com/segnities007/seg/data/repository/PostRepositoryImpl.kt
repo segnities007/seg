@@ -29,12 +29,12 @@ class PostRepositoryImpl
             byteArrayList: List<ByteArray>,
         ): Boolean {
             try {
-                val urls: List<String> = listOf()
+                val urls: MutableList<String> = mutableListOf()
                 for (i in byteArrayList.indices) {
-                    urls.plus(
+                    urls.add(
                         imageRepository.postImage(
                             byteArrayList[i],
-                            fileName = "$i",
+                            fileName = "${user.name}+${LocalDateTime.now()}+$i",
                         ),
                     )
                 }
@@ -44,7 +44,7 @@ class PostRepositoryImpl
                         userID = user.userID,
                         name = user.name,
                         description = description,
-                        imageURLs = urls,
+                        imageURLs = urls.toList(),
                     )
 
                 postgrest
@@ -122,7 +122,7 @@ class PostRepositoryImpl
                             limit(7) // その中で最新の1件を取得
                         }.decodeList<Post>()
                 val list = result.minus(result.first())
-                Log.d("PostRepository","$result" )
+                Log.d("PostRepository", "$result")
                 return list
             } catch (e: Exception) {
                 Log.e(tag, "failed to get new post $e")

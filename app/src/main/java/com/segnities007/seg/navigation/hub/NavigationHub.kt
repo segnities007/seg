@@ -33,12 +33,13 @@ fun NavigationHub(
     hubViewModel: HubViewModel = hiltViewModel(),
     onTopNavigate: (route: Route) -> Unit, // go to login
 ) {
-
     val navBackStackEntry by hubNavHostController.currentBackStackEntryAsState()
     val currentRoute =
-        navBackStackEntry?.destination?.route
-        ?.substringBefore("?") // クエリパラメータを除去
-        ?.substringAfterLast(".") // 最後のドット以降を取得
+        navBackStackEntry
+            ?.destination
+            ?.route
+            ?.substringBefore("?") // クエリパラメータを除去
+            ?.substringAfterLast(".") // 最後のドット以降を取得
 
     LaunchedEffect(Unit) {
         val postCardUiAction = postCardViewModel.onGetPostCardUiAction()
@@ -65,7 +66,7 @@ fun NavigationHub(
                     hubUiAction = hubViewModel.getHubUiAction(),
                     postCardUiState = postCardViewModel.postCardUiState,
                     postCardUiAction = postCardViewModel.onGetPostCardUiAction(),
-                    onHubNavigate = onHubNavigate
+                    onHubNavigate = onHubNavigate,
                 )
             }
             composable<NavigationHubRoute.Trend> {

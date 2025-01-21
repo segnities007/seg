@@ -15,13 +15,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
+import com.segnities007.seg.R
 import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.ui.components.card.PostCard
 import com.segnities007.seg.ui.components.card.PostCardUiAction
 import com.segnities007.seg.ui.components.card.PostCardUiState
 import com.segnities007.seg.ui.screens.hub.HubUiAction
 import com.segnities007.seg.ui.screens.hub.HubUiState
-import com.segnities007.seg.R
 
 @Composable
 fun Home(
@@ -32,7 +32,6 @@ fun Home(
     postCardUiAction: PostCardUiAction,
     onHubNavigate: (Route) -> Unit,
 ) {
-
     LazyColumn(
         modifier = modifier.fillMaxSize().padding(top = dimensionResource(R.dimen.padding_smaller)),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -50,29 +49,28 @@ fun Home(
                 postCardUiAction = postCardUiAction,
             )
         }
-        //action for fetching before post
-        item{
+        // action for fetching before post
+        item {
             Column {
                 Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_smaller)))
                 LoadingUI(
                     onLoading = {
-                        if(postCardUiState.posts.isNotEmpty()){
+                        if (postCardUiState.posts.isNotEmpty()) {
                             Log.d("Home", "onLoading")
                             postCardUiAction.onGetBeforePosts(postCardUiState.posts.last().updateAt)
                         }
-                    }
+                    },
                 )
             }
         }
     }
-
 }
 
 @Composable
 private fun LoadingUI(
     modifier: Modifier = Modifier,
     onLoading: () -> Unit,
-){
+) {
     LaunchedEffect(Unit) {
         onLoading()
     }
