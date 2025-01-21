@@ -22,6 +22,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.Dp
 import com.segnities007.seg.R
+import com.segnities007.seg.domain.presentation.Route
+import com.segnities007.seg.navigation.login.NavigationLoginRoute
 import com.segnities007.seg.ui.components.button.BasicButton
 import com.segnities007.seg.ui.screens.login.LoginUiAction
 import com.segnities007.seg.ui.screens.login.LoginUiState
@@ -30,7 +32,7 @@ import com.segnities007.seg.ui.screens.login.LoginUiState
 fun SignUp(
     modifier: Modifier = Modifier,
     padding: Dp = dimensionResource(R.dimen.padding_normal),
-    onNavigateToConfirmEmail: () -> Unit,
+    onNavigateToConfirmEmail: (Route) -> Unit,
     loginUiState: LoginUiState,
     loginUiAction: LoginUiAction,
 ) {
@@ -58,7 +60,9 @@ fun SignUp(
                     BasicButton(
                         modifier = Modifier.weight(1f),
                         textID = R.string.sign_up,
-                        onClick = onNavigateToConfirmEmail,
+                        onClick = {
+                            onNavigateToConfirmEmail(NavigationLoginRoute.ConfirmEmail())
+                        },
                     )
                 }
             }

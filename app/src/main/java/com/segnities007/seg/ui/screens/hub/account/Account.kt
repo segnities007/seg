@@ -1,5 +1,6 @@
 package com.segnities007.seg.ui.screens.hub.account
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -44,7 +45,7 @@ fun Account(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        if (hubUiState.userID != accountUiState.user.userID) {
+        if (hubUiState.user.userID != accountUiState.user.userID) {
             Spacer(modifier = Modifier.padding(commonPadding))
             FollowButtons(
                 hubUiState = hubUiState,
