@@ -5,9 +5,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.segnities007.seg.data.model.User
+import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.domain.presentation.TopLayerViewModel
 import com.segnities007.seg.domain.repository.AuthRepository
 import com.segnities007.seg.domain.repository.UserRepository
+import com.segnities007.seg.navigation.login.NavigationLoginRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -37,7 +39,7 @@ data class LoginUiAction(
 // class for ConfirmEmail UI
 
 data class ConfirmEmailUiAction(
-    val confirmEmail: (onNavigate: () -> Unit) -> Unit,
+    val onConfirmEmail: (onNavigate: () -> Unit) -> Unit,
 )
 
 // class for CreateAccount UI
@@ -75,7 +77,7 @@ class LoginViewModel
 
         fun getConfirmEmailUiAction(): ConfirmEmailUiAction =
             ConfirmEmailUiAction(
-                confirmEmail = this::confirmEmail,
+                onConfirmEmail = this::onConfirmEmail
             )
 
         fun getLoginAction(): LoginUiAction =
@@ -116,7 +118,7 @@ class LoginViewModel
             onBirthdayChange(LocalDate.of(year, month, day))
         }
 
-        private fun confirmEmail(onNavigate: () -> Unit) {
+        private fun onConfirmEmail(onNavigate: () -> Unit) {
             viewModelScope.launch(Dispatchers.IO) {
                 authRepository.signInWithEmailPassword(
                     email = loginUiState.email,
