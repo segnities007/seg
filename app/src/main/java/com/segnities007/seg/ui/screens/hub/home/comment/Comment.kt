@@ -23,9 +23,6 @@ fun Comment(
     postCardUiAction: PostCardUiAction,
     onHubNavigate: (Route) -> Unit,
 ) {
-
-
-
     Column(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Top

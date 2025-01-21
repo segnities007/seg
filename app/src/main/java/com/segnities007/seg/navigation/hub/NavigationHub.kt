@@ -1,5 +1,6 @@
 package com.segnities007.seg.navigation.hub
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
@@ -37,6 +38,7 @@ fun NavigationHub(
     }
 
     val onHubNavigate = { route: Route ->
+        Log.d("NavigationHub", route.name)
         hubViewModel.getHubUiAction().onChangeCurrentRouteName(route.name)
         hubNavHostController.navigate(route)
     }
@@ -56,7 +58,7 @@ fun NavigationHub(
                     hubUiAction = hubViewModel.getHubUiAction(),
                     postCardUiState = postCardViewModel.postCardUiState,
                     postCardUiAction = postCardViewModel.onGetPostCardUiAction(),
-                    hubNavController = hubNavHostController,
+                    onHubNavigate = onHubNavigate
                 )
             }
             composable<NavigationHubRoute.Trend> {
