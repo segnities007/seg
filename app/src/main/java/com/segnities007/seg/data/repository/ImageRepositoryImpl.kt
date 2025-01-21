@@ -18,7 +18,6 @@ class ImageRepositoryImpl
         ): String {
             try {
                 val url = storageRepository.postImage(fileName, byteArray)
-
                 return url
             } catch (e: Exception) {
                 Log.d(tag, "failed to create image. error message is $e")

@@ -61,10 +61,14 @@ fun PostCard(
                 ),
         elevation = CardDefaults.cardElevation(dimensionResource(R.dimen.elevation_small)),
     ) {
-        Row(modifier = Modifier.clickable {
-            postCardUiAction.onUpdatePost(post)
-            postCardUiAction.onClickPostCard(onHubNavigate)
-        }.fillMaxWidth()) {
+        Row(
+            modifier =
+                Modifier
+                    .clickable {
+                        postCardUiAction.onUpdatePost(post)
+                        postCardUiAction.onClickPostCard(onHubNavigate)
+                    }.fillMaxWidth(),
+        ) {
             AsyncImage(
                 modifier =
                     Modifier

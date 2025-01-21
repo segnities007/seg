@@ -36,7 +36,7 @@ fun NavigationSetting(
                 Preference(
                     settingUiAction = settingViewModel.getSettingUiAction(),
                     onTopNavigate = onTopNavigate, // logout
-                    onSettingNavigate = {route: Route -> settingNavHostController.navigate(route) },
+                    onSettingNavigate = { route: Route -> settingNavHostController.navigate(route) },
                 )
             }
             composable<NavigationSettingRoute.UserInfo> {

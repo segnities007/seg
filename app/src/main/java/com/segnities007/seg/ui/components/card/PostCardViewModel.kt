@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 data class PostCardUiState(
     val posts: List<Post> = listOf(),
-    val post: Post = Post(),// for comment
+    val post: Post = Post(), // for comment
 )
 
 data class PostCardUiAction(
@@ -56,13 +56,13 @@ class PostCardViewModel
                 onIncrementViewCount = this::onIncrementViewCount,
             )
 
-        private fun onUpdatePost(post: Post){
-                viewModelScope.launch(Dispatchers.IO) {
+        private fun onUpdatePost(post: Post) {
+            viewModelScope.launch(Dispatchers.IO) {
                 postCardUiState = postCardUiState.copy(post = post)
             }
         }
 
-        private fun onGetPost(postID: Int){
+        private fun onGetPost(postID: Int) {
             viewModelScope.launch(Dispatchers.IO) {
                 val post = postRepository.getPost(postID)
                 postCardUiState = postCardUiState.copy(post = post)
@@ -76,14 +76,12 @@ class PostCardViewModel
             }
         }
 
-        private fun onGetBeforePosts(afterPostCreateAt: java.time.LocalDateTime){
+        private fun onGetBeforePosts(afterPostCreateAt: java.time.LocalDateTime) {
             viewModelScope.launch(Dispatchers.IO) {
                 val posts = postRepository.getBeforePosts(afterPostCreateAt)
                 postCardUiState = postCardUiState.copy(posts = postCardUiState.posts.plus(posts))
             }
         }
-
-
 
         private fun onUpdatePosts(newPost: Post) {
             val newPosts =
@@ -99,9 +97,7 @@ class PostCardViewModel
         }
 
         private fun onClickPostCard(onHubNavigate: (Route) -> Unit) {
-
             onHubNavigate(NavigationHubRoute.Comment())
-
         }
 
         private fun onIncrementViewCount(post: Post) {
