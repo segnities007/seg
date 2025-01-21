@@ -13,7 +13,7 @@ interface PostRepository {
 
     suspend fun getUserPosts(userID: String): List<Post>
 
-    suspend fun getBeforePost(afterPostCreateAt: java.time.LocalDateTime): Post
+    suspend fun getBeforePosts(afterPostCreateAt: java.time.LocalDateTime): List<Post>
 
     suspend fun getPost(postID: Int): Post
 

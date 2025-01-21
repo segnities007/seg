@@ -109,7 +109,7 @@ class PostRepositoryImpl
             }
         }
 
-        override suspend fun getBeforePost(afterPostCreateAt: LocalDateTime): Post {
+        override suspend fun getBeforePosts(afterPostCreateAt: LocalDateTime): List<Post> {
             try {
                 val result =
                     postgrest
@@ -119,9 +119,11 @@ class PostRepositoryImpl
                             filter {
                                 lt("create_at", afterPostCreateAt)
                             } // targetPost より古い投稿をフィルタリング
-                            limit(1) // その中で最新の1件を取得
-                        }.decodeSingle<Post>()
-                return result
+                            limit(7) // その中で最新の1件を取得
+                        }.decodeList<Post>()
+                val list = result.minus(result.first())
+                Log.d("PostRepository","$result" )
+                return list
             } catch (e: Exception) {
                 Log.e(tag, "failed to get new post $e")
                 throw e

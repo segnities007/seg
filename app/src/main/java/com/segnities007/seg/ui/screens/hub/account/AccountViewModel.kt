@@ -57,9 +57,10 @@ class AccountViewModel
 
         fun getPostUiAction(): PostCardUiAction =
             PostCardUiAction(
-                onGetNewPosts = { /*nothing*/ },
-                onGetPost = {/*nothing*/},
-                onUpdatePost = {/*nothing*/},
+                onGetNewPosts = { /*TODO*/ },
+                onGetPost = {/*TODO*/},
+                onGetBeforePosts = {/*TODO*/},
+                onUpdatePost = {/*TODO*/},
                 onLike = this::onLike,
                 onRepost = this::onRepost,
                 onComment = this::onComment,
