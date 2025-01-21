@@ -69,7 +69,7 @@ private fun TopStatusCard(content: @Composable () -> Unit) {
         modifier =
             Modifier
                 .shadow(
-                    elevation = dimensionResource(R.dimen.elevation_large),
+                    elevation = dimensionResource(R.dimen.elevation_nl),
                     shape =
                         RoundedCornerShape(
                             bottomStart = dimensionResource(R.dimen.padding_large),

@@ -29,7 +29,7 @@ fun Preference(
     onTopNavigate: (Route) -> Unit,
 ) {
     Column(
-        modifier = modifier.padding(horizontal = commonPadding),
+        modifier = modifier.padding(horizontal = dimensionResource(R.dimen.padding_nl)),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
     ) {

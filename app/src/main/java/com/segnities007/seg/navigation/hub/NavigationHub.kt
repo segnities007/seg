@@ -1,6 +1,5 @@
 package com.segnities007.seg.navigation.hub
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue

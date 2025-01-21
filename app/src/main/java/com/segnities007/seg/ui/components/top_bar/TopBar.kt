@@ -13,6 +13,8 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.segnities007.seg.R
@@ -31,6 +33,7 @@ fun TopBar(
     scope: CoroutineScope = rememberCoroutineScope(),
 ) {
     CenterAlignedTopAppBar(
+        modifier = Modifier.shadow(elevation = dimensionResource(R.dimen.elevation_nl)),
         title = { Text(text = title, maxLines = 1) },
         colors =
             TopAppBarDefaults.centerAlignedTopAppBarColors(
