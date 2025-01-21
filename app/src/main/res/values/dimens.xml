@@ -22,6 +22,7 @@
     <dimen name="elevation_smaller">0.5dp</dimen>
     <dimen name="elevation_small">1dp</dimen>
     <dimen name="elevation_normal">2dp</dimen>
+    <dimen name="elevation_nl">4dp</dimen>
     <dimen name="elevation_large">8dp</dimen>
     <dimen name="floating_action_button_default">64dp</dimen>
     <dimen name="floating_action_button_image_default">32dp</dimen>
