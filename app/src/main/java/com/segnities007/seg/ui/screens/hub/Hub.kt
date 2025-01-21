@@ -72,26 +72,26 @@ private fun HubUi(
             when (currentRouteName) {
                 NavigationHubRoute.Home().name ->
                     TopBar(
-                        title = stringResource(R.string.app_name),
+                        title = currentRouteName,
                         onDrawerOpen = topAction.openDrawer,
                         scrollBehavior = scrollBehavior,
                         routeName = currentRouteName,
                     )
                 NavigationHubRoute.Trend().name ->
                     TopBar(
-                        title = stringResource(R.string.app_name),
+                        title = currentRouteName,
                         onDrawerOpen = topAction.openDrawer,
                         routeName = currentRouteName,
                     )
                 NavigationHubRoute.Post().name ->
                     TopBar(
-                        title = stringResource(R.string.app_name),
+                        title = currentRouteName,
                         onDrawerOpen = topAction.openDrawer,
                         routeName = currentRouteName,
                     )
                 NavigationHubRoute.Notify().name ->
                     TopBar(
-                        title = stringResource(R.string.app_name),
+                        title = currentRouteName,
                         onDrawerOpen = topAction.openDrawer,
                         routeName = currentRouteName,
                     )
@@ -110,7 +110,7 @@ private fun HubUi(
                     )
                 NavigationHubRoute.Accounts().name ->
                     TopBar(
-                        title = stringResource(R.string.app_name),
+                        title = currentRouteName,
                         onDrawerOpen = topAction.openDrawer,
                         routeName = currentRouteName,
                     )
@@ -127,6 +127,11 @@ private fun HubUi(
                         },
                         onHubNavigate = onHubNavigate,
                     )
+                NavigationHubRoute.Comment().name -> TopBar(
+                    title = currentRouteName,
+                    onDrawerOpen = topAction.openDrawer,
+                    routeName = currentRouteName,
+                )
                 else -> Spacer(modifier = Modifier.padding(0.dp))
             }
         },

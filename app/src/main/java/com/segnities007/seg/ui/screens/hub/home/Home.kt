@@ -17,11 +17,11 @@ import com.segnities007.seg.ui.screens.hub.HubUiState
 @Composable
 fun Home(
     modifier: Modifier,
-    hubNavController: NavController,
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
     postCardUiState: PostCardUiState,
     postCardUiAction: PostCardUiAction,
+    onHubNavigate: (Route) -> Unit,
 ) {
     LazyColumn(
         modifier = modifier.fillMaxSize(),
@@ -35,9 +35,7 @@ fun Home(
             PostCard(
                 post = postCardUiState.posts[i],
                 myself = hubUiState.user,
-                onHubNavigate = {
-                    route: Route -> hubNavController.navigate(route)
-                                },
+                onHubNavigate = onHubNavigate,
                 hubUiAction = hubUiAction,
                 postCardUiAction = postCardUiAction,
             )
