@@ -21,6 +21,8 @@ interface PostRepository {
 
     suspend fun getNewPosts(): List<Post>
 
+    suspend fun getTrendPostInThisWeek(limit: Long = 10): List<Post>
+
     suspend fun updatePost(post: Post)
 
     suspend fun deletePost(postID: Int)
