@@ -24,12 +24,14 @@ import com.segnities007.seg.ui.screens.hub.notify.Notify
 import com.segnities007.seg.ui.screens.hub.post.Post
 import com.segnities007.seg.ui.screens.hub.search.Search
 import com.segnities007.seg.ui.screens.hub.trend.Trend
+import com.segnities007.seg.ui.screens.hub.trend.TrendViewModel
 
 @Composable
 fun NavigationHub(
     hubNavHostController: NavHostController = rememberNavController(),
     postCardViewModel: PostCardViewModel = hiltViewModel(), // GetPostの実行を必要最低限にするためここに設置
     accountViewModel: AccountViewModel = hiltViewModel(),
+    trendViewModel: TrendViewModel = hiltViewModel(),
     hubViewModel: HubViewModel = hiltViewModel(),
     onTopNavigate: (route: Route) -> Unit, // go to login
 ) {
@@ -70,7 +72,15 @@ fun NavigationHub(
                 )
             }
             composable<NavigationHubRoute.Trend> {
-                Trend(modifier = modifier)
+                Trend(
+                    modifier = modifier,
+                    hubUiState = hubViewModel.hubUiState,
+                    hubUiAction = hubViewModel.getHubUiAction(),
+                    trendUiState = trendViewModel.trendUiState,
+                    trendUiAction = trendViewModel.onGetTrendUiAction(),
+                    onHubNavigate = onHubNavigate,
+                    postCardUiAction = postCardViewModel.onGetPostCardUiAction(),
+                )
             }
             composable<NavigationHubRoute.Post> {
                 Post(
@@ -114,9 +124,6 @@ fun NavigationHub(
                     accountUiAction = accountViewModel.getAccountUiAction(),
                     onNavigate = onHubNavigate,
                 )
-            }
-            composable<NavigationHubRoute.Search> {
-                Search(modifier = modifier)
             }
             composable<NavigationHubRoute.Search> {
                 Search(modifier = modifier)

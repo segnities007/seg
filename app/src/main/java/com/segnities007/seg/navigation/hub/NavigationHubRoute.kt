@@ -1,11 +1,11 @@
 package com.segnities007.seg.navigation.hub
 
-import com.segnities007.seg.data.model.Post
 import com.segnities007.seg.domain.presentation.Route
 import kotlinx.serialization.Serializable
 
 @Serializable
 sealed class NavigationHubRoute : Route {
+
     @Serializable
     data class Home(
         override val name: String = "Home",

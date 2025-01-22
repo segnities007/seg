@@ -8,7 +8,9 @@ import com.segnities007.seg.domain.repository.PostRepository
 import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.postgrest.query.Order
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
+
 
 class PostRepositoryImpl
     @Inject
@@ -142,6 +144,31 @@ class PostRepositoryImpl
                 return result
             } catch (e: Exception) {
                 Log.e(tag, "failed to get new posts $e")
+                throw e
+            }
+        }
+
+        override suspend fun getTrendPostInThisWeek(limit: Long): List<Post> {
+            try {
+
+                val yesterday = LocalDateTime.now().minusDays(1)
+
+                val result =
+                    postgrest
+                        .from(posts)
+                        .select {
+                            filter {
+                                // 今日の投稿を取得
+                                gte("update_at", yesterday)
+                            }
+                            order("view_count", Order.DESCENDING)
+                            limit(count = limit)
+                        }.decodeList<Post>()
+
+                return result
+
+            }catch (e: Exception){
+                Log.e(tag, "153: $e")
                 throw e
             }
         }
