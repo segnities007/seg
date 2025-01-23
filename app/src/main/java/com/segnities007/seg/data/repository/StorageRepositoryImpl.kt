@@ -32,6 +32,13 @@ class StorageRepositoryImpl
         }
 
         override suspend fun deleteImage(url: String) {
-            TODO("Not yet implemented")
+            try {
+                val fileName = url.substringAfterLast("/")
+                val bucket = storage.from(bucketName)
+                bucket.delete(fileName)
+            } catch (e: Exception) {
+                Log.e(tag, "failed to post image. err msg is $e")
+                throw e
+            }
         }
     }

@@ -1,11 +1,14 @@
 package com.segnities007.seg.data.model
 
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Serializable
+@Immutable
 data class User(
     val id: String = "", // UUID を表す文字列
     @SerialName("user_id")

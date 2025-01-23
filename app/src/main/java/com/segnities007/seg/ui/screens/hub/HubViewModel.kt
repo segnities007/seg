@@ -17,7 +17,7 @@ data class HubUiState(
     override val user: User = User(),
     val userID: String = "", // of other user
     val currentRouteName: String = "Home",
-): UserState
+) : UserState
 
 data class HubUiAction(
     val onGetUser: () -> Unit,

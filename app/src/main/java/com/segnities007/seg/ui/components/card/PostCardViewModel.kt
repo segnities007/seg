@@ -1,5 +1,6 @@
 package com.segnities007.seg.ui.components.card
 
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -16,17 +17,32 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@Immutable
 data class PostCardUiState(
     val posts: List<Post> = listOf(),
     val post: Post = Post(), // for comment
 )
 
+@Immutable
+data class PostCardUiAction(
+    val onGetNewPosts: () -> Unit,
+    val onGetPosts: (userID: String) -> Unit,
+    val onGetPost: (postID: Int) -> Unit,
+    val onGetBeforePosts: (afterPostCreateAt: java.time.LocalDateTime) -> Unit,
+    val onUpdatePost: (post: Post) -> Unit,
+    val onClickIcon: (onHubNavigate: (Route) -> Unit) -> Unit,
+    val onClickPostCard: (onHubNavigate: (Route) -> Unit) -> Unit,
+    val onIncrementViewCount: (post: Post) -> Unit,
+)
+
+@Immutable
 data class EngagementIconAction(
     val onLike: (post: Post, myself: User, onGetUser: () -> Unit) -> Unit,
     val onRepost: (post: Post, myself: User, onGetUser: () -> Unit) -> Unit,
     val onComment: (post: Post, comment: Post, myself: User, onGetUser: () -> Unit) -> Unit,
 )
 
+@Immutable
 data class EngagementIconState(
     val pushIcons: List<Int> =
         listOf(
@@ -51,16 +67,6 @@ data class EngagementIconState(
         ),
 )
 
-data class PostCardUiAction(
-    val onGetNewPosts: () -> Unit,
-    val onGetPost: (postID: Int) -> Unit,
-    val onGetBeforePosts: (afterPostCreateAt: java.time.LocalDateTime) -> Unit,
-    val onUpdatePost: (post: Post) -> Unit,
-    val onClickIcon: (onHubNavigate: (Route) -> Unit) -> Unit,
-    val onClickPostCard: (onHubNavigate: (Route) -> Unit) -> Unit,
-    val onIncrementViewCount: (post: Post) -> Unit,
-)
-
 @HiltViewModel
 class PostCardViewModel
     @Inject
@@ -76,6 +82,7 @@ class PostCardViewModel
             PostCardUiAction(
                 onGetNewPosts = this::onGetNewPosts,
                 onGetPost = this::onGetPost,
+                onGetPosts = this::onGetPosts,
                 onGetBeforePosts = this::onGetBeforePosts,
                 onClickIcon = this::onClickIcon,
                 onClickPostCard = this::onClickPostCard,
@@ -103,12 +110,19 @@ class PostCardViewModel
             }
         }
 
+
         private fun onGetNewPosts() {
             viewModelScope.launch(Dispatchers.IO) {
                 val posts = postRepository.getNewPosts()
                 postCardUiState = postCardUiState.copy(posts = posts)
             }
         }
+    private fun onGetPosts(userID: String){
+        viewModelScope.launch(Dispatchers.IO) {
+            val posts = postRepository.getUserPosts(userID)
+            postCardUiState = postCardUiState.copy(posts = posts)
+        }
+    }
 
         private fun onGetBeforePosts(afterPostCreateAt: java.time.LocalDateTime) {
             viewModelScope.launch(Dispatchers.IO) {
