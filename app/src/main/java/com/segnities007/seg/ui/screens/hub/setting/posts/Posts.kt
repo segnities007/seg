@@ -6,15 +6,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.unit.Dp
 import com.segnities007.seg.R
 import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.ui.components.card.EngagementIconAction
@@ -48,6 +43,7 @@ fun Posts(
             PostCard(
                 post = postCardUiState.posts[i],
                 myself = hubUiState.user,
+                isShowDetailButton = true,
                 onHubNavigate = onHubNavigate,
                 hubUiAction = hubUiAction,
                 engagementIconState = engagementIconState,
@@ -70,21 +66,3 @@ fun Posts(
         }
     }
 }
-
-@Composable
-private fun DetailButton(
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit,
-) {
-
-}
-
-//@Composable
-//private fun DetailsModalBottomSheet(
-//    modifier: Modifier = Modifier,
-//    onClick: () -> Unit,
-//) {
-//    ModalBottomSheet {
-//
-//    }
-//}

@@ -144,7 +144,6 @@ private fun HubUi(
         },
         floatingActionButton = {
             when (currentRouteName) {
-                NavigationHubRoute.Home().name -> FloatingButton(iconID = R.drawable.baseline_search_24) { }
                 NavigationHubRoute.Trend().name -> FloatingButton(iconID = R.drawable.baseline_search_24) { }
                 else -> Spacer(modifier = Modifier.padding(0.dp))
             }

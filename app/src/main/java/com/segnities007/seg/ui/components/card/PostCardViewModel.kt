@@ -110,19 +110,19 @@ class PostCardViewModel
             }
         }
 
-
         private fun onGetNewPosts() {
             viewModelScope.launch(Dispatchers.IO) {
                 val posts = postRepository.getNewPosts()
                 postCardUiState = postCardUiState.copy(posts = posts)
             }
         }
-    private fun onGetPosts(userID: String){
-        viewModelScope.launch(Dispatchers.IO) {
-            val posts = postRepository.getUserPosts(userID)
-            postCardUiState = postCardUiState.copy(posts = posts)
+
+        private fun onGetPosts(userID: String) {
+            viewModelScope.launch(Dispatchers.IO) {
+                val posts = postRepository.getUserPosts(userID)
+                postCardUiState = postCardUiState.copy(posts = posts)
+            }
         }
-    }
 
         private fun onGetBeforePosts(afterPostCreateAt: java.time.LocalDateTime) {
             viewModelScope.launch(Dispatchers.IO) {

@@ -9,17 +9,26 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,23 +47,34 @@ import com.segnities007.seg.data.model.Post
 import com.segnities007.seg.data.model.User
 import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.navigation.hub.NavigationHubRoute
+import com.segnities007.seg.ui.components.button.SmallButton
 import com.segnities007.seg.ui.screens.hub.HubUiAction
 
 @Composable
 fun PostCard(
-    modifier: Modifier = Modifier.padding(dimensionResource(R.dimen.padding_small)),
+    modifier: Modifier = Modifier.padding(dimensionResource(R.dimen.padding_sn)),
     post: Post,
     myself: User,
     hubUiAction: HubUiAction,
+    isShowDetailButton: Boolean = false,
     engagementIconState: EngagementIconState,
     engagementIconAction: EngagementIconAction,
     postCardUiAction: PostCardUiAction,
+//    onClickDetailButton: () -> Unit = {},
     onHubNavigate: (Route) -> Unit,
 ) {
     LaunchedEffect(Unit) {
         // modify this increment for trend
         postCardUiAction.onIncrementViewCount(post)
     }
+
+    var isShowBottomSheet by remember{ mutableStateOf(false)}
+
+    val onClickDetailButton = {
+        isShowBottomSheet = !isShowBottomSheet
+    }
+
+    if (isShowBottomSheet) BottomSheet(onClickDetailButton = onClickDetailButton)
 
     ElevatedCard(
         modifier =
@@ -73,13 +93,15 @@ fun PostCard(
                         .clickable {
                             postCardUiAction.onUpdatePost(post)
                             postCardUiAction.onClickPostCard(onHubNavigate)
-                        }.fillMaxWidth(),
+                        }
+                        .fillMaxWidth()
+                        .padding(dimensionResource(R.dimen.padding_small)),
             ) {
                 AsyncImage(
                     modifier =
                         Modifier
                             .padding(dimensionResource(R.dimen.padding_small))
-                            .size(dimensionResource(R.dimen.icon_small))
+                            .size(dimensionResource(R.dimen.icon_sn))
                             .clip(CircleShape)
                             .clickable {
                                 hubUiAction.onGetUserID(post.userID)
@@ -104,7 +126,32 @@ fun PostCard(
                     )
                 }
             }
+            if(isShowDetailButton) DetailButton(modifier = Modifier.align(Alignment.TopEnd), onClick = onClickDetailButton)
         }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun BottomSheet(
+    onClickDetailButton: () -> Unit,
+    commonPadding: Dp = dimensionResource(R.dimen.padding_normal)
+){
+    ModalBottomSheet(
+//        modifier = Modifier.height(dimensionResource(R.dimen.bottom_sheet_height_normal)),
+        onDismissRequest = {
+            onClickDetailButton()
+        }
+    ) {
+        Spacer(Modifier.padding(commonPadding))
+        SmallButton(
+            modifier = Modifier.fillMaxWidth().padding(horizontal = commonPadding),
+            textID = R.string.cancel,
+            onClick = {
+                onClickDetailButton()
+            },
+        )
+        Spacer(Modifier.padding(commonPadding))
     }
 }
 
@@ -234,6 +281,22 @@ private fun Images(
             model = url,
             imageLoader = imageLoader,
             contentDescription = "",
+        )
+    }
+}
+
+@Composable
+private fun DetailButton(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+){
+    IconButton(
+        modifier = modifier,
+        onClick = onClick,
+    ) {
+        Icon(
+            painter = painterResource(R.drawable.baseline_more_vert_24),
+            contentDescription = "more vert"
         )
     }
 }

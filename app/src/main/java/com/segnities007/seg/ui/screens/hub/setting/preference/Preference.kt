@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,9 +16,7 @@ import com.segnities007.seg.navigation.NavigationRoute
 import com.segnities007.seg.navigation.hub.setting.NavigationSettingRoute
 import com.segnities007.seg.ui.components.button.SmallButton
 import com.segnities007.seg.ui.components.card.PostCardUiAction
-import com.segnities007.seg.ui.screens.hub.HubUiAction
 import com.segnities007.seg.ui.screens.hub.HubUiState
-import com.segnities007.seg.ui.screens.hub.account.AccountUiAction
 import com.segnities007.seg.ui.screens.hub.setting.SettingUiAction
 
 @Composable
@@ -38,7 +35,7 @@ fun Preference(
         verticalArrangement = Arrangement.Top,
     ) {
         Spacer(modifier = Modifier.padding(commonPadding))
-        ShowMyPostsButton(postCardUiAction = postCardUiAction, hubUiState = hubUiState, onSettingNavigate = onSettingNavigate,)
+        ShowMyPostsButton(postCardUiAction = postCardUiAction, hubUiState = hubUiState, onSettingNavigate = onSettingNavigate)
         Spacer(modifier = Modifier.padding(commonPadding))
         ModifyUserInfoButton(onSettingNavigate = onSettingNavigate)
         Spacer(modifier = Modifier.padding(commonPadding))
@@ -52,7 +49,7 @@ private fun ShowMyPostsButton(
     postCardUiAction: PostCardUiAction,
     hubUiState: HubUiState,
     onSettingNavigate: (Route) -> Unit,
-){
+) {
     SmallButton(
         modifier = Modifier.fillMaxWidth(),
         textID = R.string.my_posts,
