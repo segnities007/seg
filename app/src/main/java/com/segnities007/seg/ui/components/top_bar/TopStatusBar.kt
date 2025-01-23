@@ -37,11 +37,11 @@ fun TopStatusBar(
     onClickFollowsButton: () -> Unit = {},
     onClickFollowersButton: () -> Unit = {},
     onHubNavigate: (Route) -> Unit,
-    commonPadding: Dp = dimensionResource(R.dimen.padding_normal),
+    commonPadding: Dp = dimensionResource(R.dimen.padding_small),
 ) {
     TopStatusCard {
         Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-            Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_large)))
+            Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_nl)))
             Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
                 AsyncImage(
                     modifier = Modifier.size(dimensionResource(R.dimen.icon_large)).clip(CircleShape),
@@ -52,14 +52,14 @@ fun TopStatusBar(
                 Status(user = userState.user)
             }
 
-            Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_sn)))
+            Spacer(modifier = Modifier.padding(commonPadding))
             AboutFollow(
                 userState = userState,
                 onHubNavigate = onHubNavigate,
                 onClickFollowsButton = onClickFollowsButton,
                 onClickFollowersButton = onClickFollowersButton,
             )
-            Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_sn)))
+            Spacer(modifier = Modifier.padding(commonPadding))
         }
     }
 }

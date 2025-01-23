@@ -12,6 +12,7 @@
     <dimen name="padding_largest">128dp</dimen>
     <dimen name="rounded_corner_shape">8dp</dimen>
     <dimen name="icon_small">48dp</dimen>
+    <dimen name="icon_sn">56dp</dimen>
     <dimen name="icon_normal">64dp</dimen>
     <dimen name="icon_nl">96dp</dimen>
     <dimen name="icon_large">128dp</dimen>
@@ -24,6 +25,7 @@
     <dimen name="elevation_normal">2dp</dimen>
     <dimen name="elevation_nl">4dp</dimen>
     <dimen name="elevation_large">8dp</dimen>
+    <dimen name="bottom_sheet_height_normal">64dp</dimen>
     <dimen name="floating_action_button_default">64dp</dimen>
     <dimen name="floating_action_button_image_default">32dp</dimen>
 </resources>

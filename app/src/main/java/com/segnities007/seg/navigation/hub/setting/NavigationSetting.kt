@@ -14,8 +14,6 @@ import com.segnities007.seg.ui.components.card.PostCardUiAction
 import com.segnities007.seg.ui.components.card.PostCardUiState
 import com.segnities007.seg.ui.screens.hub.HubUiAction
 import com.segnities007.seg.ui.screens.hub.HubUiState
-import com.segnities007.seg.ui.screens.hub.account.AccountUiAction
-import com.segnities007.seg.ui.screens.hub.account.AccountUiState
 import com.segnities007.seg.ui.screens.hub.setting.Setting
 import com.segnities007.seg.ui.screens.hub.setting.SettingViewModel
 import com.segnities007.seg.ui.screens.hub.setting.posts.Posts
