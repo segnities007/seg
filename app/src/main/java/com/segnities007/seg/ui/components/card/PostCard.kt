@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,6 +16,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -64,82 +66,45 @@ fun PostCard(
                 ),
         elevation = CardDefaults.cardElevation(dimensionResource(R.dimen.elevation_small)),
     ) {
-        Row(
-            modifier =
-                Modifier
-                    .clickable {
-                        postCardUiAction.onUpdatePost(post)
-                        postCardUiAction.onClickPostCard(onHubNavigate)
-                    }.fillMaxWidth(),
-        ) {
-            AsyncImage(
+        Box {
+            Row(
                 modifier =
                     Modifier
-                        .padding(dimensionResource(R.dimen.padding_small))
-                        .size(dimensionResource(R.dimen.icon_small))
-                        .clip(CircleShape)
                         .clickable {
-                            hubUiAction.onGetUserID(post.userID)
-                            hubUiAction.onChangeCurrentRouteName(NavigationHubRoute.Account().name)
-                            onHubNavigate(NavigationHubRoute.Account())
-                        },
-                model = post.iconURL,
-                contentDescription = post.iconURL,
-                contentScale = ContentScale.Crop,
-            )
-            Column {
-                Name(modifier = modifier, post = post)
-                Description(modifier = modifier, post = post)
-                Images(modifier = modifier, imageURLs = post.imageURLs)
-                ActionIcons(
-                    modifier = modifier,
-                    post = post,
-                    myself = myself,
-                    engagementIconState = engagementIconState,
-                    engagementIconAction = engagementIconAction,
-                    hubUiAction = hubUiAction,
+                            postCardUiAction.onUpdatePost(post)
+                            postCardUiAction.onClickPostCard(onHubNavigate)
+                        }.fillMaxWidth(),
+            ) {
+                AsyncImage(
+                    modifier =
+                        Modifier
+                            .padding(dimensionResource(R.dimen.padding_small))
+                            .size(dimensionResource(R.dimen.icon_small))
+                            .clip(CircleShape)
+                            .clickable {
+                                hubUiAction.onGetUserID(post.userID)
+                                hubUiAction.onChangeCurrentRouteName(NavigationHubRoute.Account().name)
+                                onHubNavigate(NavigationHubRoute.Account())
+                            },
+                    model = post.iconURL,
+                    contentDescription = post.iconURL,
+                    contentScale = ContentScale.Crop,
                 )
+                Column {
+                    Name(modifier = modifier, post = post)
+                    Description(modifier = modifier, post = post)
+                    Images(modifier = modifier, imageURLs = post.imageURLs)
+                    ActionIcons(
+                        modifier = modifier,
+                        post = post,
+                        myself = myself,
+                        engagementIconState = engagementIconState,
+                        engagementIconAction = engagementIconAction,
+                        hubUiAction = hubUiAction,
+                    )
+                }
             }
         }
-    }
-}
-
-@Composable
-private fun Name(
-    modifier: Modifier = Modifier,
-    post: Post = Post(),
-) {
-    Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Start,
-    ) {
-        Text(post.name)
-        Text("@${post.userID}", color = MaterialTheme.colorScheme.secondaryContainer)
-    }
-}
-
-@Composable
-private fun Description(
-    modifier: Modifier = Modifier,
-    post: Post,
-) {
-    Text(post.description, modifier = modifier)
-}
-
-@Composable
-private fun Images(
-    modifier: Modifier = Modifier,
-    imageURLs: List<String>,
-    imageLoader: ImageLoader = LocalContext.current.imageLoader,
-) {
-    for (url in imageURLs) {
-        AsyncImage(
-            modifier = modifier,
-            model = url,
-            imageLoader = imageLoader,
-            contentDescription = "",
-        )
     }
 }
 
@@ -231,5 +196,44 @@ private fun ActionIcon(
         )
         Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_action_icon)))
         Text(count.toString())
+    }
+}
+
+@Composable
+private fun Name(
+    modifier: Modifier = Modifier,
+    post: Post = Post(),
+) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Start,
+    ) {
+        Text(post.name)
+        Text("@${post.userID}", color = MaterialTheme.colorScheme.secondaryContainer)
+    }
+}
+
+@Composable
+private fun Description(
+    modifier: Modifier = Modifier,
+    post: Post,
+) {
+    Text(post.description, modifier = modifier)
+}
+
+@Composable
+private fun Images(
+    modifier: Modifier = Modifier,
+    imageURLs: List<String>,
+    imageLoader: ImageLoader = LocalContext.current.imageLoader,
+) {
+    for (url in imageURLs) {
+        AsyncImage(
+            modifier = modifier,
+            model = url,
+            imageLoader = imageLoader,
+            contentDescription = "",
+        )
     }
 }

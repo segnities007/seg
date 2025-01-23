@@ -24,7 +24,7 @@ data class AccountUiState(
     override val user: User = User(),
     val posts: List<Post> = listOf(),
     val users: List<User> = listOf(),
-): UserState
+) : UserState
 
 data class AccountUiAction(
     val onGetOtherUser: (userID: String) -> Unit,
@@ -66,14 +66,15 @@ class AccountViewModel
                 onClickIcon = this::onClickIcon,
                 onClickPostCard = this::onClickPostCard,
                 onIncrementViewCount = this::onIncrementViewCount,
+                onGetPosts = {},
             )
 
-    fun onGetEngagementIconAction(): EngagementIconAction =
-        EngagementIconAction(
-            onLike = this::onLike,
-            onRepost = this::onRepost,
-            onComment = this::onComment,
-        )
+        fun onGetEngagementIconAction(): EngagementIconAction =
+            EngagementIconAction(
+                onLike = this::onLike,
+                onRepost = this::onRepost,
+                onComment = this::onComment,
+            )
 
         private fun onClickIcon(onHubNavigate: (Route) -> Unit) {
             onHubNavigate(NavigationHubRoute.Account())

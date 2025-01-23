@@ -39,12 +39,12 @@ class TrendViewModel
                 onGetTrendPostInThisWeek = this::onGetTrendPostInThisWeek,
             )
 
-    fun onGetEngagementIconAction(): EngagementIconAction =
-        EngagementIconAction(
-            onLike = this::onLike,
-            onRepost = this::onRepost,
-            onComment = this::onComment,
-        )
+        fun onGetEngagementIconAction(): EngagementIconAction =
+            EngagementIconAction(
+                onLike = this::onLike,
+                onRepost = this::onRepost,
+                onComment = this::onComment,
+            )
 
         private fun onReadMoreAboutTrend() {
             trendUiState = trendUiState.copy(isReadMoreAboutTrend = !trendUiState.isReadMoreAboutTrend)

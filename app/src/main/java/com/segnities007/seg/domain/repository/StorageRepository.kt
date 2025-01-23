@@ -6,5 +6,6 @@ interface StorageRepository {
         byteArray: ByteArray,
     ): String
 
-    suspend fun deleteImage(url: String)
+    suspend fun deleteImage(url: String) {
+    }
 }

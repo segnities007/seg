@@ -26,16 +26,11 @@ class ImageRepositoryImpl
         }
 
         override suspend fun deleteImage(url: String) {
-            // TODO
-//            try {
-//                postgrest.from("images").delete {
-//                    filter {
-//                        Image::id eq imageID
-//                    }
-//                }
-//            } catch (e: Exception) {
-//                Log.d(tag, "failed to delete image. error message is $e")
-//                throw e
-//            }
+            try {
+                storageRepository.deleteImage(url)
+            } catch (e: Exception) {
+                Log.d(tag, "failed to delete image. error message is $e")
+                throw e
+            }
         }
     }

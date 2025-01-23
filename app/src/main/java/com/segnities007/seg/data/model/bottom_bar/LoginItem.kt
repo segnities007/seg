@@ -1,10 +1,12 @@
 package com.segnities007.seg.data.model.bottom_bar
 
+import androidx.compose.runtime.Immutable
 import com.segnities007.seg.R
 import com.segnities007.seg.domain.model.BottomBarItem
 import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.navigation.login.NavigationLoginRoute
 
+@Immutable
 data class LoginItem(
     override val routes: List<Route> = NavigationLoginRoute.routes,
     override val selectedIconIDs: List<Int> =

@@ -15,11 +15,17 @@ sealed class NavigationSettingRoute : Route {
         override val name: String = "UserInfo",
     ) : NavigationSettingRoute()
 
+    @Serializable
+    data class Posts(
+        override val name: String = "Posts",
+    ) : NavigationSettingRoute()
+
     companion object {
         val routes: List<Route> =
             listOf(
                 Preference(),
                 UserInfo(),
+                Posts(),
             )
     }
 }

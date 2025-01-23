@@ -34,7 +34,7 @@ class PostRepositoryImpl
                     urls.add(
                         imageRepository.postImage(
                             byteArrayList[i],
-                            fileName = "${user.name}+${LocalDateTime.now()}+$i",
+                            fileName = "${user.name}+${LocalDateTime.now()}+$i.png",
                         ),
                     )
                 }
@@ -192,10 +192,13 @@ class PostRepositoryImpl
             }
         }
 
-        override suspend fun deletePost(postID: Int) {
+        override suspend fun deletePost(post: Post) {
             try {
                 postgrest.from(posts).delete {
-                    filter { Post::id eq postID }
+                    filter { Post::id eq post.id }
+                }
+                for (url in post.imageURLs) {
+                    imageRepository.deleteImage(url)
                 }
             } catch (e: Exception) {
                 Log.e(tag, e.toString())

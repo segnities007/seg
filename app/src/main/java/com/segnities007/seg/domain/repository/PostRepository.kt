@@ -25,7 +25,7 @@ interface PostRepository {
 
     suspend fun updatePost(post: Post)
 
-    suspend fun deletePost(postID: Int)
+    suspend fun deletePost(post: Post)
 
     // about view
     suspend fun onIncrementView(post: Post)
