@@ -96,7 +96,7 @@ private fun HubUi(
                     )
                 NavigationHubRoute.Account().name ->
                     TopStatusBar(
-                        user = accountUiState.user,
+                        userState = accountUiState,
                         onClickFollowsButton = {
                             accountUiAction.onSetUsers(accountUiState.user.follows)
                             onHubNavigate(NavigationHubRoute.Accounts())
@@ -115,7 +115,7 @@ private fun HubUi(
                     )
                 NavigationHubRoute.Setting().name ->
                     TopStatusBar(
-                        user = hubUiState.user,
+                        userState = hubUiState,
                         onClickFollowsButton = {
                             accountUiAction.onSetUsers(hubUiState.user.follows)
                             onHubNavigate(NavigationHubRoute.Accounts())

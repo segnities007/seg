@@ -7,10 +7,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.segnities007.seg.data.model.Post
 import com.segnities007.seg.data.model.User
+import com.segnities007.seg.domain.model.UserState
 import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.domain.repository.PostRepository
 import com.segnities007.seg.domain.repository.UserRepository
 import com.segnities007.seg.navigation.hub.NavigationHubRoute
+import com.segnities007.seg.ui.components.card.EngagementIconAction
 import com.segnities007.seg.ui.components.card.PostCardUiAction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -19,18 +21,18 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class AccountUiState(
-    val user: User = User(),
+    override val user: User = User(),
     val posts: List<Post> = listOf(),
     val users: List<User> = listOf(),
-)
+): UserState
 
 data class AccountUiAction(
     val onGetOtherUser: (userID: String) -> Unit,
     val onGetUserPosts: (userID: String) -> Unit,
     val onGetUsers: (userIDs: List<User>) -> Unit,
     val onSetUsers: (userIDs: List<String>) -> Unit,
-    val onFollow: (myself: User, other: User, onGetUser: () -> Unit) -> Unit,
-    val onUnFollow: (myself: User, other: User, onGetUser: () -> Unit) -> Unit,
+    val onFollow: (myself: User, other: User, onGetMyself: () -> Unit) -> Unit,
+    val onUnFollow: (myself: User, other: User, onGetMyself: () -> Unit) -> Unit,
 )
 
 @HiltViewModel
@@ -61,13 +63,17 @@ class AccountViewModel
                 onGetPost = { /*TODO*/ },
                 onGetBeforePosts = { /*TODO*/ },
                 onUpdatePost = { /*TODO*/ },
-                onLike = this::onLike,
-                onRepost = this::onRepost,
-                onComment = this::onComment,
                 onClickIcon = this::onClickIcon,
                 onClickPostCard = this::onClickPostCard,
                 onIncrementViewCount = this::onIncrementViewCount,
             )
+
+    fun onGetEngagementIconAction(): EngagementIconAction =
+        EngagementIconAction(
+            onLike = this::onLike,
+            onRepost = this::onRepost,
+            onComment = this::onComment,
+        )
 
         private fun onClickIcon(onHubNavigate: (Route) -> Unit) {
             onHubNavigate(NavigationHubRoute.Account())
@@ -100,22 +106,22 @@ class AccountViewModel
         private fun onFollow(
             myself: User,
             other: User,
-            onGetUser: () -> Unit,
+            onGetMyself: () -> Unit,
         ) {
             viewModelScope.launch(Dispatchers.IO) {
                 userRepository.followUser(myself, other)
-                onGetUser()
+                onGetMyself()
             }
         }
 
         private fun onUnFollow(
             myself: User,
             other: User,
-            onGetUser: () -> Unit,
+            onGetMyself: () -> Unit,
         ) {
             viewModelScope.launch(Dispatchers.IO) {
                 userRepository.unFollowUser(myself, other)
-                onGetUser()
+                onGetMyself()
             }
         }
 
@@ -148,7 +154,7 @@ class AccountViewModel
         private fun onLike(
             post: Post,
             myself: User,
-            onGetUser: () -> Unit,
+            onGetMyself: () -> Unit,
         ) {
             viewModelScope.launch(Dispatchers.IO) {
                 if (myself.likes.contains(post.id)) {
@@ -157,14 +163,15 @@ class AccountViewModel
                     postRepository.onUnLike(post = post, user = myself)
                 }
                 onUpdatePosts(post.id)
-                onGetUser()
+                onGetMyself()
+                onGetOtherUser(accountUiState.user.userID)
             }
         }
 
         private fun onRepost(
             post: Post,
             myself: User,
-            onGetUser: () -> Unit,
+            onGetMyself: () -> Unit,
         ) {
             viewModelScope.launch(Dispatchers.IO) {
                 if (myself.reposts.contains(post.id)) {
@@ -173,7 +180,8 @@ class AccountViewModel
                     postRepository.onUnRepost(post = post, user = myself)
                 }
                 onUpdatePosts(post.id)
-                onGetUser()
+                onGetMyself()
+                onGetOtherUser(accountUiState.user.userID)
             }
         }
 

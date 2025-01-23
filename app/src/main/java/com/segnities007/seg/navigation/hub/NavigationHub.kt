@@ -66,6 +66,8 @@ fun NavigationHub(
                     modifier = modifier,
                     hubUiState = hubViewModel.hubUiState,
                     hubUiAction = hubViewModel.getHubUiAction(),
+                    engagementIconState = postCardViewModel.engagementIconState,
+                    engagementIconAction = postCardViewModel.onGetEngagementIconAction(),
                     postCardUiState = postCardViewModel.postCardUiState,
                     postCardUiAction = postCardViewModel.onGetPostCardUiAction(),
                     onHubNavigate = onHubNavigate,
@@ -78,8 +80,10 @@ fun NavigationHub(
                     hubUiAction = hubViewModel.getHubUiAction(),
                     trendUiState = trendViewModel.trendUiState,
                     trendUiAction = trendViewModel.onGetTrendUiAction(),
-                    onHubNavigate = onHubNavigate,
+                    engagementIconState = postCardViewModel.engagementIconState,
+                    engagementIconAction = trendViewModel.onGetEngagementIconAction(),
                     postCardUiAction = postCardViewModel.onGetPostCardUiAction(),
+                    onHubNavigate = onHubNavigate,
                 )
             }
             composable<NavigationHubRoute.Post> {
@@ -112,8 +116,10 @@ fun NavigationHub(
                     hubUiAction = hubViewModel.getHubUiAction(),
                     accountUiState = accountViewModel.accountUiState,
                     accountUiAction = accountViewModel.getAccountUiAction(),
-                    onHubNavigate = onHubNavigate,
+                    engagementIconState = postCardViewModel.engagementIconState,
+                    engagementIconAction = postCardViewModel.onGetEngagementIconAction(),
                     postCardUiAction = accountViewModel.getPostUiAction(),
+                    onHubNavigate = onHubNavigate,
                 )
             }
             composable<NavigationHubRoute.Accounts> {
@@ -133,6 +139,8 @@ fun NavigationHub(
                     modifier = modifier,
                     hubUiState = hubViewModel.hubUiState,
                     hubUiAction = hubViewModel.getHubUiAction(),
+                    engagementIconState = postCardViewModel.engagementIconState,
+                    engagementIconAction = postCardViewModel.onGetEngagementIconAction(),
                     postCardUiState = postCardViewModel.postCardUiState,
                     postCardUiAction = postCardViewModel.onGetPostCardUiAction(),
                     onHubNavigate = onHubNavigate,

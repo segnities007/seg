@@ -13,7 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import com.segnities007.seg.R
-import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.ui.screens.login.ConfirmEmailUiAction
 
 @Composable

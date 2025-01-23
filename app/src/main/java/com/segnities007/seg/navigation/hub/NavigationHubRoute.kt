@@ -5,7 +5,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 sealed class NavigationHubRoute : Route {
-
     @Serializable
     data class Home(
         override val name: String = "Home",

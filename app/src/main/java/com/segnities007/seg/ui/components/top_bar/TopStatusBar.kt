@@ -1,5 +1,6 @@
 package com.segnities007.seg.ui.components.top_bar
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -15,6 +16,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,12 +29,13 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.segnities007.seg.R
 import com.segnities007.seg.data.model.User
+import com.segnities007.seg.domain.model.UserState
 import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.navigation.hub.NavigationHubRoute
 
 @Composable
 fun TopStatusBar(
-    user: User,
+    userState: UserState,
     onClickFollowsButton: () -> Unit = {},
     onClickFollowersButton: () -> Unit = {},
     onHubNavigate: (Route) -> Unit,
@@ -44,16 +47,16 @@ fun TopStatusBar(
             Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
                 AsyncImage(
                     modifier = Modifier.size(dimensionResource(R.dimen.icon_large)).clip(CircleShape),
-                    model = user.iconURL,
-                    contentDescription = user.iconURL,
+                    model = userState.user.iconURL,
+                    contentDescription = userState.user.iconURL,
                 )
                 Spacer(modifier = Modifier.padding(commonPadding))
-                Status(user = user)
+                Status(user = userState.user)
             }
 
             Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_sn)))
             AboutFollow(
-                user = user,
+                userState = userState,
                 onHubNavigate = onHubNavigate,
                 onClickFollowsButton = onClickFollowsButton,
                 onClickFollowersButton = onClickFollowersButton,
@@ -108,7 +111,7 @@ private fun Status(
 @Composable
 private fun AboutFollow(
     modifier: Modifier = Modifier,
-    user: User,
+    userState: UserState,
     commonPadding: Dp = dimensionResource(R.dimen.padding_smaller),
     fontColor: Color = MaterialTheme.colorScheme.primary,
     onHubNavigate: (Route) -> Unit,
@@ -127,7 +130,7 @@ private fun AboutFollow(
                         onClickFollowsButton()
                         onHubNavigate(NavigationHubRoute.Accounts())
                     }.padding(commonPadding),
-        ) { Text(text = "Follow: ${user.followCount}", color = fontColor) }
+        ) { Text(text = "Follow: ${userState.user.followCount}", color = fontColor) }
         Box(
             modifier =
                 Modifier
@@ -136,6 +139,6 @@ private fun AboutFollow(
                         onClickFollowersButton()
                         onHubNavigate(NavigationHubRoute.Accounts())
                     }.padding(commonPadding),
-        ) { Text(text = "Follower: ${user.followerCount}", color = fontColor) }
+        ) { Text(text = "Follower: ${userState.user.followerCount}", color = fontColor) }
     }
 }

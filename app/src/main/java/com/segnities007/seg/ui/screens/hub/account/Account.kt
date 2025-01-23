@@ -1,6 +1,5 @@
 package com.segnities007.seg.ui.screens.hub.account
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,6 +18,8 @@ import androidx.compose.ui.unit.Dp
 import com.segnities007.seg.R
 import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.ui.components.button.SmallButton
+import com.segnities007.seg.ui.components.card.EngagementIconAction
+import com.segnities007.seg.ui.components.card.EngagementIconState
 import com.segnities007.seg.ui.components.card.PostCard
 import com.segnities007.seg.ui.components.card.PostCardUiAction
 import com.segnities007.seg.ui.screens.hub.HubUiAction
@@ -31,6 +32,8 @@ fun Account(
     hubUiAction: HubUiAction,
     accountUiState: AccountUiState,
     accountUiAction: AccountUiAction,
+    engagementIconState: EngagementIconState,
+    engagementIconAction: EngagementIconAction,
     postCardUiAction: PostCardUiAction,
     commonPadding: Dp = dimensionResource(R.dimen.padding_normal),
     onHubNavigate: (Route) -> Unit,
@@ -62,6 +65,8 @@ fun Account(
                 myself = hubUiState.user,
                 hubUiAction = hubUiAction,
                 onHubNavigate = onHubNavigate,
+                engagementIconState = engagementIconState,
+                engagementIconAction = engagementIconAction,
                 postCardUiAction = postCardUiAction,
             )
         }

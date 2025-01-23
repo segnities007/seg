@@ -1,6 +1,5 @@
 package com.segnities007.seg.ui.screens.hub.home
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -17,6 +16,8 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import com.segnities007.seg.R
 import com.segnities007.seg.domain.presentation.Route
+import com.segnities007.seg.ui.components.card.EngagementIconAction
+import com.segnities007.seg.ui.components.card.EngagementIconState
 import com.segnities007.seg.ui.components.card.PostCard
 import com.segnities007.seg.ui.components.card.PostCardUiAction
 import com.segnities007.seg.ui.components.card.PostCardUiState
@@ -28,6 +29,8 @@ fun Home(
     modifier: Modifier,
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
+    engagementIconState: EngagementIconState,
+    engagementIconAction: EngagementIconAction,
     postCardUiState: PostCardUiState,
     postCardUiAction: PostCardUiAction,
     onHubNavigate: (Route) -> Unit,
@@ -46,6 +49,8 @@ fun Home(
                 myself = hubUiState.user,
                 onHubNavigate = onHubNavigate,
                 hubUiAction = hubUiAction,
+                engagementIconState = engagementIconState,
+                engagementIconAction = engagementIconAction,
                 postCardUiAction = postCardUiAction,
             )
         }
@@ -56,7 +61,6 @@ fun Home(
                 LoadingUI(
                     onLoading = {
                         if (postCardUiState.posts.isNotEmpty()) {
-                            Log.d("Home", "onLoading")
                             postCardUiAction.onGetBeforePosts(postCardUiState.posts.last().updateAt)
                         }
                     },
