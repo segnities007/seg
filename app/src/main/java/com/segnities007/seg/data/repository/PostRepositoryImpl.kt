@@ -8,9 +8,7 @@ import com.segnities007.seg.domain.repository.PostRepository
 import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.postgrest.query.Order
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import javax.inject.Inject
-
 
 class PostRepositoryImpl
     @Inject
@@ -150,7 +148,6 @@ class PostRepositoryImpl
 
         override suspend fun getTrendPostInThisWeek(limit: Long): List<Post> {
             try {
-
                 val yesterday = LocalDateTime.now().minusDays(1)
 
                 val result =
@@ -166,8 +163,7 @@ class PostRepositoryImpl
                         }.decodeList<Post>()
 
                 return result
-
-            }catch (e: Exception){
+            } catch (e: Exception) {
                 Log.e(tag, "153: $e")
                 throw e
             }

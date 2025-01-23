@@ -152,20 +152,22 @@ class UserRepositoryImpl
             other: User,
         ) {
             try {
+                val newMyself = myself.copy(follows = myself.follows.minus(other.userID))
+                val newOther = other.copy(followers = other.followers.minus(myself.userID))
                 postgrest.from(tableName).update({
-                    set("follow_user_id_list", myself.follows)
+                    set("follow_user_id_list", newMyself.follows)
                 }) {
-                    filter { User::userID eq myself.userID }
+                    filter { User::userID eq newMyself.userID }
                 }
 
                 postgrest.from(tableName).update({
-                    set("follower_user_id_list", other.followers)
+                    set("follower_user_id_list", newOther.followers)
                 }) {
-                    filter { User::userID eq other.userID }
+                    filter { User::userID eq newOther.userID }
                 }
 
-                onDecrementFollowCount(myself)
-                onDecrementFollowerCount(other)
+                onDecrementFollowCount(newMyself)
+                onDecrementFollowerCount(newOther)
             } catch (e: Exception) {
                 Log.e(tag, "failed to follow user: $e")
             }

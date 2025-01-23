@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.segnities007.seg.R
 import com.segnities007.seg.data.model.Post
 import com.segnities007.seg.data.model.User
 import com.segnities007.seg.domain.presentation.Route
@@ -20,6 +21,36 @@ data class PostCardUiState(
     val post: Post = Post(), // for comment
 )
 
+data class EngagementIconAction(
+    val onLike: (post: Post, myself: User, onGetUser: () -> Unit) -> Unit,
+    val onRepost: (post: Post, myself: User, onGetUser: () -> Unit) -> Unit,
+    val onComment: (post: Post, comment: Post, myself: User, onGetUser: () -> Unit) -> Unit,
+)
+
+data class EngagementIconState(
+    val pushIcons: List<Int> =
+        listOf(
+            R.drawable.baseline_favorite_24,
+            R.drawable.baseline_repeat_24,
+            R.drawable.baseline_chat_bubble_24,
+            R.drawable.baseline_bar_chart_24,
+        ),
+    val unPushIcons: List<Int> =
+        listOf(
+            R.drawable.baseline_favorite_border_24,
+            R.drawable.baseline_repeat_24,
+            R.drawable.baseline_chat_bubble_outline_24,
+            R.drawable.baseline_bar_chart_24,
+        ),
+    val contentDescriptions: List<Int> =
+        listOf(
+            R.string.favorite,
+            R.string.repost,
+            R.string.comment,
+            R.string.view_count,
+        ),
+)
+
 data class PostCardUiAction(
     val onGetNewPosts: () -> Unit,
     val onGetPost: (postID: Int) -> Unit,
@@ -27,9 +58,6 @@ data class PostCardUiAction(
     val onUpdatePost: (post: Post) -> Unit,
     val onClickIcon: (onHubNavigate: (Route) -> Unit) -> Unit,
     val onClickPostCard: (onHubNavigate: (Route) -> Unit) -> Unit,
-    val onLike: (post: Post, myself: User, onGetUser: () -> Unit) -> Unit,
-    val onRepost: (post: Post, myself: User, onGetUser: () -> Unit) -> Unit,
-    val onComment: (post: Post, comment: Post, myself: User, onGetUser: () -> Unit) -> Unit,
     val onIncrementViewCount: (post: Post) -> Unit,
 )
 
@@ -39,6 +67,8 @@ class PostCardViewModel
     constructor(
         private val postRepository: PostRepository,
     ) : ViewModel() {
+        val engagementIconState = EngagementIconState()
+
         var postCardUiState by mutableStateOf(PostCardUiState())
             private set
 
@@ -49,11 +79,15 @@ class PostCardViewModel
                 onGetBeforePosts = this::onGetBeforePosts,
                 onClickIcon = this::onClickIcon,
                 onClickPostCard = this::onClickPostCard,
+                onUpdatePost = this::onUpdatePost,
+                onIncrementViewCount = this::onIncrementViewCount,
+            )
+
+        fun onGetEngagementIconAction(): EngagementIconAction =
+            EngagementIconAction(
                 onLike = this::onLike,
                 onRepost = this::onRepost,
                 onComment = this::onComment,
-                onUpdatePost = this::onUpdatePost,
-                onIncrementViewCount = this::onIncrementViewCount,
             )
 
         private fun onUpdatePost(post: Post) {

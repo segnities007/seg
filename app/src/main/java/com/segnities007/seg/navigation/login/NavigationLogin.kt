@@ -25,7 +25,6 @@ fun NavigationLogin(
     loginNavHostController: NavHostController = rememberNavController(),
     loginViewModel: LoginViewModel = hiltViewModel(),
 ) {
-
     val navBackStackEntry by loginNavHostController.currentBackStackEntryAsState()
     val currentRoute =
         navBackStackEntry

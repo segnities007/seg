@@ -12,13 +12,16 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
+import com.segnities007.seg.R
 import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.ui.components.button.SmallButton
+import com.segnities007.seg.ui.components.card.EngagementIconAction
+import com.segnities007.seg.ui.components.card.EngagementIconState
 import com.segnities007.seg.ui.components.card.PostCard
 import com.segnities007.seg.ui.components.card.PostCardUiAction
 import com.segnities007.seg.ui.screens.hub.HubUiAction
 import com.segnities007.seg.ui.screens.hub.HubUiState
-import com.segnities007.seg.R
 
 @Composable
 fun Trend(
@@ -27,13 +30,14 @@ fun Trend(
     hubUiAction: HubUiAction,
     trendUiState: TrendUiState,
     trendUiAction: TrendUiAction,
+    engagementIconState: EngagementIconState,
+    engagementIconAction: EngagementIconAction,
     postCardUiAction: PostCardUiAction,
     onHubNavigate: (Route) -> Unit,
-    ) {
-
+) {
     LaunchedEffect(Unit) {
         trendUiAction.onGetTrendPostInThisWeek(3)
-        if(trendUiState.isReadMoreAboutTrend) trendUiAction.onReadMoreAboutTrend()
+        if (trendUiState.isReadMoreAboutTrend) trendUiAction.onReadMoreAboutTrend()
     }
 
     LazyColumn(
@@ -41,9 +45,9 @@ fun Trend(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
     ) {
-        //trend of today
-        item(){
-            SubTitle()
+        // trend of today
+        item {
+            SubTitle(textID = R.string.todays_most_view_post)
         }
         items(
             trendUiState.trends.size,
@@ -55,38 +59,42 @@ fun Trend(
                 onHubNavigate = onHubNavigate,
                 hubUiAction = hubUiAction,
                 postCardUiAction = postCardUiAction,
+                engagementIconState = engagementIconState,
+                engagementIconAction = engagementIconAction,
             )
         }
-        item(){
-            if(!trendUiState.isReadMoreAboutTrend){
+        item {
+            if (!trendUiState.isReadMoreAboutTrend) {
                 ReadMoreButton(
                     onClick = {
                         trendUiAction.onReadMoreAboutTrend()
                         trendUiAction.onGetTrendPostInThisWeek(10)
-                    }
+                    },
                 )
             }
         }
         //
-
     }
 }
 
 @Composable
 private fun SubTitle(
     modifier: Modifier = Modifier,
-    textID: Int = 0,
-){
-    Box(modifier = modifier.padding(dimensionResource(R.dimen.padding_normal)).fillMaxWidth(),){
-        Text(text = "今日の最も見られたPost10選")
+    textID: Int,
+) {
+    Box(modifier = modifier.padding(dimensionResource(R.dimen.padding_normal)).fillMaxWidth()) {
+        Text(text = stringResource(textID))
     }
+}
+
+private fun mostViewedPost() {
 }
 
 @Composable
 private fun ReadMoreButton(
     modifier: Modifier = Modifier,
-    onClick: () -> Unit
-){
+    onClick: () -> Unit,
+) {
     SmallButton(
         modifier = modifier.padding(dimensionResource(R.dimen.padding_normal)).fillMaxWidth(),
         textID = R.string.read_more,

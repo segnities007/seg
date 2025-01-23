@@ -44,10 +44,13 @@ fun PostCard(
     post: Post,
     myself: User,
     hubUiAction: HubUiAction,
+    engagementIconState: EngagementIconState,
+    engagementIconAction: EngagementIconAction,
     postCardUiAction: PostCardUiAction,
     onHubNavigate: (Route) -> Unit,
 ) {
     LaunchedEffect(Unit) {
+        // modify this increment for trend
         postCardUiAction.onIncrementViewCount(post)
     }
 
@@ -92,7 +95,8 @@ fun PostCard(
                     modifier = modifier,
                     post = post,
                     myself = myself,
-                    postCardUiAction = postCardUiAction,
+                    engagementIconState = engagementIconState,
+                    engagementIconAction = engagementIconAction,
                     hubUiAction = hubUiAction,
                 )
             }
@@ -145,34 +149,11 @@ private fun ActionIcons(
     myself: User,
     post: Post,
     hubUiAction: HubUiAction,
-    postCardUiAction: PostCardUiAction,
+    engagementIconState: EngagementIconState,
+    engagementIconAction: EngagementIconAction,
     commonPadding: Dp = dimensionResource(R.dimen.padding_smaller),
 ) {
-    val pushIcons =
-        listOf(
-            R.drawable.baseline_favorite_24,
-            R.drawable.baseline_repeat_24,
-            R.drawable.baseline_chat_bubble_24,
-            R.drawable.baseline_bar_chart_24,
-        )
-
-    val unPushIcons =
-        listOf(
-            R.drawable.baseline_favorite_border_24,
-            R.drawable.baseline_repeat_24,
-            R.drawable.baseline_chat_bubble_outline_24,
-            R.drawable.baseline_bar_chart_24,
-        )
-
-    val contentDescriptions =
-        listOf(
-            R.string.favorite,
-            R.string.repost,
-            R.string.comment,
-            R.string.view_count,
-        )
-
-    val counts =
+    val counts: List<Int> =
         listOf(
             post.likeCount,
             post.repostCount,
@@ -186,45 +167,43 @@ private fun ActionIcons(
         horizontalArrangement = Arrangement.SpaceEvenly,
     ) {
         ActionIcon(
-            painterRes = if (myself.likes!!.contains(post.id)) pushIcons[0] else unPushIcons[0],
-            contentRes = contentDescriptions[0],
+            painterRes = if (myself.likes.contains(post.id)) engagementIconState.pushIcons[0] else engagementIconState.unPushIcons[0],
+            contentRes = engagementIconState.contentDescriptions[0],
             count = counts[0],
             onClick = {
                 if (myself.likes.contains(post.id)) {
-                    postCardUiAction.onLike(post, myself) { hubUiAction.onRemovePostIDFromLikeList(post.id) }
+                    engagementIconAction.onLike(post, myself) { hubUiAction.onRemovePostIDFromLikeList(post.id) }
                 } else {
-                    postCardUiAction.onLike(post, myself) { hubUiAction.onAddPostIDToLikeList(post.id) }
+                    engagementIconAction.onLike(post, myself) { hubUiAction.onAddPostIDToLikeList(post.id) }
                 }
             },
         )
         ActionIcon(
-            painterRes = if (myself.reposts!!.contains(post.id)) pushIcons[1] else unPushIcons[1],
-            contentRes = contentDescriptions[1],
+            painterRes = if (myself.reposts.contains(post.id)) engagementIconState.pushIcons[1] else engagementIconState.unPushIcons[1],
+            contentRes = engagementIconState.contentDescriptions[1],
             count = counts[1],
             onClick = {
                 Log.d("postcard", post.id.toString())
                 if (myself.reposts.contains(post.id)) {
-                    postCardUiAction.onRepost(post, myself) { hubUiAction.onRemovePostIDFromRepostList(post.id) }
+                    engagementIconAction.onRepost(post, myself) { hubUiAction.onRemovePostIDFromRepostList(post.id) }
                 } else {
-                    postCardUiAction.onRepost(post, myself) { hubUiAction.onAddPostIDToRepostList(post.id) }
+                    engagementIconAction.onRepost(post, myself) { hubUiAction.onAddPostIDToRepostList(post.id) }
                 }
             },
         )
         ActionIcon(
-            painterRes = if (myself.comments!!.contains(post.id)) pushIcons[2] else unPushIcons[2],
-            contentRes = contentDescriptions[2],
+            painterRes = if (myself.comments.contains(post.id)) engagementIconState.pushIcons[2] else engagementIconState.unPushIcons[2],
+            contentRes = engagementIconState.contentDescriptions[2],
             count = counts[2],
             onClick = {
                 // TODO
             },
         )
         ActionIcon(
-            painterRes = pushIcons[3],
-            contentRes = contentDescriptions[3],
+            painterRes = engagementIconState.pushIcons[3],
+            contentRes = engagementIconState.contentDescriptions[3],
             count = counts[3],
-            onClick = {
-                // Nothing
-            },
+            isClickable = false,
         )
     }
 }
@@ -235,13 +214,14 @@ private fun ActionIcon(
     painterRes: Int,
     contentRes: Int,
     count: Int,
-    onClick: () -> Unit,
+    isClickable: Boolean = true,
+    onClick: () -> Unit = {},
 ) {
     Row(
         modifier =
             modifier
                 .clip(RoundedCornerShape(dimensionResource(R.dimen.padding_small)))
-                .clickable { onClick() }
+                .let { if (isClickable) it.clickable { onClick() } else it }
                 .padding(dimensionResource(R.dimen.padding_action_icon)),
     ) {
         Image(
