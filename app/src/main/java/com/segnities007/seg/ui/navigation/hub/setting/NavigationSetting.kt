@@ -1,4 +1,4 @@
-package com.segnities007.seg.navigation.hub.setting
+package com.segnities007.seg.ui.navigation.hub.setting
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier

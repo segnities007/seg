@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.segnities007.seg.navigation.NavigationRoute
+import com.segnities007.seg.ui.navigation.NavigationRoute
 
 @Composable
 fun Splash(

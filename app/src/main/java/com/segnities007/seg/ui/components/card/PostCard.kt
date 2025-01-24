@@ -2,6 +2,7 @@ package com.segnities007.seg.ui.components.card
 
 import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -39,6 +40,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.sp
 import coil3.ImageLoader
 import coil3.compose.AsyncImage
 import coil3.imageLoader
@@ -46,7 +48,7 @@ import com.segnities007.seg.R
 import com.segnities007.seg.data.model.Post
 import com.segnities007.seg.data.model.User
 import com.segnities007.seg.domain.presentation.Route
-import com.segnities007.seg.navigation.hub.NavigationHubRoute
+import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
 import com.segnities007.seg.ui.components.button.SmallButton
 import com.segnities007.seg.ui.screens.hub.HubUiAction
 
@@ -60,13 +62,8 @@ fun PostCard(
     engagementIconState: EngagementIconState,
     engagementIconAction: EngagementIconAction,
     postCardUiAction: PostCardUiAction,
-//    onClickDetailButton: () -> Unit = {},
     onHubNavigate: (Route) -> Unit,
 ) {
-    LaunchedEffect(Unit) {
-        // modify this increment for trend
-        postCardUiAction.onIncrementViewCount(post)
-    }
 
     var isShowBottomSheet by remember{ mutableStateOf(false)}
 
@@ -74,7 +71,7 @@ fun PostCard(
         isShowBottomSheet = !isShowBottomSheet
     }
 
-    if (isShowBottomSheet) BottomSheet(onClickDetailButton = onClickDetailButton)
+    if (isShowBottomSheet) BottomSheet(post = post, onClickDetailButton = onClickDetailButton, postCardUiAction = postCardUiAction,)
 
     ElevatedCard(
         modifier =
@@ -134,15 +131,26 @@ fun PostCard(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun BottomSheet(
+    post: Post,
+    postCardUiAction: PostCardUiAction,
     onClickDetailButton: () -> Unit,
-    commonPadding: Dp = dimensionResource(R.dimen.padding_normal)
+    commonPadding: Dp = dimensionResource(R.dimen.padding_sn)
 ){
     ModalBottomSheet(
-//        modifier = Modifier.height(dimensionResource(R.dimen.bottom_sheet_height_normal)),
+        containerColor = MaterialTheme.colorScheme.secondaryContainer,
         onDismissRequest = {
             onClickDetailButton()
         }
     ) {
+        PanelButton(
+            modifier = Modifier.fillMaxWidth().padding(horizontal = commonPadding),
+            iconID = R.drawable.baseline_delete_24,
+            textID = R.string.delete,
+            onClick = {
+                postCardUiAction.onDeletePost(post)
+                onClickDetailButton()
+            }
+        )
         Spacer(Modifier.padding(commonPadding))
         SmallButton(
             modifier = Modifier.fillMaxWidth().padding(horizontal = commonPadding),
@@ -152,6 +160,37 @@ private fun BottomSheet(
             },
         )
         Spacer(Modifier.padding(commonPadding))
+    }
+}
+
+@Composable
+private fun PanelButton(
+    modifier: Modifier = Modifier,
+    iconID: Int,
+    textID: Int,
+    onClick: () -> Unit,
+    commonPadding: Dp = dimensionResource(R.dimen.padding_smaller)
+){
+    Row(
+        modifier = modifier
+            .height(dimensionResource(R.dimen.button_height_small_size))
+            .clickable {
+                onClick()
+            },
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Start,
+    ){
+        Spacer(modifier = Modifier.padding(commonPadding))
+        Image(
+            modifier = Modifier.size(dimensionResource(R.dimen.icon_smaller)),
+            painter = painterResource(iconID),
+            contentDescription = "Delete post",
+        )
+        Spacer(modifier = Modifier.padding(commonPadding))
+        Text(
+            text = stringResource(textID),
+            fontSize = dimensionResource(R.dimen.text_small).value.sp
+        )
     }
 }
 

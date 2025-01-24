@@ -1,4 +1,4 @@
-package com.segnities007.seg.navigation.login
+package com.segnities007.seg.ui.navigation.login
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -10,7 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.segnities007.seg.domain.presentation.Route
-import com.segnities007.seg.navigation.NavigationRoute
+import com.segnities007.seg.ui.navigation.NavigationRoute
 import com.segnities007.seg.ui.screens.login.Login
 import com.segnities007.seg.ui.screens.login.LoginViewModel
 import com.segnities007.seg.ui.screens.login.sign_in.SignIn

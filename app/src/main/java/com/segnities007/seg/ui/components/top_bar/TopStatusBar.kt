@@ -29,7 +29,7 @@ import com.segnities007.seg.R
 import com.segnities007.seg.data.model.User
 import com.segnities007.seg.domain.model.UserState
 import com.segnities007.seg.domain.presentation.Route
-import com.segnities007.seg.navigation.hub.NavigationHubRoute
+import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
 
 @Composable
 fun TopStatusBar(

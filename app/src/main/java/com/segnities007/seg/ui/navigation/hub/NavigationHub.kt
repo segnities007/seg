@@ -1,4 +1,4 @@
-package com.segnities007.seg.navigation.hub
+package com.segnities007.seg.ui.navigation.hub
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -11,7 +11,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.segnities007.seg.domain.presentation.Route
-import com.segnities007.seg.navigation.hub.setting.NavigationSetting
+import com.segnities007.seg.ui.navigation.hub.setting.NavigationSetting
 import com.segnities007.seg.ui.components.card.PostCardViewModel
 import com.segnities007.seg.ui.screens.hub.Hub
 import com.segnities007.seg.ui.screens.hub.HubViewModel

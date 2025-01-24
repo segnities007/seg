@@ -1,4 +1,4 @@
-package com.segnities007.seg.navigation.login
+package com.segnities007.seg.ui.navigation.login
 
 import com.segnities007.seg.domain.presentation.Route
 import kotlinx.serialization.Serializable

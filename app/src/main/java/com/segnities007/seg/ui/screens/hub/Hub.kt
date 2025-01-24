@@ -15,7 +15,7 @@ import com.segnities007.seg.R
 import com.segnities007.seg.data.model.bottom_bar.HubItem
 import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.domain.presentation.TopAction
-import com.segnities007.seg.navigation.hub.NavigationHubRoute
+import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
 import com.segnities007.seg.ui.components.bottom_bar.BottomBar
 import com.segnities007.seg.ui.components.floating_button.FloatingButton
 import com.segnities007.seg.ui.components.navigation_drawer.NavigationDrawer

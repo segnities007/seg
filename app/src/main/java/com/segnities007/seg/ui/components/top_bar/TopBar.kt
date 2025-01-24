@@ -18,7 +18,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.segnities007.seg.R
-import com.segnities007.seg.navigation.login.NavigationLoginRoute
+import com.segnities007.seg.ui.navigation.login.NavigationLoginRoute
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
