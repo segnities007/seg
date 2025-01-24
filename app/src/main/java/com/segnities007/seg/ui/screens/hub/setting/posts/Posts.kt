@@ -44,6 +44,7 @@ fun Posts(
                 post = postCardUiState.posts[i],
                 myself = hubUiState.user,
                 isShowDetailButton = true,
+                isIncrementView = false,
                 onHubNavigate = onHubNavigate,
                 hubUiAction = hubUiAction,
                 engagementIconState = engagementIconState,

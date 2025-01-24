@@ -1,7 +1,5 @@
 package com.segnities007.seg.ui.screens.hub.trend
 
-import androidx.compose.foundation.gestures.rememberScrollableState
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,7 +7,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
@@ -17,7 +14,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
@@ -95,7 +91,7 @@ fun Trend(
             ReadMoreButton(
                 onClick = {
                     trendUiAction.onReadMoreAboutTrendOfWeek()
-                    trendUiAction.onGetTrendPostOfToday(10)
+                    trendUiAction.onGetTrendPostOfWeek(10)
                 },
             )
         }
@@ -117,7 +113,7 @@ fun Trend(
             ReadMoreButton(
                 onClick = {
                     trendUiAction.onReadMoreAboutTrendOfMonth()
-                    trendUiAction.onGetTrendPostOfToday(10)
+                    trendUiAction.onGetTrendPostOfMonth(10)
                 },
             )
         }
@@ -139,7 +135,7 @@ fun Trend(
             ReadMoreButton(
                 onClick = {
                     trendUiAction.onReadMoreAboutTrendOfYear
-                    trendUiAction.onGetTrendPostOfToday(10)
+                    trendUiAction.onGetTrendPostOfYear(10)
                 },
             )
         }
@@ -155,9 +151,6 @@ private fun SubTitle(
     Box(modifier = modifier.padding(dimensionResource(R.dimen.padding_normal)).fillMaxWidth()) {
         Text(text = stringResource(textID))
     }
-}
-
-private fun mostViewedPost() {
 }
 
 @Composable

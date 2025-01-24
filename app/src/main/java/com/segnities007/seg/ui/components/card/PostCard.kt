@@ -57,22 +57,22 @@ fun PostCard(
     myself: User,
     hubUiAction: HubUiAction,
     isShowDetailButton: Boolean = false,
+    isIncrementView: Boolean = true,// For disable when view my post
     engagementIconState: EngagementIconState,
     engagementIconAction: EngagementIconAction,
     postCardUiAction: PostCardUiAction,
     onHubNavigate: (Route) -> Unit,
 ) {
     var isShowBottomSheet by remember { mutableStateOf(false) }
-
     val onClickDetailButton = {
         isShowBottomSheet = !isShowBottomSheet
     }
 
-    if (isShowBottomSheet) BottomSheet(post = post, onClickDetailButton = onClickDetailButton, postCardUiAction = postCardUiAction)
-
     LaunchedEffect(Unit) {
-        postCardUiAction.onIncrementViewCount(post)
+        if(isIncrementView) postCardUiAction.onIncrementViewCount(post)
     }
+
+    if (isShowBottomSheet) BottomSheet(post = post, onClickDetailButton = onClickDetailButton, postCardUiAction = postCardUiAction)
 
     ElevatedCard(
         modifier =
@@ -91,13 +91,12 @@ fun PostCard(
                         .clickable {
                             postCardUiAction.onUpdatePost(post)
                             postCardUiAction.onClickPostCard(onHubNavigate)
-                        }.fillMaxWidth()
-                        .padding(dimensionResource(R.dimen.padding_small)),
+                        }
+                        .fillMaxWidth()
             ) {
                 AsyncImage(
                     modifier =
-                        Modifier
-                            .padding(dimensionResource(R.dimen.padding_small))
+                        modifier
                             .size(dimensionResource(R.dimen.icon_sn))
                             .clip(CircleShape)
                             .clickable {
@@ -109,7 +108,10 @@ fun PostCard(
                     contentDescription = post.iconURL,
                     contentScale = ContentScale.Crop,
                 )
-                Column {
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.Start,
+                ){
                     Name(modifier = modifier, post = post)
                     Description(modifier = modifier, post = post)
                     Images(modifier = modifier, imageURLs = post.imageURLs)
@@ -203,7 +205,6 @@ private fun ActionIcons(
     hubUiAction: HubUiAction,
     engagementIconState: EngagementIconState,
     engagementIconAction: EngagementIconAction,
-    commonPadding: Dp = dimensionResource(R.dimen.padding_smaller),
 ) {
     val counts: List<Int> =
         listOf(
@@ -214,9 +215,9 @@ private fun ActionIcons(
         )
 
     Row(
-        modifier = Modifier.padding(commonPadding).fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceEvenly,
+        horizontalArrangement = Arrangement.Start,
     ) {
         ActionIcon(
             painterRes = if (myself.likes.contains(post.id)) engagementIconState.pushIcons[0] else engagementIconState.unPushIcons[0],
@@ -230,6 +231,7 @@ private fun ActionIcons(
                 }
             },
         )
+        Spacer(Modifier.weight(1f))
         ActionIcon(
             painterRes = if (myself.reposts.contains(post.id)) engagementIconState.pushIcons[1] else engagementIconState.unPushIcons[1],
             contentRes = engagementIconState.contentDescriptions[1],
@@ -243,6 +245,7 @@ private fun ActionIcons(
                 }
             },
         )
+        Spacer(Modifier.weight(1f))
         ActionIcon(
             painterRes = if (myself.comments.contains(post.id)) engagementIconState.pushIcons[2] else engagementIconState.unPushIcons[2],
             contentRes = engagementIconState.contentDescriptions[2],
@@ -251,12 +254,14 @@ private fun ActionIcons(
                 // TODO
             },
         )
+        Spacer(Modifier.weight(1f))
         ActionIcon(
             painterRes = engagementIconState.pushIcons[3],
             contentRes = engagementIconState.contentDescriptions[3],
             count = counts[3],
             isClickable = false,
         )
+        Spacer(Modifier.weight(1f))
     }
 }
 
@@ -306,7 +311,13 @@ private fun Description(
     modifier: Modifier = Modifier,
     post: Post,
 ) {
-    Text(post.description, modifier = modifier)
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.CenterStart,
+    ){
+        Text(post.description)
+    }
+
 }
 
 @Composable
