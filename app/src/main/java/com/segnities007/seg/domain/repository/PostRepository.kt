@@ -11,21 +11,27 @@ interface PostRepository {
         byteArrayList: List<ByteArray>,
     ): Boolean
 
-    suspend fun getUserPosts(userID: String): List<Post>
+    suspend fun onGetUserPosts(userID: String): List<Post>
 
-    suspend fun getBeforePosts(afterPostCreateAt: java.time.LocalDateTime): List<Post>
+    suspend fun onGetBeforePosts(afterPostCreateAt: java.time.LocalDateTime): List<Post>
 
-    suspend fun getPost(postID: Int): Post
+    suspend fun onGetPost(postID: Int): Post
 
-    suspend fun getNewPost(): Post
+    suspend fun onGetNewPost(): Post
 
-    suspend fun getNewPosts(): List<Post>
+    suspend fun onGetNewPosts(): List<Post>
 
-    suspend fun getTrendPostInThisWeek(limit: Long = 10): List<Post>
+    suspend fun onGetTrendPostOfToday(limit: Long = 10): List<Post>
 
-    suspend fun updatePost(post: Post)
+    suspend fun onGetTrendPostOfWeek(limit: Long = 10): List<Post>
 
-    suspend fun deletePost(post: Post)
+    suspend fun onGetTrendPostOfMonth(limit: Long = 10): List<Post>
+
+    suspend fun onGetTrendPostOfYear(limit: Long = 10): List<Post>
+
+    suspend fun onUpdatePost(post: Post)
+
+    suspend fun onDeletePost(post: Post)
 
     // about view
     suspend fun onIncrementView(post: Post)

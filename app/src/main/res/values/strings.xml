@@ -42,5 +42,8 @@
     <string name="sign_up">Sign Up</string>
     <string name="read_more">Read More</string>
     <string name="todays_most_view_post">Today\'s Most Viewed Post</string>
+    <string name="weeks_most_view_post">Week\'s Most Viewed Post</string>
+    <string name="months_most_view_post">Month\'s Most Viewed Post</string>
+    <string name="years_most_view_post">Year\'s Most Viewed Post</string>
     <string name="my_posts">My Posts</string>
 </resources>

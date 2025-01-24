@@ -107,28 +107,28 @@ class PostCardViewModel
 
         private fun onGetPost(postID: Int) {
             viewModelScope.launch(Dispatchers.IO) {
-                val post = postRepository.getPost(postID)
+                val post = postRepository.onGetPost(postID)
                 postCardUiState = postCardUiState.copy(post = post)
             }
         }
 
         private fun onGetNewPosts() {
             viewModelScope.launch(Dispatchers.IO) {
-                val posts = postRepository.getNewPosts()
+                val posts = postRepository.onGetNewPosts()
                 postCardUiState = postCardUiState.copy(posts = posts)
             }
         }
 
         private fun onGetPosts(userID: String) {
             viewModelScope.launch(Dispatchers.IO) {
-                val posts = postRepository.getUserPosts(userID)
+                val posts = postRepository.onGetUserPosts(userID)
                 postCardUiState = postCardUiState.copy(posts = posts)
             }
         }
 
         private fun onGetBeforePosts(afterPostCreateAt: java.time.LocalDateTime) {
             viewModelScope.launch(Dispatchers.IO) {
-                val posts = postRepository.getBeforePosts(afterPostCreateAt)
+                val posts = postRepository.onGetBeforePosts(afterPostCreateAt)
                 postCardUiState = postCardUiState.copy(posts = postCardUiState.posts.plus(posts))
             }
         }
@@ -142,16 +142,16 @@ class PostCardViewModel
             postCardUiState = postCardUiState.copy(posts = newPosts)
         }
 
-        private fun onDeletePost(post: Post){
-            viewModelScope.launch(Dispatchers.IO){
-                postRepository.deletePost(post)
+        private fun onDeletePost(post: Post) {
+            viewModelScope.launch(Dispatchers.IO) {
+                postRepository.onDeletePost(post)
                 onRemovePostFromPosts(post)
             }
         }
 
-    private fun onRemovePostFromPosts(post: Post){
-        postCardUiState = postCardUiState.copy(posts = postCardUiState.posts.minus(post))
-    }
+        private fun onRemovePostFromPosts(post: Post) {
+            postCardUiState = postCardUiState.copy(posts = postCardUiState.posts.minus(post))
+        }
 
         private fun onClickIcon(onHubNavigate: (Route) -> Unit) {
             onHubNavigate(NavigationHubRoute.Account())

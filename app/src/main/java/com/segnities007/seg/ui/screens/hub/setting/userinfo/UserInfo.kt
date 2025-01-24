@@ -36,8 +36,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.segnities007.seg.R
 import com.segnities007.seg.domain.presentation.Route
-import com.segnities007.seg.ui.navigation.hub.setting.NavigationSettingRoute
 import com.segnities007.seg.ui.components.button.BasicButton
+import com.segnities007.seg.ui.navigation.hub.setting.NavigationSettingRoute
 import com.segnities007.seg.ui.screens.hub.HubUiAction
 import com.segnities007.seg.ui.screens.hub.HubUiState
 import com.segnities007.seg.ui.screens.hub.setting.SettingUiAction
