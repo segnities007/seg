@@ -33,7 +33,6 @@ fun Home(
     postCardUiAction: PostCardUiAction,
     onHubNavigate: (Route) -> Unit,
 ) {
-
     LaunchedEffect(Unit) {
         postCardUiAction.onGetNewPosts()
     }

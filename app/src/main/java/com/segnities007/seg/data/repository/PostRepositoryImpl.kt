@@ -169,74 +169,74 @@ class PostRepositoryImpl
             }
         }
 
-    override suspend fun onGetTrendPostOfMonth(limit: Long): List<Post> {
-        try {
-            val month = LocalDateTime.now().minusDays(30)
+        override suspend fun onGetTrendPostOfMonth(limit: Long): List<Post> {
+            try {
+                val month = LocalDateTime.now().minusDays(30)
 
-            val result =
-                postgrest
-                    .from(posts)
-                    .select {
-                        filter {
-                            // 今日の投稿を取得
-                            gte("update_at", month)
-                        }
-                        order("view_count", Order.DESCENDING)
-                        limit(count = limit)
-                    }.decodeList<Post>()
+                val result =
+                    postgrest
+                        .from(posts)
+                        .select {
+                            filter {
+                                // 今日の投稿を取得
+                                gte("update_at", month)
+                            }
+                            order("view_count", Order.DESCENDING)
+                            limit(count = limit)
+                        }.decodeList<Post>()
 
-            return result
-        } catch (e: Exception) {
-            Log.e(tag, "190: $e")
-            throw e
+                return result
+            } catch (e: Exception) {
+                Log.e(tag, "190: $e")
+                throw e
+            }
         }
-    }
 
-    override suspend fun onGetTrendPostOfYear(limit: Long): List<Post> {
-        try {
-            val year = LocalDateTime.now().minusDays(365)
+        override suspend fun onGetTrendPostOfYear(limit: Long): List<Post> {
+            try {
+                val year = LocalDateTime.now().minusDays(365)
 
-            val result =
-                postgrest
-                    .from(posts)
-                    .select {
-                        filter {
-                            // 今日の投稿を取得
-                            gte("update_at", year)
-                        }
-                        order("view_count", Order.DESCENDING)
-                        limit(count = limit)
-                    }.decodeList<Post>()
+                val result =
+                    postgrest
+                        .from(posts)
+                        .select {
+                            filter {
+                                // 今日の投稿を取得
+                                gte("update_at", year)
+                            }
+                            order("view_count", Order.DESCENDING)
+                            limit(count = limit)
+                        }.decodeList<Post>()
 
-            return result
-        } catch (e: Exception) {
-            Log.e(tag, "213: $e")
-            throw e
+                return result
+            } catch (e: Exception) {
+                Log.e(tag, "213: $e")
+                throw e
+            }
         }
-    }
 
-    override suspend fun onGetTrendPostOfToday(limit: Long): List<Post> {
-        try {
-            val yesterday = LocalDateTime.now().minusDays(7)
+        override suspend fun onGetTrendPostOfToday(limit: Long): List<Post> {
+            try {
+                val yesterday = LocalDateTime.now().minusDays(7)
 
-            val result =
-                postgrest
-                    .from(posts)
-                    .select {
-                        filter {
-                            // 今日の投稿を取得
-                            gte("update_at", yesterday)
-                        }
-                        order("view_count", Order.DESCENDING)
-                        limit(count = limit)
-                    }.decodeList<Post>()
+                val result =
+                    postgrest
+                        .from(posts)
+                        .select {
+                            filter {
+                                // 今日の投稿を取得
+                                gte("update_at", yesterday)
+                            }
+                            order("view_count", Order.DESCENDING)
+                            limit(count = limit)
+                        }.decodeList<Post>()
 
-            return result
-        } catch (e: Exception) {
-            Log.e(tag, "153: $e")
-            throw e
+                return result
+            } catch (e: Exception) {
+                Log.e(tag, "153: $e")
+                throw e
+            }
         }
-    }
 
         override suspend fun onIncrementView(post: Post) {
             try {

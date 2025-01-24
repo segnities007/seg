@@ -1,22 +1,20 @@
 package com.segnities007.seg.ui.screens.hub.trend
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.Dp
 import com.segnities007.seg.R
 import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.ui.components.button.SmallButton
@@ -37,9 +35,49 @@ fun Trend(
     engagementIconState: EngagementIconState,
     engagementIconAction: EngagementIconAction,
     postCardUiAction: PostCardUiAction,
-    commonPadding: Dp = dimensionResource(R.dimen.padding_normal),
     onHubNavigate: (Route) -> Unit,
 ) {
+    val postLists =
+        listOf(
+            trendUiState.trendOfToday,
+            trendUiState.trendOfWeek,
+            trendUiState.trendOfMonth,
+            trendUiState.trendOfYear,
+        )
+
+    val readMores =
+        listOf(
+            trendUiState.isReadMoreAboutTrendOfToday,
+            trendUiState.isReadMoreAboutTrendOfWeek,
+            trendUiState.isReadMoreAboutTrendOfMonth,
+            trendUiState.isReadMoreAboutTrendOfYear,
+        )
+
+    val onClicks =
+        listOf(
+            {
+                trendUiAction.onReadMoreAboutTrendOfToday()
+                trendUiAction.onGetTrendPostOfToday(10)
+            },
+            {
+                trendUiAction.onReadMoreAboutTrendOfWeek()
+                trendUiAction.onGetTrendPostOfWeek(10)
+            },
+            {
+                trendUiAction.onReadMoreAboutTrendOfMonth()
+                trendUiAction.onGetTrendPostOfMonth(10)
+            },
+            {
+                trendUiAction.onReadMoreAboutTrendOfYear()
+                trendUiAction.onGetTrendPostOfYear(10)
+            },
+        )
+
+    val pagerState =
+        rememberPagerState(pageCount = {
+            4
+        })
+
     LaunchedEffect(Unit) {
         trendUiAction.onResetReadMore()
         trendUiAction.onGetTrendPostOfToday(3)
@@ -48,98 +86,32 @@ fun Trend(
         trendUiAction.onGetTrendPostOfYear(3)
     }
 
-    Column(
-        modifier = modifier.fillMaxSize().verticalScroll(rememberScrollState()),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top,
-    ){
-
-        SubTitle(textID = R.string.todays_most_view_post)
-        for(post in trendUiState.trendOfToday)
-            PostCard(
-                post = post,
-                myself = hubUiState.user,
-                onHubNavigate = onHubNavigate,
-                hubUiAction = hubUiAction,
-                postCardUiAction = postCardUiAction,
-                engagementIconState = engagementIconState,
-                engagementIconAction = engagementIconAction,
-            )
-        if (!trendUiState.isReadMoreAboutTrendOfToday) {
-            ReadMoreButton(
-                onClick = {
-                    trendUiAction.onReadMoreAboutTrendOfToday()
-                    trendUiAction.onGetTrendPostOfToday(10)
-                },
-            )
+    HorizontalPager(
+        modifier = modifier.fillMaxSize(),
+        state = pagerState,
+    ) { page ->
+        Column(
+            modifier = Modifier.verticalScroll(rememberScrollState()),
+        ) {
+            SubTitle(textID = trendUiState.textIDs[page])
+            for (post in postLists[page]) {
+                PostCard(
+                    post = post,
+                    myself = hubUiState.user,
+                    onHubNavigate = onHubNavigate,
+                    isIncrementView = readMores[page],
+                    hubUiAction = hubUiAction,
+                    postCardUiAction = postCardUiAction,
+                    engagementIconState = engagementIconState,
+                    engagementIconAction = engagementIconAction,
+                )
+            }
+            if (!readMores[page]) {
+                ReadMoreButton(
+                    onClick = onClicks[page],
+                )
+            }
         }
-
-        Spacer(Modifier.padding(commonPadding))
-
-        SubTitle(textID = R.string.weeks_most_view_post)
-        for(post in trendUiState.trendOfWeek)
-            PostCard(
-                post = post,
-                myself = hubUiState.user,
-                onHubNavigate = onHubNavigate,
-                hubUiAction = hubUiAction,
-                postCardUiAction = postCardUiAction,
-                engagementIconState = engagementIconState,
-                engagementIconAction = engagementIconAction,
-            )
-        if (!trendUiState.isReadMoreAboutTrendOfWeek) {
-            ReadMoreButton(
-                onClick = {
-                    trendUiAction.onReadMoreAboutTrendOfWeek()
-                    trendUiAction.onGetTrendPostOfWeek(10)
-                },
-            )
-        }
-
-        Spacer(Modifier.padding(commonPadding))
-
-        SubTitle(textID = R.string.months_most_view_post)
-        for(post in trendUiState.trendOfMonth)
-            PostCard(
-                post = post,
-                myself = hubUiState.user,
-                onHubNavigate = onHubNavigate,
-                hubUiAction = hubUiAction,
-                postCardUiAction = postCardUiAction,
-                engagementIconState = engagementIconState,
-                engagementIconAction = engagementIconAction,
-            )
-        if (!trendUiState.isReadMoreAboutTrendOfMonth) {
-            ReadMoreButton(
-                onClick = {
-                    trendUiAction.onReadMoreAboutTrendOfMonth()
-                    trendUiAction.onGetTrendPostOfMonth(10)
-                },
-            )
-        }
-
-        Spacer(Modifier.padding(commonPadding))
-
-        SubTitle(textID = R.string.years_most_view_post)
-        for(post in trendUiState.trendOfYear)
-            PostCard(
-                post = post,
-                myself = hubUiState.user,
-                onHubNavigate = onHubNavigate,
-                hubUiAction = hubUiAction,
-                postCardUiAction = postCardUiAction,
-                engagementIconState = engagementIconState,
-                engagementIconAction = engagementIconAction,
-            )
-        if (!trendUiState.isReadMoreAboutTrendOfYear) {
-            ReadMoreButton(
-                onClick = {
-                    trendUiAction.onReadMoreAboutTrendOfYear
-                    trendUiAction.onGetTrendPostOfYear(10)
-                },
-            )
-        }
-
     }
 }
 
