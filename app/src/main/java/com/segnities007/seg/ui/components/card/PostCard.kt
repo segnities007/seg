@@ -23,6 +23,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -68,6 +69,10 @@ fun PostCard(
     }
 
     if (isShowBottomSheet) BottomSheet(post = post, onClickDetailButton = onClickDetailButton, postCardUiAction = postCardUiAction)
+
+    LaunchedEffect(Unit) {
+        postCardUiAction.onIncrementViewCount(post)
+    }
 
     ElevatedCard(
         modifier =

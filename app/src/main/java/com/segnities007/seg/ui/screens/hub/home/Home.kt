@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -32,6 +33,11 @@ fun Home(
     postCardUiAction: PostCardUiAction,
     onHubNavigate: (Route) -> Unit,
 ) {
+
+    LaunchedEffect(Unit) {
+        postCardUiAction.onGetNewPosts()
+    }
+
     LazyColumn(
         modifier = modifier.fillMaxSize().padding(top = dimensionResource(R.dimen.padding_smaller)),
         horizontalAlignment = Alignment.CenterHorizontally,

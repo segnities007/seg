@@ -43,11 +43,6 @@ fun NavigationHub(
             ?.substringBefore("?") // クエリパラメータを除去
             ?.substringAfterLast(".") // 最後のドット以降を取得
 
-    LaunchedEffect(Unit) {
-        val postCardUiAction = postCardViewModel.onGetPostCardUiAction()
-        postCardUiAction.onGetNewPosts()
-    }
-
     val onHubNavigate = { route: Route ->
         hubViewModel.getHubUiAction().onChangeCurrentRouteName(route.name)
         hubNavHostController.navigate(route)
