@@ -57,7 +57,7 @@ fun PostCard(
     myself: User,
     hubUiAction: HubUiAction,
     isShowDetailButton: Boolean = false,
-    isIncrementView: Boolean = true,// For disable when view my post
+    isIncrementView: Boolean = true, // For disable when view my post
     engagementIconState: EngagementIconState,
     engagementIconAction: EngagementIconAction,
     postCardUiAction: PostCardUiAction,
@@ -69,7 +69,7 @@ fun PostCard(
     }
 
     LaunchedEffect(Unit) {
-        if(isIncrementView) postCardUiAction.onIncrementViewCount(post)
+        if (isIncrementView) postCardUiAction.onIncrementViewCount(post)
     }
 
     if (isShowBottomSheet) BottomSheet(post = post, onClickDetailButton = onClickDetailButton, postCardUiAction = postCardUiAction)
@@ -91,8 +91,7 @@ fun PostCard(
                         .clickable {
                             postCardUiAction.onUpdatePost(post)
                             postCardUiAction.onClickPostCard(onHubNavigate)
-                        }
-                        .fillMaxWidth()
+                        }.fillMaxWidth(),
             ) {
                 AsyncImage(
                     modifier =
@@ -111,7 +110,7 @@ fun PostCard(
                 Column(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.Start,
-                ){
+                ) {
                     Name(modifier = modifier, post = post)
                     Description(modifier = modifier, post = post)
                     Images(modifier = modifier, imageURLs = post.imageURLs)
@@ -314,10 +313,9 @@ private fun Description(
     Box(
         modifier = modifier,
         contentAlignment = Alignment.CenterStart,
-    ){
+    ) {
         Text(post.description)
     }
-
 }
 
 @Composable
