@@ -11,8 +11,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.segnities007.seg.domain.presentation.Route
-import com.segnities007.seg.ui.navigation.hub.setting.NavigationSetting
 import com.segnities007.seg.ui.components.card.PostCardViewModel
+import com.segnities007.seg.ui.navigation.hub.setting.NavigationSetting
 import com.segnities007.seg.ui.screens.hub.Hub
 import com.segnities007.seg.ui.screens.hub.HubViewModel
 import com.segnities007.seg.ui.screens.hub.account.Account
@@ -42,11 +42,6 @@ fun NavigationHub(
             ?.route
             ?.substringBefore("?") // クエリパラメータを除去
             ?.substringAfterLast(".") // 最後のドット以降を取得
-
-    LaunchedEffect(Unit) {
-        val postCardUiAction = postCardViewModel.onGetPostCardUiAction()
-        postCardUiAction.onGetNewPosts()
-    }
 
     val onHubNavigate = { route: Route ->
         hubViewModel.getHubUiAction().onChangeCurrentRouteName(route.name)

@@ -42,7 +42,7 @@ class HomeViewModel
 
         private fun onGetNewPosts() {
             viewModelScope.launch(Dispatchers.IO) {
-                val posts = postRepository.getNewPosts()
+                val posts = postRepository.onGetNewPosts()
                 homeUiState = homeUiState.copy(posts = posts)
             }
         }

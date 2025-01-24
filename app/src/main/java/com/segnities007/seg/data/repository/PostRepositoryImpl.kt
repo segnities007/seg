@@ -60,7 +60,7 @@ class PostRepositoryImpl
             return false
         }
 
-        override suspend fun getUserPosts(userID: String): List<Post> {
+        override suspend fun onGetUserPosts(userID: String): List<Post> {
             try {
                 val result =
                     postgrest
@@ -77,7 +77,7 @@ class PostRepositoryImpl
             }
         }
 
-        override suspend fun getPost(postID: Int): Post {
+        override suspend fun onGetPost(postID: Int): Post {
             try {
                 val result =
                     postgrest
@@ -94,7 +94,7 @@ class PostRepositoryImpl
             }
         }
 
-        override suspend fun getNewPost(): Post {
+        override suspend fun onGetNewPost(): Post {
             try {
                 val result =
                     postgrest
@@ -109,7 +109,7 @@ class PostRepositoryImpl
             }
         }
 
-        override suspend fun getBeforePosts(afterPostCreateAt: LocalDateTime): List<Post> {
+        override suspend fun onGetBeforePosts(afterPostCreateAt: LocalDateTime): List<Post> {
             try {
                 val result =
                     postgrest
@@ -130,7 +130,7 @@ class PostRepositoryImpl
             }
         }
 
-        override suspend fun getNewPosts(): List<Post> {
+        override suspend fun onGetNewPosts(): List<Post> {
             try {
                 val result =
                     postgrest
@@ -146,9 +146,9 @@ class PostRepositoryImpl
             }
         }
 
-        override suspend fun getTrendPostInThisWeek(limit: Long): List<Post> {
+        override suspend fun onGetTrendPostOfWeek(limit: Long): List<Post> {
             try {
-                val yesterday = LocalDateTime.now().minusDays(1)
+                val yesterday = LocalDateTime.now().minusDays(7)
 
                 val result =
                     postgrest
@@ -169,6 +169,75 @@ class PostRepositoryImpl
             }
         }
 
+    override suspend fun onGetTrendPostOfMonth(limit: Long): List<Post> {
+        try {
+            val month = LocalDateTime.now().minusDays(30)
+
+            val result =
+                postgrest
+                    .from(posts)
+                    .select {
+                        filter {
+                            // 今日の投稿を取得
+                            gte("update_at", month)
+                        }
+                        order("view_count", Order.DESCENDING)
+                        limit(count = limit)
+                    }.decodeList<Post>()
+
+            return result
+        } catch (e: Exception) {
+            Log.e(tag, "190: $e")
+            throw e
+        }
+    }
+
+    override suspend fun onGetTrendPostOfYear(limit: Long): List<Post> {
+        try {
+            val year = LocalDateTime.now().minusDays(365)
+
+            val result =
+                postgrest
+                    .from(posts)
+                    .select {
+                        filter {
+                            // 今日の投稿を取得
+                            gte("update_at", year)
+                        }
+                        order("view_count", Order.DESCENDING)
+                        limit(count = limit)
+                    }.decodeList<Post>()
+
+            return result
+        } catch (e: Exception) {
+            Log.e(tag, "213: $e")
+            throw e
+        }
+    }
+
+    override suspend fun onGetTrendPostOfToday(limit: Long): List<Post> {
+        try {
+            val yesterday = LocalDateTime.now().minusDays(7)
+
+            val result =
+                postgrest
+                    .from(posts)
+                    .select {
+                        filter {
+                            // 今日の投稿を取得
+                            gte("update_at", yesterday)
+                        }
+                        order("view_count", Order.DESCENDING)
+                        limit(count = limit)
+                    }.decodeList<Post>()
+
+            return result
+        } catch (e: Exception) {
+            Log.e(tag, "153: $e")
+            throw e
+        }
+    }
+
         override suspend fun onIncrementView(post: Post) {
             try {
                 postgrest.from(posts).update({
@@ -184,7 +253,7 @@ class PostRepositoryImpl
             }
         }
 
-        override suspend fun updatePost(post: Post) {
+        override suspend fun onUpdatePost(post: Post) {
             try {
                 postgrest.from(posts).update(post)
             } catch (e: Exception) {
@@ -192,7 +261,7 @@ class PostRepositoryImpl
             }
         }
 
-        override suspend fun deletePost(post: Post) {
+        override suspend fun onDeletePost(post: Post) {
             try {
                 postgrest.from(posts).delete {
                     filter { Post::id eq post.id }

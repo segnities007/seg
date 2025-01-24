@@ -2,7 +2,6 @@ package com.segnities007.seg.ui.components.card
 
 import android.util.Log
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,7 +23,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -48,8 +46,8 @@ import com.segnities007.seg.R
 import com.segnities007.seg.data.model.Post
 import com.segnities007.seg.data.model.User
 import com.segnities007.seg.domain.presentation.Route
-import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
 import com.segnities007.seg.ui.components.button.SmallButton
+import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
 import com.segnities007.seg.ui.screens.hub.HubUiAction
 
 @Composable
@@ -64,14 +62,17 @@ fun PostCard(
     postCardUiAction: PostCardUiAction,
     onHubNavigate: (Route) -> Unit,
 ) {
-
-    var isShowBottomSheet by remember{ mutableStateOf(false)}
+    var isShowBottomSheet by remember { mutableStateOf(false) }
 
     val onClickDetailButton = {
         isShowBottomSheet = !isShowBottomSheet
     }
 
-    if (isShowBottomSheet) BottomSheet(post = post, onClickDetailButton = onClickDetailButton, postCardUiAction = postCardUiAction,)
+    if (isShowBottomSheet) BottomSheet(post = post, onClickDetailButton = onClickDetailButton, postCardUiAction = postCardUiAction)
+
+    LaunchedEffect(Unit) {
+        postCardUiAction.onIncrementViewCount(post)
+    }
 
     ElevatedCard(
         modifier =
@@ -90,8 +91,7 @@ fun PostCard(
                         .clickable {
                             postCardUiAction.onUpdatePost(post)
                             postCardUiAction.onClickPostCard(onHubNavigate)
-                        }
-                        .fillMaxWidth()
+                        }.fillMaxWidth()
                         .padding(dimensionResource(R.dimen.padding_small)),
             ) {
                 AsyncImage(
@@ -123,7 +123,7 @@ fun PostCard(
                     )
                 }
             }
-            if(isShowDetailButton) DetailButton(modifier = Modifier.align(Alignment.TopEnd), onClick = onClickDetailButton)
+            if (isShowDetailButton) DetailButton(modifier = Modifier.align(Alignment.TopEnd), onClick = onClickDetailButton)
         }
     }
 }
@@ -134,13 +134,13 @@ private fun BottomSheet(
     post: Post,
     postCardUiAction: PostCardUiAction,
     onClickDetailButton: () -> Unit,
-    commonPadding: Dp = dimensionResource(R.dimen.padding_sn)
-){
+    commonPadding: Dp = dimensionResource(R.dimen.padding_sn),
+) {
     ModalBottomSheet(
         containerColor = MaterialTheme.colorScheme.secondaryContainer,
         onDismissRequest = {
             onClickDetailButton()
-        }
+        },
     ) {
         PanelButton(
             modifier = Modifier.fillMaxWidth().padding(horizontal = commonPadding),
@@ -149,7 +149,7 @@ private fun BottomSheet(
             onClick = {
                 postCardUiAction.onDeletePost(post)
                 onClickDetailButton()
-            }
+            },
         )
         Spacer(Modifier.padding(commonPadding))
         SmallButton(
@@ -169,17 +169,18 @@ private fun PanelButton(
     iconID: Int,
     textID: Int,
     onClick: () -> Unit,
-    commonPadding: Dp = dimensionResource(R.dimen.padding_smaller)
-){
+    commonPadding: Dp = dimensionResource(R.dimen.padding_smaller),
+) {
     Row(
-        modifier = modifier
-            .height(dimensionResource(R.dimen.button_height_small_size))
-            .clickable {
-                onClick()
-            },
+        modifier =
+            modifier
+                .height(dimensionResource(R.dimen.button_height_small_size))
+                .clickable {
+                    onClick()
+                },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start,
-    ){
+    ) {
         Spacer(modifier = Modifier.padding(commonPadding))
         Image(
             modifier = Modifier.size(dimensionResource(R.dimen.icon_smaller)),
@@ -189,7 +190,7 @@ private fun PanelButton(
         Spacer(modifier = Modifier.padding(commonPadding))
         Text(
             text = stringResource(textID),
-            fontSize = dimensionResource(R.dimen.text_small).value.sp
+            fontSize = dimensionResource(R.dimen.text_small).value.sp,
         )
     }
 }
@@ -328,14 +329,14 @@ private fun Images(
 private fun DetailButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
-){
+) {
     IconButton(
         modifier = modifier,
         onClick = onClick,
     ) {
         Icon(
             painter = painterResource(R.drawable.baseline_more_vert_24),
-            contentDescription = "more vert"
+            contentDescription = "more vert",
         )
     }
 }

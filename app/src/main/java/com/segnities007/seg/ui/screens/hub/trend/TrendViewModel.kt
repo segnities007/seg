@@ -15,13 +15,26 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class TrendUiState(
-    val trends: List<Post> = listOf(),
-    val isReadMoreAboutTrend: Boolean = false,
+    val trendOfToday: List<Post> = listOf(),
+    val trendOfWeek: List<Post> = listOf(),
+    val trendOfMonth: List<Post> = listOf(),
+    val trendOfYear: List<Post> = listOf(),
+    val isReadMoreAboutTrendOfToday: Boolean = false,
+    val isReadMoreAboutTrendOfWeek: Boolean = false,
+    val isReadMoreAboutTrendOfMonth: Boolean = false,
+    val isReadMoreAboutTrendOfYear: Boolean = false,
 )
 
 data class TrendUiAction(
-    val onGetTrendPostInThisWeek: (limit: Long) -> Unit,
-    val onReadMoreAboutTrend: () -> Unit,
+    val onGetTrendPostOfToday: (limit: Long) -> Unit,
+    val onGetTrendPostOfWeek: (limit: Long) -> Unit,
+    val onGetTrendPostOfMonth: (limit: Long) -> Unit,
+    val onGetTrendPostOfYear: (limit: Long) -> Unit,
+    val onReadMoreAboutTrendOfToday: () -> Unit,
+    val onReadMoreAboutTrendOfWeek: () -> Unit,
+    val onReadMoreAboutTrendOfMonth: () -> Unit,
+    val onReadMoreAboutTrendOfYear: () -> Unit,
+    val onResetReadMore: () -> Unit,
 )
 
 @HiltViewModel
@@ -35,8 +48,15 @@ class TrendViewModel
 
         fun onGetTrendUiAction(): TrendUiAction =
             TrendUiAction(
-                onReadMoreAboutTrend = this::onReadMoreAboutTrend,
-                onGetTrendPostInThisWeek = this::onGetTrendPostInThisWeek,
+                onReadMoreAboutTrendOfToday = this::onReadMoreAboutTrendOfToday,
+                onReadMoreAboutTrendOfWeek = this::onReadMoreAboutTrendOfWeek,
+                onReadMoreAboutTrendOfMonth = this::onReadMoreAboutTrendOfMonth,
+                onReadMoreAboutTrendOfYear = this::onReadMoreAboutTrendOfYear,
+                onGetTrendPostOfToday = this::onGetTrendPostOfToday,
+                onGetTrendPostOfWeek = this::onGetTrendPostOfWeek,
+                onGetTrendPostOfMonth = this::onGetTrendPostOfMonth,
+                onGetTrendPostOfYear = this::onGetTrendPostOfYear,
+                onResetReadMore = this::onResetReadMore,
             )
 
         fun onGetEngagementIconAction(): EngagementIconAction =
@@ -46,16 +66,58 @@ class TrendViewModel
                 onComment = this::onComment,
             )
 
-        private fun onReadMoreAboutTrend() {
-            trendUiState = trendUiState.copy(isReadMoreAboutTrend = !trendUiState.isReadMoreAboutTrend)
+    private fun onResetReadMore(){
+        trendUiState = trendUiState.copy(
+            isReadMoreAboutTrendOfToday = false,
+            isReadMoreAboutTrendOfWeek = false,
+            isReadMoreAboutTrendOfMonth = false,
+            isReadMoreAboutTrendOfYear = false
+        )
+    }
+
+        private fun onReadMoreAboutTrendOfToday() {
+            trendUiState = trendUiState.copy(isReadMoreAboutTrendOfToday = !trendUiState.isReadMoreAboutTrendOfToday)
         }
 
-        private fun onGetTrendPostInThisWeek(limit: Long) {
+    private fun onReadMoreAboutTrendOfWeek() {
+        trendUiState = trendUiState.copy(isReadMoreAboutTrendOfWeek = !trendUiState.isReadMoreAboutTrendOfWeek)
+    }
+
+    private fun onReadMoreAboutTrendOfMonth() {
+        trendUiState = trendUiState.copy(isReadMoreAboutTrendOfMonth = !trendUiState.isReadMoreAboutTrendOfMonth)
+    }
+
+    private fun onReadMoreAboutTrendOfYear() {
+        trendUiState = trendUiState.copy(isReadMoreAboutTrendOfYear = !trendUiState.isReadMoreAboutTrendOfYear)
+    }
+
+        private fun onGetTrendPostOfToday(limit: Long) {
             viewModelScope.launch(Dispatchers.IO) {
-                val trends = postRepository.getTrendPostInThisWeek(limit = limit)
-                trendUiState = trendUiState.copy(trends = trends)
+                val trendOfToday = postRepository.onGetTrendPostOfToday(limit = limit)
+                trendUiState = trendUiState.copy(trendOfToday = trendOfToday)
             }
         }
+
+    private fun onGetTrendPostOfWeek(limit: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val trendOfWeek = postRepository.onGetTrendPostOfWeek(limit = limit)
+            trendUiState = trendUiState.copy(trendOfWeek = trendOfWeek)
+        }
+    }
+
+    private fun onGetTrendPostOfMonth(limit: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val trendOfMonth = postRepository.onGetTrendPostOfMonth(limit = limit)
+            trendUiState = trendUiState.copy(trendOfMonth = trendOfMonth)
+        }
+    }
+
+    private fun onGetTrendPostOfYear(limit: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val trendOfYear = postRepository.onGetTrendPostOfYear(limit = limit)
+            trendUiState = trendUiState.copy(trendOfYear = trendOfYear)
+        }
+    }
 
         private fun onLike(
             post: Post,
@@ -112,10 +174,10 @@ class TrendViewModel
 
         private fun onUpdateTrends(newTrend: Post) {
             val trends =
-                trendUiState.trends.map { trend ->
+                trendUiState.trendOfToday.map { trend ->
                     if (newTrend.id == trend.id) newTrend else trend
                 }
 
-            trendUiState = trendUiState.copy(trends = trends)
+            trendUiState = trendUiState.copy(trendOfToday = trends)
         }
     }
