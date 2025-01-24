@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.segnities007.seg.domain.presentation.Route
-import com.segnities007.seg.navigation.hub.NavigationHubRoute
+import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
 import com.segnities007.seg.ui.components.card.AvatarCard
 import com.segnities007.seg.ui.screens.hub.HubUiAction
 

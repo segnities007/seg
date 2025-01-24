@@ -13,7 +13,7 @@ import com.segnities007.seg.data.model.bottom_bar.LoginItem
 import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.domain.presentation.TopAction
 import com.segnities007.seg.domain.presentation.TopState
-import com.segnities007.seg.navigation.login.NavigationLoginRoute
+import com.segnities007.seg.ui.navigation.login.NavigationLoginRoute
 import com.segnities007.seg.ui.components.bottom_bar.BottomBar
 import com.segnities007.seg.ui.components.navigation_drawer.NavigationDrawer
 import com.segnities007.seg.ui.components.top_bar.TopBar

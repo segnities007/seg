@@ -11,6 +11,11 @@
     <dimen name="padding_larger">64dp</dimen>
     <dimen name="padding_largest">128dp</dimen>
     <dimen name="rounded_corner_shape">8dp</dimen>
+    <dimen name="text_small">16dp</dimen>
+    <dimen name="text_sn">24dp</dimen>
+    <dimen name="text_normal">32dp</dimen>
+    <dimen name="icon_smallest">16dp</dimen>
+    <dimen name="icon_smaller">32dp</dimen>
     <dimen name="icon_small">48dp</dimen>
     <dimen name="icon_sn">56dp</dimen>
     <dimen name="icon_normal">64dp</dimen>

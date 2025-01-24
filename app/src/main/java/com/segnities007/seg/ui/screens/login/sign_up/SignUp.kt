@@ -23,7 +23,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.Dp
 import com.segnities007.seg.R
 import com.segnities007.seg.domain.presentation.Route
-import com.segnities007.seg.navigation.login.NavigationLoginRoute
+import com.segnities007.seg.ui.navigation.login.NavigationLoginRoute
 import com.segnities007.seg.ui.components.button.BasicButton
 import com.segnities007.seg.ui.screens.login.LoginUiAction
 import com.segnities007.seg.ui.screens.login.LoginUiState

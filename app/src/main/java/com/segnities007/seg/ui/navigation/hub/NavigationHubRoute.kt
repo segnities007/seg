@@ -1,4 +1,4 @@
-package com.segnities007.seg.navigation.hub
+package com.segnities007.seg.ui.navigation.hub
 
 import com.segnities007.seg.domain.presentation.Route
 import kotlinx.serialization.Serializable

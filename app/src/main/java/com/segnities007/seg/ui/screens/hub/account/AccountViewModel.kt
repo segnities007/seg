@@ -11,7 +11,7 @@ import com.segnities007.seg.domain.model.UserState
 import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.domain.repository.PostRepository
 import com.segnities007.seg.domain.repository.UserRepository
-import com.segnities007.seg.navigation.hub.NavigationHubRoute
+import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
 import com.segnities007.seg.ui.components.card.EngagementIconAction
 import com.segnities007.seg.ui.components.card.PostCardUiAction
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -67,6 +67,7 @@ class AccountViewModel
                 onClickPostCard = this::onClickPostCard,
                 onIncrementViewCount = this::onIncrementViewCount,
                 onGetPosts = {},
+                onDeletePost = {},
             )
 
         fun onGetEngagementIconAction(): EngagementIconAction =

@@ -11,7 +11,7 @@ import com.segnities007.seg.data.model.Post
 import com.segnities007.seg.data.model.User
 import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.domain.repository.PostRepository
-import com.segnities007.seg.navigation.hub.NavigationHubRoute
+import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -30,6 +30,7 @@ data class PostCardUiAction(
     val onGetPost: (postID: Int) -> Unit,
     val onGetBeforePosts: (afterPostCreateAt: java.time.LocalDateTime) -> Unit,
     val onUpdatePost: (post: Post) -> Unit,
+    val onDeletePost: (post: Post) -> Unit,
     val onClickIcon: (onHubNavigate: (Route) -> Unit) -> Unit,
     val onClickPostCard: (onHubNavigate: (Route) -> Unit) -> Unit,
     val onIncrementViewCount: (post: Post) -> Unit,
@@ -84,9 +85,10 @@ class PostCardViewModel
                 onGetPost = this::onGetPost,
                 onGetPosts = this::onGetPosts,
                 onGetBeforePosts = this::onGetBeforePosts,
+                onUpdatePost = this::onUpdatePost,
+                onDeletePost = this::onDeletePost,
                 onClickIcon = this::onClickIcon,
                 onClickPostCard = this::onClickPostCard,
-                onUpdatePost = this::onUpdatePost,
                 onIncrementViewCount = this::onIncrementViewCount,
             )
 
@@ -139,6 +141,17 @@ class PostCardViewModel
 
             postCardUiState = postCardUiState.copy(posts = newPosts)
         }
+
+        private fun onDeletePost(post: Post){
+            viewModelScope.launch(Dispatchers.IO){
+                postRepository.deletePost(post)
+                onRemovePostFromPosts(post)
+            }
+        }
+
+    private fun onRemovePostFromPosts(post: Post){
+        postCardUiState = postCardUiState.copy(posts = postCardUiState.posts.minus(post))
+    }
 
         private fun onClickIcon(onHubNavigate: (Route) -> Unit) {
             onHubNavigate(NavigationHubRoute.Account())
