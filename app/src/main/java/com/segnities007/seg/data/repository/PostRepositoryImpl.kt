@@ -26,25 +26,13 @@ class PostRepositoryImpl
         override suspend fun createPost(
             description: String,
             user: User,
-            byteArrayList: List<ByteArray>,
         ): Boolean {
             try {
-                val urls: MutableList<String> = mutableListOf()
-                for (i in byteArrayList.indices) {
-                    urls.add(
-                        imageRepository.postImage(
-                            byteArrayList[i],
-                            fileName = "${user.name}+${LocalDateTime.now()}+$i.png",
-                        ),
-                    )
-                }
-
                 val post =
                     Post(
                         userID = user.userID,
                         name = user.name,
                         description = description,
-                        imageURLs = urls.toList(),
                     )
 
                 postgrest
@@ -234,6 +222,101 @@ class PostRepositoryImpl
                 return result
             } catch (e: Exception) {
                 Log.e(tag, "153: $e")
+                throw e
+            }
+        }
+
+        override suspend fun onGetPostsByKeyword(keyword: String): List<Post> {
+            try {
+                val count: Long = 10
+
+                val result =
+                    postgrest
+                        .from(posts)
+                        .select {
+                            filter {
+                                Post::description like keyword
+                            }
+
+                            limit(count = count)
+                        }.decodeList<Post>()
+
+                return result
+            } catch (e: Exception) {
+                Log.d(tag, "onGetPostsByKeyword $e")
+                throw e
+            }
+        }
+
+        override suspend fun onGetBeforePostsByKeyword(
+            keyword: String,
+            afterPostCreateAt: LocalDateTime,
+        ): List<Post> {
+            try {
+                val count: Long = 10
+
+                val result =
+                    postgrest
+                        .from(posts)
+                        .select {
+                            filter {
+                                lt("create_at", afterPostCreateAt)
+                                Post::description like keyword
+                            }
+                            limit(count = count)
+                        }.decodeList<Post>()
+
+                return result
+            } catch (e: Exception) {
+                Log.d(tag, "onGetBeforePostsByKeyword $e")
+                throw e
+            }
+        }
+
+        override suspend fun onGetPostsByKeywordSortedByViewCount(keyword: String): List<Post> {
+            try {
+                val count: Long = 10
+
+                val result =
+                    postgrest
+                        .from(posts)
+                        .select {
+                            filter {
+                                Post::description like keyword
+                            }
+                            order("view_count", Order.DESCENDING)
+                            limit(count = count)
+                        }.decodeList<Post>()
+
+                return result
+            } catch (e: Exception) {
+                Log.d(tag, "onGetPostsByKeywordSortedByViewCount $e")
+                throw e
+            }
+        }
+
+        override suspend fun onGetBeforePostsByKeywordSortedByViewCount(
+            keyword: String,
+            afterPostCreateAt: LocalDateTime,
+        ): List<Post> {
+            try {
+                val count: Long = 10
+
+                val result =
+                    postgrest
+                        .from(posts)
+                        .select {
+                            filter {
+                                lt("create_at", afterPostCreateAt)
+                                Post::description like keyword
+                            }
+                            order("view_count", Order.DESCENDING)
+                            limit(count = count)
+                        }.decodeList<Post>()
+
+                return result
+            } catch (e: Exception) {
+                Log.d(tag, "onGetBeforePostsByKeywordSortedByViewCount $e")
                 throw e
             }
         }

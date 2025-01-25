@@ -18,7 +18,7 @@ import com.segnities007.seg.ui.components.card.EngagementIconState
 import com.segnities007.seg.ui.components.card.PostCard
 import com.segnities007.seg.ui.components.card.PostCardUiAction
 import com.segnities007.seg.ui.components.card.PostCardUiState
-import com.segnities007.seg.ui.components.loading_indicator.LoadingUI
+import com.segnities007.seg.ui.components.indicator.LoadingUI
 import com.segnities007.seg.ui.screens.hub.HubUiAction
 import com.segnities007.seg.ui.screens.hub.HubUiState
 

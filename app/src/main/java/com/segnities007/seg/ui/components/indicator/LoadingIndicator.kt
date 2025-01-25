@@ -1,4 +1,4 @@
-package com.segnities007.seg.ui.components.loading_indicator
+package com.segnities007.seg.ui.components.indicator
 
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.CircularProgressIndicator

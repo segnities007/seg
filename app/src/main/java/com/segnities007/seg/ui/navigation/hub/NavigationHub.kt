@@ -28,7 +28,7 @@ import com.segnities007.seg.ui.screens.hub.trend.TrendViewModel
 @Composable
 fun NavigationHub(
     hubNavHostController: NavHostController = rememberNavController(),
-    postCardViewModel: PostCardViewModel = hiltViewModel(), // GetPostの実行を必要最低限にするためここに設置
+    postCardViewModel: PostCardViewModel = hiltViewModel(),
     accountViewModel: AccountViewModel = hiltViewModel(),
     trendViewModel: TrendViewModel = hiltViewModel(),
     hubViewModel: HubViewModel = hiltViewModel(),

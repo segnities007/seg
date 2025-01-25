@@ -13,6 +13,8 @@ interface UserRepository {
 
     suspend fun getUsers(userIDs: List<String>): List<User>
 
+    suspend fun onGetUsersByKeyword(keyword: String): List<User>
+
     suspend fun updateUser(user: User)
 
     suspend fun deleteUser(id: String)

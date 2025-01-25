@@ -19,6 +19,7 @@ import com.segnities007.seg.ui.components.bottom_bar.BottomBar
 import com.segnities007.seg.ui.components.floating_button.FloatingButton
 import com.segnities007.seg.ui.components.navigation_drawer.NavigationDrawer
 import com.segnities007.seg.ui.components.top_bar.TopBar
+import com.segnities007.seg.ui.components.top_bar.TopSearchBar
 import com.segnities007.seg.ui.components.top_bar.TopStatusBar
 import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
 import com.segnities007.seg.ui.screens.hub.account.AccountUiAction
@@ -82,6 +83,7 @@ private fun HubUi(
                         onDrawerOpen = topAction.openDrawer,
                         routeName = currentRouteName,
                     )
+                NavigationHubRoute.Search().name -> TopSearchBar()
                 NavigationHubRoute.Post().name ->
                     TopBar(
                         title = currentRouteName,
@@ -144,7 +146,11 @@ private fun HubUi(
         },
         floatingActionButton = {
             when (currentRouteName) {
-                NavigationHubRoute.Trend().name -> FloatingButton(iconID = R.drawable.baseline_search_24) { }
+                NavigationHubRoute.Trend().name ->
+                    FloatingButton(
+                        iconID = R.drawable.baseline_search_24,
+                        onClick = { onHubNavigate(NavigationHubRoute.Search()) },
+                    )
                 else -> Spacer(modifier = Modifier.padding(0.dp))
             }
         },
