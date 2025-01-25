@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -53,7 +54,7 @@ private fun LoginUi(
     Scaffold(
         topBar = {
             TopBar(
-                title = stringResource(R.string.login_screen_title),
+                titleContent = { Text(text = stringResource(R.string.login_screen_title)) },
                 routeName = currentRouteName,
                 onDrawerOpen = topAction.openDrawer,
             )

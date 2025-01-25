@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
@@ -72,27 +73,28 @@ private fun HubUi(
             when (currentRouteName) {
                 NavigationHubRoute.Home().name ->
                     TopBar(
-                        title = currentRouteName,
+                        titleContent = { Text(text = currentRouteName) },
                         onDrawerOpen = topAction.openDrawer,
                         scrollBehavior = scrollBehavior,
                         routeName = currentRouteName,
                     )
                 NavigationHubRoute.Trend().name ->
                     TopBar(
-                        title = currentRouteName,
+                        titleContent = { Text(text = currentRouteName) },
                         onDrawerOpen = topAction.openDrawer,
                         routeName = currentRouteName,
                     )
-                NavigationHubRoute.Search().name -> TopSearchBar()
+                NavigationHubRoute.Search().name ->
+                    TopSearchBar()
                 NavigationHubRoute.Post().name ->
                     TopBar(
-                        title = currentRouteName,
+                        titleContent = { Text(text = currentRouteName) },
                         onDrawerOpen = topAction.openDrawer,
                         routeName = currentRouteName,
                     )
                 NavigationHubRoute.Notify().name ->
                     TopBar(
-                        title = currentRouteName,
+                        titleContent = { Text(text = currentRouteName) },
                         onDrawerOpen = topAction.openDrawer,
                         routeName = currentRouteName,
                     )
@@ -111,7 +113,7 @@ private fun HubUi(
                     )
                 NavigationHubRoute.Accounts().name ->
                     TopBar(
-                        title = currentRouteName,
+                        titleContent = { Text(text = currentRouteName) },
                         onDrawerOpen = topAction.openDrawer,
                         routeName = currentRouteName,
                     )
@@ -130,7 +132,7 @@ private fun HubUi(
                     )
                 NavigationHubRoute.Comment().name ->
                     TopBar(
-                        title = currentRouteName,
+                        titleContent = { Text(text = currentRouteName) },
                         onDrawerOpen = topAction.openDrawer,
                         routeName = currentRouteName,
                     )
@@ -147,6 +149,11 @@ private fun HubUi(
         floatingActionButton = {
             when (currentRouteName) {
                 NavigationHubRoute.Trend().name ->
+                    FloatingButton(
+                        iconID = R.drawable.baseline_search_24,
+                        onClick = { onHubNavigate(NavigationHubRoute.Search()) },
+                    )
+                NavigationHubRoute.Home().name ->
                     FloatingButton(
                         iconID = R.drawable.baseline_search_24,
                         onClick = { onHubNavigate(NavigationHubRoute.Search()) },
