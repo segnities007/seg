@@ -16,6 +16,12 @@ class UserRepositoryImpl
     ) : UserRepository {
         private val tag = "UserRepository"
         private val tableName = "users"
+        private val userColumn =
+            (
+                "name," + "user_id," + "birthday," + "is_prime," +
+                    "icon_url," + "follow_user_id_list," + "follow_count," + "follower_user_id_list," +
+                    "follower_count," + "create_at," + "post_id_list"
+            ).trimIndent()
 
         override fun confirmEmail(): Boolean {
             try {
@@ -64,36 +70,35 @@ class UserRepositoryImpl
             return users.toList()
         }
 
+        override suspend fun onGetUsersByKeyword(keyword: String): List<User> {
+            try {
+                val result =
+                    postgrest
+                        .from(tableName)
+                        .select(columns = Columns.list(userColumn)) {
+                            filter { User::userID like keyword }
+                        }.decodeList<User>()
+
+                return result
+            } catch (e: Exception) {
+                Log.e(tag, "onGetUsersByKeyword $e")
+                throw e
+            }
+        }
+
         override suspend fun getOtherUser(userID: String): User {
             try {
                 val result =
                     postgrest
                         .from(tableName)
-                        .select(
-                            columns =
-                                Columns.list(
-                                    (
-                                        "name," +
-                                            "user_id," +
-                                            "birthday," +
-                                            "is_prime," +
-                                            "icon_url," +
-                                            "follow_user_id_list," +
-                                            "follow_count," +
-                                            "follower_user_id_list," +
-                                            "follower_count," +
-                                            "create_at," +
-                                            "post_id_list"
-                                    ).trimIndent(),
-                                ),
-                        ) {
+                        .select(columns = Columns.list(userColumn)) {
                             filter { User::userID eq userID }
                         }.decodeSingle<User>()
 
                 return result
             } catch (e: Exception) {
                 Log.e(tag, "failed to get other user. error message is $e")
-                throw Exception()
+                throw e
             }
         }
 

@@ -8,7 +8,6 @@ interface PostRepository {
     suspend fun createPost(
         description: String,
         user: User,
-        byteArrayList: List<ByteArray>,
     ): Boolean
 
     suspend fun onGetUserPosts(userID: String): List<Post>
@@ -28,6 +27,20 @@ interface PostRepository {
     suspend fun onGetTrendPostOfMonth(limit: Long = 10): List<Post>
 
     suspend fun onGetTrendPostOfYear(limit: Long = 10): List<Post>
+
+    suspend fun onGetPostsByKeyword(keyword: String): List<Post>
+
+    suspend fun onGetBeforePostsByKeyword(
+        keyword: String,
+        afterPostCreateAt: java.time.LocalDateTime,
+    ): List<Post>
+
+    suspend fun onGetPostsByKeywordSortedByViewCount(keyword: String): List<Post>
+
+    suspend fun onGetBeforePostsByKeywordSortedByViewCount(
+        keyword: String,
+        afterPostCreateAt: java.time.LocalDateTime,
+    ): List<Post>
 
     suspend fun onUpdatePost(post: Post)
 
