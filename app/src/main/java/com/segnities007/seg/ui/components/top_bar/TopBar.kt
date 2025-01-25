@@ -7,7 +7,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
@@ -26,7 +25,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun TopBar(
     modifier: Modifier = Modifier,
-    title: String,
+    titleContent: @Composable () -> Unit,
     routeName: String,
     onDrawerOpen: suspend () -> Unit,
     scrollBehavior: TopAppBarScrollBehavior? = null,
@@ -34,7 +33,7 @@ fun TopBar(
 ) {
     CenterAlignedTopAppBar(
         modifier = Modifier.shadow(elevation = dimensionResource(R.dimen.elevation_nl)),
-        title = { Text(text = title, maxLines = 1) },
+        title = { titleContent() },
         colors =
             TopAppBarDefaults.centerAlignedTopAppBarColors(
                 containerColor = MaterialTheme.colorScheme.primaryContainer,
