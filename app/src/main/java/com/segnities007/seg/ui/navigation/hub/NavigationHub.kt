@@ -22,6 +22,7 @@ import com.segnities007.seg.ui.screens.hub.home.comment.Comment
 import com.segnities007.seg.ui.screens.hub.notify.Notify
 import com.segnities007.seg.ui.screens.hub.post.Post
 import com.segnities007.seg.ui.screens.hub.search.Search
+import com.segnities007.seg.ui.screens.hub.search.SearchViewModel
 import com.segnities007.seg.ui.screens.hub.trend.Trend
 import com.segnities007.seg.ui.screens.hub.trend.TrendViewModel
 
@@ -30,6 +31,7 @@ fun NavigationHub(
     hubNavHostController: NavHostController = rememberNavController(),
     postCardViewModel: PostCardViewModel = hiltViewModel(),
     accountViewModel: AccountViewModel = hiltViewModel(),
+    searchViewModel: SearchViewModel = hiltViewModel(),
     trendViewModel: TrendViewModel = hiltViewModel(),
     hubViewModel: HubViewModel = hiltViewModel(),
     onTopNavigate: (route: Route) -> Unit, // go to login
@@ -53,6 +55,9 @@ fun NavigationHub(
         hubUiState = hubViewModel.hubUiState,
         accountUiState = accountViewModel.accountUiState,
         accountUiAction = accountViewModel.getAccountUiAction(),
+        searchUiAction = searchViewModel.onGetSearchUiAction(),
+        topSearchBarUiState = searchViewModel.topSearchBarUiState,
+        topSearchBarUiAction = searchViewModel.onGetTopSearchBarUiAction(),
     ) { modifier: Modifier ->
         NavHost(navController = hubNavHostController, startDestination = NavigationHubRoute.Home()) {
             composable<NavigationHubRoute.Home> {
