@@ -14,10 +14,17 @@ import androidx.compose.ui.unit.Dp
 import com.segnities007.seg.R
 import com.segnities007.seg.ui.components.bar.SearchInputForm
 import com.segnities007.seg.ui.components.tab.Tab
+import com.segnities007.seg.ui.screens.hub.search.SearchUiAction
+import com.segnities007.seg.ui.screens.hub.search.SearchUiState
+import com.segnities007.seg.ui.screens.hub.search.TopSearchBarUiAction
+import com.segnities007.seg.ui.screens.hub.search.TopSearchBarUiState
 
 @Composable
 fun TopSearchBar(
     modifier: Modifier = Modifier,
+    searchUiAction: SearchUiAction,
+    topSearchBarUiState: TopSearchBarUiState,
+    topSearchBarUiAction: TopSearchBarUiAction,
     commonPadding: Dp = dimensionResource(R.dimen.padding_sn),
 ) {
     Column(

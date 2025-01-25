@@ -25,6 +25,9 @@ import com.segnities007.seg.ui.components.top_bar.TopStatusBar
 import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
 import com.segnities007.seg.ui.screens.hub.account.AccountUiAction
 import com.segnities007.seg.ui.screens.hub.account.AccountUiState
+import com.segnities007.seg.ui.screens.hub.search.SearchUiAction
+import com.segnities007.seg.ui.screens.hub.search.TopSearchBarUiAction
+import com.segnities007.seg.ui.screens.hub.search.TopSearchBarUiState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -33,6 +36,9 @@ fun Hub(
     onHubNavigate: (Route) -> Unit,
     currentRouteName: String,
     hubUiState: HubUiState,
+    searchUiAction: SearchUiAction,
+    topSearchBarUiState: TopSearchBarUiState,
+    topSearchBarUiAction: TopSearchBarUiAction,
     accountUiState: AccountUiState,
     accountUiAction: AccountUiAction,
     content: @Composable (Modifier) -> Unit,
@@ -49,6 +55,9 @@ fun Hub(
             currentRouteName = currentRouteName,
             onHubNavigate = onHubNavigate,
             hubUiState = hubUiState,
+            searchUiAction = searchUiAction,
+            topSearchBarUiState = topSearchBarUiState,
+            topSearchBarUiAction = topSearchBarUiAction,
             accountUiState = accountUiState,
             accountUiAction = accountUiAction,
         )
@@ -63,6 +72,9 @@ private fun HubUi(
     hubUiState: HubUiState,
     accountUiState: AccountUiState,
     accountUiAction: AccountUiAction,
+    searchUiAction: SearchUiAction,
+    topSearchBarUiState: TopSearchBarUiState,
+    topSearchBarUiAction: TopSearchBarUiAction,
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(),
     onHubNavigate: (Route) -> Unit,
     content: @Composable (modifier: Modifier) -> Unit,
@@ -85,7 +97,11 @@ private fun HubUi(
                         routeName = currentRouteName,
                     )
                 NavigationHubRoute.Search().name ->
-                    TopSearchBar()
+                    TopSearchBar(
+                        searchUiAction = searchUiAction,
+                        topSearchBarUiState = topSearchBarUiState,
+                        topSearchBarUiAction = topSearchBarUiAction,
+                    )
                 NavigationHubRoute.Post().name ->
                     TopBar(
                         titleContent = { Text(text = currentRouteName) },
