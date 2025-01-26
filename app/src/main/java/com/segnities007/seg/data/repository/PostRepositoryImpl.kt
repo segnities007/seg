@@ -235,11 +235,13 @@ class PostRepositoryImpl
                         .from(posts)
                         .select {
                             filter {
-                                Post::description like keyword
+                                Post::description like "%$keyword%"
                             }
 
                             limit(count = count)
                         }.decodeList<Post>()
+
+                Log.d(tag, "success getkeyword $result")
 
                 return result
             } catch (e: Exception) {
@@ -261,7 +263,7 @@ class PostRepositoryImpl
                         .select {
                             filter {
                                 lt("create_at", afterPostCreateAt)
-                                Post::description like keyword
+                                Post::description like "%$keyword%"
                             }
                             limit(count = count)
                         }.decodeList<Post>()
@@ -282,7 +284,7 @@ class PostRepositoryImpl
                         .from(posts)
                         .select {
                             filter {
-                                Post::description like keyword
+                                Post::description like "%$keyword%"
                             }
                             order("view_count", Order.DESCENDING)
                             limit(count = count)
@@ -308,7 +310,7 @@ class PostRepositoryImpl
                         .select {
                             filter {
                                 lt("create_at", afterPostCreateAt)
-                                Post::description like keyword
+                                Post::description like "%$keyword%"
                             }
                             order("view_count", Order.DESCENDING)
                             limit(count = count)

@@ -136,7 +136,17 @@ fun NavigationHub(
                 )
             }
             composable<NavigationHubRoute.Search> {
-                Search(modifier = modifier)
+                Search(
+                    modifier = modifier,
+                    hubUiState = hubViewModel.hubUiState,
+                    hubUiAction = hubViewModel.getHubUiAction(),
+                    postCardUiAction = postCardViewModel.onGetPostCardUiAction(),
+                    engagementIconState = postCardViewModel.engagementIconState,
+                    engagementIconAction = postCardViewModel.onGetEngagementIconAction(),
+                    topSearchBarUiState = searchViewModel.topSearchBarUiState,
+                    searchUiState = searchViewModel.searchUiState,
+                    onHubNavigate = onHubNavigate,
+                )
             }
             composable<NavigationHubRoute.Comment> {
                 Comment(
