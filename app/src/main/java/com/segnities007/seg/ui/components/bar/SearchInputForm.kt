@@ -9,27 +9,25 @@ import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.res.stringResource
 import com.segnities007.seg.R
+import com.segnities007.seg.ui.screens.hub.search.SearchUiAction
+import com.segnities007.seg.ui.screens.hub.search.TopSearchBarUiAction
+import com.segnities007.seg.ui.screens.hub.search.TopSearchBarUiState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-@Preview
 fun SearchInputForm(
     modifier: Modifier = Modifier,
-    commonPadding: Dp = dimensionResource(R.dimen.padding_sn),
-    onHubBackNavigate: () -> Unit = {},
+    searchUiAction: SearchUiAction,
+    topSearchBarUiState: TopSearchBarUiState,
+    topSearchBarUiAction: TopSearchBarUiAction,
+    focusManager: FocusManager = LocalFocusManager.current,
 ) {
-    var query by rememberSaveable { mutableStateOf("") }
-    val focusManager = LocalFocusManager.current
-
     SearchBar(
         modifier = modifier,
         expanded = false,
@@ -37,12 +35,17 @@ fun SearchInputForm(
         content = {},
         inputField = {
             SearchBarDefaults.InputField(
-                query = query,
+                query = topSearchBarUiState.keyword,
                 expanded = false,
-                onQueryChange = { query = it },
-                onSearch = { focusManager.clearFocus() },
+                onQueryChange = { topSearchBarUiAction.onUpdateKeyword(it) },
+                onSearch = {
+                    focusManager.clearFocus()
+                    searchUiAction.onGetPostsByKeyword(topSearchBarUiState.keyword)
+                    searchUiAction.onGetPostsByKeywordSortedByViewCount(topSearchBarUiState.keyword)
+                    searchUiAction.onGetUsersByKeyword(topSearchBarUiState.keyword)
+                },
                 onExpandedChange = {},
-                placeholder = { Text("Search") },
+                placeholder = { Text(stringResource(R.string.search)) },
                 leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
             )
         },

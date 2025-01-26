@@ -17,10 +17,18 @@ import javax.inject.Inject
 
 data class TopSearchBarUiState(
     val keyword: String = "",
+    val index: Int = 0,
+    val titles: List<String> =
+        listOf(
+            "Most View",
+            "Latest",
+            "Users",
+        ),
 )
 
 data class TopSearchBarUiAction(
     val onUpdateKeyword: (newKeyword: String) -> Unit,
+    val onUpdateIndex: (newIndex: Int) -> Unit,
 )
 
 data class SearchUiState(
@@ -37,73 +45,78 @@ data class SearchUiAction(
     val onGetBeforePostsByKeywordSortedByViewCount: (keyword: String, afterPostCreateAt: LocalDateTime) -> Unit,
 )
 
-
 @HiltViewModel
-class SearchViewModel @Inject constructor(
-    private val postRepository: PostRepository,
-    private val userRepository: UserRepository,
-): ViewModel() {
+class SearchViewModel
+    @Inject
+    constructor(
+        private val postRepository: PostRepository,
+        private val userRepository: UserRepository,
+    ) : ViewModel() {
+        var topSearchBarUiState by mutableStateOf(TopSearchBarUiState())
+            private set
 
-    var topSearchBarUiState by mutableStateOf(TopSearchBarUiState() )
-        private set
+        var searchUiState by mutableStateOf(SearchUiState())
+            private set
 
-    var searchUiState by mutableStateOf(SearchUiState())
-        private set
+        fun onGetTopSearchBarUiAction(): TopSearchBarUiAction =
+            TopSearchBarUiAction(
+                onUpdateKeyword = this::onUpdateKeyword,
+                onUpdateIndex = this::onUpdateIndex,
+            )
 
-    fun onGetTopSearchBarUiAction(): TopSearchBarUiAction{
-        return TopSearchBarUiAction(
-            onUpdateKeyword = this::onUpdateKeyword,
-        )
-    }
+        fun onGetSearchUiAction(): SearchUiAction =
+            SearchUiAction(
+                onGetUsersByKeyword = this::onGetUsersByKeyword,
+                onGetPostsByKeyword = this::onGetPostsByKeyword,
+                onGetBeforePostsByKeyword = this::onGetBeforePostsByKeyword,
+                onGetPostsByKeywordSortedByViewCount = this::onGetPostsByKeywordSortedByViewCount,
+                onGetBeforePostsByKeywordSortedByViewCount = this::onGetBeforePostsByKeywordSortedByViewCount,
+            )
 
-    fun onGetSearchUiAction(): SearchUiAction{
-        return SearchUiAction(
-            onGetUsersByKeyword = this::onGetUsersByKeyword,
-            onGetPostsByKeyword = this::onGetPostsByKeyword,
-            onGetBeforePostsByKeyword = this::onGetBeforePostsByKeyword,
-            onGetPostsByKeywordSortedByViewCount = this::onGetPostsByKeywordSortedByViewCount,
-            onGetBeforePostsByKeywordSortedByViewCount = this::onGetBeforePostsByKeywordSortedByViewCount,
-        )
-    }
+        private fun onUpdateKeyword(newKeyword: String) {
+            topSearchBarUiState = topSearchBarUiState.copy(keyword = newKeyword)
+        }
 
-    private fun onUpdateKeyword(newKeyword: String){
-        topSearchBarUiState = topSearchBarUiState.copy(keyword = newKeyword)
-    }
+        private fun onUpdateIndex(newIndex: Int) {
+            topSearchBarUiState = topSearchBarUiState.copy(index = newIndex)
+        }
 
-    private fun onGetUsersByKeyword(keyword: String){
-        viewModelScope.launch(Dispatchers.IO){
-            searchUiState = searchUiState.copy(users = userRepository.onGetUsersByKeyword(keyword))
+        private fun onGetUsersByKeyword(keyword: String) {
+            viewModelScope.launch(Dispatchers.IO) {
+                searchUiState = searchUiState.copy(users = userRepository.onGetUsersByKeyword(keyword))
+            }
+        }
+
+        private fun onGetPostsByKeyword(keyword: String) {
+            viewModelScope.launch(Dispatchers.IO) {
+                searchUiState = searchUiState.copy(posts = postRepository.onGetPostsByKeyword(keyword))
+            }
+        }
+
+        private fun onGetBeforePostsByKeyword(
+            keyword: String,
+            afterPostCreateAt: LocalDateTime,
+        ) {
+            viewModelScope.launch(Dispatchers.IO) {
+                searchUiState = searchUiState.copy(posts = postRepository.onGetBeforePostsByKeyword(keyword, afterPostCreateAt))
+            }
+        }
+
+        private fun onGetPostsByKeywordSortedByViewCount(keyword: String) {
+            viewModelScope.launch(Dispatchers.IO) {
+                searchUiState = searchUiState.copy(postsSortedByViewCount = postRepository.onGetPostsByKeywordSortedByViewCount(keyword))
+            }
+        }
+
+        private fun onGetBeforePostsByKeywordSortedByViewCount(
+            keyword: String,
+            afterPostCreateAt: LocalDateTime,
+        ) {
+            viewModelScope.launch(Dispatchers.IO) {
+                searchUiState =
+                    searchUiState.copy(
+                        postsSortedByViewCount = postRepository.onGetBeforePostsByKeywordSortedByViewCount(keyword, afterPostCreateAt),
+                    )
+            }
         }
     }
-
-    private fun onGetPostsByKeyword(keyword: String){
-        viewModelScope.launch(Dispatchers.IO){
-            searchUiState = searchUiState.copy(posts = postRepository.onGetPostsByKeyword(keyword))
-        }
-    }
-
-    private fun onGetBeforePostsByKeyword(
-        keyword: String,
-        afterPostCreateAt: LocalDateTime,
-    ){
-        viewModelScope.launch(Dispatchers.IO){
-            searchUiState = searchUiState.copy(posts = postRepository.onGetBeforePostsByKeyword(keyword, afterPostCreateAt))
-        }
-    }
-
-    private fun onGetPostsByKeywordSortedByViewCount(keyword: String){
-        viewModelScope.launch(Dispatchers.IO){
-            searchUiState = searchUiState.copy(postsSortedByViewCount = postRepository.onGetPostsByKeywordSortedByViewCount(keyword))
-        }
-    }
-
-    private fun onGetBeforePostsByKeywordSortedByViewCount(
-        keyword: String,
-        afterPostCreateAt: LocalDateTime,
-    ){
-        viewModelScope.launch(Dispatchers.IO){
-            searchUiState = searchUiState.copy(postsSortedByViewCount = postRepository.onGetBeforePostsByKeywordSortedByViewCount(keyword, afterPostCreateAt))
-        }
-    }
-
-}

@@ -15,7 +15,6 @@ import com.segnities007.seg.R
 import com.segnities007.seg.ui.components.bar.SearchInputForm
 import com.segnities007.seg.ui.components.tab.Tab
 import com.segnities007.seg.ui.screens.hub.search.SearchUiAction
-import com.segnities007.seg.ui.screens.hub.search.SearchUiState
 import com.segnities007.seg.ui.screens.hub.search.TopSearchBarUiAction
 import com.segnities007.seg.ui.screens.hub.search.TopSearchBarUiState
 
@@ -32,8 +31,16 @@ fun TopSearchBar(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
     ) {
-        SearchInputForm()
+        SearchInputForm(
+            searchUiAction = searchUiAction,
+            topSearchBarUiState = topSearchBarUiState,
+            topSearchBarUiAction = topSearchBarUiAction,
+        )
         Spacer(Modifier.padding(commonPadding))
-        Tab(modifier = modifier.background(color = MaterialTheme.colorScheme.primaryContainer))
+        Tab(
+            modifier = modifier.background(color = MaterialTheme.colorScheme.primaryContainer),
+            topSearchBarUiState = topSearchBarUiState,
+            topSearchBarUiAction = topSearchBarUiAction,
+        )
     }
 }
