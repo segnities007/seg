@@ -40,9 +40,7 @@ fun SearchInputForm(
                 onQueryChange = { topSearchBarUiAction.onUpdateKeyword(it) },
                 onSearch = {
                     focusManager.clearFocus()
-                    searchUiAction.onGetPostsByKeyword(topSearchBarUiState.keyword)
-                    searchUiAction.onGetPostsByKeywordSortedByViewCount(topSearchBarUiState.keyword)
-                    searchUiAction.onGetUsersByKeyword(topSearchBarUiState.keyword)
+                    searchUiAction.onEnter(topSearchBarUiState.keyword)
                 },
                 onExpandedChange = {},
                 placeholder = { Text(stringResource(R.string.search)) },
