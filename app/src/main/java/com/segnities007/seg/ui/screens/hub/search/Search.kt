@@ -37,11 +37,6 @@ fun Search(
     searchUiAction: SearchUiAction,
     onHubNavigate: (Route) -> Unit,
 ) {
-    LaunchedEffect(topSearchBarUiState.keyword) {
-        if (topSearchBarUiState.keyword != "") {
-            Log.d("search.kt launch", "${searchUiState.posts}, \n ${searchUiState.postsSortedByViewCount}")
-        }
-    }
 
     DisposableEffect(Unit) {
         onDispose {
@@ -127,10 +122,6 @@ private fun MostViewPosts(
                 postCardUiAction = postCardUiAction,
             )
         }
-        item {
-            // TODO remove
-            Text(searchUiState.postsSortedByViewCount.toString())
-        }
         // action for fetching before post
         item {
             if (searchUiState.postsSortedByViewCount.isNotEmpty()) {
@@ -140,7 +131,7 @@ private fun MostViewPosts(
                         onLoading = {
                             searchUiAction.onGetBeforePostsByKeywordSortedByViewCount(
                                 topSearchBarUiState.keyword,
-                                searchUiState.postsSortedByViewCount.last().updateAt,
+                                searchUiState.postsSortedByViewCount.last().viewCount,
                             )
                         },
                     )
@@ -185,10 +176,6 @@ private fun LatestPosts(
                 postCardUiAction = postCardUiAction,
             )
         }
-        item {
-            // TODO remove
-            Text(searchUiState.posts.toString())
-        }
         // action for fetching before post
         item {
             if (searchUiState.posts.isNotEmpty()) {
@@ -196,7 +183,7 @@ private fun LatestPosts(
                     Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_smaller)))
                     LoadingUI(
                         onLoading = {
-                            searchUiAction.onGetBeforePostsByKeywordSortedByViewCount(
+                            searchUiAction.onGetBeforePostsByKeyword(
                                 topSearchBarUiState.keyword,
                                 searchUiState.posts.last().updateAt,
                             )
@@ -232,10 +219,7 @@ private fun Users(
                 searchUiState.users[index].id
             },
         ) { i ->
-        }
-        item {
-            // TODO remove
-            Text(searchUiState.users.toString())
+            //TODO
         }
         // action for fetching before post
         item {
@@ -244,10 +228,7 @@ private fun Users(
                     Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_smaller)))
                     LoadingUI(
                         onLoading = {
-                            searchUiAction.onGetBeforePostsByKeywordSortedByViewCount(
-                                topSearchBarUiState.keyword,
-                                searchUiState.users.last().updateAt,
-                            )
+                            //TODO
                         },
                     )
                 }

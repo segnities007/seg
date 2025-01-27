@@ -39,7 +39,7 @@ interface PostRepository {
 
     suspend fun onGetBeforePostsByKeywordSortedByViewCount(
         keyword: String,
-        afterPostCreateAt: java.time.LocalDateTime,
+        viewCount: Int,
     ): List<Post>
 
     suspend fun onUpdatePost(post: Post)

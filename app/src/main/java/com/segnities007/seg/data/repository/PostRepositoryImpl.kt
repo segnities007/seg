@@ -110,7 +110,9 @@ class PostRepositoryImpl
                             limit(7) // その中で最新の1件を取得
                         }.decodeList<Post>()
                 val list = result.minus(result.first())
-                Log.d("PostRepository", "$result")
+
+                if(result.isEmpty()) return result
+
                 return list
             } catch (e: Exception) {
                 Log.e(tag, "failed to get new post $e")
@@ -237,15 +239,13 @@ class PostRepositoryImpl
                             filter {
                                 Post::description like "%$keyword%"
                             }
-
+                            order("create_at", Order.DESCENDING)
                             limit(count = count)
                         }.decodeList<Post>()
 
-                Log.d(tag, "success onGetPostsByKeyword $result")
-
                 return result
             } catch (e: Exception) {
-                Log.d(tag, "failed onGetPostsByKeyword $e")
+                Log.e(tag, "failed onGetPostsByKeyword $e")
                 throw e
             }
         }
@@ -265,14 +265,16 @@ class PostRepositoryImpl
                                 lt("create_at", afterPostCreateAt)
                                 Post::description like "%$keyword%"
                             }
+                            order("create_at", Order.DESCENDING)
                             limit(count = count)
                         }.decodeList<Post>()
+                val list = result.minus(result.first())
 
-                Log.d(tag, "success onGetBeforePostsByKeyword $result")
+                if(result.isEmpty()) return result
 
-                return result
+                return list
             } catch (e: Exception) {
-                Log.d(tag, "failed onGetBeforePostsByKeyword $e")
+                Log.e(tag, "failed onGetBeforePostsByKeyword $e")
                 throw e
             }
         }
@@ -292,18 +294,16 @@ class PostRepositoryImpl
                             limit(count = count)
                         }.decodeList<Post>()
 
-                Log.d(tag, "success onGetPostsByKeywordSortedByViewCount $result")
-
                 return result
             } catch (e: Exception) {
-                Log.d(tag, "failed onGetPostsByKeywordSortedByViewCount $e")
+                Log.e(tag, "failed onGetPostsByKeywordSortedByViewCount $e")
                 throw e
             }
         }
 
         override suspend fun onGetBeforePostsByKeywordSortedByViewCount(
             keyword: String,
-            afterPostCreateAt: LocalDateTime,
+            viewCount: Int,
         ): List<Post> {
             try {
                 val count: Long = 10
@@ -313,18 +313,19 @@ class PostRepositoryImpl
                         .from(posts)
                         .select {
                             filter {
-                                lt("create_at", afterPostCreateAt)
+                                lt("view_count", viewCount)
                                 Post::description like "%$keyword%"
                             }
                             order("view_count", Order.DESCENDING)
                             limit(count = count)
                         }.decodeList<Post>()
 
-                Log.d(tag, "success onGetBeforePostsByKeywordSortedByViewCount $result")
+                if(result.isEmpty()) return result
 
-                return result
+                val list = result.minus(result.first())
+                return list
             } catch (e: Exception) {
-                Log.d(tag, "success onGetBeforePostsByKeywordSortedByViewCount $e")
+                Log.e(tag, "success onGetBeforePostsByKeywordSortedByViewCount $e")
                 throw e
             }
         }

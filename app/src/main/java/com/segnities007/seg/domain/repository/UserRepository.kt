@@ -1,6 +1,7 @@
 package com.segnities007.seg.domain.repository
 
 import com.segnities007.seg.data.model.User
+import java.time.LocalDateTime
 
 interface UserRepository {
     fun confirmEmail(): Boolean
@@ -14,6 +15,8 @@ interface UserRepository {
     suspend fun getUsers(userIDs: List<String>): List<User>
 
     suspend fun onGetUsersByKeyword(keyword: String): List<User>
+
+    suspend fun onGetBeforeUsersByKeyword(keyword: String, afterUserCreateAt: LocalDateTime): List<User>
 
     suspend fun updateUser(user: User)
 
