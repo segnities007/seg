@@ -78,9 +78,10 @@ class UserRepositoryImpl
                     postgrest
                         .from(tableName)
                         .select(columns = Columns.list(userColumn)) {
-                            filter { User::userID like keyword }
+                            filter { User::userID like "%$keyword%" }
                             order("create_at", Order.DESCENDING)
                         }.decodeList<User>()
+                Log.d(tag, "$result")
 
                 return result
             } catch (e: Exception) {
@@ -89,30 +90,32 @@ class UserRepositoryImpl
             }
         }
 
-    override suspend fun onGetBeforeUsersByKeyword(
-        keyword: String,
-        afterUserCreateAt: LocalDateTime,
-    ): List<User> {
-        try {
-            val result =
-                postgrest
-                    .from(tableName)
-                    .select(columns = Columns.list(userColumn)) {
-                        filter {
-                            User::userID like keyword
-                            lt("create_at", afterUserCreateAt)
-                        }
-                        order("create_at", Order.DESCENDING)
-                    }.decodeList<User>()
+        override suspend fun onGetBeforeUsersByKeyword(
+            keyword: String,
+            afterUserCreateAt: LocalDateTime,
+        ): List<User> {
+            try {
+                val result =
+                    postgrest
+                        .from(tableName)
+                        .select(columns = Columns.list(userColumn)) {
+                            filter {
+                                User::userID like "%$keyword%"
+                                lt("create_at", afterUserCreateAt)
+                            }
+                            order("create_at", Order.DESCENDING)
+                        }.decodeList<User>()
 
-            val list = result.minus(result.first())
+                if (result.isEmpty()) return result
 
-            return list
-        } catch (e: Exception) {
-            Log.e(tag, "onGetUsersByKeyword $e")
-            throw e
+                val list = result.minus(result.first())
+
+                return list
+            } catch (e: Exception) {
+                Log.e(tag, "onGetUsersByKeyword $e")
+                throw e
+            }
         }
-    }
 
         override suspend fun getOtherUser(userID: String): User {
             try {

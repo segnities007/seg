@@ -48,7 +48,7 @@ class PostRepositoryImpl
             return false
         }
 
-        override suspend fun onGetUserPosts(userID: String): List<Post> {
+        override suspend fun onGetPostsOfUser(userID: String): List<Post> {
             try {
                 val result =
                     postgrest
@@ -64,6 +64,35 @@ class PostRepositoryImpl
                 throw e
             }
         }
+
+    override suspend fun onGetBeforePostsOfUser(
+        userID: String,
+        updateAt: LocalDateTime,
+    ): List<Post> {
+        try {
+            val count: Long = 10
+
+            val result =
+                postgrest
+                    .from(posts)
+                    .select {
+                        filter {
+                            Post::userID eq userID
+                            lt("created_at", updateAt)
+                        }
+                        order("create_at", Order.DESCENDING)
+                        limit(count = 7)
+                    }.decodeList<Post>()
+            if (result.isEmpty()) return result
+
+            val list = result.minus(result.first())
+
+            return list
+        } catch (e: Exception) {
+            Log.e(tag, "failed onGetBeforePosts $e")
+            throw e
+        }
+    }
 
         override suspend fun onGetPost(postID: Int): Post {
             try {
@@ -111,7 +140,7 @@ class PostRepositoryImpl
                         }.decodeList<Post>()
                 val list = result.minus(result.first())
 
-                if(result.isEmpty()) return result
+                if (result.isEmpty()) return result
 
                 return list
             } catch (e: Exception) {
@@ -268,9 +297,9 @@ class PostRepositoryImpl
                             order("create_at", Order.DESCENDING)
                             limit(count = count)
                         }.decodeList<Post>()
-                val list = result.minus(result.first())
+                if (result.isEmpty()) return result
 
-                if(result.isEmpty()) return result
+                val list = result.minus(result.first())
 
                 return list
             } catch (e: Exception) {
@@ -320,7 +349,7 @@ class PostRepositoryImpl
                             limit(count = count)
                         }.decodeList<Post>()
 
-                if(result.isEmpty()) return result
+                if (result.isEmpty()) return result
 
                 val list = result.minus(result.first())
                 return list

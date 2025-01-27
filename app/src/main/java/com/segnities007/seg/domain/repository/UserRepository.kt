@@ -16,7 +16,10 @@ interface UserRepository {
 
     suspend fun onGetUsersByKeyword(keyword: String): List<User>
 
-    suspend fun onGetBeforeUsersByKeyword(keyword: String, afterUserCreateAt: LocalDateTime): List<User>
+    suspend fun onGetBeforeUsersByKeyword(
+        keyword: String,
+        afterUserCreateAt: LocalDateTime,
+    ): List<User>
 
     suspend fun updateUser(user: User)
 

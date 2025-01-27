@@ -142,7 +142,7 @@ class AccountViewModel
 
         private fun onGetUserPosts(userID: String) {
             viewModelScope.launch(ioDispatcher) {
-                val posts = postRepository.onGetUserPosts(userID)
+                val posts = postRepository.onGetPostsOfUser(userID)
                 accountUiState = accountUiState.copy(posts = posts)
             }
         }
