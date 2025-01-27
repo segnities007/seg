@@ -10,7 +10,10 @@ interface PostRepository {
         user: User,
     ): Boolean
 
-    suspend fun onGetUserPosts(userID: String): List<Post>
+    suspend fun onGetPostsOfUser(userID: String): List<Post>
+
+    suspend fun onGetBeforePostsOfUser(userID: String, updateAt: java.time.LocalDateTime): List<Post>
+
 
     suspend fun onGetBeforePosts(afterPostCreateAt: java.time.LocalDateTime): List<Post>
 

@@ -1,28 +1,28 @@
 package com.segnities007.seg.ui.screens.hub.search
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import com.segnities007.seg.R
 import com.segnities007.seg.domain.presentation.Route
+import com.segnities007.seg.ui.components.card.AvatarCard
 import com.segnities007.seg.ui.components.card.EngagementIconAction
 import com.segnities007.seg.ui.components.card.EngagementIconState
 import com.segnities007.seg.ui.components.card.PostCard
 import com.segnities007.seg.ui.components.card.PostCardUiAction
 import com.segnities007.seg.ui.components.indicator.LoadingUI
+import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
 import com.segnities007.seg.ui.screens.hub.HubUiAction
 import com.segnities007.seg.ui.screens.hub.HubUiState
+import com.segnities007.seg.ui.screens.hub.account.AccountUiAction
 
 @Composable
 fun Search(
@@ -33,11 +33,11 @@ fun Search(
     engagementIconState: EngagementIconState,
     engagementIconAction: EngagementIconAction,
     topSearchBarUiState: TopSearchBarUiState,
+    accountUiAction: AccountUiAction,
     searchUiState: SearchUiState,
     searchUiAction: SearchUiAction,
     onHubNavigate: (Route) -> Unit,
 ) {
-
     DisposableEffect(Unit) {
         onDispose {
             searchUiAction.onResetListsOfSearchUiState()
@@ -76,10 +76,8 @@ fun Search(
                 modifier = modifier,
                 hubUiState = hubUiState,
                 hubUiAction = hubUiAction,
-                postCardUiAction = postCardUiAction,
-                engagementIconState = engagementIconState,
-                engagementIconAction = engagementIconAction,
                 topSearchBarUiState = topSearchBarUiState,
+                accountUiAction = accountUiAction,
                 searchUiState = searchUiState,
                 searchUiAction = searchUiAction,
                 onHubNavigate = onHubNavigate,
@@ -124,7 +122,7 @@ private fun MostViewPosts(
         }
         // action for fetching before post
         item {
-            if (searchUiState.postsSortedByViewCount.isNotEmpty()) {
+            if (searchUiState.postsSortedByViewCount.isNotEmpty() && topSearchBarUiState.isCompletedLoadingPostsSortedByViewCount) {
                 Column {
                     Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_smaller)))
                     LoadingUI(
@@ -178,14 +176,14 @@ private fun LatestPosts(
         }
         // action for fetching before post
         item {
-            if (searchUiState.posts.isNotEmpty()) {
+            if (searchUiState.posts.isNotEmpty() && topSearchBarUiState.isCompletedLoadingPosts) {
                 Column {
                     Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_smaller)))
                     LoadingUI(
                         onLoading = {
                             searchUiAction.onGetBeforePostsByKeyword(
                                 topSearchBarUiState.keyword,
-                                searchUiState.posts.last().updateAt,
+                                searchUiState.posts.last().createAt,
                             )
                         },
                     )
@@ -200,10 +198,8 @@ private fun Users(
     modifier: Modifier = Modifier,
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
-    postCardUiAction: PostCardUiAction,
-    engagementIconState: EngagementIconState,
-    engagementIconAction: EngagementIconAction,
     topSearchBarUiState: TopSearchBarUiState,
+    accountUiAction: AccountUiAction,
     searchUiState: SearchUiState,
     searchUiAction: SearchUiAction,
     onHubNavigate: (Route) -> Unit,
@@ -219,16 +215,27 @@ private fun Users(
                 searchUiState.users[index].id
             },
         ) { i ->
-            //TODO
+            AvatarCard(
+                onCardClick = {
+                    accountUiAction.onGetUserPosts(searchUiState.users[i].userID)
+                    hubUiAction.onGetUserID(searchUiState.users[i].userID)
+                    hubUiAction.onChangeCurrentRouteName(NavigationHubRoute.Account().name)
+                    onHubNavigate(NavigationHubRoute.Account())
+                },
+                user = searchUiState.users[i],
+            )
         }
         // action for fetching before post
         item {
-            if (searchUiState.users.isNotEmpty()) {
+            if (searchUiState.users.isNotEmpty() && topSearchBarUiState.isCompletedLoadingUsers) {
                 Column {
                     Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_smaller)))
                     LoadingUI(
                         onLoading = {
-                            //TODO
+                            searchUiAction.onGetBeforeUsersByKeyword(
+                                topSearchBarUiState.keyword,
+                                searchUiState.users.last().createAt,
+                            )
                         },
                     )
                 }

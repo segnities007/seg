@@ -58,15 +58,17 @@ fun Home(
         }
         // action for fetching before post
         item {
-            Column {
-                Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_smaller)))
-                LoadingUI(
-                    onLoading = {
-                        if (postCardUiState.posts.isNotEmpty()) {
-                            postCardUiAction.onGetBeforePosts(postCardUiState.posts.last().updateAt)
-                        }
-                    },
-                )
+            if(postCardUiState.isNotCompleted){
+                Column {
+                    Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_smaller)))
+                    LoadingUI(
+                        onLoading = {
+                            if (postCardUiState.posts.isNotEmpty()) {
+                                postCardUiAction.onGetBeforePosts(postCardUiState.posts.last().updateAt)
+                            }
+                        },
+                    )
+                }
             }
         }
     }

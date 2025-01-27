@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
@@ -22,6 +23,7 @@ import com.segnities007.seg.ui.components.card.EngagementIconAction
 import com.segnities007.seg.ui.components.card.EngagementIconState
 import com.segnities007.seg.ui.components.card.PostCard
 import com.segnities007.seg.ui.components.card.PostCardUiAction
+import com.segnities007.seg.ui.components.indicator.LoadingUI
 import com.segnities007.seg.ui.screens.hub.HubUiAction
 import com.segnities007.seg.ui.screens.hub.HubUiState
 
@@ -43,32 +45,49 @@ fun Account(
         accountUiAction.onGetUserPosts(hubUiState.userID)
     }
 
-    Column(
-        modifier = modifier.fillMaxSize().verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.Top,
+    LazyColumn(
+        modifier = modifier.fillMaxSize().padding(top = dimensionResource(R.dimen.padding_smaller)),
         horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top,
     ) {
         if (hubUiState.user.userID != accountUiState.user.userID) {
-            Spacer(modifier = Modifier.padding(commonPadding))
-            FollowButtons(
-                hubUiState = hubUiState,
-                hubUiAction = hubUiAction,
-                accountUiState = accountUiState,
-                accountUiAction = accountUiAction,
-            )
-            Spacer(modifier = Modifier.padding(commonPadding))
+            item{
+                Spacer(modifier = Modifier.padding(commonPadding))
+                FollowButtons(
+                    hubUiState = hubUiState,
+                    hubUiAction = hubUiAction,
+                    accountUiState = accountUiState,
+                    accountUiAction = accountUiAction,
+                )
+                Spacer(modifier = Modifier.padding(commonPadding))
+            }
         }
-
-        for (i in 0 until accountUiState.posts.size) {
+        items(
+            accountUiState.posts.size,
+            key = { index: Int -> accountUiState.posts[index].id },
+        ) { i ->
             PostCard(
                 post = accountUiState.posts[i],
                 myself = hubUiState.user,
-                hubUiAction = hubUiAction,
                 onHubNavigate = onHubNavigate,
+                hubUiAction = hubUiAction,
                 engagementIconState = engagementIconState,
                 engagementIconAction = engagementIconAction,
                 postCardUiAction = postCardUiAction,
             )
+        }
+        // action for fetching before-post
+        if(accountUiState.posts.isNotEmpty()){
+            item {
+                Column {
+                    Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_smaller)))
+                    LoadingUI(
+                        onLoading = {
+                            postCardUiAction.onGetBeforePosts(accountUiState.posts.last().updateAt)
+                        },
+                    )
+                }
+            }
         }
     }
 }

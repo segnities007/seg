@@ -21,6 +21,7 @@ import javax.inject.Inject
 data class PostCardUiState(
     val posts: List<Post> = listOf(),
     val post: Post = Post(), // for comment
+    val isNotCompleted: Boolean = true
 )
 
 @Immutable
@@ -99,6 +100,10 @@ class PostCardViewModel
                 onComment = this::onComment,
             )
 
+        private fun onBeTrueIsNotCompleted(){
+
+        }
+
         private fun onUpdatePost(post: Post) {
             viewModelScope.launch(Dispatchers.IO) {
                 postCardUiState = postCardUiState.copy(post = post)
@@ -121,7 +126,7 @@ class PostCardViewModel
 
         private fun onGetPosts(userID: String) {
             viewModelScope.launch(Dispatchers.IO) {
-                val posts = postRepository.onGetUserPosts(userID)
+                val posts = postRepository.onGetPostsOfUser(userID)
                 postCardUiState = postCardUiState.copy(posts = posts)
             }
         }
