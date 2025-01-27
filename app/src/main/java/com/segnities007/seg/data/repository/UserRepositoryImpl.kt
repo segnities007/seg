@@ -6,6 +6,8 @@ import com.segnities007.seg.domain.repository.UserRepository
 import io.github.jan.supabase.auth.Auth
 import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.postgrest.query.Columns
+import io.github.jan.supabase.postgrest.query.Order
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 class UserRepositoryImpl
@@ -77,6 +79,7 @@ class UserRepositoryImpl
                         .from(tableName)
                         .select(columns = Columns.list(userColumn)) {
                             filter { User::userID like keyword }
+                            order("create_at", Order.DESCENDING)
                         }.decodeList<User>()
 
                 return result
@@ -85,6 +88,31 @@ class UserRepositoryImpl
                 throw e
             }
         }
+
+    override suspend fun onGetBeforeUsersByKeyword(
+        keyword: String,
+        afterUserCreateAt: LocalDateTime,
+    ): List<User> {
+        try {
+            val result =
+                postgrest
+                    .from(tableName)
+                    .select(columns = Columns.list(userColumn)) {
+                        filter {
+                            User::userID like keyword
+                            lt("create_at", afterUserCreateAt)
+                        }
+                        order("create_at", Order.DESCENDING)
+                    }.decodeList<User>()
+
+            val list = result.minus(result.first())
+
+            return list
+        } catch (e: Exception) {
+            Log.e(tag, "onGetUsersByKeyword $e")
+            throw e
+        }
+    }
 
         override suspend fun getOtherUser(userID: String): User {
             try {

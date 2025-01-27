@@ -1,6 +1,5 @@
 package com.segnities007.seg.ui.screens.hub.search
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -45,7 +44,7 @@ data class SearchUiAction(
     val onGetPostsByKeyword: (keyword: String) -> Unit,
     val onGetBeforePostsByKeyword: (keyword: String, afterPostCreateAt: LocalDateTime) -> Unit,
     val onGetPostsByKeywordSortedByViewCount: (keyword: String) -> Unit,
-    val onGetBeforePostsByKeywordSortedByViewCount: (keyword: String, afterPostCreateAt: LocalDateTime) -> Unit,
+    val onGetBeforePostsByKeywordSortedByViewCount: (keyword: String, viewCount: Int) -> Unit,
 )
 
 @HiltViewModel
@@ -100,15 +99,17 @@ class SearchViewModel
 
         private fun onGetUsersByKeyword(keyword: String) {
             viewModelScope.launch(Dispatchers.IO) {
-                searchUiState = searchUiState.copy(users = userRepository.onGetUsersByKeyword(keyword))
-                Log.d("SearchViewModel.kt", "88 ${searchUiState.users}")
+                searchUiState = searchUiState.copy(
+                    users = searchUiState.users.plus(
+                        userRepository.onGetUsersByKeyword(keyword)
+                    )
+                )
             }
         }
 
         private fun onGetPostsByKeyword(keyword: String) {
             viewModelScope.launch(Dispatchers.IO) {
                 searchUiState = searchUiState.copy(posts = postRepository.onGetPostsByKeyword(keyword))
-                Log.d("SearchViewModel.kt", "95 ${searchUiState.posts}")
             }
         }
 
@@ -117,28 +118,31 @@ class SearchViewModel
             afterPostCreateAt: LocalDateTime,
         ) {
             viewModelScope.launch(Dispatchers.IO) {
-                searchUiState = searchUiState.copy(posts = postRepository.onGetBeforePostsByKeyword(keyword, afterPostCreateAt))
-                Log.d("SearchViewModel.kt", "105 ${searchUiState.posts}")
+                searchUiState = searchUiState.copy(
+                    posts = searchUiState.posts.plus(
+                        postRepository.onGetBeforePostsByKeyword(keyword, afterPostCreateAt)
+                    )
+                )
             }
         }
 
         private fun onGetPostsByKeywordSortedByViewCount(keyword: String) {
             viewModelScope.launch(Dispatchers.IO) {
                 searchUiState = searchUiState.copy(postsSortedByViewCount = postRepository.onGetPostsByKeywordSortedByViewCount(keyword))
-                Log.d("SearchViewModel.kt", "112 ${searchUiState.postsSortedByViewCount}")
             }
         }
 
         private fun onGetBeforePostsByKeywordSortedByViewCount(
             keyword: String,
-            afterPostCreateAt: LocalDateTime,
+            viewCount: Int,
         ) {
             viewModelScope.launch(Dispatchers.IO) {
                 searchUiState =
                     searchUiState.copy(
-                        postsSortedByViewCount = postRepository.onGetBeforePostsByKeywordSortedByViewCount(keyword, afterPostCreateAt),
+                        postsSortedByViewCount = searchUiState.postsSortedByViewCount.plus(
+                            postRepository.onGetBeforePostsByKeywordSortedByViewCount(keyword, viewCount)
+                        ),
                     )
-                Log.d("SearchViewModel.kt", "122 ${searchUiState.postsSortedByViewCount}")
             }
         }
     }
