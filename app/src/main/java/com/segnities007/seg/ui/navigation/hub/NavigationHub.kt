@@ -145,6 +145,7 @@ fun NavigationHub(
                     engagementIconAction = postCardViewModel.onGetEngagementIconAction(),
                     topSearchBarUiState = searchViewModel.topSearchBarUiState,
                     searchUiState = searchViewModel.searchUiState,
+                    searchUiAction = searchViewModel.onGetSearchUiAction(),
                     onHubNavigate = onHubNavigate,
                 )
             }

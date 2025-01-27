@@ -241,11 +241,11 @@ class PostRepositoryImpl
                             limit(count = count)
                         }.decodeList<Post>()
 
-                Log.d(tag, "success getkeyword $result")
+                Log.d(tag, "success onGetPostsByKeyword $result")
 
                 return result
             } catch (e: Exception) {
-                Log.d(tag, "onGetPostsByKeyword $e")
+                Log.d(tag, "failed onGetPostsByKeyword $e")
                 throw e
             }
         }
@@ -268,9 +268,11 @@ class PostRepositoryImpl
                             limit(count = count)
                         }.decodeList<Post>()
 
+                Log.d(tag, "success onGetBeforePostsByKeyword $result")
+
                 return result
             } catch (e: Exception) {
-                Log.d(tag, "onGetBeforePostsByKeyword $e")
+                Log.d(tag, "failed onGetBeforePostsByKeyword $e")
                 throw e
             }
         }
@@ -290,9 +292,11 @@ class PostRepositoryImpl
                             limit(count = count)
                         }.decodeList<Post>()
 
+                Log.d(tag, "success onGetPostsByKeywordSortedByViewCount $result")
+
                 return result
             } catch (e: Exception) {
-                Log.d(tag, "onGetPostsByKeywordSortedByViewCount $e")
+                Log.d(tag, "failed onGetPostsByKeywordSortedByViewCount $e")
                 throw e
             }
         }
@@ -316,9 +320,11 @@ class PostRepositoryImpl
                             limit(count = count)
                         }.decodeList<Post>()
 
+                Log.d(tag, "success onGetBeforePostsByKeywordSortedByViewCount $result")
+
                 return result
             } catch (e: Exception) {
-                Log.d(tag, "onGetBeforePostsByKeywordSortedByViewCount $e")
+                Log.d(tag, "success onGetBeforePostsByKeywordSortedByViewCount $e")
                 throw e
             }
         }
