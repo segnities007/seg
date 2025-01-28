@@ -25,6 +25,8 @@ import com.segnities007.seg.ui.components.top_bar.TopStatusBar
 import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
 import com.segnities007.seg.ui.screens.hub.account.AccountUiAction
 import com.segnities007.seg.ui.screens.hub.account.AccountUiState
+import com.segnities007.seg.ui.screens.hub.account.AccountsUiAction
+import com.segnities007.seg.ui.screens.hub.account.AccountsUiState
 import com.segnities007.seg.ui.screens.hub.search.SearchUiAction
 import com.segnities007.seg.ui.screens.hub.search.TopSearchBarUiAction
 import com.segnities007.seg.ui.screens.hub.search.TopSearchBarUiState
@@ -41,6 +43,8 @@ fun Hub(
     topSearchBarUiAction: TopSearchBarUiAction,
     accountUiState: AccountUiState,
     accountUiAction: AccountUiAction,
+    accountsUiState: AccountsUiState,
+    accountsUiAction: AccountsUiAction,
     content: @Composable (Modifier) -> Unit,
 ) {
     NavigationDrawer(
@@ -60,6 +64,8 @@ fun Hub(
             topSearchBarUiAction = topSearchBarUiAction,
             accountUiState = accountUiState,
             accountUiAction = accountUiAction,
+            accountsUiState = accountsUiState,
+            accountsUiAction = accountsUiAction,
         )
     }
 }
@@ -72,6 +78,8 @@ private fun HubUi(
     hubUiState: HubUiState,
     accountUiState: AccountUiState,
     accountUiAction: AccountUiAction,
+    accountsUiState: AccountsUiState,
+    accountsUiAction: AccountsUiAction,
     searchUiAction: SearchUiAction,
     topSearchBarUiState: TopSearchBarUiState,
     topSearchBarUiAction: TopSearchBarUiAction,
@@ -116,13 +124,13 @@ private fun HubUi(
                     )
                 NavigationHubRoute.Account().name ->
                     TopStatusBar(
-                        userState = accountUiState,
+                        user = accountUiState.user,
                         onClickFollowsButton = {
-                            accountUiAction.onSetUsers(accountUiState.user.follows)
+                            accountsUiAction.onGetUsers(accountUiState.user.follows)
                             onHubNavigate(NavigationHubRoute.Accounts())
                         },
                         onClickFollowersButton = {
-                            accountUiAction.onSetUsers(accountUiState.user.followers)
+                            accountsUiAction.onGetUsers(accountUiState.user.followers)
                             onHubNavigate(NavigationHubRoute.Accounts())
                         },
                         onHubNavigate = onHubNavigate,
@@ -135,13 +143,13 @@ private fun HubUi(
                     )
                 NavigationHubRoute.Setting().name ->
                     TopStatusBar(
-                        userState = hubUiState,
+                        user = hubUiState.user,
                         onClickFollowsButton = {
-                            accountUiAction.onSetUsers(hubUiState.user.follows)
+                            accountsUiAction.onGetUsers(hubUiState.user.follows)
                             onHubNavigate(NavigationHubRoute.Accounts())
                         },
                         onClickFollowersButton = {
-                            accountUiAction.onSetUsers(hubUiState.user.followers)
+                            accountsUiAction.onGetUsers(hubUiState.user.followers)
                             onHubNavigate(NavigationHubRoute.Accounts())
                         },
                         onHubNavigate = onHubNavigate,

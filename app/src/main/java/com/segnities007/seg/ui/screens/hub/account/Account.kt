@@ -8,9 +8,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,6 +33,7 @@ fun Account(
     hubUiAction: HubUiAction,
     accountUiState: AccountUiState,
     accountUiAction: AccountUiAction,
+    accountsUiAction: AccountsUiAction,
     engagementIconState: EngagementIconState,
     engagementIconAction: EngagementIconAction,
     postCardUiAction: PostCardUiAction,
@@ -45,13 +45,19 @@ fun Account(
         accountUiAction.onGetUserPosts(hubUiState.userID)
     }
 
+    DisposableEffect(Unit) {
+        onDispose {
+            accountsUiAction.onReset()
+        }
+    }
+
     LazyColumn(
         modifier = modifier.fillMaxSize().padding(top = dimensionResource(R.dimen.padding_smaller)),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
     ) {
         if (hubUiState.user.userID != accountUiState.user.userID) {
-            item{
+            item {
                 Spacer(modifier = Modifier.padding(commonPadding))
                 FollowButtons(
                     hubUiState = hubUiState,
@@ -77,13 +83,14 @@ fun Account(
             )
         }
         // action for fetching before-post
-        if(accountUiState.posts.isNotEmpty()){
+        if (accountUiState.posts.isNotEmpty() && accountUiState.isNotCompleted) {
             item {
                 Column {
                     Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_smaller)))
                     LoadingUI(
                         onLoading = {
-                            postCardUiAction.onGetBeforePosts(accountUiState.posts.last().updateAt)
+                            // get before posts
+                            accountUiAction.onGetBeforePosts(accountUiState.posts.last().updateAt)
                         },
                     )
                 }

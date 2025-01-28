@@ -27,13 +27,12 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.segnities007.seg.R
 import com.segnities007.seg.data.model.User
-import com.segnities007.seg.domain.model.UserState
 import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
 
 @Composable
 fun TopStatusBar(
-    userState: UserState,
+    user: User,
     onClickFollowsButton: () -> Unit = {},
     onClickFollowersButton: () -> Unit = {},
     onHubNavigate: (Route) -> Unit,
@@ -45,16 +44,16 @@ fun TopStatusBar(
             Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
                 AsyncImage(
                     modifier = Modifier.size(dimensionResource(R.dimen.icon_large)).clip(CircleShape),
-                    model = userState.user.iconURL,
-                    contentDescription = userState.user.iconURL,
+                    model = user.iconURL,
+                    contentDescription = user.iconURL,
                 )
                 Spacer(modifier = Modifier.padding(commonPadding))
-                Status(user = userState.user)
+                Status(user = user)
             }
 
             Spacer(modifier = Modifier.padding(commonPadding))
             AboutFollow(
-                userState = userState,
+                user = user,
                 onHubNavigate = onHubNavigate,
                 onClickFollowsButton = onClickFollowsButton,
                 onClickFollowersButton = onClickFollowersButton,
@@ -109,7 +108,7 @@ private fun Status(
 @Composable
 private fun AboutFollow(
     modifier: Modifier = Modifier,
-    userState: UserState,
+    user: User,
     commonPadding: Dp = dimensionResource(R.dimen.padding_smaller),
     fontColor: Color = MaterialTheme.colorScheme.primary,
     onHubNavigate: (Route) -> Unit,
@@ -128,7 +127,7 @@ private fun AboutFollow(
                         onClickFollowsButton()
                         onHubNavigate(NavigationHubRoute.Accounts())
                     }.padding(commonPadding),
-        ) { Text(text = "Follow: ${userState.user.followCount}", color = fontColor) }
+        ) { Text(text = "Follow: ${user.followCount}", color = fontColor) }
         Box(
             modifier =
                 Modifier
@@ -137,6 +136,6 @@ private fun AboutFollow(
                         onClickFollowersButton()
                         onHubNavigate(NavigationHubRoute.Accounts())
                     }.padding(commonPadding),
-        ) { Text(text = "Follower: ${userState.user.followerCount}", color = fontColor) }
+        ) { Text(text = "Follower: ${user.followerCount}", color = fontColor) }
     }
 }

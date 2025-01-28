@@ -97,49 +97,56 @@ class SearchViewModel
             onResetIs()
         }
 
-    private fun onResetIs(){
-        topSearchBarUiState = topSearchBarUiState.copy(
-            isCompletedLoadingUsers = true,
-            isCompletedLoadingPosts = true,
-            isCompletedLoadingPostsSortedByViewCount = true,
-        )
-    }
+        private fun onResetIs() {
+            topSearchBarUiState =
+                topSearchBarUiState.copy(
+                    isCompletedLoadingUsers = true,
+                    isCompletedLoadingPosts = true,
+                    isCompletedLoadingPostsSortedByViewCount = true,
+                )
+        }
 
-    private fun onBeFalseIsUsers(){
-        topSearchBarUiState = topSearchBarUiState.copy(
-            isCompletedLoadingUsers = false
-        )
-    }
+        private fun onBeFalseIsUsers() {
+            topSearchBarUiState =
+                topSearchBarUiState.copy(
+                    isCompletedLoadingUsers = false,
+                )
+        }
 
-    private fun onBeTrueIsUsers(){
-        topSearchBarUiState = topSearchBarUiState.copy(
-            isCompletedLoadingUsers = true
-        )
-    }
+        private fun onBeTrueIsUsers() {
+            topSearchBarUiState =
+                topSearchBarUiState.copy(
+                    isCompletedLoadingUsers = true,
+                )
+        }
 
-    private fun onBeFalseIsPosts(){
-        topSearchBarUiState = topSearchBarUiState.copy(
-            isCompletedLoadingPosts = false
-        )
-    }
+        private fun onBeFalseIsPosts() {
+            topSearchBarUiState =
+                topSearchBarUiState.copy(
+                    isCompletedLoadingPosts = false,
+                )
+        }
 
-    private fun onBeTrueIsPosts(){
-        topSearchBarUiState = topSearchBarUiState.copy(
-            isCompletedLoadingPosts = true
-        )
-    }
+        private fun onBeTrueIsPosts() {
+            topSearchBarUiState =
+                topSearchBarUiState.copy(
+                    isCompletedLoadingPosts = true,
+                )
+        }
 
-    private fun onBeFalseIsPostsSorted(){
-        topSearchBarUiState = topSearchBarUiState.copy(
-            isCompletedLoadingPostsSortedByViewCount = false
-        )
-    }
+        private fun onBeFalseIsPostsSorted() {
+            topSearchBarUiState =
+                topSearchBarUiState.copy(
+                    isCompletedLoadingPostsSortedByViewCount = false,
+                )
+        }
 
-    private fun onBeTrueIsPostsSorted(){
-        topSearchBarUiState = topSearchBarUiState.copy(
-            isCompletedLoadingUsers = true
-        )
-    }
+        private fun onBeTrueIsPostsSorted() {
+            topSearchBarUiState =
+                topSearchBarUiState.copy(
+                    isCompletedLoadingUsers = true,
+                )
+        }
 
         private fun onUpdateKeyword(newKeyword: String) {
             topSearchBarUiState = topSearchBarUiState.copy(keyword = newKeyword)
@@ -165,14 +172,13 @@ class SearchViewModel
             viewModelScope.launch(Dispatchers.IO) {
                 val newUsers = userRepository.onGetBeforeUsersByKeyword(keyword, afterPostCreateAt)
 
-                if(newUsers.isNotEmpty()){
+                if (newUsers.isNotEmpty()) {
                     val users = searchUiState.users.plus(newUsers)
                     searchUiState = searchUiState.copy(users = users)
                     return@launch
-                } else{
+                } else {
                     onBeFalseIsUsers()
                 }
-
             }
         }
 
@@ -188,11 +194,11 @@ class SearchViewModel
         ) {
             viewModelScope.launch(Dispatchers.IO) {
                 val newPosts = postRepository.onGetBeforePostsByKeyword(keyword, afterPostCreateAt)
-                if(newPosts.isNotEmpty()){
+                if (newPosts.isNotEmpty()) {
                     val posts = searchUiState.posts.plus(newPosts)
                     searchUiState = searchUiState.copy(posts = posts)
                     searchUiState = searchUiState.copy(posts = searchUiState.posts.plus(newPosts))
-                }else{
+                } else {
                     onBeFalseIsPosts()
                 }
             }
@@ -210,10 +216,10 @@ class SearchViewModel
         ) {
             viewModelScope.launch(Dispatchers.IO) {
                 val newPosts = postRepository.onGetBeforePostsByKeywordSortedByViewCount(keyword, viewCount)
-                if(newPosts.isNotEmpty()){
+                if (newPosts.isNotEmpty()) {
                     val postsSortedByViewCount = searchUiState.postsSortedByViewCount.plus(newPosts)
                     searchUiState = searchUiState.copy(postsSortedByViewCount = postsSortedByViewCount)
-                }else{
+                } else {
                     onBeFalseIsPostsSorted()
                 }
             }
