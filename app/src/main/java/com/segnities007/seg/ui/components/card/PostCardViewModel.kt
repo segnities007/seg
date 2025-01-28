@@ -21,7 +21,7 @@ import javax.inject.Inject
 data class PostCardUiState(
     val posts: List<Post> = listOf(),
     val post: Post = Post(), // for comment
-    val isNotCompleted: Boolean = true
+    val isNotCompleted: Boolean = true,
 )
 
 @Immutable
@@ -29,7 +29,7 @@ data class PostCardUiAction(
     val onGetNewPosts: () -> Unit,
     val onGetPosts: (userID: String) -> Unit,
     val onGetPost: (postID: Int) -> Unit,
-    val onGetBeforePosts: (afterPostCreateAt: java.time.LocalDateTime) -> Unit,
+    val onGetBeforePosts: (updateAt: java.time.LocalDateTime) -> Unit,
     val onUpdatePost: (post: Post) -> Unit,
     val onDeletePost: (post: Post) -> Unit,
     val onClickIcon: (onHubNavigate: (Route) -> Unit) -> Unit,
@@ -100,8 +100,7 @@ class PostCardViewModel
                 onComment = this::onComment,
             )
 
-        private fun onBeTrueIsNotCompleted(){
-
+        private fun onBeTrueIsNotCompleted() {
         }
 
         private fun onUpdatePost(post: Post) {
@@ -131,9 +130,9 @@ class PostCardViewModel
             }
         }
 
-        private fun onGetBeforePosts(afterPostCreateAt: java.time.LocalDateTime) {
+        private fun onGetBeforePosts(updateAt: java.time.LocalDateTime) {
             viewModelScope.launch(Dispatchers.IO) {
-                val posts = postRepository.onGetBeforePosts(afterPostCreateAt)
+                val posts = postRepository.onGetBeforePosts(updateAt)
                 postCardUiState = postCardUiState.copy(posts = postCardUiState.posts.plus(posts))
             }
         }

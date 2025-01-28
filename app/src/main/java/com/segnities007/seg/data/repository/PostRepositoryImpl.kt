@@ -65,34 +65,34 @@ class PostRepositoryImpl
             }
         }
 
-    override suspend fun onGetBeforePostsOfUser(
-        userID: String,
-        updateAt: LocalDateTime,
-    ): List<Post> {
-        try {
-            val count: Long = 10
+        override suspend fun onGetBeforePostsOfUser(
+            userID: String,
+            updateAt: LocalDateTime,
+        ): List<Post> {
+            try {
+                val count: Long = 10
 
-            val result =
-                postgrest
-                    .from(posts)
-                    .select {
-                        filter {
-                            Post::userID eq userID
-                            lt("created_at", updateAt)
-                        }
-                        order("create_at", Order.DESCENDING)
-                        limit(count = 7)
-                    }.decodeList<Post>()
-            if (result.isEmpty()) return result
+                val result =
+                    postgrest
+                        .from(posts)
+                        .select {
+                            filter {
+                                Post::userID eq userID
+                                lt("created_at", updateAt)
+                            }
+                            order("create_at", Order.DESCENDING)
+                            limit(count = 7)
+                        }.decodeList<Post>()
+                if (result.isEmpty()) return result
 
-            val list = result.minus(result.first())
+                val list = result.minus(result.first())
 
-            return list
-        } catch (e: Exception) {
-            Log.e(tag, "failed onGetBeforePosts $e")
-            throw e
+                return list
+            } catch (e: Exception) {
+                Log.e(tag, "failed onGetBeforePosts $e")
+                throw e
+            }
         }
-    }
 
         override suspend fun onGetPost(postID: Int): Post {
             try {

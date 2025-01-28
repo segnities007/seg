@@ -58,7 +58,7 @@ fun Home(
         }
         // action for fetching before post
         item {
-            if(postCardUiState.isNotCompleted){
+            if (postCardUiState.isNotCompleted) {
                 Column {
                     Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_smaller)))
                     LoadingUI(

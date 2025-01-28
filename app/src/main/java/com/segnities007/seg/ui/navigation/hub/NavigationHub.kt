@@ -55,6 +55,8 @@ fun NavigationHub(
         hubUiState = hubViewModel.hubUiState,
         accountUiState = accountViewModel.accountUiState,
         accountUiAction = accountViewModel.getAccountUiAction(),
+        accountsUiState = accountViewModel.accountsUiState,
+        accountsUiAction = accountViewModel.onGetAccountsUiAction(),
         searchUiAction = searchViewModel.onGetSearchUiAction(),
         topSearchBarUiState = searchViewModel.topSearchBarUiState,
         topSearchBarUiAction = searchViewModel.onGetTopSearchBarUiAction(),
@@ -120,8 +122,9 @@ fun NavigationHub(
                     hubUiAction = hubViewModel.getHubUiAction(),
                     accountUiState = accountViewModel.accountUiState,
                     accountUiAction = accountViewModel.getAccountUiAction(),
-                    engagementIconState = postCardViewModel.engagementIconState,
-                    engagementIconAction = postCardViewModel.onGetEngagementIconAction(),
+                    accountsUiAction = accountViewModel.onGetAccountsUiAction(),
+                    engagementIconState = postCardViewModel.engagementIconState, // ok using it of post
+                    engagementIconAction = accountViewModel.onGetEngagementIconAction(),
                     postCardUiAction = accountViewModel.getPostUiAction(),
                     onHubNavigate = onHubNavigate,
                 )
@@ -132,7 +135,9 @@ fun NavigationHub(
                     hubUiAction = hubViewModel.getHubUiAction(),
                     accountUiState = accountViewModel.accountUiState,
                     accountUiAction = accountViewModel.getAccountUiAction(),
-                    onNavigate = onHubNavigate,
+                    accountsUiState = accountViewModel.accountsUiState,
+                    accountsUiAction = accountViewModel.onGetAccountsUiAction(),
+                    onHubNavigate = onHubNavigate,
                 )
             }
             composable<NavigationHubRoute.Search> {
