@@ -9,7 +9,7 @@ import com.segnities007.seg.data.model.Post
 import com.segnities007.seg.data.model.User
 import com.segnities007.seg.domain.presentation.TopLayerViewModel
 import com.segnities007.seg.domain.repository.PostRepository
-import com.segnities007.seg.ui.components.card.EngagementIconAction
+import com.segnities007.seg.ui.components.card.postcard.EngagementIconAction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

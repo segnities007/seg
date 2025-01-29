@@ -10,7 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.segnities007.seg.domain.presentation.Route
-import com.segnities007.seg.ui.components.card.PostCardViewModel
+import com.segnities007.seg.ui.components.card.postcard.PostCardViewModel
 import com.segnities007.seg.ui.navigation.hub.setting.NavigationSetting
 import com.segnities007.seg.ui.screens.hub.Hub
 import com.segnities007.seg.ui.screens.hub.HubViewModel
@@ -147,7 +147,8 @@ fun NavigationHub(
                     hubUiAction = hubViewModel.getHubUiAction(),
                     postCardUiAction = postCardViewModel.onGetPostCardUiAction(),
                     engagementIconState = postCardViewModel.engagementIconState,
-                    engagementIconAction = postCardViewModel.onGetEngagementIconAction(),
+                    engagementIconActionForPosts = searchViewModel.onGetEngagementIconActionForPosts(),
+                    engagementIconActionForPostsSortedByViewCount = searchViewModel.onGetEngagementIconActionForPostsSortedByViewCount(),
                     topSearchBarUiState = searchViewModel.topSearchBarUiState,
                     accountUiAction = accountViewModel.getAccountUiAction(),
                     searchUiState = searchViewModel.searchUiState,

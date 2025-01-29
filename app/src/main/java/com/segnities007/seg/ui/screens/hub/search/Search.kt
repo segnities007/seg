@@ -14,10 +14,10 @@ import androidx.compose.ui.res.dimensionResource
 import com.segnities007.seg.R
 import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.ui.components.card.AvatarCard
-import com.segnities007.seg.ui.components.card.EngagementIconAction
-import com.segnities007.seg.ui.components.card.EngagementIconState
-import com.segnities007.seg.ui.components.card.PostCard
-import com.segnities007.seg.ui.components.card.PostCardUiAction
+import com.segnities007.seg.ui.components.card.postcard.EngagementIconAction
+import com.segnities007.seg.ui.components.card.postcard.EngagementIconState
+import com.segnities007.seg.ui.components.card.postcard.PostCard
+import com.segnities007.seg.ui.components.card.postcard.PostCardUiAction
 import com.segnities007.seg.ui.components.indicator.LoadingUI
 import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
 import com.segnities007.seg.ui.screens.hub.HubUiAction
@@ -31,7 +31,8 @@ fun Search(
     hubUiAction: HubUiAction,
     postCardUiAction: PostCardUiAction,
     engagementIconState: EngagementIconState,
-    engagementIconAction: EngagementIconAction,
+    engagementIconActionForPosts: EngagementIconAction,
+    engagementIconActionForPostsSortedByViewCount: EngagementIconAction,
     topSearchBarUiState: TopSearchBarUiState,
     accountUiAction: AccountUiAction,
     searchUiState: SearchUiState,
@@ -52,7 +53,7 @@ fun Search(
                 hubUiAction = hubUiAction,
                 postCardUiAction = postCardUiAction,
                 engagementIconState = engagementIconState,
-                engagementIconAction = engagementIconAction,
+                engagementIconAction = engagementIconActionForPostsSortedByViewCount,
                 topSearchBarUiState = topSearchBarUiState,
                 searchUiState = searchUiState,
                 searchUiAction = searchUiAction,
@@ -65,7 +66,7 @@ fun Search(
                 hubUiAction = hubUiAction,
                 postCardUiAction = postCardUiAction,
                 engagementIconState = engagementIconState,
-                engagementIconAction = engagementIconAction,
+                engagementIconAction = engagementIconActionForPosts,
                 topSearchBarUiState = topSearchBarUiState,
                 searchUiState = searchUiState,
                 searchUiAction = searchUiAction,
