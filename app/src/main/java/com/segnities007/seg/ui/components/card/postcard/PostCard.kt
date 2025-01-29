@@ -1,4 +1,4 @@
-package com.segnities007.seg.ui.components.card
+package com.segnities007.seg.ui.components.card.postcard
 
 import android.util.Log
 import androidx.compose.foundation.Image

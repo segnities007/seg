@@ -10,8 +10,8 @@ import com.segnities007.seg.data.model.User
 import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.domain.repository.PostRepository
 import com.segnities007.seg.domain.repository.UserRepository
-import com.segnities007.seg.ui.components.card.EngagementIconAction
-import com.segnities007.seg.ui.components.card.PostCardUiAction
+import com.segnities007.seg.ui.components.card.postcard.EngagementIconAction
+import com.segnities007.seg.ui.components.card.postcard.PostCardUiAction
 import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher

@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.Dp
 import com.segnities007.seg.R
 import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.ui.components.button.SmallButton
-import com.segnities007.seg.ui.components.card.PostCardUiAction
+import com.segnities007.seg.ui.components.card.postcard.PostCardUiAction
 import com.segnities007.seg.ui.navigation.NavigationRoute
 import com.segnities007.seg.ui.navigation.hub.setting.NavigationSettingRoute
 import com.segnities007.seg.ui.screens.hub.HubUiState

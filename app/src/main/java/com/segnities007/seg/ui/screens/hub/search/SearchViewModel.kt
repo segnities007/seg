@@ -9,6 +9,7 @@ import com.segnities007.seg.data.model.Post
 import com.segnities007.seg.data.model.User
 import com.segnities007.seg.domain.repository.PostRepository
 import com.segnities007.seg.domain.repository.UserRepository
+import com.segnities007.seg.ui.components.card.postcard.EngagementIconAction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -81,6 +82,20 @@ class SearchViewModel
                 onGetPostsByKeywordSortedByViewCount = this::onGetPostsByKeywordSortedByViewCount,
                 onGetBeforePostsByKeywordSortedByViewCount = this::onGetBeforePostsByKeywordSortedByViewCount,
             )
+
+        fun onGetEngagementIconActionForPosts(): EngagementIconAction =
+            EngagementIconAction(
+                onLike = this::onLikeOfPosts,
+                onRepost = this::onRepostOfPosts,
+                onComment = this::onCommentOfPosts,
+            )
+
+    fun onGetEngagementIconActionForPostsSortedByViewCount(): EngagementIconAction =
+        EngagementIconAction(
+            onLike = this::onLikeOfPostsSortedByViewCount,
+            onRepost = this::onRepostOfPostsSortedByViewCount,
+            onComment = this::onCommentOfPostsSortedByViewCount,
+        )
 
         private fun onEnter(keyword: String) {
             viewModelScope.launch(Dispatchers.IO) {
@@ -224,4 +239,128 @@ class SearchViewModel
                 }
             }
         }
+
+        private fun onUpdatePosts(newPost: Post) {
+            val newPosts =
+                searchUiState.posts.map { post ->
+                    if (newPost.id == post.id) newPost else post
+                }
+
+            searchUiState = searchUiState.copy(posts = newPosts)
+        }
+
+    private fun onUpdatePostsSortedByViewCount(newPost: Post) {
+        val newPosts =
+            searchUiState.postsSortedByViewCount.map { post ->
+                if (newPost.id == post.id) newPost else post
+            }
+
+        searchUiState = searchUiState.copy(postsSortedByViewCount = newPosts)
+    }
+
+        private fun onLikeOfPosts(
+            post: Post,
+            myself: User,
+            onAddOrRemoveFromMyList: () -> Unit,
+        ) {
+            val newPost: Post
+            if (!myself.likes.contains(post.id)) {
+                newPost = post.copy(likeCount = post.likeCount + 1)
+                viewModelScope.launch(Dispatchers.IO) {
+                    postRepository.onLike(post = newPost, user = myself)
+                }
+            } else {
+                newPost = post.copy(likeCount = post.likeCount - 1)
+                viewModelScope.launch(Dispatchers.IO) {
+                    postRepository.onUnLike(post = newPost, user = myself)
+                }
+            }
+            onUpdatePosts(newPost)
+            onAddOrRemoveFromMyList()
+        }
+
+        private fun onRepostOfPosts(
+            post: Post,
+            myself: User,
+            onAddOrRemoveFromMyList: () -> Unit,
+        ) {
+            val newPost: Post
+            if (!myself.reposts.contains(post.id)) {
+                newPost = post.copy(repostCount = post.repostCount + 1)
+                viewModelScope.launch(Dispatchers.IO) {
+                    postRepository.onRepost(post = newPost, user = myself)
+                }
+            } else {
+                newPost = post.copy(repostCount = post.repostCount - 1)
+                viewModelScope.launch(Dispatchers.IO) {
+                    postRepository.onUnRepost(post = newPost, user = myself)
+                }
+            }
+            onUpdatePosts(newPost)
+            onAddOrRemoveFromMyList()
+        }
+
+        private fun onCommentOfPosts(
+            post: Post,
+            comment: Post,
+            myself: User,
+            updateMyself: () -> Unit,
+        ) {
+            viewModelScope.launch(Dispatchers.IO) {
+                // TODO
+            }
+        }
+
+    private fun onLikeOfPostsSortedByViewCount(
+        post: Post,
+        myself: User,
+        onAddOrRemoveFromMyList: () -> Unit,
+    ) {
+        val newPost: Post
+        if (!myself.likes.contains(post.id)) {
+            newPost = post.copy(likeCount = post.likeCount + 1)
+            viewModelScope.launch(Dispatchers.IO) {
+                postRepository.onLike(post = newPost, user = myself)
+            }
+        } else {
+            newPost = post.copy(likeCount = post.likeCount - 1)
+            viewModelScope.launch(Dispatchers.IO) {
+                postRepository.onUnLike(post = newPost, user = myself)
+            }
+        }
+        onUpdatePostsSortedByViewCount(newPost)
+        onAddOrRemoveFromMyList()
+    }
+
+    private fun onRepostOfPostsSortedByViewCount(
+        post: Post,
+        myself: User,
+        onAddOrRemoveFromMyList: () -> Unit,
+    ) {
+        val newPost: Post
+        if (!myself.reposts.contains(post.id)) {
+            newPost = post.copy(repostCount = post.repostCount + 1)
+            viewModelScope.launch(Dispatchers.IO) {
+                postRepository.onRepost(post = newPost, user = myself)
+            }
+        } else {
+            newPost = post.copy(repostCount = post.repostCount - 1)
+            viewModelScope.launch(Dispatchers.IO) {
+                postRepository.onUnRepost(post = newPost, user = myself)
+            }
+        }
+        onUpdatePostsSortedByViewCount(newPost)
+        onAddOrRemoveFromMyList()
+    }
+
+    private fun onCommentOfPostsSortedByViewCount(
+        post: Post,
+        comment: Post,
+        myself: User,
+        updateMyself: () -> Unit,
+    ) {
+        viewModelScope.launch(Dispatchers.IO) {
+            // TODO
+        }
+    }
     }

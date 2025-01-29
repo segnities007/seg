@@ -12,11 +12,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import com.segnities007.seg.R
 import com.segnities007.seg.domain.presentation.Route
-import com.segnities007.seg.ui.components.card.EngagementIconAction
-import com.segnities007.seg.ui.components.card.EngagementIconState
-import com.segnities007.seg.ui.components.card.PostCard
-import com.segnities007.seg.ui.components.card.PostCardUiAction
-import com.segnities007.seg.ui.components.card.PostCardUiState
+import com.segnities007.seg.ui.components.card.postcard.EngagementIconAction
+import com.segnities007.seg.ui.components.card.postcard.EngagementIconState
+import com.segnities007.seg.ui.components.card.postcard.PostCard
+import com.segnities007.seg.ui.components.card.postcard.PostCardUiAction
+import com.segnities007.seg.ui.components.card.postcard.PostCardUiState
 import com.segnities007.seg.ui.components.indicator.LoadingUI
 import com.segnities007.seg.ui.screens.hub.HubUiAction
 import com.segnities007.seg.ui.screens.hub.HubUiState
