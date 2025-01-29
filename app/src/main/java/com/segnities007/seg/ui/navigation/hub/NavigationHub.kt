@@ -82,7 +82,10 @@ fun NavigationHub(
                     trendUiState = trendViewModel.trendUiState,
                     trendUiAction = trendViewModel.onGetTrendUiAction(),
                     engagementIconState = postCardViewModel.engagementIconState,
-                    engagementIconAction = trendViewModel.onGetEngagementIconAction(),
+                    engagementIconActionForToday = trendViewModel.onGetEngagementIconActionForToday(),
+                    engagementIconActionForWeek = trendViewModel.onGetEngagementIconActionForWeek(),
+                    engagementIconActionForMonth = trendViewModel.onGetEngagementIconActionForMonth(),
+                    engagementIconActionForYear = trendViewModel.onGetEngagementIconActionForYear(),
                     postCardUiAction = postCardViewModel.onGetPostCardUiAction(),
                     onHubNavigate = onHubNavigate,
                 )
