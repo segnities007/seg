@@ -15,6 +15,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+//TODO フラグを利用してonlikeなどの処理を使い回すようにする
+
 data class TrendUiState(
     val trendOfToday: List<Post> = listOf(),
     val trendOfWeek: List<Post> = listOf(),
@@ -67,12 +69,33 @@ class TrendViewModel
                 onResetReadMore = this::onResetReadMore,
             )
 
-        fun onGetEngagementIconAction(): EngagementIconAction =
+        fun onGetEngagementIconActionForToday(): EngagementIconAction =
             EngagementIconAction(
-                onLike = this::onLike,
-                onRepost = this::onRepost,
+                onLike = this::onLikeForToday,
+                onRepost = this::onRepostForToday,
                 onComment = this::onComment,
             )
+
+    fun onGetEngagementIconActionForWeek(): EngagementIconAction =
+        EngagementIconAction(
+            onLike = this::onLikeForWeek,
+            onRepost = this::onRepostForWeek,
+            onComment = this::onComment,
+        )
+
+    fun onGetEngagementIconActionForMonth(): EngagementIconAction =
+        EngagementIconAction(
+            onLike = this::onLikeForMonth,
+            onRepost = this::onRepostForMonth,
+            onComment = this::onComment,
+        )
+
+    fun onGetEngagementIconActionForYear(): EngagementIconAction =
+        EngagementIconAction(
+            onLike = this::onLikeForYear,
+            onRepost = this::onRepostForYear,
+            onComment = this::onComment,
+        )
 
         private fun onResetReadMore() {
             trendUiState =
@@ -128,7 +151,7 @@ class TrendViewModel
             }
         }
 
-        private fun onLike(
+        private fun onLikeForToday(
             post: Post,
             myself: User,
             onGetUser: () -> Unit,
@@ -145,11 +168,74 @@ class TrendViewModel
                     postRepository.onUnLike(post = newPost, user = myself)
                 }
             }
-            onUpdateTrends(newPost)
+            onUpdateTrendsForToday(newPost)
             onGetUser()
         }
 
-        private fun onRepost(
+    private fun onLikeForWeek(
+        post: Post,
+        myself: User,
+        onGetUser: () -> Unit,
+    ) {
+        val newPost: Post
+        if (!myself.likes.contains(post.id)) {
+            newPost = post.copy(likeCount = post.likeCount + 1)
+            viewModelScope.launch(Dispatchers.IO) {
+                postRepository.onLike(post = newPost, user = myself)
+            }
+        } else {
+            newPost = post.copy(likeCount = post.likeCount - 1)
+            viewModelScope.launch(Dispatchers.IO) {
+                postRepository.onUnLike(post = newPost, user = myself)
+            }
+        }
+        onUpdateTrendsForWeek(newPost)
+        onGetUser()
+    }
+
+    private fun onLikeForMonth(
+        post: Post,
+        myself: User,
+        onGetUser: () -> Unit,
+    ) {
+        val newPost: Post
+        if (!myself.likes.contains(post.id)) {
+            newPost = post.copy(likeCount = post.likeCount + 1)
+            viewModelScope.launch(Dispatchers.IO) {
+                postRepository.onLike(post = newPost, user = myself)
+            }
+        } else {
+            newPost = post.copy(likeCount = post.likeCount - 1)
+            viewModelScope.launch(Dispatchers.IO) {
+                postRepository.onUnLike(post = newPost, user = myself)
+            }
+        }
+        onUpdateTrendsForMonth(newPost)
+        onGetUser()
+    }
+
+    private fun onLikeForYear(
+        post: Post,
+        myself: User,
+        onGetUser: () -> Unit,
+    ) {
+        val newPost: Post
+        if (!myself.likes.contains(post.id)) {
+            newPost = post.copy(likeCount = post.likeCount + 1)
+            viewModelScope.launch(Dispatchers.IO) {
+                postRepository.onLike(post = newPost, user = myself)
+            }
+        } else {
+            newPost = post.copy(likeCount = post.likeCount - 1)
+            viewModelScope.launch(Dispatchers.IO) {
+                postRepository.onUnLike(post = newPost, user = myself)
+            }
+        }
+        onUpdateTrendsForYear(newPost)
+        onGetUser()
+    }
+
+        private fun onRepostForToday(
             post: Post,
             myself: User,
             onGetUser: () -> Unit,
@@ -166,9 +252,72 @@ class TrendViewModel
                     postRepository.onUnRepost(post = newPost, user = myself)
                 }
             }
-            onUpdateTrends(newPost)
+            onUpdateTrendsForToday(newPost)
             onGetUser()
         }
+
+    private fun onRepostForWeek(
+        post: Post,
+        myself: User,
+        onGetUser: () -> Unit,
+    ) {
+        val newPost: Post
+        if (!myself.reposts.contains(post.id)) {
+            newPost = post.copy(repostCount = post.repostCount + 1)
+            viewModelScope.launch(Dispatchers.IO) {
+                postRepository.onRepost(post = newPost, user = myself)
+            }
+        } else {
+            newPost = post.copy(repostCount = post.repostCount - 1)
+            viewModelScope.launch(Dispatchers.IO) {
+                postRepository.onUnRepost(post = newPost, user = myself)
+            }
+        }
+        onUpdateTrendsForWeek(newPost)
+        onGetUser()
+    }
+
+    private fun onRepostForMonth(
+        post: Post,
+        myself: User,
+        onGetUser: () -> Unit,
+    ) {
+        val newPost: Post
+        if (!myself.reposts.contains(post.id)) {
+            newPost = post.copy(repostCount = post.repostCount + 1)
+            viewModelScope.launch(Dispatchers.IO) {
+                postRepository.onRepost(post = newPost, user = myself)
+            }
+        } else {
+            newPost = post.copy(repostCount = post.repostCount - 1)
+            viewModelScope.launch(Dispatchers.IO) {
+                postRepository.onUnRepost(post = newPost, user = myself)
+            }
+        }
+        onUpdateTrendsForMonth(newPost)
+        onGetUser()
+    }
+
+    private fun onRepostForYear(
+        post: Post,
+        myself: User,
+        onGetUser: () -> Unit,
+    ) {
+        val newPost: Post
+        if (!myself.reposts.contains(post.id)) {
+            newPost = post.copy(repostCount = post.repostCount + 1)
+            viewModelScope.launch(Dispatchers.IO) {
+                postRepository.onRepost(post = newPost, user = myself)
+            }
+        } else {
+            newPost = post.copy(repostCount = post.repostCount - 1)
+            viewModelScope.launch(Dispatchers.IO) {
+                postRepository.onUnRepost(post = newPost, user = myself)
+            }
+        }
+        onUpdateTrendsForYear(newPost)
+        onGetUser()
+    }
 
         private fun onComment(
             post: Post,
@@ -181,7 +330,7 @@ class TrendViewModel
             }
         }
 
-        private fun onUpdateTrends(newTrend: Post) {
+        private fun onUpdateTrendsForToday(newTrend: Post) {
             val trends =
                 trendUiState.trendOfToday.map { trend ->
                     if (newTrend.id == trend.id) newTrend else trend
@@ -189,4 +338,31 @@ class TrendViewModel
 
             trendUiState = trendUiState.copy(trendOfToday = trends)
         }
+
+    private fun onUpdateTrendsForWeek(newTrend: Post) {
+        val trends =
+            trendUiState.trendOfWeek.map { trend ->
+                if (newTrend.id == trend.id) newTrend else trend
+            }
+
+        trendUiState = trendUiState.copy(trendOfWeek = trends)
+    }
+
+    private fun onUpdateTrendsForMonth(newTrend: Post) {
+        val trends =
+            trendUiState.trendOfMonth.map { trend ->
+                if (newTrend.id == trend.id) newTrend else trend
+            }
+
+        trendUiState = trendUiState.copy(trendOfMonth = trends)
+    }
+
+    private fun onUpdateTrendsForYear(newTrend: Post) {
+        val trends =
+            trendUiState.trendOfYear.map { trend ->
+                if (newTrend.id == trend.id) newTrend else trend
+            }
+
+        trendUiState = trendUiState.copy(trendOfYear = trends)
+    }
     }

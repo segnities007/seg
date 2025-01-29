@@ -37,7 +37,10 @@ fun Trend(
     trendUiState: TrendUiState,
     trendUiAction: TrendUiAction,
     engagementIconState: EngagementIconState,
-    engagementIconAction: EngagementIconAction,
+    engagementIconActionForToday: EngagementIconAction,
+    engagementIconActionForWeek: EngagementIconAction,
+    engagementIconActionForMonth: EngagementIconAction,
+    engagementIconActionForYear: EngagementIconAction,
     postCardUiAction: PostCardUiAction,
     onHubNavigate: (Route) -> Unit,
 ) {
@@ -77,6 +80,13 @@ fun Trend(
             },
         )
 
+    val engages = listOf(
+        engagementIconActionForToday,
+        engagementIconActionForWeek,
+        engagementIconActionForMonth,
+        engagementIconActionForYear,
+    )
+
     val pagerState =
         rememberPagerState(pageCount = {
             4
@@ -107,7 +117,7 @@ fun Trend(
                     hubUiAction = hubUiAction,
                     postCardUiAction = postCardUiAction,
                     engagementIconState = engagementIconState,
-                    engagementIconAction = engagementIconAction,
+                    engagementIconAction = engages[page]
                 )
             }
             if (!readMores[page]) {
