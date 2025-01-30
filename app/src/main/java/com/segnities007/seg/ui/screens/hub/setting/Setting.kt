@@ -18,8 +18,6 @@ import com.segnities007.seg.ui.screens.hub.HubUiAction
 fun Setting(
     modifier: Modifier = Modifier,
     hubUiAction: HubUiAction,
-    onSettingNavigate: (Route) -> Unit,
-    commonPadding: Dp = dimensionResource(R.dimen.padding_normal),
     content: @Composable () -> Unit,
 ) {
     LaunchedEffect(Unit) {

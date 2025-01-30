@@ -108,10 +108,8 @@ fun NavigationHub(
                     hubUiState = hubViewModel.hubUiState,
                     hubUiAction = hubViewModel.getHubUiAction(),
                     onTopNavigate = onTopNavigate,
-                    postCardUiState = postCardViewModel.postCardUiState,
                     postCardUiAction = postCardViewModel.onGetPostCardUiAction(),
                     engagementIconState = postCardViewModel.engagementIconState,
-                    engagementIconAction = postCardViewModel.onGetEngagementIconAction(),
                     onHubNavigate = onHubNavigate,
                 )
             }

@@ -78,7 +78,7 @@ class PostRepositoryImpl
                         .select {
                             filter {
                                 Post::userID eq userID
-                                lt("created_at", updateAt)
+                                lt("create_at", updateAt)
                             }
                             order("create_at", Order.DESCENDING)
                             limit(count = 7)
@@ -89,7 +89,7 @@ class PostRepositoryImpl
 
                 return list
             } catch (e: Exception) {
-                Log.e(tag, "failed onGetBeforePosts $e")
+                Log.e(tag, "failed onGetBeforePostsOfUser $e")
                 throw e
             }
         }

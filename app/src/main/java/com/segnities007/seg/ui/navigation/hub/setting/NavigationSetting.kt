@@ -16,7 +16,7 @@ import com.segnities007.seg.ui.screens.hub.HubUiAction
 import com.segnities007.seg.ui.screens.hub.HubUiState
 import com.segnities007.seg.ui.screens.hub.setting.Setting
 import com.segnities007.seg.ui.screens.hub.setting.SettingViewModel
-import com.segnities007.seg.ui.screens.hub.setting.posts.Posts
+import com.segnities007.seg.ui.screens.hub.setting.my_posts.MyPosts
 import com.segnities007.seg.ui.screens.hub.setting.preference.Preference
 import com.segnities007.seg.ui.screens.hub.setting.userinfo.UserInfo
 
@@ -25,10 +25,8 @@ fun NavigationSetting(
     modifier: Modifier = Modifier,
     settingNavHostController: NavHostController = rememberNavController(),
     settingViewModel: SettingViewModel = hiltViewModel(),
-    postCardUiState: PostCardUiState,
     postCardUiAction: PostCardUiAction,
     engagementIconState: EngagementIconState,
-    engagementIconAction: EngagementIconAction,
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
     onTopNavigate: (Route) -> Unit,
@@ -36,9 +34,6 @@ fun NavigationSetting(
 ) {
     Setting(
         modifier = modifier,
-        onSettingNavigate = { route: Route ->
-            settingNavHostController.navigate(route)
-        },
         hubUiAction = hubUiAction,
     ) {
         NavHost(navController = settingNavHostController, startDestination = NavigationSettingRoute.Preference()) {
@@ -61,14 +56,12 @@ fun NavigationSetting(
                 )
             }
             composable<NavigationSettingRoute.Posts> {
-                Posts(
+                MyPosts(
                     hubUiState = hubUiState,
                     hubUiAction = hubUiAction,
                     engagementIconState = engagementIconState,
-                    engagementIconAction = engagementIconAction,
                     postCardUiAction = postCardUiAction,
                     onHubNavigate = onHubNavigate,
-                    postCardUiState = postCardUiState,
                 )
             }
         }
