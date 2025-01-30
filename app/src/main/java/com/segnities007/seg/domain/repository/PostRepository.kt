@@ -21,6 +21,8 @@ interface PostRepository {
 
     suspend fun onGetPost(postID: Int): Post
 
+    suspend fun onGetPosts(postIDs: List<Int>): List<Post>
+
     suspend fun onGetNewPost(): Post
 
     suspend fun onGetNewPosts(): List<Post>

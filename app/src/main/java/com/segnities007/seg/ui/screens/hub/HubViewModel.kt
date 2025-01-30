@@ -19,9 +19,12 @@ data class HubUiState(
     val accounts: List<String> = listOf(),
     val currentRouteName: String = "Home",
     val comment: Post = Post(),
+    val isHideTopBar: Boolean = false,
 )
 
 data class HubUiAction(
+    val onChangeIsHideTopBar: () -> Unit,
+    val onResetIsHideTopBar: () -> Unit,
     val onGetUser: () -> Unit,
     val onSetComment: (comment: Post) -> Unit,
     val onSetUserID: (userID: String) -> Unit,
@@ -53,7 +56,17 @@ class HubViewModel
                 onAddPostIDToRepostList = this::onAddPostIDToRepostList,
                 onRemovePostIDFromRepostList = this::onRemovePostIDFromRepostList,
                 onChangeCurrentRouteName = this::onChangeCurrentRouteName,
+                onChangeIsHideTopBar = this::onChangeIsHideTopBar,
+                onResetIsHideTopBar = this::onResetIsHideTopBar,
             )
+
+        private fun onChangeIsHideTopBar() {
+            hubUiState = hubUiState.copy(isHideTopBar = !hubUiState.isHideTopBar)
+        }
+
+        private fun onResetIsHideTopBar() {
+            hubUiState = hubUiState.copy(isHideTopBar = false)
+        }
 
         private fun onSetComment(comment: Post) {
             hubUiState = hubUiState.copy(comment = comment)
