@@ -8,6 +8,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.segnities007.seg.domain.presentation.Route
+import com.segnities007.seg.ui.components.card.postcard.EngagementIconAction
 import com.segnities007.seg.ui.components.card.postcard.PostCard
 import com.segnities007.seg.ui.components.card.postcard.PostCardUiAction
 import com.segnities007.seg.ui.screens.hub.HubUiAction
@@ -25,19 +26,39 @@ fun Comment(
     LaunchedEffect(Unit) {
         val commentUiAction = commentViewModel.onGetCommentUiAction()
         commentUiAction.onGetComment(hubUiState.comment)
-        // TODO get comments
     }
 
+    CommentUi(
+        modifier = modifier,
+        hubUiState = hubUiState,
+        hubUiAction = hubUiAction,
+        commentUiState = commentViewModel.commentUiState,
+        engagementIconAction = commentViewModel.onGetEngagementIconAction(),
+        postCardUiAction = postCardUiAction,
+        onHubNavigate = onHubNavigate,
+    )
+}
+
+@Composable
+private fun CommentUi(
+    modifier: Modifier = Modifier,
+    hubUiState: HubUiState,
+    hubUiAction: HubUiAction,
+    commentUiState: CommentUiState,
+    engagementIconAction: EngagementIconAction,
+    postCardUiAction: PostCardUiAction,
+    onHubNavigate: (Route) -> Unit,
+) {
     Column(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Top,
     ) {
         PostCard(
-            post = commentViewModel.commentUiState.comment,
+            post = commentUiState.comment,
             myself = hubUiState.user,
             hubUiAction = hubUiAction,
             postCardUiAction = postCardUiAction,
-            engagementIconAction = commentViewModel.onGetEngagementIconAction(),
+            engagementIconAction = engagementIconAction,
             onHubNavigate = onHubNavigate,
         )
     }

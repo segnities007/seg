@@ -13,8 +13,6 @@ import com.segnities007.seg.ui.components.card.AvatarCard
 import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
 import com.segnities007.seg.ui.screens.hub.HubUiAction
 import com.segnities007.seg.ui.screens.hub.HubUiState
-import com.segnities007.seg.ui.screens.hub.account.AccountUiAction
-import com.segnities007.seg.ui.screens.hub.account.AccountUiState
 
 @Composable
 fun Accounts(
@@ -24,7 +22,6 @@ fun Accounts(
     hubUiAction: HubUiAction,
     onHubNavigate: (Route) -> Unit,
 ) {
-
     LaunchedEffect(Unit) {
         val action = accountsViewModel.onGetAccountsUiAction()
         action.onGetUser(hubUiState.userID)
@@ -47,7 +44,7 @@ private fun AccountsUi(
     accountsUiAction: AccountsUiAction,
     hubUiAction: HubUiAction,
     onHubNavigate: (Route) -> Unit,
-){
+) {
     LazyColumn(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Top,

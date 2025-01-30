@@ -64,7 +64,7 @@ private fun AccountUi(
     postCardUiAction: PostCardUiAction,
     commonPadding: Dp,
     onHubNavigate: (Route) -> Unit,
-){
+) {
     LazyColumn(
         modifier = modifier.fillMaxSize().padding(top = dimensionResource(R.dimen.padding_smaller)),
         horizontalAlignment = Alignment.CenterHorizontally,

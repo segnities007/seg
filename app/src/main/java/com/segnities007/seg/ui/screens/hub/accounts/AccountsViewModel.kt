@@ -41,12 +41,12 @@ class AccountsViewModel
                 onChangeIsNotCompletedOfAccounts = this::onChangeIsNotCompletedOfAccounts,
             )
 
-    private fun onGetUser(userID: String){
-        viewModelScope.launch(Dispatchers.IO){
-            val user = userRepository.getOtherUser(userID)
-            accountsUiState = accountsUiState.copy(user = user)
+        private fun onGetUser(userID: String) {
+            viewModelScope.launch(Dispatchers.IO) {
+                val user = userRepository.getOtherUser(userID)
+                accountsUiState = accountsUiState.copy(user = user)
+            }
         }
-    }
 
         private fun onGetUsers(userIDs: List<String>) {
             viewModelScope.launch(Dispatchers.IO) {

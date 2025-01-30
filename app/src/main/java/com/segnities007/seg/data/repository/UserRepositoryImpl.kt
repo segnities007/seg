@@ -19,7 +19,8 @@ class UserRepositoryImpl
         private val tag = "UserRepository"
         private val tableName = "users"
         private val userColumn =
-            ("name," + "user_id," + "birthday," + "is_prime," +
+            (
+                "name," + "user_id," + "birthday," + "is_prime," +
                     "icon_url," + "follow_user_id_list," + "follow_count," + "follower_user_id_list," +
                     "follower_count," + "create_at," + "post_id_list"
             ).trimIndent()
