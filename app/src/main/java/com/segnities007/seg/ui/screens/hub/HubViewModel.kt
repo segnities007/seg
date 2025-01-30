@@ -23,6 +23,7 @@ data class HubUiState(
 
 data class HubUiAction(
     val onGetUser: () -> Unit,
+    val onSetComment: (comment: Post) -> Unit,
     val onSetUserID: (userID: String) -> Unit,
     val onSetAccounts: (accounts: List<String>) -> Unit,
     val onAddPostIDToLikeList: (postID: Int) -> Unit,
@@ -46,6 +47,7 @@ class HubViewModel
                 onGetUser = this::onGetUser,
                 onSetUserID = this::onSetUserID,
                 onSetAccounts = this::onSetAccounts,
+                onSetComment = this::onSetComment,
                 onAddPostIDToLikeList = this::onAddPostIDToLikeList,
                 onRemovePostIDFromLikeList = this::onRemovePostIDFromLikeList,
                 onAddPostIDToRepostList = this::onAddPostIDToRepostList,
@@ -53,9 +55,13 @@ class HubViewModel
                 onChangeCurrentRouteName = this::onChangeCurrentRouteName,
             )
 
-    private fun onSetAccounts(accounts: List<String>){
-        hubUiState = hubUiState.copy(accounts = accounts)
-    }
+        private fun onSetComment(comment: Post) {
+            hubUiState = hubUiState.copy(comment = comment)
+        }
+
+        private fun onSetAccounts(accounts: List<String>) {
+            hubUiState = hubUiState.copy(accounts = accounts)
+        }
 
         private fun onSetUserID(userID: String) {
             hubUiState = hubUiState.copy(userID = userID)
