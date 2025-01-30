@@ -15,7 +15,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.segnities007.seg.R
 import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.ui.components.card.postcard.EngagementIconAction
-import com.segnities007.seg.ui.components.card.postcard.EngagementIconState
 import com.segnities007.seg.ui.components.card.postcard.PostCard
 import com.segnities007.seg.ui.components.card.postcard.PostCardUiAction
 import com.segnities007.seg.ui.components.indicator.LoadingUI
@@ -27,7 +26,6 @@ fun MyPosts(
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
     myPostsViewModel: MyPostsViewModel = hiltViewModel(),
-    engagementIconState: EngagementIconState,
     postCardUiAction: PostCardUiAction,
     onHubNavigate: (Route) -> Unit,
 ) {
@@ -42,7 +40,6 @@ fun MyPosts(
         hubUiAction = hubUiAction,
         myPostsUiState = myPostsViewModel.myPostsUiState,
         myPostsUiAction = myPostsViewModel.onGetMyPostsUiAction(),
-        engagementIconState = engagementIconState,
         engagementIconAction = myPostsViewModel.onGetEngagementIconAction(),
         postCardUiAction = postCardUiAction,
         onHubNavigate = onHubNavigate,
@@ -55,7 +52,6 @@ private fun MyPostsUi(
     hubUiAction: HubUiAction,
     myPostsUiState: MyPostsUiState,
     myPostsUiAction: MyPostsUiAction,
-    engagementIconState: EngagementIconState,
     engagementIconAction: EngagementIconAction,
     postCardUiAction: PostCardUiAction,
     onHubNavigate: (Route) -> Unit,
@@ -77,7 +73,6 @@ private fun MyPostsUi(
                     isIncrementView = false,
                     onHubNavigate = onHubNavigate,
                     hubUiAction = hubUiAction,
-                    engagementIconState = engagementIconState,
                     engagementIconAction = engagementIconAction,
                     postCardUiAction = postCardUiAction,
                 )

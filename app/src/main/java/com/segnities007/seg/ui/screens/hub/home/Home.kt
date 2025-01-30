@@ -15,7 +15,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.segnities007.seg.R
 import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.ui.components.card.postcard.EngagementIconAction
-import com.segnities007.seg.ui.components.card.postcard.EngagementIconState
 import com.segnities007.seg.ui.components.card.postcard.PostCard
 import com.segnities007.seg.ui.components.card.postcard.PostCardUiAction
 import com.segnities007.seg.ui.components.indicator.LoadingUI
@@ -28,7 +27,6 @@ fun Home(
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
     homeViewModel: HomeViewModel = hiltViewModel(),
-    engagementIconState: EngagementIconState,
     postCardUiAction: PostCardUiAction,
     onHubNavigate: (Route) -> Unit,
 ) {
@@ -42,7 +40,6 @@ fun Home(
         hubUiAction = hubUiAction,
         homeUiState = homeViewModel.homeUiState,
         homeUiAction = homeViewModel.onGetHomeUiAction(),
-        engagementIconState = engagementIconState,
         engagementIconAction = homeViewModel.onGetEngagementUiAction(),
         postCardUiAction = postCardUiAction,
         onHubNavigate = onHubNavigate,
@@ -56,7 +53,6 @@ private fun HomeUi(
     hubUiAction: HubUiAction,
     homeUiState: HomeUiState,
     homeUiAction: HomeUiAction,
-    engagementIconState: EngagementIconState,
     engagementIconAction: EngagementIconAction,
     postCardUiAction: PostCardUiAction,
     onHubNavigate: (Route) -> Unit,
@@ -75,7 +71,6 @@ private fun HomeUi(
                 myself = hubUiState.user,
                 onHubNavigate = onHubNavigate,
                 hubUiAction = hubUiAction,
-                engagementIconState = engagementIconState,
                 engagementIconAction = engagementIconAction,
                 postCardUiAction = postCardUiAction,
             )

@@ -67,7 +67,10 @@ fun CreateAccount(
             Text(stringResource(id = R.string.select))
         }
         ElevatedButton(
-            onClick = { createAccountUiAction.createUser(onNavigateToHub) },
+            onClick = {
+                createAccountUiAction.onCreateUser()
+                onNavigateToHub()
+            },
             modifier = Modifier.padding(dimensionResource(R.dimen.padding_normal)),
         ) {
             Text(stringResource(id = R.string.enter))

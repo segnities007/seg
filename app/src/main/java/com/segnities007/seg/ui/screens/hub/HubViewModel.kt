@@ -14,15 +14,17 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class HubUiState(
-    val user: User = User(),
-    val userID: String = "", // of other user
+    val user: User = User(), // myself
+    val userID: String = "", // other user
+    val accounts: List<String> = listOf(),
     val currentRouteName: String = "Home",
     val comment: Post = Post(),
 )
 
 data class HubUiAction(
     val onGetUser: () -> Unit,
-    val onGetUserID: (userID: String) -> Unit,
+    val onSetUserID: (userID: String) -> Unit,
+    val onSetAccounts: (accounts: List<String>) -> Unit,
     val onAddPostIDToLikeList: (postID: Int) -> Unit,
     val onRemovePostIDFromLikeList: (postID: Int) -> Unit,
     val onAddPostIDToRepostList: (postID: Int) -> Unit,
@@ -36,17 +38,14 @@ class HubViewModel
     constructor(
         private val userRepository: UserRepository,
     ) : TopLayerViewModel() {
-        init {
-            onGetUser()
-        }
-
         var hubUiState by mutableStateOf(HubUiState())
             private set
 
         fun getHubUiAction(): HubUiAction =
             HubUiAction(
                 onGetUser = this::onGetUser,
-                onGetUserID = this::onGetUserID,
+                onSetUserID = this::onSetUserID,
+                onSetAccounts = this::onSetAccounts,
                 onAddPostIDToLikeList = this::onAddPostIDToLikeList,
                 onRemovePostIDFromLikeList = this::onRemovePostIDFromLikeList,
                 onAddPostIDToRepostList = this::onAddPostIDToRepostList,
@@ -54,7 +53,11 @@ class HubViewModel
                 onChangeCurrentRouteName = this::onChangeCurrentRouteName,
             )
 
-        private fun onGetUserID(userID: String) {
+    private fun onSetAccounts(accounts: List<String>){
+        hubUiState = hubUiState.copy(accounts = accounts)
+    }
+
+        private fun onSetUserID(userID: String) {
             hubUiState = hubUiState.copy(userID = userID)
         }
 
@@ -87,8 +90,8 @@ class HubViewModel
         }
 
         private fun onRemovePostIDFromRepostList(postID: Int) {
-            val newPosta = hubUiState.user.reposts.minus(postID)
-            val updatedUser = hubUiState.user.copy(reposts = newPosta)
+            val newPosts = hubUiState.user.reposts.minus(postID)
+            val updatedUser = hubUiState.user.copy(reposts = newPosts)
 
             hubUiState = hubUiState.copy(user = updatedUser)
         }

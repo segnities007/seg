@@ -1,26 +1,53 @@
-package com.segnities007.seg.ui.screens.hub.account
+package com.segnities007.seg.ui.screens.hub.accounts
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.ui.components.card.AvatarCard
 import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
 import com.segnities007.seg.ui.screens.hub.HubUiAction
+import com.segnities007.seg.ui.screens.hub.HubUiState
+import com.segnities007.seg.ui.screens.hub.account.AccountUiAction
+import com.segnities007.seg.ui.screens.hub.account.AccountUiState
 
 @Composable
 fun Accounts(
     modifier: Modifier = Modifier,
-    accountUiState: AccountUiState,
-    accountUiAction: AccountUiAction,
+    accountsViewModel: AccountsViewModel = hiltViewModel(),
+    hubUiState: HubUiState,
+    hubUiAction: HubUiAction,
+    onHubNavigate: (Route) -> Unit,
+) {
+
+    LaunchedEffect(Unit) {
+        val action = accountsViewModel.onGetAccountsUiAction()
+        action.onGetUser(hubUiState.userID)
+        action.onGetUsers(hubUiState.accounts)
+    }
+
+    AccountsUi(
+        modifier = modifier,
+        accountsUiState = accountsViewModel.accountsUiState,
+        accountsUiAction = accountsViewModel.onGetAccountsUiAction(),
+        hubUiAction = hubUiAction,
+        onHubNavigate = onHubNavigate,
+    )
+}
+
+@Composable
+private fun AccountsUi(
+    modifier: Modifier = Modifier,
     accountsUiState: AccountsUiState,
     accountsUiAction: AccountsUiAction,
     hubUiAction: HubUiAction,
     onHubNavigate: (Route) -> Unit,
-) {
+){
     LazyColumn(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Top,
@@ -33,8 +60,7 @@ fun Accounts(
             AvatarCard(
                 user = accountsUiState.users[it],
                 onCardClick = {
-                    accountUiAction.onGetOtherUser(accountsUiState.users[it].userID)
-                    hubUiAction.onGetUserID(accountsUiState.users[it].userID)
+                    hubUiAction.onSetUserID(accountsUiState.users[it].userID)
                     hubUiAction.onChangeCurrentRouteName(NavigationHubRoute.Account().name)
                     onHubNavigate(NavigationHubRoute.Account())
                 },

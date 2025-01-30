@@ -58,7 +58,6 @@ fun PostCard(
     hubUiAction: HubUiAction,
     isShowDetailButton: Boolean = false,
     isIncrementView: Boolean = true, // For disable when view my post
-    engagementIconState: EngagementIconState,
     engagementIconAction: EngagementIconAction,
     postCardUiAction: PostCardUiAction,
     onHubNavigate: (Route) -> Unit,
@@ -98,7 +97,7 @@ fun PostCard(
                             .size(dimensionResource(R.dimen.icon_sn))
                             .clip(CircleShape)
                             .clickable {
-                                hubUiAction.onGetUserID(post.userID)
+                                hubUiAction.onSetUserID(post.userID) // for viewing other user
                                 hubUiAction.onChangeCurrentRouteName(NavigationHubRoute.Account().name)
                                 onHubNavigate(NavigationHubRoute.Account())
                             },
@@ -117,7 +116,6 @@ fun PostCard(
                         modifier = modifier,
                         post = post,
                         myself = myself,
-                        engagementIconState = engagementIconState,
                         engagementIconAction = engagementIconAction,
                         hubUiAction = hubUiAction,
                     )
@@ -201,7 +199,6 @@ private fun ActionIcons(
     myself: User,
     post: Post,
     hubUiAction: HubUiAction,
-    engagementIconState: EngagementIconState,
     engagementIconAction: EngagementIconAction,
 ) {
     val counts: List<Int> =
@@ -218,8 +215,8 @@ private fun ActionIcons(
         horizontalArrangement = Arrangement.Start,
     ) {
         ActionIcon(
-            painterRes = if (myself.likes.contains(post.id)) engagementIconState.pushIcons[0] else engagementIconState.unPushIcons[0],
-            contentRes = engagementIconState.contentDescriptions[0],
+            painterRes = if (myself.likes.contains(post.id)) EngagementIconState.pushIcons[0] else EngagementIconState.unPushIcons[0],
+            contentRes = EngagementIconState.contentDescriptions[0],
             count = counts[0],
             onClick = {
                 if (myself.likes.contains(post.id)) {
@@ -231,8 +228,8 @@ private fun ActionIcons(
         )
         Spacer(Modifier.weight(1f))
         ActionIcon(
-            painterRes = if (myself.reposts.contains(post.id)) engagementIconState.pushIcons[1] else engagementIconState.unPushIcons[1],
-            contentRes = engagementIconState.contentDescriptions[1],
+            painterRes = if (myself.reposts.contains(post.id)) EngagementIconState.pushIcons[1] else EngagementIconState.unPushIcons[1],
+            contentRes = EngagementIconState.contentDescriptions[1],
             count = counts[1],
             onClick = {
                 Log.d("postcard", post.id.toString())
@@ -245,8 +242,8 @@ private fun ActionIcons(
         )
         Spacer(Modifier.weight(1f))
         ActionIcon(
-            painterRes = if (myself.comments.contains(post.id)) engagementIconState.pushIcons[2] else engagementIconState.unPushIcons[2],
-            contentRes = engagementIconState.contentDescriptions[2],
+            painterRes = if (myself.comments.contains(post.id)) EngagementIconState.pushIcons[2] else EngagementIconState.unPushIcons[2],
+            contentRes = EngagementIconState.contentDescriptions[2],
             count = counts[2],
             onClick = {
                 // TODO
@@ -254,8 +251,8 @@ private fun ActionIcons(
         )
         Spacer(Modifier.weight(1f))
         ActionIcon(
-            painterRes = engagementIconState.pushIcons[3],
-            contentRes = engagementIconState.contentDescriptions[3],
+            painterRes = EngagementIconState.pushIcons[3],
+            contentRes = EngagementIconState.contentDescriptions[3],
             count = counts[3],
             isClickable = false,
         )

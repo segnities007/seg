@@ -8,7 +8,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.segnities007.seg.domain.presentation.Route
-import com.segnities007.seg.ui.components.card.postcard.EngagementIconState
 import com.segnities007.seg.ui.components.card.postcard.PostCard
 import com.segnities007.seg.ui.components.card.postcard.PostCardUiAction
 import com.segnities007.seg.ui.screens.hub.HubUiAction
@@ -19,7 +18,6 @@ fun Comment(
     modifier: Modifier = Modifier,
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
-    engagementIconState: EngagementIconState,
     commentViewModel: CommentViewModel = hiltViewModel(),
     postCardUiAction: PostCardUiAction,
     onHubNavigate: (Route) -> Unit,
@@ -39,7 +37,6 @@ fun Comment(
             myself = hubUiState.user,
             hubUiAction = hubUiAction,
             postCardUiAction = postCardUiAction,
-            engagementIconState = engagementIconState,
             engagementIconAction = commentViewModel.onGetEngagementIconAction(),
             onHubNavigate = onHubNavigate,
         )

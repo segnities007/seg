@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,7 +18,6 @@ import com.segnities007.seg.R
 import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.ui.components.button.SmallButton
 import com.segnities007.seg.ui.components.card.postcard.EngagementIconAction
-import com.segnities007.seg.ui.components.card.postcard.EngagementIconState
 import com.segnities007.seg.ui.components.card.postcard.PostCard
 import com.segnities007.seg.ui.components.card.postcard.PostCardUiAction
 import com.segnities007.seg.ui.components.indicator.LoadingUI
@@ -33,24 +31,40 @@ fun Account(
     hubUiAction: HubUiAction,
     accountUiState: AccountUiState,
     accountUiAction: AccountUiAction,
-    accountsUiAction: AccountsUiAction,
-    engagementIconState: EngagementIconState,
     engagementIconAction: EngagementIconAction,
     postCardUiAction: PostCardUiAction,
     commonPadding: Dp = dimensionResource(R.dimen.padding_normal),
     onHubNavigate: (Route) -> Unit,
 ) {
     LaunchedEffect(Unit) {
-        accountUiAction.onGetOtherUser(hubUiState.userID)
-        accountUiAction.onGetUserPosts(hubUiState.userID)
+        accountUiAction.onInitAccountUiState(hubUiState.userID)
     }
 
-    DisposableEffect(Unit) {
-        onDispose {
-            accountsUiAction.onReset()
-        }
-    }
+    AccountUi(
+        modifier = modifier,
+        hubUiState = hubUiState,
+        hubUiAction = hubUiAction,
+        accountUiState = accountUiState,
+        accountUiAction = accountUiAction,
+        engagementIconAction = engagementIconAction,
+        postCardUiAction = postCardUiAction,
+        onHubNavigate = onHubNavigate,
+        commonPadding = commonPadding,
+    )
+}
 
+@Composable
+private fun AccountUi(
+    modifier: Modifier = Modifier,
+    hubUiState: HubUiState,
+    hubUiAction: HubUiAction,
+    accountUiState: AccountUiState,
+    accountUiAction: AccountUiAction,
+    engagementIconAction: EngagementIconAction,
+    postCardUiAction: PostCardUiAction,
+    commonPadding: Dp,
+    onHubNavigate: (Route) -> Unit,
+){
     LazyColumn(
         modifier = modifier.fillMaxSize().padding(top = dimensionResource(R.dimen.padding_smaller)),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -77,7 +91,6 @@ fun Account(
                 myself = hubUiState.user,
                 onHubNavigate = onHubNavigate,
                 hubUiAction = hubUiAction,
-                engagementIconState = engagementIconState,
                 engagementIconAction = engagementIconAction,
                 postCardUiAction = postCardUiAction,
             )

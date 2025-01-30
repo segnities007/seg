@@ -15,7 +15,6 @@ import com.segnities007.seg.R
 import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.ui.components.card.AvatarCard
 import com.segnities007.seg.ui.components.card.postcard.EngagementIconAction
-import com.segnities007.seg.ui.components.card.postcard.EngagementIconState
 import com.segnities007.seg.ui.components.card.postcard.PostCard
 import com.segnities007.seg.ui.components.card.postcard.PostCardUiAction
 import com.segnities007.seg.ui.components.indicator.LoadingUI
@@ -30,7 +29,6 @@ fun Search(
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
     postCardUiAction: PostCardUiAction,
-    engagementIconState: EngagementIconState,
     engagementIconActionForPosts: EngagementIconAction,
     engagementIconActionForPostsSortedByViewCount: EngagementIconAction,
     topSearchBarUiState: TopSearchBarUiState,
@@ -52,7 +50,6 @@ fun Search(
                 hubUiState = hubUiState,
                 hubUiAction = hubUiAction,
                 postCardUiAction = postCardUiAction,
-                engagementIconState = engagementIconState,
                 engagementIconAction = engagementIconActionForPostsSortedByViewCount,
                 topSearchBarUiState = topSearchBarUiState,
                 searchUiState = searchUiState,
@@ -65,7 +62,6 @@ fun Search(
                 hubUiState = hubUiState,
                 hubUiAction = hubUiAction,
                 postCardUiAction = postCardUiAction,
-                engagementIconState = engagementIconState,
                 engagementIconAction = engagementIconActionForPosts,
                 topSearchBarUiState = topSearchBarUiState,
                 searchUiState = searchUiState,
@@ -92,7 +88,6 @@ private fun MostViewPosts(
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
     postCardUiAction: PostCardUiAction,
-    engagementIconState: EngagementIconState,
     engagementIconAction: EngagementIconAction,
     topSearchBarUiState: TopSearchBarUiState,
     searchUiState: SearchUiState,
@@ -116,7 +111,6 @@ private fun MostViewPosts(
                 onHubNavigate = onHubNavigate,
                 hubUiAction = hubUiAction,
                 isIncrementView = false,
-                engagementIconState = engagementIconState,
                 engagementIconAction = engagementIconAction,
                 postCardUiAction = postCardUiAction,
             )
@@ -146,7 +140,6 @@ private fun LatestPosts(
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
     postCardUiAction: PostCardUiAction,
-    engagementIconState: EngagementIconState,
     engagementIconAction: EngagementIconAction,
     topSearchBarUiState: TopSearchBarUiState,
     searchUiState: SearchUiState,
@@ -170,7 +163,6 @@ private fun LatestPosts(
                 onHubNavigate = onHubNavigate,
                 hubUiAction = hubUiAction,
                 isIncrementView = false,
-                engagementIconState = engagementIconState,
                 engagementIconAction = engagementIconAction,
                 postCardUiAction = postCardUiAction,
             )
@@ -219,7 +211,7 @@ private fun Users(
             AvatarCard(
                 onCardClick = {
                     accountUiAction.onGetUserPosts(searchUiState.users[i].userID)
-                    hubUiAction.onGetUserID(searchUiState.users[i].userID)
+                    hubUiAction.onSetUserID(searchUiState.users[i].userID)
                     hubUiAction.onChangeCurrentRouteName(NavigationHubRoute.Account().name)
                     onHubNavigate(NavigationHubRoute.Account())
                 },

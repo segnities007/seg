@@ -29,10 +29,12 @@ import com.segnities007.seg.R
 import com.segnities007.seg.data.model.User
 import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
+import com.segnities007.seg.ui.screens.hub.HubUiAction
 
 @Composable
 fun TopStatusBar(
     user: User,
+    hubUiAction: HubUiAction,
     onClickFollowsButton: () -> Unit = {},
     onClickFollowersButton: () -> Unit = {},
     onHubNavigate: (Route) -> Unit,
@@ -55,6 +57,7 @@ fun TopStatusBar(
             AboutFollow(
                 user = user,
                 onHubNavigate = onHubNavigate,
+                hubUiAction = hubUiAction,
                 onClickFollowsButton = onClickFollowsButton,
                 onClickFollowersButton = onClickFollowersButton,
             )
@@ -110,6 +113,7 @@ private fun AboutFollow(
     modifier: Modifier = Modifier,
     user: User,
     commonPadding: Dp = dimensionResource(R.dimen.padding_smaller),
+    hubUiAction: HubUiAction,
     fontColor: Color = MaterialTheme.colorScheme.primary,
     onHubNavigate: (Route) -> Unit,
     onClickFollowsButton: () -> Unit,
@@ -125,6 +129,7 @@ private fun AboutFollow(
                     .clip(RoundedCornerShape(commonPadding))
                     .clickable {
                         onClickFollowsButton()
+                        hubUiAction.onSetAccounts(user.follows)
                         onHubNavigate(NavigationHubRoute.Accounts())
                     }.padding(commonPadding),
         ) { Text(text = "Follow: ${user.followCount}", color = fontColor) }
@@ -134,6 +139,7 @@ private fun AboutFollow(
                     .clip(RoundedCornerShape(commonPadding))
                     .clickable {
                         onClickFollowersButton()
+                        hubUiAction.onSetAccounts(user.followers)
                         onHubNavigate(NavigationHubRoute.Accounts())
                     }.padding(commonPadding),
         ) { Text(text = "Follower: ${user.followerCount}", color = fontColor) }

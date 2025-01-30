@@ -13,26 +13,26 @@ data class EngagementIconAction(
 )
 
 @Immutable
-data class EngagementIconState(
+object EngagementIconState {
     val pushIcons: List<Int> =
         listOf(
             R.drawable.baseline_favorite_24,
             R.drawable.baseline_repeat_24,
             R.drawable.baseline_chat_bubble_24,
             R.drawable.baseline_bar_chart_24,
-        ),
+        )
     val unPushIcons: List<Int> =
         listOf(
             R.drawable.baseline_favorite_border_24,
             R.drawable.baseline_repeat_24,
             R.drawable.baseline_chat_bubble_outline_24,
             R.drawable.baseline_bar_chart_24,
-        ),
+        )
     val contentDescriptions: List<Int> =
         listOf(
             R.string.favorite,
             R.string.repost,
             R.string.comment,
             R.string.view_count,
-        ),
-)
+        )
+}

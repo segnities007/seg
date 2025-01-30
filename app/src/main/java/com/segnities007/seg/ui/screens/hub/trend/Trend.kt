@@ -17,11 +17,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.segnities007.seg.R
 import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.ui.components.button.SmallButton
 import com.segnities007.seg.ui.components.card.postcard.EngagementIconAction
-import com.segnities007.seg.ui.components.card.postcard.EngagementIconState
 import com.segnities007.seg.ui.components.card.postcard.PostCard
 import com.segnities007.seg.ui.components.card.postcard.PostCardUiAction
 import com.segnities007.seg.ui.components.indicator.PagingIndicator
@@ -34,9 +34,39 @@ fun Trend(
     commonPadding: Dp = dimensionResource(R.dimen.padding_sn),
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
+    trendViewModel: TrendViewModel = hiltViewModel(),
+    postCardUiAction: PostCardUiAction,
+    onHubNavigate: (Route) -> Unit,
+) {
+    LaunchedEffect(Unit) {
+        trendViewModel.onGetTrendUiAction().onResetReadMore()
+        trendViewModel.onGetTrendUiAction().onGetTrendPostOfToday(3)
+        trendViewModel.onGetTrendUiAction().onGetTrendPostOfWeek(3)
+        trendViewModel.onGetTrendUiAction().onGetTrendPostOfMonth(3)
+        trendViewModel.onGetTrendUiAction().onGetTrendPostOfYear(3)
+    }
+
+    TrendUi(
+        modifier = modifier,
+        commonPadding = commonPadding,
+        hubUiState = hubUiState,
+        hubUiAction = hubUiAction,
+        trendUiState = trendViewModel.trendUiState,
+        trendUiAction = trendViewModel.onGetTrendUiAction(),
+        engagementIconAction = trendViewModel.onGetEngagementIconAction(),
+        postCardUiAction = postCardUiAction,
+        onHubNavigate = onHubNavigate,
+    )
+}
+
+@Composable
+private fun TrendUi(
+    modifier: Modifier,
+    commonPadding: Dp,
+    hubUiState: HubUiState,
+    hubUiAction: HubUiAction,
     trendUiState: TrendUiState,
     trendUiAction: TrendUiAction,
-    engagementIconState: EngagementIconState,
     engagementIconAction: EngagementIconAction,
     postCardUiAction: PostCardUiAction,
     onHubNavigate: (Route) -> Unit,
@@ -82,14 +112,6 @@ fun Trend(
             4
         })
 
-    LaunchedEffect(Unit) {
-        trendUiAction.onResetReadMore()
-        trendUiAction.onGetTrendPostOfToday(3)
-        trendUiAction.onGetTrendPostOfWeek(3)
-        trendUiAction.onGetTrendPostOfMonth(3)
-        trendUiAction.onGetTrendPostOfYear(3)
-    }
-
     HorizontalPager(
         modifier = modifier.fillMaxSize(),
         state = pagerState,
@@ -106,7 +128,6 @@ fun Trend(
                     isIncrementView = readMores[page],
                     hubUiAction = hubUiAction,
                     postCardUiAction = postCardUiAction,
-                    engagementIconState = engagementIconState,
                     engagementIconAction = engagementIconAction,
                 )
             }

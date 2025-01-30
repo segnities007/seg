@@ -16,7 +16,7 @@ import com.segnities007.seg.ui.screens.hub.Hub
 import com.segnities007.seg.ui.screens.hub.HubViewModel
 import com.segnities007.seg.ui.screens.hub.account.Account
 import com.segnities007.seg.ui.screens.hub.account.AccountViewModel
-import com.segnities007.seg.ui.screens.hub.account.Accounts
+import com.segnities007.seg.ui.screens.hub.accounts.Accounts
 import com.segnities007.seg.ui.screens.hub.home.Home
 import com.segnities007.seg.ui.screens.hub.home.comment.Comment
 import com.segnities007.seg.ui.screens.hub.notify.Notify
@@ -24,7 +24,6 @@ import com.segnities007.seg.ui.screens.hub.post.Post
 import com.segnities007.seg.ui.screens.hub.search.Search
 import com.segnities007.seg.ui.screens.hub.search.SearchViewModel
 import com.segnities007.seg.ui.screens.hub.trend.Trend
-import com.segnities007.seg.ui.screens.hub.trend.TrendViewModel
 
 @Composable
 fun NavigationHub(
@@ -32,7 +31,6 @@ fun NavigationHub(
     postCardViewModel: PostCardViewModel = hiltViewModel(),
     accountViewModel: AccountViewModel = hiltViewModel(),
     searchViewModel: SearchViewModel = hiltViewModel(),
-    trendViewModel: TrendViewModel = hiltViewModel(),
     hubViewModel: HubViewModel = hiltViewModel(),
     onTopNavigate: (route: Route) -> Unit, // go to login
 ) {
@@ -53,10 +51,8 @@ fun NavigationHub(
         currentRouteName = currentRoute.toString(),
         onHubNavigate = onHubNavigate,
         hubUiState = hubViewModel.hubUiState,
+        hubUiAction = hubViewModel.getHubUiAction(),
         accountUiState = accountViewModel.accountUiState,
-        accountUiAction = accountViewModel.getAccountUiAction(),
-        accountsUiState = accountViewModel.accountsUiState,
-        accountsUiAction = accountViewModel.onGetAccountsUiAction(),
         searchUiAction = searchViewModel.onGetSearchUiAction(),
         topSearchBarUiState = searchViewModel.topSearchBarUiState,
         topSearchBarUiAction = searchViewModel.onGetTopSearchBarUiAction(),
@@ -67,7 +63,6 @@ fun NavigationHub(
                     modifier = modifier,
                     hubUiState = hubViewModel.hubUiState,
                     hubUiAction = hubViewModel.getHubUiAction(),
-                    engagementIconState = postCardViewModel.engagementIconState,
                     postCardUiAction = postCardViewModel.onGetPostCardUiAction(),
                     onHubNavigate = onHubNavigate,
                 )
@@ -77,10 +72,6 @@ fun NavigationHub(
                     modifier = modifier,
                     hubUiState = hubViewModel.hubUiState,
                     hubUiAction = hubViewModel.getHubUiAction(),
-                    trendUiState = trendViewModel.trendUiState,
-                    trendUiAction = trendViewModel.onGetTrendUiAction(),
-                    engagementIconState = postCardViewModel.engagementIconState,
-                    engagementIconAction = trendViewModel.onGetEngagementIconAction(),
                     postCardUiAction = postCardViewModel.onGetPostCardUiAction(),
                     onHubNavigate = onHubNavigate,
                 )
@@ -90,10 +81,7 @@ fun NavigationHub(
                     modifier = modifier,
                     hubUiState = hubViewModel.hubUiState,
                     postCardUiAction = postCardViewModel.onGetPostCardUiAction(),
-                    onNavigate = { route: Route ->
-                        hubNavHostController.navigate(route)
-                        hubViewModel.getHubUiAction().onChangeCurrentRouteName(route.name)
-                    },
+                    onNavigate = onHubNavigate,
                 )
             }
             composable<NavigationHubRoute.Notify> {
@@ -106,7 +94,6 @@ fun NavigationHub(
                     hubUiAction = hubViewModel.getHubUiAction(),
                     onTopNavigate = onTopNavigate,
                     postCardUiAction = postCardViewModel.onGetPostCardUiAction(),
-                    engagementIconState = postCardViewModel.engagementIconState,
                     onHubNavigate = onHubNavigate,
                 )
             }
@@ -117,8 +104,6 @@ fun NavigationHub(
                     hubUiAction = hubViewModel.getHubUiAction(),
                     accountUiState = accountViewModel.accountUiState,
                     accountUiAction = accountViewModel.getAccountUiAction(),
-                    accountsUiAction = accountViewModel.onGetAccountsUiAction(),
-                    engagementIconState = postCardViewModel.engagementIconState, // ok using it of post
                     engagementIconAction = accountViewModel.onGetEngagementIconAction(),
                     postCardUiAction = accountViewModel.getPostUiAction(),
                     onHubNavigate = onHubNavigate,
@@ -128,11 +113,8 @@ fun NavigationHub(
                 Accounts(
                     modifier = modifier,
                     hubUiAction = hubViewModel.getHubUiAction(),
-                    accountUiState = accountViewModel.accountUiState,
-                    accountUiAction = accountViewModel.getAccountUiAction(),
-                    accountsUiState = accountViewModel.accountsUiState,
-                    accountsUiAction = accountViewModel.onGetAccountsUiAction(),
                     onHubNavigate = onHubNavigate,
+                    hubUiState = hubViewModel.hubUiState,
                 )
             }
             composable<NavigationHubRoute.Search> {
@@ -141,7 +123,6 @@ fun NavigationHub(
                     hubUiState = hubViewModel.hubUiState,
                     hubUiAction = hubViewModel.getHubUiAction(),
                     postCardUiAction = postCardViewModel.onGetPostCardUiAction(),
-                    engagementIconState = postCardViewModel.engagementIconState,
                     engagementIconActionForPosts = searchViewModel.onGetEngagementIconActionForPosts(),
                     engagementIconActionForPostsSortedByViewCount = searchViewModel.onGetEngagementIconActionForPostsSortedByViewCount(),
                     topSearchBarUiState = searchViewModel.topSearchBarUiState,
@@ -156,7 +137,6 @@ fun NavigationHub(
                     modifier = modifier,
                     hubUiState = hubViewModel.hubUiState,
                     hubUiAction = hubViewModel.getHubUiAction(),
-                    engagementIconState = postCardViewModel.engagementIconState,
                     postCardUiAction = postCardViewModel.onGetPostCardUiAction(),
                     onHubNavigate = onHubNavigate,
                 )

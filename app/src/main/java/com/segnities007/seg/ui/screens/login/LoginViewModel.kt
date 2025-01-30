@@ -56,7 +56,7 @@ data class CreateAccountUiAction(
     val onNameChange: (name: String) -> Unit,
     val onChangeUserID: (userID: String) -> Unit,
     val onBirthdayChange: (birthday: LocalDate) -> Unit,
-    val createUser: (onNavigate: () -> Unit) -> Unit,
+    val onCreateUser: () -> Unit,
 )
 
 //
@@ -94,7 +94,7 @@ class LoginViewModel
                 onDateSelect = this::onDateSelect,
                 onNameChange = this::onNameChange,
                 onBirthdayChange = this::onBirthdayChange,
-                createUser = this::createUser,
+                onCreateUser = this::onCreateUser,
                 onChangeUserID = this::onChangeUserID,
             )
 
@@ -129,7 +129,7 @@ class LoginViewModel
             }
         }
 
-        private fun createUser(onNavigate: () -> Unit) {
+        private fun onCreateUser() {
             val user =
                 User(
                     id = "",
@@ -139,9 +139,6 @@ class LoginViewModel
                 )
             viewModelScope.launch(Dispatchers.IO) {
                 userRepository.createUser(user)
-                withContext(Dispatchers.Main) {
-                    onNavigate()
-                }
             }
         }
 

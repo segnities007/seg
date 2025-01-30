@@ -28,8 +28,6 @@ class PostCardViewModel
     constructor(
         private val postRepository: PostRepository,
     ) : ViewModel() {
-        val engagementIconState = EngagementIconState()
-
         fun onGetPostCardUiAction(): PostCardUiAction =
             PostCardUiAction(
                 onDeletePost = this::onDeletePost,

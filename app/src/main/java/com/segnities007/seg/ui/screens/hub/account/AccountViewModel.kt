@@ -17,6 +17,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.io.StringWriter
 import javax.inject.Inject
 
 data class AccountUiState(
@@ -27,6 +28,7 @@ data class AccountUiState(
 
 data class AccountUiAction(
     val onReset: () -> Unit,
+    val onInitAccountUiState: (userID: String) -> Unit,
     val onGetOtherUser: (userID: String) -> Unit,
     val onSetOtherUser: (user: User) -> Unit,
     val onGetUserPosts: (userID: String) -> Unit,
@@ -34,18 +36,6 @@ data class AccountUiAction(
     val onGetBeforePosts: (updateAt: java.time.LocalDateTime) -> Unit,
     val onFollow: (myself: User, other: User, onGetMyself: () -> Unit) -> Unit,
     val onUnFollow: (myself: User, other: User, onGetMyself: () -> Unit) -> Unit,
-)
-
-data class AccountsUiState(
-    val user: User = User(),
-    val users: List<User> = listOf(),
-    val isNotCompleted: Boolean = true,
-)
-
-data class AccountsUiAction(
-    val onReset: () -> Unit,
-    val onGetUsers: (userIDs: List<String>) -> Unit,
-    val onChangeIsNotCompletedOfAccounts: () -> Unit,
 )
 
 @HiltViewModel
@@ -60,9 +50,6 @@ class AccountViewModel
         var accountUiState by mutableStateOf(AccountUiState())
             private set
 
-        var accountsUiState by mutableStateOf(AccountsUiState())
-            private set
-
         fun getAccountUiAction(): AccountUiAction =
             AccountUiAction(
                 onGetOtherUser = this::onGetOtherUser,
@@ -72,14 +59,8 @@ class AccountViewModel
                 onFollow = this::onFollow,
                 onUnFollow = this::onUnFollow,
                 onReset = this::onResetAccount,
+                onInitAccountUiState = this::onInitAccountUiState,
                 onChangeIsNotCompletedOfAccount = this::onChangeIsNotCompletedOfAccount,
-            )
-
-        fun onGetAccountsUiAction(): AccountsUiAction =
-            AccountsUiAction(
-                onGetUsers = this::onGetUsers,
-                onReset = this::onResetAccounts,
-                onChangeIsNotCompletedOfAccounts = this::onChangeIsNotCompletedOfAccounts,
             )
 
         fun getPostUiAction(): PostCardUiAction =
@@ -97,9 +78,25 @@ class AccountViewModel
                 onComment = this::onComment,
             )
 
+        private fun onInitAccountUiState(userID: String){
+            viewModelScope.launch(ioDispatcher) {
+
+                val user = userRepository.getOtherUser(userID)
+                accountUiState = accountUiState.copy(user = user)
+
+                val posts = postRepository.onGetPostsOfUser(userID)
+                if (posts.isNotEmpty()) {
+                    accountUiState = accountUiState.copy(posts = posts)
+                } else {
+                    onChangeIsNotCompletedOfAccount()
+                }
+
+            }
+        }
+
         private fun onGetBeforePosts(updateAt: java.time.LocalDateTime) {
             viewModelScope.launch(Dispatchers.IO) {
-                val posts = postRepository.onGetBeforePosts(updateAt)
+                val posts = postRepository.onGetBeforePostsOfUser(accountUiState.user.userID, updateAt)
                 if (posts.isNotEmpty()) {
                     accountUiState = accountUiState.copy(posts = accountUiState.posts.plus(posts))
                 } else {
@@ -116,10 +113,8 @@ class AccountViewModel
             onHubNavigate(NavigationHubRoute.Comment())
         }
 
-        private fun onUpdatePosts(postID: Int) {
+        private fun onUpdatePosts(newPost: Post) {
             viewModelScope.launch(Dispatchers.IO) {
-                val newPost = postRepository.onGetPost(postID)
-
                 val newPosts =
                     accountUiState.posts.map { post ->
                         if (newPost.id == post.id) newPost else post
@@ -148,13 +143,6 @@ class AccountViewModel
             viewModelScope.launch(Dispatchers.IO) {
                 userRepository.unFollowUser(myself, other)
                 onGetMyself()
-            }
-        }
-
-        private fun onGetUsers(userIDs: List<String>) {
-            viewModelScope.launch(Dispatchers.IO) {
-                val users = userRepository.getUsers(userIDs)
-                accountsUiState = accountsUiState.copy(users = users)
             }
         }
 
@@ -188,20 +176,12 @@ class AccountViewModel
             }
         }
 
-        private fun onChangeIsNotCompletedOfAccounts() {
-            accountsUiState = accountsUiState.copy(isNotCompleted = !accountsUiState.isNotCompleted)
-        }
-
         private fun onChangeIsNotCompletedOfAccount() {
             accountUiState = accountUiState.copy(isNotCompleted = !accountUiState.isNotCompleted)
         }
 
         private fun onResetAccount() {
             accountUiState = accountUiState.copy(isNotCompleted = true)
-        }
-
-        private fun onResetAccounts() {
-            accountsUiState = accountsUiState.copy(isNotCompleted = true)
         }
 
         private fun onLike(
@@ -215,7 +195,7 @@ class AccountViewModel
                 } else {
                     postRepository.onUnLike(post = post, user = myself)
                 }
-                onUpdatePosts(post.id)
+                onUpdatePosts(post)
                 onGetMyself()
                 onGetOtherUser(accountUiState.user.userID)
             }
@@ -232,7 +212,7 @@ class AccountViewModel
                 } else {
                     postRepository.onUnRepost(post = post, user = myself)
                 }
-                onUpdatePosts(post.id)
+                onUpdatePosts(post)
                 onGetMyself()
                 onGetOtherUser(accountUiState.user.userID)
             }

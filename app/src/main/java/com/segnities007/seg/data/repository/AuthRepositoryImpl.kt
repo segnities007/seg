@@ -54,10 +54,12 @@ class AuthRepositoryImpl
             password: String,
         ): Boolean =
             try {
-                auth.signUpWith(Email) {
-                    this.email = email
-                    this.password = password
-                }
+                val result =
+                    auth.signUpWith(Email) {
+                        this.email = email
+                        this.password = password
+                    }
+                Log.d(tag, "$result")
                 true
             } catch (e: Exception) {
                 Log.e(tag, "$e")

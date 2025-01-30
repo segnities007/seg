@@ -61,7 +61,7 @@ fun SignUp(
                         modifier = Modifier.weight(1f),
                         textID = R.string.sign_up,
                         onClick = {
-                            onNavigateToConfirmEmail(NavigationLoginRoute.ConfirmEmail())
+                            loginUiAction.onSignUpWithEmailPassword({ onNavigateToConfirmEmail(NavigationLoginRoute.ConfirmEmail()) })
                         },
                     )
                 }

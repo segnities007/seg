@@ -23,10 +23,7 @@ import com.segnities007.seg.ui.components.top_bar.TopBar
 import com.segnities007.seg.ui.components.top_bar.TopSearchBar
 import com.segnities007.seg.ui.components.top_bar.TopStatusBar
 import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
-import com.segnities007.seg.ui.screens.hub.account.AccountUiAction
 import com.segnities007.seg.ui.screens.hub.account.AccountUiState
-import com.segnities007.seg.ui.screens.hub.account.AccountsUiAction
-import com.segnities007.seg.ui.screens.hub.account.AccountsUiState
 import com.segnities007.seg.ui.screens.hub.search.SearchUiAction
 import com.segnities007.seg.ui.screens.hub.search.TopSearchBarUiAction
 import com.segnities007.seg.ui.screens.hub.search.TopSearchBarUiState
@@ -38,13 +35,11 @@ fun Hub(
     onHubNavigate: (Route) -> Unit,
     currentRouteName: String,
     hubUiState: HubUiState,
+    hubUiAction: HubUiAction,
     searchUiAction: SearchUiAction,
     topSearchBarUiState: TopSearchBarUiState,
     topSearchBarUiAction: TopSearchBarUiAction,
     accountUiState: AccountUiState,
-    accountUiAction: AccountUiAction,
-    accountsUiState: AccountsUiState,
-    accountsUiAction: AccountsUiAction,
     content: @Composable (Modifier) -> Unit,
 ) {
     NavigationDrawer(
@@ -59,13 +54,11 @@ fun Hub(
             currentRouteName = currentRouteName,
             onHubNavigate = onHubNavigate,
             hubUiState = hubUiState,
+            hubUiAction = hubUiAction,
             searchUiAction = searchUiAction,
             topSearchBarUiState = topSearchBarUiState,
             topSearchBarUiAction = topSearchBarUiAction,
             accountUiState = accountUiState,
-            accountUiAction = accountUiAction,
-            accountsUiState = accountsUiState,
-            accountsUiAction = accountsUiAction,
         )
     }
 }
@@ -76,10 +69,8 @@ private fun HubUi(
     topAction: TopAction,
     currentRouteName: String,
     hubUiState: HubUiState,
+    hubUiAction: HubUiAction,
     accountUiState: AccountUiState,
-    accountUiAction: AccountUiAction,
-    accountsUiState: AccountsUiState,
-    accountsUiAction: AccountsUiAction,
     searchUiAction: SearchUiAction,
     topSearchBarUiState: TopSearchBarUiState,
     topSearchBarUiAction: TopSearchBarUiAction,
@@ -126,13 +117,14 @@ private fun HubUi(
                     TopStatusBar(
                         user = accountUiState.user,
                         onClickFollowsButton = {
-                            accountsUiAction.onGetUsers(accountUiState.user.follows)
+//                            accountsUiAction.onGetUsers(accountUiState.user.follows)
                             onHubNavigate(NavigationHubRoute.Accounts())
                         },
                         onClickFollowersButton = {
-                            accountsUiAction.onGetUsers(accountUiState.user.followers)
+//                            accountsUiAction.onGetUsers(accountUiState.user.followers)
                             onHubNavigate(NavigationHubRoute.Accounts())
                         },
+                        hubUiAction = hubUiAction,
                         onHubNavigate = onHubNavigate,
                     )
                 NavigationHubRoute.Accounts().name ->
@@ -145,14 +137,15 @@ private fun HubUi(
                     TopStatusBar(
                         user = hubUiState.user,
                         onClickFollowsButton = {
-                            accountsUiAction.onGetUsers(hubUiState.user.follows)
+//                            accountsUiAction.onGetUsers(hubUiState.user.follows)
                             onHubNavigate(NavigationHubRoute.Accounts())
                         },
                         onClickFollowersButton = {
-                            accountsUiAction.onGetUsers(hubUiState.user.followers)
+//                            accountsUiAction.onGetUsers(hubUiState.user.followers)
                             onHubNavigate(NavigationHubRoute.Accounts())
                         },
                         onHubNavigate = onHubNavigate,
+                        hubUiAction = hubUiAction,
                     )
                 NavigationHubRoute.Comment().name ->
                     TopBar(
