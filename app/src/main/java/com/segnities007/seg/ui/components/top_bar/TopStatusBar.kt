@@ -35,12 +35,15 @@ import com.segnities007.seg.ui.screens.hub.HubUiAction
 fun TopStatusBar(
     user: User,
     hubUiAction: HubUiAction,
+    isHideFollows: Boolean = false,
     onClickFollowsButton: () -> Unit = {},
     onClickFollowersButton: () -> Unit = {},
     onHubNavigate: (Route) -> Unit,
     commonPadding: Dp = dimensionResource(R.dimen.padding_small),
 ) {
-    TopStatusCard {
+    TopStatusCard(
+        isHideFollows = isHideFollows,
+    ){
         Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
             Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_nl)))
             Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
@@ -52,39 +55,47 @@ fun TopStatusBar(
                 Spacer(modifier = Modifier.padding(commonPadding))
                 Status(user = user)
             }
-
             Spacer(modifier = Modifier.padding(commonPadding))
-            AboutFollow(
-                user = user,
-                onHubNavigate = onHubNavigate,
-                hubUiAction = hubUiAction,
-                onClickFollowsButton = onClickFollowsButton,
-                onClickFollowersButton = onClickFollowersButton,
-            )
-            Spacer(modifier = Modifier.padding(commonPadding))
+            if(!isHideFollows){
+                AboutFollow(
+                    user = user,
+                    onHubNavigate = onHubNavigate,
+                    hubUiAction = hubUiAction,
+                    onClickFollowsButton = onClickFollowsButton,
+                    onClickFollowersButton = onClickFollowersButton,
+                )
+                Spacer(modifier = Modifier.padding(commonPadding))
+            }
         }
     }
 }
 
 @Composable
-private fun TopStatusCard(content: @Composable () -> Unit) {
+private fun TopStatusCard(
+    isHideFollows: Boolean,
+    content: @Composable () -> Unit,
+) {
     Box(
         modifier =
             Modifier
-                .shadow(
-                    elevation = dimensionResource(R.dimen.elevation_nl),
-                    shape =
-                        RoundedCornerShape(
-                            bottomStart = dimensionResource(R.dimen.padding_large),
-                            bottomEnd = dimensionResource(R.dimen.padding_large),
-                        ),
-                ).clip(
-                    shape =
-                        RoundedCornerShape(
-                            bottomStart = dimensionResource(R.dimen.padding_large),
-                            bottomEnd = dimensionResource(R.dimen.padding_large),
-                        ),
-                ).background(color = MaterialTheme.colorScheme.primaryContainer),
+                .run{
+                    if(!isHideFollows){
+                        this.shadow(
+                            elevation = dimensionResource(R.dimen.elevation_normal),
+                            shape = RoundedCornerShape(
+                                bottomStart = dimensionResource(R.dimen.padding_large),
+                                bottomEnd = dimensionResource(R.dimen.padding_large),
+                            )
+                        ).clip(
+                            shape = RoundedCornerShape(
+                                bottomStart = dimensionResource(R.dimen.padding_large),
+                                bottomEnd = dimensionResource(R.dimen.padding_large),
+                            )
+                        )
+                    }else{
+                        this
+                    }
+                }.background(color = MaterialTheme.colorScheme.primaryContainer),
     ) {
         content()
     }

@@ -111,6 +111,20 @@ class PostRepositoryImpl
             }
         }
 
+        override suspend fun onGetPosts(postIDs: List<Int>): List<Post> {
+            try {
+                val list: MutableList<Post> = mutableListOf()
+                for (id in postIDs) {
+                    list.add(onGetPost(id))
+                }
+
+                return list.toList()
+            } catch (e: Exception) {
+                Log.e(tag, "failed onGetPosts $e")
+                throw e
+            }
+        }
+
         override suspend fun onGetNewPost(): Post {
             try {
                 val result =
