@@ -236,7 +236,7 @@ class PostRepositoryImpl
 
         override suspend fun onGetTrendPostOfToday(limit: Long): List<Post> {
             try {
-                val yesterday = LocalDateTime.now().minusDays(7)
+                val yesterday = LocalDateTime.now().minusDays(1)
 
                 val result =
                     postgrest
@@ -455,7 +455,7 @@ class PostRepositoryImpl
                     }
                 }
 
-                Log.d(tag, "success c like")
+                Log.d(tag, "success unlike")
             } catch (e: Exception) {
                 Log.e(tag, "cancel like: $e")
             }
@@ -488,6 +488,8 @@ class PostRepositoryImpl
                         User::id eq updatedUser.id
                     }
                 }
+
+                Log.d(tag, "success repost")
             } catch (e: Exception) {
                 Log.e(tag, e.toString())
             }
@@ -518,6 +520,8 @@ class PostRepositoryImpl
                         User::id eq updatedUser.id
                     }
                 }
+
+                Log.d(tag, "success un repost")
             } catch (e: Exception) {
                 Log.e(tag, e.toString())
             }

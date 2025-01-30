@@ -28,8 +28,6 @@ fun PostsState.getUpdatedPostAndPostsForLikeClick(
     return Pair(newClickedPost, updatedPosts)
 }
 
-suspend fun PostsState.updateUsingOnLikeOfPostRepository(
-    process: suspend () -> Unit,
-){
+suspend fun PostsState.updateUsingOnLikeOfPostRepository(process: suspend () -> Unit) {
     process()
 }

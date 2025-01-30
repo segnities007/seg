@@ -1,5 +1,6 @@
 package com.segnities007.seg.ui.screens.hub.home
 
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -12,10 +13,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@Immutable
 data class HomeUiState(
     val posts: List<Post> = listOf(),
 )
 
+@Immutable
 data class HomeUiAction(
     val onGetNewPosts: () -> Unit,
 )
