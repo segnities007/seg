@@ -5,6 +5,7 @@ import com.segnities007.seg.data.model.Post
 import com.segnities007.seg.data.model.User
 import com.segnities007.seg.domain.repository.ImageRepository
 import com.segnities007.seg.domain.repository.PostRepository
+import com.segnities007.seg.domain.repository.UserRepository
 import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.postgrest.query.Order
 import java.time.LocalDateTime
@@ -15,6 +16,7 @@ class PostRepositoryImpl
     constructor(
         private val postgrest: Postgrest,
         private val imageRepository: ImageRepository,
+        private val userRepository: UserRepository,
     ) : PostRepository {
         private val tag = "PostRepositoryImpl"
 
@@ -70,7 +72,7 @@ class PostRepositoryImpl
             updateAt: LocalDateTime,
         ): List<Post> {
             try {
-                val count: Long = 10
+                val count: Long = 7
 
                 val result =
                     postgrest
@@ -81,7 +83,7 @@ class PostRepositoryImpl
                                 lt("create_at", updateAt)
                             }
                             order("create_at", Order.DESCENDING)
-                            limit(count = 7)
+                            limit(count = count)
                         }.decodeList<Post>()
                 if (result.isEmpty()) return result
 
@@ -103,8 +105,15 @@ class PostRepositoryImpl
                             filter {
                                 Post::id eq postID
                             }
-                        }.decodeSingle<Post>()
-                return result
+                        }.decodeList<Post>()
+
+                if(result.isEmpty()){
+                    var user = userRepository.getUser()
+                    user = user.copy(posts = user.posts.minus(postID), likes = user.likes.minus(postID), reposts = user.reposts.minus(postID))
+                    userRepository.updateUser(user)
+                }
+
+                return if(result.isNotEmpty()) result.first() else Post()
             } catch (e: Exception) {
                 Log.e(tag, "failed to get post $e")
                 throw e

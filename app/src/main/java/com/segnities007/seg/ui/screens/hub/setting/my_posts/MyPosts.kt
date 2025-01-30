@@ -37,10 +37,10 @@ fun MyPosts(
     onHubNavigate: (Route) -> Unit,
 ) {
     LaunchedEffect(Unit) {
+        hubUiAction.onChangeIsHideTopBar()
         val action = myPostsViewModel.onGetMyPostsUiAction()
         action.onGetSelf(hubUiState.user)
         action.onInit()
-        hubUiAction.onChangeIsHideTopBar()
     }
 
     Column {
@@ -70,12 +70,6 @@ private fun MyPostsUi(
     postCardUiAction: PostCardUiAction,
     onHubNavigate: (Route) -> Unit,
 ) {
-
-    DisposableEffect(Unit) {
-        onDispose {
-            hubUiAction.onResetIsHideTopBar()
-        }
-    }
 
     when (myPostsUiState.selectedTabIndex) {
         0 ->
@@ -274,7 +268,7 @@ private fun Reposts(
                     LoadingUI(
                         onLoading = {
                             if(myPostsUiState.repostedPosts.isNotEmpty())
-                                myPostsUiAction.onGetBeforeRepostedPosts(myPostsUiState.self.likes, myPostsUiState.repostedPosts.last().id)
+                                myPostsUiAction.onGetBeforeRepostedPosts(myPostsUiState.self.reposts, myPostsUiState.repostedPosts.last().id)
                         },
                     )
                 }
