@@ -68,8 +68,6 @@ fun NavigationHub(
                     hubUiState = hubViewModel.hubUiState,
                     hubUiAction = hubViewModel.getHubUiAction(),
                     engagementIconState = postCardViewModel.engagementIconState,
-                    engagementIconAction = postCardViewModel.onGetEngagementIconAction(),
-                    postCardUiState = postCardViewModel.postCardUiState,
                     postCardUiAction = postCardViewModel.onGetPostCardUiAction(),
                     onHubNavigate = onHubNavigate,
                 )
@@ -95,7 +93,6 @@ fun NavigationHub(
                     onNavigate = { route: Route ->
                         hubNavHostController.navigate(route)
                         hubViewModel.getHubUiAction().onChangeCurrentRouteName(route.name)
-                        postCardViewModel.onGetPostCardUiAction().onGetNewPosts()
                     },
                 )
             }
@@ -160,7 +157,6 @@ fun NavigationHub(
                     hubUiState = hubViewModel.hubUiState,
                     hubUiAction = hubViewModel.getHubUiAction(),
                     engagementIconState = postCardViewModel.engagementIconState,
-                    postCardUiState = postCardViewModel.postCardUiState,
                     postCardUiAction = postCardViewModel.onGetPostCardUiAction(),
                     onHubNavigate = onHubNavigate,
                 )

@@ -18,7 +18,6 @@ import com.segnities007.seg.ui.components.card.postcard.EngagementIconAction
 import com.segnities007.seg.ui.components.card.postcard.EngagementIconState
 import com.segnities007.seg.ui.components.card.postcard.PostCard
 import com.segnities007.seg.ui.components.card.postcard.PostCardUiAction
-import com.segnities007.seg.ui.components.card.postcard.PostCardUiState
 import com.segnities007.seg.ui.components.indicator.LoadingUI
 import com.segnities007.seg.ui.screens.hub.HubUiAction
 import com.segnities007.seg.ui.screens.hub.HubUiState
@@ -32,7 +31,6 @@ fun MyPosts(
     postCardUiAction: PostCardUiAction,
     onHubNavigate: (Route) -> Unit,
 ) {
-
     LaunchedEffect(Unit) {
         val action = myPostsViewModel.onGetMyPostsUiAction()
         action.onGetSelf(hubUiState.user)
@@ -49,7 +47,6 @@ fun MyPosts(
         postCardUiAction = postCardUiAction,
         onHubNavigate = onHubNavigate,
     )
-
 }
 
 @Composable
@@ -62,8 +59,7 @@ private fun MyPostsUi(
     engagementIconAction: EngagementIconAction,
     postCardUiAction: PostCardUiAction,
     onHubNavigate: (Route) -> Unit,
-){
-
+) {
     LazyColumn(
         modifier = Modifier.fillMaxSize().padding(top = dimensionResource(R.dimen.padding_smaller)),
         horizontalAlignment = Alignment.CenterHorizontally,

@@ -2,12 +2,10 @@ package com.segnities007.seg.ui.components.card.postcard
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.segnities007.seg.data.model.Post
-import com.segnities007.seg.data.model.User
 import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.domain.repository.PostRepository
 import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
@@ -17,19 +15,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @Immutable
-data class PostCardUiState(
-    val posts: List<Post> = listOf(),
-    val post: Post = Post(), // for comment
-    val isNotCompleted: Boolean = true,
-)
-
-@Immutable
 data class PostCardUiAction(
-    val onGetNewPosts: () -> Unit,
-    val onGetPosts: (userID: String) -> Unit,
-    val onGetPost: (postID: Int) -> Unit,
-    val onGetBeforePosts: (updateAt: java.time.LocalDateTime) -> Unit,
-    val onUpdatePost: (post: Post) -> Unit,
     val onDeletePost: (post: Post) -> Unit,
     val onClickIcon: (onHubNavigate: (Route) -> Unit) -> Unit,
     val onClickPostCard: (onHubNavigate: (Route) -> Unit) -> Unit,
@@ -44,84 +30,18 @@ class PostCardViewModel
     ) : ViewModel() {
         val engagementIconState = EngagementIconState()
 
-        var postCardUiState by mutableStateOf(PostCardUiState())
-            private set
-
         fun onGetPostCardUiAction(): PostCardUiAction =
             PostCardUiAction(
-                onGetNewPosts = this::onGetNewPosts,
-                onGetPost = this::onGetPost,
-                onGetPosts = this::onGetPosts,
-                onGetBeforePosts = this::onGetBeforePosts,
-                onUpdatePost = this::onUpdatePost,
                 onDeletePost = this::onDeletePost,
                 onClickIcon = this::onClickIcon,
                 onClickPostCard = this::onClickPostCard,
                 onIncrementViewCount = this::onIncrementViewCount,
             )
 
-        fun onGetEngagementIconAction(): EngagementIconAction =
-            EngagementIconAction(
-                onLike = this::onLike,
-                onRepost = this::onRepost,
-                onComment = this::onComment,
-            )
-
-        private fun onBeTrueIsNotCompleted() {
-        }
-
-        private fun onUpdatePost(post: Post) {
-            viewModelScope.launch(Dispatchers.IO) {
-                postCardUiState = postCardUiState.copy(post = post)
-            }
-        }
-
-        private fun onGetPost(postID: Int) {
-            viewModelScope.launch(Dispatchers.IO) {
-                val post = postRepository.onGetPost(postID)
-                postCardUiState = postCardUiState.copy(post = post)
-            }
-        }
-
-        private fun onGetNewPosts() {
-            viewModelScope.launch(Dispatchers.IO) {
-                val posts = postRepository.onGetNewPosts()
-                postCardUiState = postCardUiState.copy(posts = posts)
-            }
-        }
-
-        private fun onGetPosts(userID: String) {
-            viewModelScope.launch(Dispatchers.IO) {
-                val posts = postRepository.onGetPostsOfUser(userID)
-                postCardUiState = postCardUiState.copy(posts = posts)
-            }
-        }
-
-        private fun onGetBeforePosts(updateAt: java.time.LocalDateTime) {
-            viewModelScope.launch(Dispatchers.IO) {
-                val posts = postRepository.onGetBeforePosts(updateAt)
-                postCardUiState = postCardUiState.copy(posts = postCardUiState.posts.plus(posts))
-            }
-        }
-
-        private fun onUpdatePosts(newPost: Post) {
-            val newPosts =
-                postCardUiState.posts.map { post ->
-                    if (newPost.id == post.id) newPost else post
-                }
-
-            postCardUiState = postCardUiState.copy(posts = newPosts)
-        }
-
         private fun onDeletePost(post: Post) {
             viewModelScope.launch(Dispatchers.IO) {
                 postRepository.onDeletePost(post)
-                onRemovePostFromPosts(post)
             }
-        }
-
-        private fun onRemovePostFromPosts(post: Post) {
-            postCardUiState = postCardUiState.copy(posts = postCardUiState.posts.minus(post))
         }
 
         private fun onClickIcon(onHubNavigate: (Route) -> Unit) {
@@ -135,59 +55,6 @@ class PostCardViewModel
         private fun onIncrementViewCount(post: Post) {
             viewModelScope.launch(Dispatchers.IO) {
                 postRepository.onIncrementView(post)
-            }
-        }
-
-        private fun onLike(
-            post: Post,
-            myself: User,
-            onAddOrRemoveFromMyList: () -> Unit,
-        ) {
-            val newPost: Post
-            if (!myself.likes.contains(post.id)) {
-                newPost = post.copy(likeCount = post.likeCount + 1)
-                viewModelScope.launch(Dispatchers.IO) {
-                    postRepository.onLike(post = newPost, user = myself)
-                }
-            } else {
-                newPost = post.copy(likeCount = post.likeCount - 1)
-                viewModelScope.launch(Dispatchers.IO) {
-                    postRepository.onUnLike(post = newPost, user = myself)
-                }
-            }
-            onUpdatePosts(newPost)
-            onAddOrRemoveFromMyList()
-        }
-
-        private fun onRepost(
-            post: Post,
-            myself: User,
-            onAddOrRemoveFromMyList: () -> Unit,
-        ) {
-            val newPost: Post
-            if (!myself.reposts.contains(post.id)) {
-                newPost = post.copy(repostCount = post.repostCount + 1)
-                viewModelScope.launch(Dispatchers.IO) {
-                    postRepository.onRepost(post = newPost, user = myself)
-                }
-            } else {
-                newPost = post.copy(repostCount = post.repostCount - 1)
-                viewModelScope.launch(Dispatchers.IO) {
-                    postRepository.onUnRepost(post = newPost, user = myself)
-                }
-            }
-            onUpdatePosts(newPost)
-            onAddOrRemoveFromMyList()
-        }
-
-        private fun onComment(
-            post: Post,
-            comment: Post,
-            myself: User,
-            updateMyself: () -> Unit,
-        ) {
-            viewModelScope.launch(Dispatchers.IO) {
-                // TODO
             }
         }
     }
