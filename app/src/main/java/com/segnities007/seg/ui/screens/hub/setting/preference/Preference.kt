@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -15,16 +16,23 @@ import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.ui.components.button.SmallButton
 import com.segnities007.seg.ui.navigation.NavigationRoute
 import com.segnities007.seg.ui.navigation.hub.setting.NavigationSettingRoute
+import com.segnities007.seg.ui.screens.hub.HubUiAction
 import com.segnities007.seg.ui.screens.hub.setting.SettingUiAction
 
 @Composable
 fun Preference(
     modifier: Modifier = Modifier,
     settingUiAction: SettingUiAction,
+    hubUiAction: HubUiAction,
     commonPadding: Dp = dimensionResource(R.dimen.padding_normal),
     onSettingNavigate: (Route) -> Unit,
     onTopNavigate: (Route) -> Unit,
 ) {
+
+    LaunchedEffect(Unit) {
+        hubUiAction.onResetIsHideTopBar()
+    }
+
     Column(
         modifier = modifier.padding(horizontal = dimensionResource(R.dimen.padding_nl)),
         horizontalAlignment = Alignment.CenterHorizontally,

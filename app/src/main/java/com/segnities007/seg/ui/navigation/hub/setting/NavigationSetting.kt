@@ -36,6 +36,7 @@ fun NavigationSetting(
             composable<NavigationSettingRoute.Preference> {
                 Preference(
                     settingUiAction = settingViewModel.getSettingUiAction(),
+                    hubUiAction = hubUiAction,
                     onTopNavigate = onTopNavigate, // logout
                     onSettingNavigate = { route: Route -> settingNavHostController.navigate(route) },
                 )
