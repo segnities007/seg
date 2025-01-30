@@ -89,7 +89,6 @@ fun PostCard(
                 modifier =
                     Modifier
                         .clickable {
-                            postCardUiAction.onUpdatePost(post)
                             postCardUiAction.onClickPostCard(onHubNavigate)
                         }.fillMaxWidth(),
             ) {

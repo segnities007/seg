@@ -96,7 +96,6 @@ private fun TopToolBar(
             onClick = {
                 postUiAction.onCreatePost(hubUiState.user)
                 postUiAction.onUpdateInputText("")
-                postCardUiAction.onGetNewPosts()
                 onNavigate(NavigationHubRoute.Home())
             },
         )

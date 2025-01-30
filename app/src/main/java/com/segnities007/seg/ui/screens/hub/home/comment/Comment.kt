@@ -1,6 +1,5 @@
 package com.segnities007.seg.ui.screens.hub.home.comment
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,7 +11,6 @@ import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.ui.components.card.postcard.EngagementIconState
 import com.segnities007.seg.ui.components.card.postcard.PostCard
 import com.segnities007.seg.ui.components.card.postcard.PostCardUiAction
-import com.segnities007.seg.ui.components.card.postcard.PostCardUiState
 import com.segnities007.seg.ui.screens.hub.HubUiAction
 import com.segnities007.seg.ui.screens.hub.HubUiState
 
@@ -23,13 +21,12 @@ fun Comment(
     hubUiAction: HubUiAction,
     engagementIconState: EngagementIconState,
     commentViewModel: CommentViewModel = hiltViewModel(),
-    postCardUiState: PostCardUiState,
     postCardUiAction: PostCardUiAction,
     onHubNavigate: (Route) -> Unit,
 ) {
     LaunchedEffect(Unit) {
         val commentUiAction = commentViewModel.onGetCommentUiAction()
-        commentUiAction.onGetComment(postCardUiState.post)
+        commentUiAction.onGetComment(hubUiState.comment)
         // TODO get comments
     }
 

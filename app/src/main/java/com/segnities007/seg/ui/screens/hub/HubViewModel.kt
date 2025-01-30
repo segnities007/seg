@@ -4,8 +4,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
+import com.segnities007.seg.data.model.Post
 import com.segnities007.seg.data.model.User
-import com.segnities007.seg.domain.model.UserState
 import com.segnities007.seg.domain.presentation.TopLayerViewModel
 import com.segnities007.seg.domain.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,10 +14,11 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class HubUiState(
-    override val user: User = User(),
+    val user: User = User(),
     val userID: String = "", // of other user
     val currentRouteName: String = "Home",
-) : UserState
+    val comment: Post = Post(),
+)
 
 data class HubUiAction(
     val onGetUser: () -> Unit,

@@ -22,8 +22,6 @@ import com.segnities007.seg.ui.screens.hub.setting.SettingUiAction
 @Composable
 fun Preference(
     modifier: Modifier = Modifier,
-    postCardUiAction: PostCardUiAction,
-    hubUiState: HubUiState,
     settingUiAction: SettingUiAction,
     commonPadding: Dp = dimensionResource(R.dimen.padding_normal),
     onSettingNavigate: (Route) -> Unit,
@@ -35,7 +33,7 @@ fun Preference(
         verticalArrangement = Arrangement.Top,
     ) {
         Spacer(modifier = Modifier.padding(commonPadding))
-        ShowMyPostsButton(postCardUiAction = postCardUiAction, hubUiState = hubUiState, onSettingNavigate = onSettingNavigate)
+        ShowMyPostsButton(onSettingNavigate = onSettingNavigate)
         Spacer(modifier = Modifier.padding(commonPadding))
         ModifyUserInfoButton(onSettingNavigate = onSettingNavigate)
         Spacer(modifier = Modifier.padding(commonPadding))
@@ -46,15 +44,12 @@ fun Preference(
 @Composable
 private fun ShowMyPostsButton(
     modifier: Modifier = Modifier,
-    postCardUiAction: PostCardUiAction,
-    hubUiState: HubUiState,
     onSettingNavigate: (Route) -> Unit,
 ) {
     SmallButton(
         modifier = Modifier.fillMaxWidth(),
         textID = R.string.my_posts,
         onClick = {
-            postCardUiAction.onGetPosts(hubUiState.user.userID)
             onSettingNavigate(NavigationSettingRoute.Posts())
         },
     )
