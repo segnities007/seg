@@ -17,7 +17,6 @@ import androidx.compose.ui.unit.Dp
 import com.segnities007.seg.R
 import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.ui.components.button.SmallButton
-import com.segnities007.seg.ui.components.card.postcard.EngagementIconAction
 import com.segnities007.seg.ui.components.card.postcard.PostCard
 import com.segnities007.seg.ui.components.card.postcard.PostCardUiAction
 import com.segnities007.seg.ui.components.indicator.LoadingUI
@@ -31,9 +30,7 @@ fun Account(
     hubUiAction: HubUiAction,
     accountUiState: AccountUiState,
     accountUiAction: AccountUiAction,
-    engagementIconAction: EngagementIconAction,
     postCardUiAction: PostCardUiAction,
-    commonPadding: Dp = dimensionResource(R.dimen.padding_normal),
     onHubNavigate: (Route) -> Unit,
 ) {
     LaunchedEffect(Unit) {
@@ -46,10 +43,8 @@ fun Account(
         hubUiAction = hubUiAction,
         accountUiState = accountUiState,
         accountUiAction = accountUiAction,
-        engagementIconAction = engagementIconAction,
         postCardUiAction = postCardUiAction,
         onHubNavigate = onHubNavigate,
-        commonPadding = commonPadding,
     )
 }
 
@@ -60,9 +55,7 @@ private fun AccountUi(
     hubUiAction: HubUiAction,
     accountUiState: AccountUiState,
     accountUiAction: AccountUiAction,
-    engagementIconAction: EngagementIconAction,
     postCardUiAction: PostCardUiAction,
-    commonPadding: Dp,
     onHubNavigate: (Route) -> Unit,
 ) {
     LazyColumn(
@@ -72,14 +65,12 @@ private fun AccountUi(
     ) {
         if (hubUiState.user.userID != accountUiState.user.userID) {
             item {
-                Spacer(modifier = Modifier.padding(commonPadding))
                 FollowButtons(
                     hubUiState = hubUiState,
                     hubUiAction = hubUiAction,
                     accountUiState = accountUiState,
                     accountUiAction = accountUiAction,
                 )
-                Spacer(modifier = Modifier.padding(commonPadding))
             }
         }
         items(
@@ -91,8 +82,8 @@ private fun AccountUi(
                 myself = hubUiState.user,
                 onHubNavigate = onHubNavigate,
                 hubUiAction = hubUiAction,
-                engagementIconAction = engagementIconAction,
                 postCardUiAction = postCardUiAction,
+                onProcessOfEngagementAction = accountUiAction.onProcessOfEngagementAction
             )
         }
         // action for fetching before-post
@@ -128,15 +119,9 @@ private fun FollowButtons(
         SmallButton(
             modifier = Modifier.weight(1f),
             textID =
-                if (
-                    hubUiState.user.follows.contains(accountUiState.user.userID)
-                ) {
-                    R.string.followed
-                } else {
-                    R.string.follow
-                },
+                if (hubUiState.user.follows.contains(accountUiState.user.userID))  R.string.followed  else  R.string.follow ,
             onClick = {
-                // リストがNullじゃないかつ、IDがある場合unfollow
+                // IDがある場合unfollow
                 if (hubUiState.user.follows.contains(accountUiState.user.userID)) {
                     accountUiAction.onUnFollow(hubUiState.user, accountUiState.user, hubUiAction.onGetUser)
                 } else {

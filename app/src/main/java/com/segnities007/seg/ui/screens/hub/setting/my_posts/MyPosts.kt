@@ -11,7 +11,6 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
@@ -53,7 +52,6 @@ fun MyPosts(
             hubUiAction = hubUiAction,
             myPostsUiState = myPostsViewModel.myPostsUiState,
             myPostsUiAction = myPostsViewModel.onGetMyPostsUiAction(),
-            engagementIconAction = myPostsViewModel.onGetEngagementIconAction(),
             postCardUiAction = postCardUiAction,
             onHubNavigate = onHubNavigate,
         )
@@ -66,11 +64,9 @@ private fun MyPostsUi(
     hubUiAction: HubUiAction,
     myPostsUiState: MyPostsUiState,
     myPostsUiAction: MyPostsUiAction,
-    engagementIconAction: EngagementIconAction,
     postCardUiAction: PostCardUiAction,
     onHubNavigate: (Route) -> Unit,
 ) {
-
     when (myPostsUiState.selectedTabIndex) {
         0 ->
             Posts(
@@ -78,7 +74,6 @@ private fun MyPostsUi(
                 myPostsUiAction = myPostsUiAction,
                 hubUiState = hubUiState,
                 hubUiAction = hubUiAction,
-                engagementIconAction = engagementIconAction,
                 postCardUiAction = postCardUiAction,
                 onHubNavigate = onHubNavigate,
             )
@@ -88,7 +83,6 @@ private fun MyPostsUi(
                 myPostsUiAction = myPostsUiAction,
                 hubUiState = hubUiState,
                 hubUiAction = hubUiAction,
-                engagementIconAction = engagementIconAction,
                 postCardUiAction = postCardUiAction,
                 onHubNavigate = onHubNavigate,
             )
@@ -98,7 +92,6 @@ private fun MyPostsUi(
                 myPostsUiAction = myPostsUiAction,
                 hubUiState = hubUiState,
                 hubUiAction = hubUiAction,
-                engagementIconAction = engagementIconAction,
                 postCardUiAction = postCardUiAction,
                 onHubNavigate = onHubNavigate,
             )
@@ -107,7 +100,6 @@ private fun MyPostsUi(
 
 @Composable
 private fun Tabs(
-    modifier: Modifier = Modifier,
     myPostsUiState: MyPostsUiState,
     myPostsUiAction: MyPostsUiAction,
 ) {
@@ -129,12 +121,10 @@ private fun Tabs(
 
 @Composable
 private fun Posts(
-    modifier: Modifier = Modifier,
     myPostsUiState: MyPostsUiState,
     myPostsUiAction: MyPostsUiAction,
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
-    engagementIconAction: EngagementIconAction,
     postCardUiAction: PostCardUiAction,
     onHubNavigate: (Route) -> Unit,
 ) {
@@ -155,8 +145,8 @@ private fun Posts(
                     isIncrementView = false,
                     onHubNavigate = onHubNavigate,
                     hubUiAction = hubUiAction,
-                    engagementIconAction = engagementIconAction,
                     postCardUiAction = postCardUiAction,
+                    onProcessOfEngagementAction = myPostsUiAction.onProcessOfEngagementAction,
                 )
             }
         }
@@ -167,8 +157,9 @@ private fun Posts(
                     Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_smaller)))
                     LoadingUI(
                         onLoading = {
-                            if(myPostsUiState.posts.isNotEmpty())
+                            if (myPostsUiState.posts.isNotEmpty()) {
                                 myPostsUiAction.onGetBeforePosts(myPostsUiState.posts.last().createAt)
+                            }
                         },
                     )
                 }
@@ -179,12 +170,10 @@ private fun Posts(
 
 @Composable
 private fun Likes(
-    modifier: Modifier = Modifier,
     myPostsUiState: MyPostsUiState,
     myPostsUiAction: MyPostsUiAction,
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
-    engagementIconAction: EngagementIconAction,
     postCardUiAction: PostCardUiAction,
     onHubNavigate: (Route) -> Unit,
 ) {
@@ -205,8 +194,8 @@ private fun Likes(
                     isIncrementView = false,
                     onHubNavigate = onHubNavigate,
                     hubUiAction = hubUiAction,
-                    engagementIconAction = engagementIconAction,
                     postCardUiAction = postCardUiAction,
+                    onProcessOfEngagementAction = myPostsUiAction.onProcessOfEngagementAction,
                 )
             }
         }
@@ -217,8 +206,9 @@ private fun Likes(
                     Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_smaller)))
                     LoadingUI(
                         onLoading = {
-                            if(myPostsUiState.posts.isNotEmpty())
+                            if (myPostsUiState.posts.isNotEmpty()) {
                                 myPostsUiAction.onGetBeforeLikedPosts(myPostsUiState.self.likes, myPostsUiState.likedPosts.last().id)
+                            }
                         },
                     )
                 }
@@ -229,12 +219,10 @@ private fun Likes(
 
 @Composable
 private fun Reposts(
-    modifier: Modifier = Modifier,
     myPostsUiState: MyPostsUiState,
     myPostsUiAction: MyPostsUiAction,
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
-    engagementIconAction: EngagementIconAction,
     postCardUiAction: PostCardUiAction,
     onHubNavigate: (Route) -> Unit,
 ) {
@@ -255,20 +243,24 @@ private fun Reposts(
                     isIncrementView = false,
                     onHubNavigate = onHubNavigate,
                     hubUiAction = hubUiAction,
-                    engagementIconAction = engagementIconAction,
                     postCardUiAction = postCardUiAction,
+                    onProcessOfEngagementAction = myPostsUiAction.onProcessOfEngagementAction,
                 )
             }
         }
         // action for fetching before post
-        if(!myPostsUiState.hasNoMoreRepostedPosts){
+        if (!myPostsUiState.hasNoMoreRepostedPosts) {
             item {
                 Column {
                     Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_smaller)))
                     LoadingUI(
                         onLoading = {
-                            if(myPostsUiState.repostedPosts.isNotEmpty())
-                                myPostsUiAction.onGetBeforeRepostedPosts(myPostsUiState.self.reposts, myPostsUiState.repostedPosts.last().id)
+                            if (myPostsUiState.repostedPosts.isNotEmpty()) {
+                                myPostsUiAction.onGetBeforeRepostedPosts(
+                                    myPostsUiState.self.reposts,
+                                    myPostsUiState.repostedPosts.last().id,
+                                )
+                            }
                         },
                     )
                 }

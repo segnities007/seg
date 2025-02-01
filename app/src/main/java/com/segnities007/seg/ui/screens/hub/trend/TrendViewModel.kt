@@ -15,8 +15,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-// TODO フラグを利用してonlikeなどの処理を使い回すようにする
-
 data class TrendUiState(
     val trendOfToday: List<Post> = listOf(),
     val trendOfWeek: List<Post> = listOf(),
@@ -45,6 +43,7 @@ data class TrendUiAction(
     val onReadMoreAboutTrendOfMonth: () -> Unit,
     val onReadMoreAboutTrendOfYear: () -> Unit,
     val onResetReadMore: () -> Unit,
+    val onProcessOfEngagementAction: (newPost: Post) -> Unit,
 )
 
 @HiltViewModel
@@ -67,14 +66,13 @@ class TrendViewModel
                 onGetTrendPostOfMonth = this::onGetTrendPostOfMonth,
                 onGetTrendPostOfYear = this::onGetTrendPostOfYear,
                 onResetReadMore = this::onResetReadMore,
+                onProcessOfEngagementAction = this::onProcessOfEngagementAction,
             )
 
-        fun onGetEngagementIconAction(): EngagementIconAction =
-            EngagementIconAction(
-                onLike = this::onLike,
-                onRepost = this::onRepost,
-                onComment = this::onComment,
-            )
+        private fun onProcessOfEngagementAction(newTrend: Post){
+            onUpdateTrends(newTrend)
+        }
+
 
         private fun onResetReadMore() {
             trendUiState =
@@ -127,59 +125,6 @@ class TrendViewModel
             viewModelScope.launch(Dispatchers.IO) {
                 val trendOfYear = postRepository.onGetTrendPostOfYear(limit = limit)
                 trendUiState = trendUiState.copy(trendOfYear = trendOfYear)
-            }
-        }
-
-        private fun onLike(
-            post: Post,
-            myself: User,
-            onGetUser: () -> Unit,
-        ) {
-            val newPost: Post
-            if (!myself.likes.contains(post.id)) {
-                newPost = post.copy(likeCount = post.likeCount + 1)
-                viewModelScope.launch(Dispatchers.IO) {
-                    postRepository.onLike(post = newPost, user = myself)
-                }
-            } else {
-                newPost = post.copy(likeCount = post.likeCount - 1)
-                viewModelScope.launch(Dispatchers.IO) {
-                    postRepository.onUnLike(post = newPost, user = myself)
-                }
-            }
-            onUpdateTrends(newPost)
-            onGetUser()
-        }
-
-        private fun onRepost(
-            post: Post,
-            myself: User,
-            onGetUser: () -> Unit,
-        ) {
-            val newPost: Post
-            if (!myself.reposts.contains(post.id)) {
-                newPost = post.copy(repostCount = post.repostCount + 1)
-                viewModelScope.launch(Dispatchers.IO) {
-                    postRepository.onRepost(post = newPost, user = myself)
-                }
-            } else {
-                newPost = post.copy(repostCount = post.repostCount - 1)
-                viewModelScope.launch(Dispatchers.IO) {
-                    postRepository.onUnRepost(post = newPost, user = myself)
-                }
-            }
-            onUpdateTrends(newPost)
-            onGetUser()
-        }
-
-        private fun onComment(
-            post: Post,
-            comment: Post,
-            myself: User,
-            updateMyself: () -> Unit,
-        ) {
-            viewModelScope.launch(Dispatchers.IO) {
-                // TODO
             }
         }
 

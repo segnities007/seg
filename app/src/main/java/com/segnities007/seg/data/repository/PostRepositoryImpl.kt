@@ -107,13 +107,14 @@ class PostRepositoryImpl
                             }
                         }.decodeList<Post>()
 
-                if(result.isEmpty()){
+                if (result.isEmpty()) {
                     var user = userRepository.getUser()
-                    user = user.copy(posts = user.posts.minus(postID), likes = user.likes.minus(postID), reposts = user.reposts.minus(postID))
+                    user =
+                        user.copy(posts = user.posts.minus(postID), likes = user.likes.minus(postID), reposts = user.reposts.minus(postID))
                     userRepository.updateUser(user)
                 }
 
-                return if(result.isNotEmpty()) result.first() else Post()
+                return if (result.isNotEmpty()) result.first() else Post()
             } catch (e: Exception) {
                 Log.e(tag, "failed to get post $e")
                 throw e

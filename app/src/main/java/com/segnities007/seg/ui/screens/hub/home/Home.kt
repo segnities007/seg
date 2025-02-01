@@ -14,7 +14,6 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.segnities007.seg.R
 import com.segnities007.seg.domain.presentation.Route
-import com.segnities007.seg.ui.components.card.postcard.EngagementIconAction
 import com.segnities007.seg.ui.components.card.postcard.PostCard
 import com.segnities007.seg.ui.components.card.postcard.PostCardUiAction
 import com.segnities007.seg.ui.components.indicator.LoadingUI
@@ -40,7 +39,6 @@ fun Home(
         hubUiAction = hubUiAction,
         homeUiState = homeViewModel.homeUiState,
         homeUiAction = homeViewModel.onGetHomeUiAction(),
-        engagementIconAction = homeViewModel.onGetEngagementUiAction(),
         postCardUiAction = postCardUiAction,
         onHubNavigate = onHubNavigate,
     )
@@ -53,7 +51,6 @@ private fun HomeUi(
     hubUiAction: HubUiAction,
     homeUiState: HomeUiState,
     homeUiAction: HomeUiAction,
-    engagementIconAction: EngagementIconAction,
     postCardUiAction: PostCardUiAction,
     onHubNavigate: (Route) -> Unit,
 ) {
@@ -71,8 +68,9 @@ private fun HomeUi(
                 myself = hubUiState.user,
                 onHubNavigate = onHubNavigate,
                 hubUiAction = hubUiAction,
-                engagementIconAction = engagementIconAction,
                 postCardUiAction = postCardUiAction,
+                isIncrementView = true,
+                onProcessOfEngagementAction = homeUiAction.onProcessOfEngagementAction,
             )
         }
         // action for fetching before post

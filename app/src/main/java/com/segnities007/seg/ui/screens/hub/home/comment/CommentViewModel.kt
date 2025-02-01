@@ -24,15 +24,13 @@ data class CommentUiState(
 @Immutable
 data class CommentUiAction(
     val onGetComment: (comment: Post) -> Unit,
-    val onGetComments: (comment: Post) -> Unit,
-    val onGetBeforeComments: (comment: Post, commentID: Int) -> Unit,
+    val onProcessOfEngagementAction: (newPost: Post) -> Unit,
 )
 
 @HiltViewModel
 class CommentViewModel
     @Inject
     constructor(
-        private val postRepository: PostRepository,
     ) : ViewModel() {
         var commentUiState by mutableStateOf(CommentUiState())
             private set
@@ -40,34 +38,15 @@ class CommentViewModel
         fun onGetCommentUiAction(): CommentUiAction =
             CommentUiAction(
                 onGetComment = this::onGetComment,
-                onGetComments = this::onGetComments,
-                onGetBeforeComments = this::onGetBeforeComments,
+                onProcessOfEngagementAction = this::onProcessOfEngagementAction,
             )
 
-        fun onGetEngagementIconAction(): EngagementIconAction =
-            EngagementIconAction(
-                onLike = this::onLike,
-                onRepost = this::onRepost,
-                onComment = this::onComment,
-            )
+    private fun onProcessOfEngagementAction(newPost: Post){
+        onUpdatePosts(newPost)
+    }
 
         private fun onGetComment(comment: Post) {
             commentUiState = commentUiState.copy(comment = comment)
-        }
-
-        private fun onGetComments(comment: Post) {
-            viewModelScope.launch(Dispatchers.IO) {
-                // todo
-            }
-        }
-
-        private fun onGetBeforeComments(
-            comment: Post,
-            commentID: Int,
-        ) {
-            viewModelScope.launch(Dispatchers.IO) {
-                // todo
-            }
         }
 
         private fun onUpdatePosts(newPost: Post) {
@@ -78,58 +57,5 @@ class CommentViewModel
             val comment = if (commentUiState.comment.id == newPost.id) newPost else commentUiState.comment
 
             commentUiState = commentUiState.copy(comments = newPosts, comment = comment)
-        }
-
-        private fun onLike(
-            post: Post,
-            myself: User,
-            onAddOrRemoveFromMyList: () -> Unit,
-        ) {
-            val newPost: Post
-            if (!myself.likes.contains(post.id)) {
-                newPost = post.copy(likeCount = post.likeCount + 1)
-                viewModelScope.launch(Dispatchers.IO) {
-                    postRepository.onLike(post = newPost, user = myself)
-                }
-            } else {
-                newPost = post.copy(likeCount = post.likeCount - 1)
-                viewModelScope.launch(Dispatchers.IO) {
-                    postRepository.onUnLike(post = newPost, user = myself)
-                }
-            }
-            onUpdatePosts(newPost)
-            onAddOrRemoveFromMyList()
-        }
-
-        private fun onRepost(
-            post: Post,
-            myself: User,
-            onAddOrRemoveFromMyList: () -> Unit,
-        ) {
-            val newPost: Post
-            if (!myself.reposts.contains(post.id)) {
-                newPost = post.copy(repostCount = post.repostCount + 1)
-                viewModelScope.launch(Dispatchers.IO) {
-                    postRepository.onRepost(post = newPost, user = myself)
-                }
-            } else {
-                newPost = post.copy(repostCount = post.repostCount - 1)
-                viewModelScope.launch(Dispatchers.IO) {
-                    postRepository.onUnRepost(post = newPost, user = myself)
-                }
-            }
-            onUpdatePosts(newPost)
-            onAddOrRemoveFromMyList()
-        }
-
-        private fun onComment(
-            post: Post,
-            comment: Post,
-            myself: User,
-            updateMyself: () -> Unit,
-        ) {
-            viewModelScope.launch(Dispatchers.IO) {
-                // TODO
-            }
         }
     }

@@ -39,7 +39,7 @@ fun NavigationLogin(
         topState = loginViewModel.topState,
         onNavigate = { route: Route ->
             loginNavHostController.navigate(route)
-            loginViewModel.getLoginAction().onChangeCurrentRouteName(route.name)
+            loginViewModel.onGetLoginAction().onChangeCurrentRouteName(route.name)
         },
     ) { modifier: Modifier ->
         NavHost(
@@ -50,7 +50,7 @@ fun NavigationLogin(
                 SignIn(
                     modifier = modifier,
                     loginUiState = loginViewModel.loginUiState,
-                    loginUiAction = loginViewModel.getLoginAction(),
+                    loginUiAction = loginViewModel.onGetLoginAction(),
                     onNavigate = { navHostController.navigate(NavigationRoute.Hub()) },
                 )
             }
@@ -58,7 +58,7 @@ fun NavigationLogin(
                 SignUp(
                     modifier = modifier,
                     loginUiState = loginViewModel.loginUiState,
-                    loginUiAction = loginViewModel.getLoginAction(),
+                    loginUiAction = loginViewModel.onGetLoginAction(),
                     onNavigateToConfirmEmail = {
                         loginNavHostController.navigate(
                             NavigationLoginRoute.ConfirmEmail(),
@@ -69,7 +69,7 @@ fun NavigationLogin(
             composable<NavigationLoginRoute.ConfirmEmail> {
                 ConfirmEmail(
                     modifier = modifier,
-                    confirmEmailUiAction = loginViewModel.getConfirmEmailUiAction(),
+                    confirmEmailUiAction = loginViewModel.onGetConfirmEmailUiAction(),
                     onNavigateToCreateAccount = {
                         loginNavHostController.navigate(
                             NavigationLoginRoute.CreateAccount(),
@@ -81,7 +81,7 @@ fun NavigationLogin(
                 CreateAccount(
                     modifier = modifier,
                     createAccountUiState = loginViewModel.createAccountUiState,
-                    createAccountUiAction = loginViewModel.getCreateAccountUiAction(),
+                    createAccountUiAction = loginViewModel.onGetCreateAccountUiAction(),
                     onNavigateToHub = { navHostController.navigate(NavigationRoute.Hub()) },
                 )
             }

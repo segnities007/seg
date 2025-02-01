@@ -50,6 +50,7 @@ data class SearchUiAction(
     val onGetBeforePostsByKeyword: (keyword: String, afterPostCreateAt: LocalDateTime) -> Unit,
     val onGetPostsByKeywordSortedByViewCount: (keyword: String) -> Unit,
     val onGetBeforePostsByKeywordSortedByViewCount: (keyword: String, viewCount: Int) -> Unit,
+    val onProcessOfEngagementAction: (newPost: Post) -> Unit,
 )
 
 @HiltViewModel
@@ -81,21 +82,12 @@ class SearchViewModel
                 onGetBeforePostsByKeyword = this::onGetBeforePostsByKeyword,
                 onGetPostsByKeywordSortedByViewCount = this::onGetPostsByKeywordSortedByViewCount,
                 onGetBeforePostsByKeywordSortedByViewCount = this::onGetBeforePostsByKeywordSortedByViewCount,
+                onProcessOfEngagementAction = this::onProcessOfEngagementAction,
             )
 
-        fun onGetEngagementIconActionForPosts(): EngagementIconAction =
-            EngagementIconAction(
-                onLike = this::onLike,
-                onRepost = this::onRepost,
-                onComment = this::onComment,
-            )
-
-        fun onGetEngagementIconActionForPostsSortedByViewCount(): EngagementIconAction =
-            EngagementIconAction(
-                onLike = this::onLikeOfPostsSortedByViewCount,
-                onRepost = this::onRepostOfPostsSortedByViewCount,
-                onComment = this::onCommentOfPostsSortedByViewCount,
-            )
+        private fun onProcessOfEngagementAction(newPost: Post){
+            onUpdatePosts(newPost)
+        }
 
         private fun onEnter(keyword: String) {
             viewModelScope.launch(Dispatchers.IO) {
@@ -127,14 +119,6 @@ class SearchViewModel
                     isCompletedLoadingUsers = false,
                 )
         }
-
-        private fun onBeTrueIsUsers() {
-            topSearchBarUiState =
-                topSearchBarUiState.copy(
-                    isCompletedLoadingUsers = true,
-                )
-        }
-
         private fun onBeFalseIsPosts() {
             topSearchBarUiState =
                 topSearchBarUiState.copy(
@@ -142,24 +126,10 @@ class SearchViewModel
                 )
         }
 
-        private fun onBeTrueIsPosts() {
-            topSearchBarUiState =
-                topSearchBarUiState.copy(
-                    isCompletedLoadingPosts = true,
-                )
-        }
-
         private fun onBeFalseIsPostsSorted() {
             topSearchBarUiState =
                 topSearchBarUiState.copy(
                     isCompletedLoadingPostsSortedByViewCount = false,
-                )
-        }
-
-        private fun onBeTrueIsPostsSorted() {
-            topSearchBarUiState =
-                topSearchBarUiState.copy(
-                    isCompletedLoadingUsers = true,
                 )
         }
 
@@ -256,109 +226,4 @@ class SearchViewModel
             searchUiState = searchUiState.copy(postsSortedByViewCount = newPosts)
         }
 
-        private fun onLike(
-            post: Post,
-            myself: User,
-            onAddOrRemoveFromMyList: () -> Unit,
-        ) {
-            val newPost: Post
-            if (!myself.likes.contains(post.id)) {
-                newPost = post.copy(likeCount = post.likeCount + 1)
-                viewModelScope.launch(Dispatchers.IO) {
-                    postRepository.onLike(post = newPost, user = myself)
-                }
-            } else {
-                newPost = post.copy(likeCount = post.likeCount - 1)
-                viewModelScope.launch(Dispatchers.IO) {
-                    postRepository.onUnLike(post = newPost, user = myself)
-                }
-            }
-            onUpdatePosts(newPost)
-            onAddOrRemoveFromMyList()
-        }
-
-        private fun onRepost(
-            post: Post,
-            myself: User,
-            onAddOrRemoveFromMyList: () -> Unit,
-        ) {
-            val newPost: Post
-            if (!myself.reposts.contains(post.id)) {
-                newPost = post.copy(repostCount = post.repostCount + 1)
-                viewModelScope.launch(Dispatchers.IO) {
-                    postRepository.onRepost(post = newPost, user = myself)
-                }
-            } else {
-                newPost = post.copy(repostCount = post.repostCount - 1)
-                viewModelScope.launch(Dispatchers.IO) {
-                    postRepository.onUnRepost(post = newPost, user = myself)
-                }
-            }
-            onUpdatePosts(newPost)
-            onAddOrRemoveFromMyList()
-        }
-
-        private fun onComment(
-            post: Post,
-            comment: Post,
-            myself: User,
-            updateMyself: () -> Unit,
-        ) {
-            viewModelScope.launch(Dispatchers.IO) {
-                // TODO
-            }
-        }
-
-        private fun onLikeOfPostsSortedByViewCount(
-            post: Post,
-            myself: User,
-            onAddOrRemoveFromMyList: () -> Unit,
-        ) {
-            val newPost: Post
-            if (!myself.likes.contains(post.id)) {
-                newPost = post.copy(likeCount = post.likeCount + 1)
-                viewModelScope.launch(Dispatchers.IO) {
-                    postRepository.onLike(post = newPost, user = myself)
-                }
-            } else {
-                newPost = post.copy(likeCount = post.likeCount - 1)
-                viewModelScope.launch(Dispatchers.IO) {
-                    postRepository.onUnLike(post = newPost, user = myself)
-                }
-            }
-            onUpdatePosts(newPost)
-            onAddOrRemoveFromMyList()
-        }
-
-        private fun onRepostOfPostsSortedByViewCount(
-            post: Post,
-            myself: User,
-            onAddOrRemoveFromMyList: () -> Unit,
-        ) {
-            val newPost: Post
-            if (!myself.reposts.contains(post.id)) {
-                newPost = post.copy(repostCount = post.repostCount + 1)
-                viewModelScope.launch(Dispatchers.IO) {
-                    postRepository.onRepost(post = newPost, user = myself)
-                }
-            } else {
-                newPost = post.copy(repostCount = post.repostCount - 1)
-                viewModelScope.launch(Dispatchers.IO) {
-                    postRepository.onUnRepost(post = newPost, user = myself)
-                }
-            }
-            onUpdatePosts(newPost)
-            onAddOrRemoveFromMyList()
-        }
-
-        private fun onCommentOfPostsSortedByViewCount(
-            post: Post,
-            comment: Post,
-            myself: User,
-            updateMyself: () -> Unit,
-        ) {
-            viewModelScope.launch(Dispatchers.IO) {
-                // TODO
-            }
-        }
     }

@@ -35,9 +35,8 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideImageRepository(
-        storageRepository: StorageRepository,
-    ): ImageRepository = ImageRepositoryImpl(storageRepository = storageRepository)
+    fun provideImageRepository(storageRepository: StorageRepository): ImageRepository =
+        ImageRepositoryImpl(storageRepository = storageRepository)
 
     @Provides
     @Singleton
