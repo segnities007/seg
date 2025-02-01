@@ -53,7 +53,6 @@ fun Trend(
         hubUiAction = hubUiAction,
         trendUiState = trendViewModel.trendUiState,
         trendUiAction = trendViewModel.onGetTrendUiAction(),
-        engagementIconAction = trendViewModel.onGetEngagementIconAction(),
         postCardUiAction = postCardUiAction,
         onHubNavigate = onHubNavigate,
     )
@@ -67,7 +66,6 @@ private fun TrendUi(
     hubUiAction: HubUiAction,
     trendUiState: TrendUiState,
     trendUiAction: TrendUiAction,
-    engagementIconAction: EngagementIconAction,
     postCardUiAction: PostCardUiAction,
     onHubNavigate: (Route) -> Unit,
 ) {
@@ -128,7 +126,7 @@ private fun TrendUi(
                     isIncrementView = readMores[page],
                     hubUiAction = hubUiAction,
                     postCardUiAction = postCardUiAction,
-                    engagementIconAction = engagementIconAction,
+                    onProcessOfEngagementAction = trendUiAction.onProcessOfEngagementAction,
                 )
             }
             if (!readMores[page]) {

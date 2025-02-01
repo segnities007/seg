@@ -104,8 +104,7 @@ fun NavigationHub(
                     hubUiAction = hubViewModel.getHubUiAction(),
                     accountUiState = accountViewModel.accountUiState,
                     accountUiAction = accountViewModel.getAccountUiAction(),
-                    engagementIconAction = accountViewModel.onGetEngagementIconAction(),
-                    postCardUiAction = accountViewModel.getPostUiAction(),
+                    postCardUiAction = postCardViewModel.onGetPostCardUiAction(),
                     onHubNavigate = onHubNavigate,
                 )
             }
@@ -123,8 +122,6 @@ fun NavigationHub(
                     hubUiState = hubViewModel.hubUiState,
                     hubUiAction = hubViewModel.getHubUiAction(),
                     postCardUiAction = postCardViewModel.onGetPostCardUiAction(),
-                    engagementIconActionForPosts = searchViewModel.onGetEngagementIconActionForPosts(),
-                    engagementIconActionForPostsSortedByViewCount = searchViewModel.onGetEngagementIconActionForPostsSortedByViewCount(),
                     topSearchBarUiState = searchViewModel.topSearchBarUiState,
                     accountUiAction = accountViewModel.getAccountUiAction(),
                     searchUiState = searchViewModel.searchUiState,

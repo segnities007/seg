@@ -28,7 +28,6 @@ fun Preference(
     onSettingNavigate: (Route) -> Unit,
     onTopNavigate: (Route) -> Unit,
 ) {
-
     LaunchedEffect(Unit) {
         hubUiAction.onResetIsHideTopBar()
     }

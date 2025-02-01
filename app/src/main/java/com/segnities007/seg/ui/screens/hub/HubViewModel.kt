@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 data class HubUiState(
     val user: User = User(), // myself
-    val userID: String = "", // other user
+    val userID: String = "", // other user's userID
     val accounts: List<String> = listOf(),
     val currentRouteName: String = "Home",
     val comment: Post = Post(),
@@ -29,10 +29,10 @@ data class HubUiAction(
     val onSetComment: (comment: Post) -> Unit,
     val onSetUserID: (userID: String) -> Unit,
     val onSetAccounts: (accounts: List<String>) -> Unit,
-    val onAddPostIDToLikeList: (postID: Int) -> Unit,
-    val onRemovePostIDFromLikeList: (postID: Int) -> Unit,
-    val onAddPostIDToRepostList: (postID: Int) -> Unit,
-    val onRemovePostIDFromRepostList: (postID: Int) -> Unit,
+    val onAddPostIDToMyLikes: (postID: Int) -> Unit,
+    val onRemovePostIDFromMyLikes: (postID: Int) -> Unit,
+    val onAddPostIDToMyReposts: (postID: Int) -> Unit,
+    val onRemovePostIDFromMyReposts: (postID: Int) -> Unit,
     val onChangeCurrentRouteName: (newRouteName: String) -> Unit,
 )
 
@@ -51,10 +51,10 @@ class HubViewModel
                 onSetUserID = this::onSetUserID,
                 onSetAccounts = this::onSetAccounts,
                 onSetComment = this::onSetComment,
-                onAddPostIDToLikeList = this::onAddPostIDToLikeList,
-                onRemovePostIDFromLikeList = this::onRemovePostIDFromLikeList,
-                onAddPostIDToRepostList = this::onAddPostIDToRepostList,
-                onRemovePostIDFromRepostList = this::onRemovePostIDFromRepostList,
+                onAddPostIDToMyLikes = this::onAddPostIDToMyLikes,
+                onRemovePostIDFromMyLikes = this::onRemovePostIDFromMyLikes,
+                onAddPostIDToMyReposts = this::onAddPostIDToMyReposts,
+                onRemovePostIDFromMyReposts = this::onRemovePostIDFromMyReposts,
                 onChangeCurrentRouteName = this::onChangeCurrentRouteName,
                 onChangeIsHideTopBar = this::onChangeIsHideTopBar,
                 onResetIsHideTopBar = this::onResetIsHideTopBar,
@@ -92,23 +92,23 @@ class HubViewModel
         }
 
         // TODO
-        private fun onAddPostIDToLikeList(postID: Int) {
+        private fun onAddPostIDToMyLikes(postID: Int) {
             val updatedUser = hubUiState.user.copy(likes = hubUiState.user.likes.plus(postID))
             hubUiState = hubUiState.copy(user = updatedUser)
         }
 
-        private fun onRemovePostIDFromLikeList(postID: Int) {
+        private fun onRemovePostIDFromMyLikes(postID: Int) {
             val updatedUser = hubUiState.user.copy(likes = hubUiState.user.likes.minus(postID))
             hubUiState = hubUiState.copy(user = updatedUser)
         }
 
-        private fun onAddPostIDToRepostList(postID: Int) {
+        private fun onAddPostIDToMyReposts(postID: Int) {
             val newPosts = hubUiState.user.reposts.plus(postID)
             val updatedUser = hubUiState.user.copy(reposts = newPosts)
             hubUiState = hubUiState.copy(user = updatedUser)
         }
 
-        private fun onRemovePostIDFromRepostList(postID: Int) {
+        private fun onRemovePostIDFromMyReposts(postID: Int) {
             val newPosts = hubUiState.user.reposts.minus(postID)
             val updatedUser = hubUiState.user.copy(reposts = newPosts)
 

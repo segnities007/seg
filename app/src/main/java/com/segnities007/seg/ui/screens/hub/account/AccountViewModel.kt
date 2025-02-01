@@ -7,23 +7,19 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.segnities007.seg.data.model.Post
 import com.segnities007.seg.data.model.User
-import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.domain.repository.PostRepository
 import com.segnities007.seg.domain.repository.UserRepository
-import com.segnities007.seg.ui.components.card.postcard.EngagementIconAction
-import com.segnities007.seg.ui.components.card.postcard.PostCardUiAction
-import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 data class AccountUiState(
     val user: User = User(),
     val posts: List<Post> = listOf(),
-    val likedPosts: List<Post> = listOf(), // TODO
-    val repostedPosts: List<Post> = listOf(), // TODO
+    val likedPosts: List<Post> = listOf(),
+    val repostedPosts: List<Post> = listOf(),
     val isNotCompleted: Boolean = true,
 )
 
@@ -34,9 +30,10 @@ data class AccountUiAction(
     val onSetOtherUser: (user: User) -> Unit,
     val onGetUserPosts: (userID: String) -> Unit,
     val onChangeIsNotCompletedOfAccount: () -> Unit,
-    val onGetBeforePosts: (updateAt: java.time.LocalDateTime) -> Unit,
+    val onGetBeforePosts: (updateAt: LocalDateTime) -> Unit,
     val onFollow: (myself: User, other: User, onGetMyself: () -> Unit) -> Unit,
     val onUnFollow: (myself: User, other: User, onGetMyself: () -> Unit) -> Unit,
+    val onProcessOfEngagementAction: (newPost: Post) -> Unit,
 )
 
 @HiltViewModel
@@ -46,8 +43,6 @@ class AccountViewModel
         private val userRepository: UserRepository,
         private val postRepository: PostRepository,
     ) : ViewModel() {
-        private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
-
         var accountUiState by mutableStateOf(AccountUiState())
             private set
 
@@ -62,25 +57,11 @@ class AccountViewModel
                 onReset = this::onResetAccount,
                 onInitAccountUiState = this::onInitAccountUiState,
                 onChangeIsNotCompletedOfAccount = this::onChangeIsNotCompletedOfAccount,
-            )
-
-        fun getPostUiAction(): PostCardUiAction =
-            PostCardUiAction(
-                onClickIcon = this::onClickIcon,
-                onClickPostCard = this::onClickPostCard,
-                onIncrementViewCount = this::onIncrementViewCount,
-                onDeletePost = {},
-            )
-
-        fun onGetEngagementIconAction(): EngagementIconAction =
-            EngagementIconAction(
-                onLike = this::onLike,
-                onRepost = this::onRepost,
-                onComment = this::onComment,
+                onProcessOfEngagementAction = this::onProcessOfEngagement,
             )
 
         private fun onInitAccountUiState(userID: String) {
-            viewModelScope.launch(ioDispatcher) {
+            viewModelScope.launch(Dispatchers.IO) {
                 val user = userRepository.getOtherUser(userID)
                 accountUiState = accountUiState.copy(user = user)
 
@@ -93,7 +74,7 @@ class AccountViewModel
             }
         }
 
-        private fun onGetBeforePosts(updateAt: java.time.LocalDateTime) {
+        private fun onGetBeforePosts(updateAt: LocalDateTime) {
             viewModelScope.launch(Dispatchers.IO) {
                 val posts = postRepository.onGetBeforePostsOfUser(accountUiState.user.userID, updateAt)
                 if (posts.isNotEmpty()) {
@@ -104,12 +85,9 @@ class AccountViewModel
             }
         }
 
-        private fun onClickIcon(onHubNavigate: (Route) -> Unit) {
-            onHubNavigate(NavigationHubRoute.Account())
-        }
-
-        private fun onClickPostCard(onHubNavigate: (Route) -> Unit) {
-            onHubNavigate(NavigationHubRoute.Comment())
+        private fun onProcessOfEngagement(newPost: Post) {
+            onUpdatePosts(newPost)
+            onGetOtherUser(accountUiState.user.userID)
         }
 
         private fun onUpdatePosts(newPost: Post) {
@@ -150,14 +128,14 @@ class AccountViewModel
         }
 
         private fun onGetOtherUser(userID: String) {
-            viewModelScope.launch(ioDispatcher) {
+            viewModelScope.launch(Dispatchers.IO) {
                 val user = userRepository.getOtherUser(userID)
                 accountUiState = accountUiState.copy(user = user)
             }
         }
 
         private fun onGetUserPosts(userID: String) {
-            viewModelScope.launch(ioDispatcher) {
+            viewModelScope.launch(Dispatchers.IO) {
                 val posts = postRepository.onGetPostsOfUser(userID)
                 if (posts.isNotEmpty()) {
                     accountUiState = accountUiState.copy(posts = posts)
@@ -167,72 +145,11 @@ class AccountViewModel
             }
         }
 
-        private fun onIncrementViewCount(post: Post) {
-            viewModelScope.launch(Dispatchers.IO) {
-                postRepository.onIncrementView(post)
-            }
-        }
-
         private fun onChangeIsNotCompletedOfAccount() {
             accountUiState = accountUiState.copy(isNotCompleted = !accountUiState.isNotCompleted)
         }
 
         private fun onResetAccount() {
             accountUiState = accountUiState.copy(isNotCompleted = true)
-        }
-
-        private fun onLike(
-            post: Post,
-            myself: User,
-            onGetMyself: () -> Unit,
-        ) {
-            val newPost: Post
-            if (myself.likes.contains(post.id)) {
-                newPost = post.copy(likeCount = post.likeCount - 1)
-                viewModelScope.launch(Dispatchers.IO) {
-                    postRepository.onLike(post = newPost, user = myself)
-                }
-            } else {
-                newPost = post.copy(likeCount = post.likeCount + 1)
-                viewModelScope.launch(Dispatchers.IO) {
-                    postRepository.onUnLike(post = newPost, user = myself)
-                }
-            }
-            onUpdatePosts(newPost)
-            onGetMyself()
-            onGetOtherUser(accountUiState.user.userID)
-        }
-
-        private fun onRepost(
-            post: Post,
-            myself: User,
-            onGetMyself: () -> Unit,
-        ) {
-            val newPost: Post
-            if (myself.reposts.contains(post.id)) {
-                newPost = post.copy(repostCount = post.repostCount - 1)
-                viewModelScope.launch(Dispatchers.IO) {
-                    postRepository.onRepost(post = newPost, user = myself)
-                }
-            } else {
-                newPost = post.copy(repostCount = post.repostCount + 1)
-                viewModelScope.launch(Dispatchers.IO) {
-                    postRepository.onUnRepost(post = newPost, user = myself)
-                }
-            }
-            onUpdatePosts(newPost)
-            onGetMyself()
-            onGetOtherUser(accountUiState.user.userID)
-        }
-
-        private fun onComment(
-            post: Post,
-            comment: Post,
-            myself: User,
-            updateMyself: () -> Unit,
-        ) {
-            viewModelScope.launch(Dispatchers.IO) {
-                // TODO
-            }
         }
     }

@@ -43,7 +43,7 @@ fun TopStatusBar(
 ) {
     TopStatusCard(
         isHideFollows = isHideFollows,
-    ){
+    ) {
         Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
             Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_nl)))
             Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
@@ -56,7 +56,7 @@ fun TopStatusBar(
                 Status(user = user)
             }
             Spacer(modifier = Modifier.padding(commonPadding))
-            if(!isHideFollows){
+            if (!isHideFollows) {
                 AboutFollow(
                     user = user,
                     onHubNavigate = onHubNavigate,
@@ -78,21 +78,24 @@ private fun TopStatusCard(
     Box(
         modifier =
             Modifier
-                .run{
-                    if(!isHideFollows){
-                        this.shadow(
-                            elevation = dimensionResource(R.dimen.elevation_normal),
-                            shape = RoundedCornerShape(
-                                bottomStart = dimensionResource(R.dimen.padding_large),
-                                bottomEnd = dimensionResource(R.dimen.padding_large),
+                .run {
+                    if (!isHideFollows) {
+                        this
+                            .shadow(
+                                elevation = dimensionResource(R.dimen.elevation_normal),
+                                shape =
+                                    RoundedCornerShape(
+                                        bottomStart = dimensionResource(R.dimen.padding_large),
+                                        bottomEnd = dimensionResource(R.dimen.padding_large),
+                                    ),
+                            ).clip(
+                                shape =
+                                    RoundedCornerShape(
+                                        bottomStart = dimensionResource(R.dimen.padding_large),
+                                        bottomEnd = dimensionResource(R.dimen.padding_large),
+                                    ),
                             )
-                        ).clip(
-                            shape = RoundedCornerShape(
-                                bottomStart = dimensionResource(R.dimen.padding_large),
-                                bottomEnd = dimensionResource(R.dimen.padding_large),
-                            )
-                        )
-                    }else{
+                    } else {
                         this
                     }
                 }.background(color = MaterialTheme.colorScheme.primaryContainer),

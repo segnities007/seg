@@ -29,8 +29,6 @@ fun Search(
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
     postCardUiAction: PostCardUiAction,
-    engagementIconActionForPosts: EngagementIconAction,
-    engagementIconActionForPostsSortedByViewCount: EngagementIconAction,
     topSearchBarUiState: TopSearchBarUiState,
     accountUiAction: AccountUiAction,
     searchUiState: SearchUiState,
@@ -50,7 +48,6 @@ fun Search(
                 hubUiState = hubUiState,
                 hubUiAction = hubUiAction,
                 postCardUiAction = postCardUiAction,
-                engagementIconAction = engagementIconActionForPostsSortedByViewCount,
                 topSearchBarUiState = topSearchBarUiState,
                 searchUiState = searchUiState,
                 searchUiAction = searchUiAction,
@@ -62,7 +59,6 @@ fun Search(
                 hubUiState = hubUiState,
                 hubUiAction = hubUiAction,
                 postCardUiAction = postCardUiAction,
-                engagementIconAction = engagementIconActionForPosts,
                 topSearchBarUiState = topSearchBarUiState,
                 searchUiState = searchUiState,
                 searchUiAction = searchUiAction,
@@ -71,7 +67,6 @@ fun Search(
         2 ->
             Users(
                 modifier = modifier,
-                hubUiState = hubUiState,
                 hubUiAction = hubUiAction,
                 topSearchBarUiState = topSearchBarUiState,
                 accountUiAction = accountUiAction,
@@ -88,7 +83,6 @@ private fun MostViewPosts(
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
     postCardUiAction: PostCardUiAction,
-    engagementIconAction: EngagementIconAction,
     topSearchBarUiState: TopSearchBarUiState,
     searchUiState: SearchUiState,
     searchUiAction: SearchUiAction,
@@ -111,8 +105,8 @@ private fun MostViewPosts(
                 onHubNavigate = onHubNavigate,
                 hubUiAction = hubUiAction,
                 isIncrementView = false,
-                engagementIconAction = engagementIconAction,
                 postCardUiAction = postCardUiAction,
+                onProcessOfEngagementAction = searchUiAction.onProcessOfEngagementAction,
             )
         }
         // action for fetching before post
@@ -140,7 +134,6 @@ private fun LatestPosts(
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
     postCardUiAction: PostCardUiAction,
-    engagementIconAction: EngagementIconAction,
     topSearchBarUiState: TopSearchBarUiState,
     searchUiState: SearchUiState,
     searchUiAction: SearchUiAction,
@@ -163,8 +156,8 @@ private fun LatestPosts(
                 onHubNavigate = onHubNavigate,
                 hubUiAction = hubUiAction,
                 isIncrementView = false,
-                engagementIconAction = engagementIconAction,
                 postCardUiAction = postCardUiAction,
+                onProcessOfEngagementAction = searchUiAction.onProcessOfEngagementAction,
             )
         }
         // action for fetching before post
@@ -189,7 +182,6 @@ private fun LatestPosts(
 @Composable
 private fun Users(
     modifier: Modifier = Modifier,
-    hubUiState: HubUiState,
     hubUiAction: HubUiAction,
     topSearchBarUiState: TopSearchBarUiState,
     accountUiAction: AccountUiAction,

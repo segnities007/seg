@@ -1,6 +1,5 @@
 package com.segnities007.seg.ui.components.card.postcard
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -58,8 +57,8 @@ fun PostCard(
     hubUiAction: HubUiAction,
     isShowDetailButton: Boolean = false,
     isIncrementView: Boolean = true, // For disable when view my post
-    engagementIconAction: EngagementIconAction,
     postCardUiAction: PostCardUiAction,
+    onProcessOfEngagementAction: (newPost: Post) -> Unit,
     onHubNavigate: (Route) -> Unit,
 ) {
     var isShowBottomSheet by remember { mutableStateOf(false) }
@@ -117,8 +116,9 @@ fun PostCard(
                         modifier = modifier,
                         post = post,
                         myself = myself,
-                        engagementIconAction = engagementIconAction,
                         hubUiAction = hubUiAction,
+                        postCardUiAction = postCardUiAction,
+                        onProcessOfEngagementAction = onProcessOfEngagementAction
                     )
                 }
             }
@@ -200,7 +200,8 @@ private fun ActionIcons(
     myself: User,
     post: Post,
     hubUiAction: HubUiAction,
-    engagementIconAction: EngagementIconAction,
+    postCardUiAction: PostCardUiAction,
+    onProcessOfEngagementAction: (newPost: Post) -> Unit,
 ) {
     val counts: List<Int> =
         listOf(
@@ -220,10 +221,16 @@ private fun ActionIcons(
             contentRes = EngagementIconState.contentDescriptions[0],
             count = counts[0],
             onClick = {
-                if (myself.likes.contains(post.id)) {
-                    engagementIconAction.onLike(post, myself) { hubUiAction.onRemovePostIDFromLikeList(post.id) }
-                } else {
-                    engagementIconAction.onLike(post, myself) { hubUiAction.onAddPostIDToLikeList(post.id) }
+                postCardUiAction.onLike(
+                    post,
+                    myself,
+                ) {
+                    onProcessOfEngagementAction(it)
+                    if (myself.likes.contains(post.id)) {
+                        hubUiAction.onRemovePostIDFromMyLikes(post.id)
+                    } else {
+                        hubUiAction.onAddPostIDToMyLikes(post.id)
+                    }
                 }
             },
         )
@@ -233,11 +240,16 @@ private fun ActionIcons(
             contentRes = EngagementIconState.contentDescriptions[1],
             count = counts[1],
             onClick = {
-                Log.d("postcard", post.id.toString())
-                if (myself.reposts.contains(post.id)) {
-                    engagementIconAction.onRepost(post, myself) { hubUiAction.onRemovePostIDFromRepostList(post.id) }
-                } else {
-                    engagementIconAction.onRepost(post, myself) { hubUiAction.onAddPostIDToRepostList(post.id) }
+                postCardUiAction.onRepost(
+                    post,
+                    myself,
+                ) {
+                    onProcessOfEngagementAction(it)
+                    if (myself.reposts.contains(post.id)) {
+                        hubUiAction.onRemovePostIDFromMyReposts(post.id)
+                    } else {
+                        hubUiAction.onAddPostIDToMyReposts(post.id)
+                    }
                 }
             },
         )

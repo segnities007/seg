@@ -117,11 +117,9 @@ private fun HubUi(
                     TopStatusBar(
                         user = accountUiState.user,
                         onClickFollowsButton = {
-//                            accountsUiAction.onGetUsers(accountUiState.user.follows)
                             onHubNavigate(NavigationHubRoute.Accounts())
                         },
                         onClickFollowersButton = {
-//                            accountsUiAction.onGetUsers(accountUiState.user.followers)
                             onHubNavigate(NavigationHubRoute.Accounts())
                         },
                         hubUiAction = hubUiAction,
@@ -134,20 +132,18 @@ private fun HubUi(
                         routeName = currentRouteName,
                     )
                 NavigationHubRoute.Setting().name ->
-                        TopStatusBar(
-                            isHideFollows = hubUiState.isHideTopBar,
-                            user = hubUiState.user,
-                            onClickFollowsButton = {
-//                            accountsUiAction.onGetUsers(hubUiState.user.follows)
-                                onHubNavigate(NavigationHubRoute.Accounts())
-                            },
-                            onClickFollowersButton = {
-//                            accountsUiAction.onGetUsers(hubUiState.user.followers)
-                                onHubNavigate(NavigationHubRoute.Accounts())
-                            },
-                            onHubNavigate = onHubNavigate,
-                            hubUiAction = hubUiAction,
-                        )
+                    TopStatusBar(
+                        isHideFollows = hubUiState.isHideTopBar,
+                        user = hubUiState.user,
+                        onClickFollowsButton = {
+                            onHubNavigate(NavigationHubRoute.Accounts())
+                        },
+                        onClickFollowersButton = {
+                            onHubNavigate(NavigationHubRoute.Accounts())
+                        },
+                        onHubNavigate = onHubNavigate,
+                        hubUiAction = hubUiAction,
+                    )
                 NavigationHubRoute.Comment().name ->
                     TopBar(
                         titleContent = { Text(text = currentRouteName) },

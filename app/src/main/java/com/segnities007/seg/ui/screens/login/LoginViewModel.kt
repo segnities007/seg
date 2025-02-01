@@ -24,9 +24,12 @@ data class LoginUiState(
     val email: String = "",
     val password: String = "",
     val currentRouteName: String = "SignIn",
+    val isFailedSignIn: Boolean = false,
 )
 
 data class LoginUiAction(
+    val onChangeIsFailedSignIn: () -> Unit,
+    val onResetIsFailedSignIn: () -> Unit,
     val onChangeCurrentRouteName: (newCurrentRouteName: String) -> Unit,
     val onPasswordChange: (password: String) -> Unit,
     val onEmailChange: (email: String) -> Unit,
@@ -59,8 +62,6 @@ data class CreateAccountUiAction(
     val onCreateUser: () -> Unit,
 )
 
-//
-
 @HiltViewModel
 class LoginViewModel
     @Inject
@@ -73,13 +74,15 @@ class LoginViewModel
         var createAccountUiState by mutableStateOf(CreateAccountUiState())
             private set
 
-        fun getConfirmEmailUiAction(): ConfirmEmailUiAction =
+        fun onGetConfirmEmailUiAction(): ConfirmEmailUiAction =
             ConfirmEmailUiAction(
                 onConfirmEmail = this::onConfirmEmail,
             )
 
-        fun getLoginAction(): LoginUiAction =
+        fun onGetLoginAction(): LoginUiAction =
             LoginUiAction(
+                onChangeIsFailedSignIn = this::onChangeIsFailedSignIn,
+                onResetIsFailedSignIn = this::onResetIsFailedSignIn,
                 onChangeCurrentRouteName = this::onChangeCurrentRouteName,
                 onEmailChange = this::onEmailChange,
                 onPasswordChange = this::onPasswordChange,
@@ -87,7 +90,7 @@ class LoginViewModel
                 onSignInWithEmailPassword = this::onSignInWithEmailPassword,
             )
 
-        fun getCreateAccountUiAction(): CreateAccountUiAction =
+        fun onGetCreateAccountUiAction(): CreateAccountUiAction =
             CreateAccountUiAction(
                 onDatePickerOpen = this::onDatePickerOpen,
                 onDatePickerClose = this::onDatePickerClose,
@@ -104,6 +107,14 @@ class LoginViewModel
 
         private fun onChangeUserID(userID: String) {
             createAccountUiState = createAccountUiState.copy(userID = userID)
+        }
+
+        private fun onChangeIsFailedSignIn() {
+            loginUiState = loginUiState.copy(isFailedSignIn = !loginUiState.isFailedSignIn)
+        }
+
+        private fun onResetIsFailedSignIn() {
+            loginUiState = loginUiState.copy(isFailedSignIn = false)
         }
 
         private fun onDateSelect(millis: Long?) {

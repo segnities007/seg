@@ -33,7 +33,7 @@ fun Comment(
         hubUiState = hubUiState,
         hubUiAction = hubUiAction,
         commentUiState = commentViewModel.commentUiState,
-        engagementIconAction = commentViewModel.onGetEngagementIconAction(),
+        commentUiAction = commentViewModel.onGetCommentUiAction(),
         postCardUiAction = postCardUiAction,
         onHubNavigate = onHubNavigate,
     )
@@ -45,8 +45,8 @@ private fun CommentUi(
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
     commentUiState: CommentUiState,
-    engagementIconAction: EngagementIconAction,
     postCardUiAction: PostCardUiAction,
+    commentUiAction: CommentUiAction,
     onHubNavigate: (Route) -> Unit,
 ) {
     Column(
@@ -58,8 +58,8 @@ private fun CommentUi(
             myself = hubUiState.user,
             hubUiAction = hubUiAction,
             postCardUiAction = postCardUiAction,
-            engagementIconAction = engagementIconAction,
             onHubNavigate = onHubNavigate,
+            onProcessOfEngagementAction = commentUiAction.onProcessOfEngagementAction,
         )
     }
 }

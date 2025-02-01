@@ -1,5 +1,8 @@
 package com.segnities007.seg.ui.screens.login.sign_up
 
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -76,6 +79,20 @@ fun CreateAccount(
             Text(stringResource(id = R.string.enter))
         }
     }
+}
+
+@Composable
+private fun ImagePicker() {
+    val pickMedia =
+        rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+            // Callback is invoked after the user selects a media item or closes the
+            // photo picker.
+            if (uri != null) {
+                Log.d("PhotoPicker", "Selected URI: $uri")
+            } else {
+                Log.d("PhotoPicker", "No media selected")
+            }
+        }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -12,9 +12,10 @@ class AuthRepositoryImpl
         private val auth: Auth,
     ) : AuthRepository {
         private val tag = "AuthRepositoryImpl"
+        private val users = "users"
 
         // 前回ログインしていたかを確認
-        suspend fun hasLogged(
+        override suspend fun hasLogged(
             onNavigateToLogin: () -> Unit,
             onNavigateToHost: () -> Unit,
         ) {
@@ -28,7 +29,7 @@ class AuthRepositoryImpl
             }
         }
 
-        suspend fun logout() {
+        override suspend fun logout() {
             auth.signOut()
         }
 
@@ -52,17 +53,20 @@ class AuthRepositoryImpl
         override suspend fun signUpWithEmailPassword(
             email: String,
             password: String,
-        ): Boolean =
-            try {
+        ): Boolean {
+            return try {
                 val result =
                     auth.signUpWith(Email) {
                         this.email = email
                         this.password = password
                     }
-                Log.d(tag, "$result")
+                if (result?.identities?.isEmpty() == true) {
+                    return false
+                }
                 true
             } catch (e: Exception) {
                 Log.e(tag, "$e")
                 false
             }
+        }
     }
