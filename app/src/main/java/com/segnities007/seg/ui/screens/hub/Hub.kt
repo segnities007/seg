@@ -21,7 +21,8 @@ import com.segnities007.seg.ui.components.floating_button.FloatingButton
 import com.segnities007.seg.ui.components.navigation_drawer.NavigationDrawer
 import com.segnities007.seg.ui.components.top_bar.TopBar
 import com.segnities007.seg.ui.components.top_bar.TopSearchBar
-import com.segnities007.seg.ui.components.top_bar.TopStatusBar
+import com.segnities007.seg.ui.components.top_bar.status_bar.TopStatusBar
+import com.segnities007.seg.ui.components.top_bar.status_bar.TopStatusBarWithFollows
 import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
 import com.segnities007.seg.ui.screens.hub.account.AccountUiState
 import com.segnities007.seg.ui.screens.hub.search.SearchUiAction
@@ -114,17 +115,11 @@ private fun HubUi(
                         routeName = currentRouteName,
                     )
                 NavigationHubRoute.Account().name ->
-                    TopStatusBar(
+                    TopStatusBarWithFollows(
                         user = accountUiState.user,
-                        onClickFollowsButton = {
-                            onHubNavigate(NavigationHubRoute.Accounts())
-                        },
-                        onClickFollowersButton = {
-                            onHubNavigate(NavigationHubRoute.Accounts())
-                        },
-                        hubUiAction = hubUiAction,
                         onHubNavigate = onHubNavigate,
-                    )
+                        hubUiAction = hubUiAction,
+                        )
                 NavigationHubRoute.Accounts().name ->
                     TopBar(
                         titleContent = { Text(text = currentRouteName) },
@@ -132,18 +127,15 @@ private fun HubUi(
                         routeName = currentRouteName,
                     )
                 NavigationHubRoute.Setting().name ->
-                    TopStatusBar(
-                        isHideFollows = hubUiState.isHideTopBar,
-                        user = hubUiState.user,
-                        onClickFollowsButton = {
-                            onHubNavigate(NavigationHubRoute.Accounts())
-                        },
-                        onClickFollowersButton = {
-                            onHubNavigate(NavigationHubRoute.Accounts())
-                        },
-                        onHubNavigate = onHubNavigate,
-                        hubUiAction = hubUiAction,
-                    )
+                    if(!hubUiState.isHideTopBar){
+                        TopStatusBarWithFollows(
+                            user = hubUiState.user,
+                            onHubNavigate = onHubNavigate,
+                            hubUiAction = hubUiAction,
+                        )
+                    }else{
+                        TopStatusBar(user = hubUiState.user)
+                    }
                 NavigationHubRoute.Comment().name ->
                     TopBar(
                         titleContent = { Text(text = currentRouteName) },

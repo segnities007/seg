@@ -9,7 +9,6 @@ import com.segnities007.seg.data.model.Post
 import com.segnities007.seg.data.model.User
 import com.segnities007.seg.domain.repository.PostRepository
 import com.segnities007.seg.domain.repository.UserRepository
-import com.segnities007.seg.ui.components.card.postcard.EngagementIconAction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -85,7 +84,7 @@ class SearchViewModel
                 onProcessOfEngagementAction = this::onProcessOfEngagementAction,
             )
 
-        private fun onProcessOfEngagementAction(newPost: Post){
+        private fun onProcessOfEngagementAction(newPost: Post) {
             onUpdatePosts(newPost)
         }
 
@@ -119,6 +118,7 @@ class SearchViewModel
                     isCompletedLoadingUsers = false,
                 )
         }
+
         private fun onBeFalseIsPosts() {
             topSearchBarUiState =
                 topSearchBarUiState.copy(
@@ -225,5 +225,4 @@ class SearchViewModel
 
             searchUiState = searchUiState.copy(postsSortedByViewCount = newPosts)
         }
-
     }
