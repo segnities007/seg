@@ -118,7 +118,7 @@ fun PostCard(
                         myself = myself,
                         hubUiAction = hubUiAction,
                         postCardUiAction = postCardUiAction,
-                        onProcessOfEngagementAction = onProcessOfEngagementAction
+                        onProcessOfEngagementAction = onProcessOfEngagementAction,
                     )
                 }
             }
