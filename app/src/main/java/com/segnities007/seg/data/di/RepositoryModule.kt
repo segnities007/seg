@@ -28,15 +28,19 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideUserRepository(
-        auth: Auth,
-        postgrest: Postgrest,
-    ): UserRepository = UserRepositoryImpl(auth = auth, postgrest = postgrest)
+    fun provideImageRepository(storageRepository: StorageRepository): ImageRepository =
+        ImageRepositoryImpl(storageRepository = storageRepository)
 
     @Provides
     @Singleton
-    fun provideImageRepository(storageRepository: StorageRepository): ImageRepository =
-        ImageRepositoryImpl(storageRepository = storageRepository)
+    fun provideUserRepository(
+        auth: Auth,
+        postgrest: Postgrest,
+        imageRepository: ImageRepository,
+    ): UserRepository = UserRepositoryImpl(
+        auth = auth, postgrest = postgrest,
+        imageRepository = imageRepository,
+    )
 
     @Provides
     @Singleton

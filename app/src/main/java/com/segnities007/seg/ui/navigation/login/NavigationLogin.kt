@@ -15,12 +15,11 @@ import com.segnities007.seg.ui.screens.login.Login
 import com.segnities007.seg.ui.screens.login.LoginViewModel
 import com.segnities007.seg.ui.screens.login.sign_in.SignIn
 import com.segnities007.seg.ui.screens.login.sign_up.ConfirmEmail
-import com.segnities007.seg.ui.screens.login.sign_up.CreateAccount
+import com.segnities007.seg.ui.screens.login.sign_up.create_account.CreateAccount
 import com.segnities007.seg.ui.screens.login.sign_up.SignUp
 
 @Composable
 fun NavigationLogin(
-    modifier: Modifier = Modifier,
     navHostController: NavHostController,
     loginNavHostController: NavHostController = rememberNavController(),
     loginViewModel: LoginViewModel = hiltViewModel(),
@@ -61,27 +60,25 @@ fun NavigationLogin(
                     loginUiAction = loginViewModel.onGetLoginAction(),
                     onNavigateToConfirmEmail = {
                         loginNavHostController.navigate(
-                            NavigationLoginRoute.ConfirmEmail(),
-                        )
-                    },
-                )
-            }
-            composable<NavigationLoginRoute.ConfirmEmail> {
-                ConfirmEmail(
-                    modifier = modifier,
-                    confirmEmailUiAction = loginViewModel.onGetConfirmEmailUiAction(),
-                    onNavigateToCreateAccount = {
-                        loginNavHostController.navigate(
                             NavigationLoginRoute.CreateAccount(),
                         )
                     },
                 )
             }
+//            composable<NavigationLoginRoute.ConfirmEmail> {
+//                ConfirmEmail(
+//                    modifier = modifier,
+//                    confirmEmailUiAction = loginViewModel.onGetConfirmEmailUiAction(),
+//                    onNavigateToCreateAccount = {
+//                        loginNavHostController.navigate(
+//                            NavigationLoginRoute.CreateAccount(),
+//                        )
+//                    },
+//                )
+//            }
             composable<NavigationLoginRoute.CreateAccount> {
                 CreateAccount(
                     modifier = modifier,
-                    createAccountUiState = loginViewModel.createAccountUiState,
-                    createAccountUiAction = loginViewModel.onGetCreateAccountUiAction(),
                     onNavigateToHub = { navHostController.navigate(NavigationRoute.Hub()) },
                 )
             }

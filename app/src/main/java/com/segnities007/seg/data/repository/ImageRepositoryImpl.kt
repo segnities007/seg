@@ -12,15 +12,15 @@ class ImageRepositoryImpl
     ) : ImageRepository {
         private val tag = "ImageRepositoryImpl"
 
-        override suspend fun postImage(
+        override suspend fun postAvatarImage(
+            path: String,
             byteArray: ByteArray,
-            fileName: String,
         ): String {
             try {
-                val url = storageRepository.postImage(fileName, byteArray)
+                val url = storageRepository.postAvatarImage(path, byteArray)
                 return url
             } catch (e: Exception) {
-                Log.d(tag, "failed to create image. error message is $e")
+                Log.d(tag, "failed postImage $e")
                 throw e
             }
         }
@@ -29,7 +29,7 @@ class ImageRepositoryImpl
             try {
                 storageRepository.deleteImage(url)
             } catch (e: Exception) {
-                Log.d(tag, "failed to delete image. error message is $e")
+                Log.d(tag, "failed deleteImage $e")
                 throw e
             }
         }

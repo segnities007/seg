@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
@@ -55,6 +56,7 @@ private fun Status(
             modifier = Modifier.size(dimensionResource(R.dimen.icon_large)).clip(CircleShape),
             model = user.iconURL,
             contentDescription = null,
+            contentScale = ContentScale.Crop,
         )
         Spacer(modifier = Modifier.padding(commonPadding))
         Text(text = name, color = fontColor, fontSize = commonFontSize)

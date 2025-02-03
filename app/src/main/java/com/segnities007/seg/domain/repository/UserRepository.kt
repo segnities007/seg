@@ -6,7 +6,9 @@ import java.time.LocalDateTime
 interface UserRepository {
     fun confirmEmail(): Boolean
 
-    suspend fun createUser(user: User)
+    suspend fun onCreateUser(user: User)
+
+    suspend fun onCreateUserWithIcon(user: User, path: String, byteArray: ByteArray,)
 
     suspend fun getOtherUser(userID: String): User
 

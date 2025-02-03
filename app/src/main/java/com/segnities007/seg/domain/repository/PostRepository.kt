@@ -77,17 +77,17 @@ interface PostRepository {
         post: Post,
         user: User,
     )
-
-    // about comment
-    suspend fun onComment(
-        post: Post,
-        comment: Post,
-        user: User,
-    )
-
-    suspend fun onUnComment(
-        post: Post,
-        comment: Post,
-        user: User,
-    )
+//
+//    // about comment
+//    suspend fun onComment(
+//        post: Post,
+//        comment: Post,
+//        user: User,
+//    )
+//
+//    suspend fun onUnComment(
+//        post: Post,
+//        comment: Post,
+//        user: User,
+//    )
 }

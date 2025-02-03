@@ -46,4 +46,6 @@
     <string name="months_most_view_post">Month\'s Most Viewed Post</string>
     <string name="years_most_view_post">Year\'s Most Viewed Post</string>
     <string name="my_posts">My Posts</string>
+    <string name="user_id">User ID</string>
+    <string name="select_image">Select Image</string>
 </resources>

@@ -16,6 +16,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import com.segnities007.seg.R
 import com.segnities007.seg.data.model.User
@@ -33,23 +34,25 @@ fun TopStatusBarWithFollows(
     val shape = dimensionResource(R.dimen.padding_large)
 
     TopStatusBar(
-        modifier = Modifier
-            .fillMaxWidth()
-            .shadow(
-                shape = RoundedCornerShape(
-                    bottomStart = shape,
-                    bottomEnd = shape,
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .shadow(
+                    shape =
+                        RoundedCornerShape(
+                            bottomStart = shape,
+                            bottomEnd = shape,
+                        ),
+                    elevation = dimensionResource(R.dimen.elevation_nl),
+                ).clip(
+                    shape =
+                        RoundedCornerShape(
+                            bottomStart = shape,
+                            bottomEnd = shape,
+                        ),
                 ),
-                elevation = dimensionResource(R.dimen.elevation_nl),
-            )
-            .clip(
-                shape = RoundedCornerShape(
-                    bottomStart = shape,
-                    bottomEnd = shape,
-                )
-            ),
         user = user,
-        ) {
+    ) {
         AboutFollow(user = user, onHubNavigate = onHubNavigate, hubUiAction = hubUiAction)
         Spacer(modifier = Modifier.padding(commonPadding))
     }
@@ -63,6 +66,9 @@ private fun AboutFollow(
     fontColor: Color = MaterialTheme.colorScheme.primary,
     onHubNavigate: (Route) -> Unit,
 ) {
+    val followsText = stringResource(R.string.follows) + ": ${user.followCount}"
+    val followersText = stringResource(R.string.followers) + ": ${user.followerCount}"
+
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly,
@@ -76,7 +82,7 @@ private fun AboutFollow(
                         onHubNavigate(NavigationHubRoute.Accounts())
                     }.padding(commonPadding),
         ) {
-            Text(text = "Follow: ${user.followCount}", color = fontColor)
+            Text(text = followsText, color = fontColor)
         }
         Box(
             modifier =
@@ -87,7 +93,7 @@ private fun AboutFollow(
                         onHubNavigate(NavigationHubRoute.Accounts())
                     }.padding(commonPadding),
         ) {
-            Text(text = "Follower: ${user.followerCount}", color = fontColor)
+            Text(text = followersText, color = fontColor)
         }
     }
 }

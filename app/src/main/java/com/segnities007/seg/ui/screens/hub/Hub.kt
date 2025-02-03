@@ -119,7 +119,7 @@ private fun HubUi(
                         user = accountUiState.user,
                         onHubNavigate = onHubNavigate,
                         hubUiAction = hubUiAction,
-                        )
+                    )
                 NavigationHubRoute.Accounts().name ->
                     TopBar(
                         titleContent = { Text(text = currentRouteName) },
@@ -127,13 +127,13 @@ private fun HubUi(
                         routeName = currentRouteName,
                     )
                 NavigationHubRoute.Setting().name ->
-                    if(!hubUiState.isHideTopBar){
+                    if (!hubUiState.isHideTopBar) {
                         TopStatusBarWithFollows(
                             user = hubUiState.user,
                             onHubNavigate = onHubNavigate,
                             hubUiAction = hubUiAction,
                         )
-                    }else{
+                    } else {
                         TopStatusBar(user = hubUiState.user)
                     }
                 NavigationHubRoute.Comment().name ->

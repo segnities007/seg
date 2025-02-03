@@ -35,6 +35,7 @@ class PostRepositoryImpl
                         userID = user.userID,
                         name = user.name,
                         description = description,
+                        iconURL = user.iconURL,
                     )
 
                 postgrest
@@ -549,23 +550,5 @@ class PostRepositoryImpl
             } catch (e: Exception) {
                 Log.e(tag, e.toString())
             }
-        }
-
-        // about comment
-
-        override suspend fun onComment(
-            post: Post,
-            comment: Post,
-            user: User,
-        ) {
-            TODO("Not yet implemented")
-        }
-
-        override suspend fun onUnComment(
-            post: Post,
-            comment: Post,
-            user: User,
-        ) {
-            TODO("Not yet implemented")
         }
     }

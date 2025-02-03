@@ -27,15 +27,16 @@ import com.segnities007.seg.ui.screens.login.LoginUiAction
 import com.segnities007.seg.ui.screens.login.LoginUiState
 
 @Composable
-fun InputFormCard(
-    modifier: Modifier = Modifier,
+fun LoginCard(
+    modifier: Modifier,
     padding: Dp,
+    textIDOfEnterLabel: Int,
     loginUiState: LoginUiState,
     loginUiAction: LoginUiAction,
     onClickSignButton: () -> Unit,
 ) {
     Box(
-        modifier = Modifier.fillMaxSize().padding(dimensionResource(R.dimen.padding_large)),
+        modifier = modifier.fillMaxSize().padding(dimensionResource(R.dimen.padding_large)),
         contentAlignment = Alignment.Center,
     ) {
         Card {
@@ -57,7 +58,7 @@ fun InputFormCard(
                 Row {
                     BasicButton(
                         modifier = Modifier.weight(1f),
-                        textID = R.string.sign_up,
+                        textID = textIDOfEnterLabel,
                         onClick = {
                             onClickSignButton()
                         },
