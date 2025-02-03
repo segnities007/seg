@@ -3,13 +3,11 @@ package com.segnities007.seg.data.repository
 import android.util.Log
 import com.segnities007.seg.data.model.User
 import com.segnities007.seg.domain.repository.ImageRepository
-import com.segnities007.seg.domain.repository.StorageRepository
 import com.segnities007.seg.domain.repository.UserRepository
 import io.github.jan.supabase.auth.Auth
 import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.postgrest.query.Columns
 import io.github.jan.supabase.postgrest.query.Order
-import okio.Path
 import java.time.LocalDateTime
 import javax.inject.Inject
 
@@ -39,16 +37,16 @@ class UserRepositoryImpl
             return false
         }
 
-    override suspend fun onCreateUser(user: User) {
-        auth.awaitInitialization()
-        try {
-            val id = auth.currentUserOrNull()?.id
-            val updatedUser = user.copy(id = id.toString())
-            postgrest.from(tableName).insert(updatedUser)
-        } catch (e: Exception) {
-            Log.e(tag, "failed onCreateUser $e")
+        override suspend fun onCreateUser(user: User) {
+            auth.awaitInitialization()
+            try {
+                val id = auth.currentUserOrNull()?.id
+                val updatedUser = user.copy(id = id.toString())
+                postgrest.from(tableName).insert(updatedUser)
+            } catch (e: Exception) {
+                Log.e(tag, "failed onCreateUser $e")
+            }
         }
-    }
 
         override suspend fun onCreateUserWithIcon(
             user: User,

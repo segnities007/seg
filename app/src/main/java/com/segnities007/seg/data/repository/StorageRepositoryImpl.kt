@@ -14,22 +14,21 @@ class StorageRepositoryImpl
         private val tag = "StorageRepositoryImpl"
         private val bucketName = "avatars"
 
-    override suspend fun postAvatarImage(
-        path: String,
-        byteArray: ByteArray,
-    ): String {
-        try {
-            val bucket = storage.from(bucketName)
-            bucket.upload(path, byteArray) { upsert = false }
-            return bucket.publicUrl(path)
-        } catch (e: UnknownRestException) {
-            return storage.from(bucketName).publicUrl(path)
-        } catch (e: Exception) {
-            Log.e(tag, "failed postImage $e")
-            throw e
+        override suspend fun postAvatarImage(
+            path: String,
+            byteArray: ByteArray,
+        ): String {
+            try {
+                val bucket = storage.from(bucketName)
+                bucket.upload(path, byteArray) { upsert = false }
+                return bucket.publicUrl(path)
+            } catch (e: UnknownRestException) {
+                return storage.from(bucketName).publicUrl(path)
+            } catch (e: Exception) {
+                Log.e(tag, "failed postImage $e")
+                throw e
+            }
         }
-    }
-
 
         override suspend fun deleteImage(url: String) {
             try {

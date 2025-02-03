@@ -1,5 +1,6 @@
 package com.segnities007.seg.ui.screens.hub.setting.my_posts
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -139,7 +140,7 @@ private fun Posts(
             ) { i ->
                 PostCard(
                     post = myPostsUiState.posts[i],
-                    myself = hubUiState.user,
+                    hubUiState = hubUiState,
                     isShowDetailButton = true,
                     isIncrementView = false,
                     onHubNavigate = onHubNavigate,
@@ -149,18 +150,11 @@ private fun Posts(
                 )
             }
         }
-        // action for fetching before post
         if (!myPostsUiState.hasNoMorePosts) {
             item {
                 Column {
                     Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_smaller)))
-                    LoadingUI(
-                        onLoading = {
-                            if (myPostsUiState.posts.isNotEmpty()) {
-                                myPostsUiAction.onGetBeforePosts(myPostsUiState.posts.last().createAt)
-                            }
-                        },
-                    )
+                    LoadingUI(onLoading = { myPostsUiAction.onGetPosts() })
                 }
             }
         }
@@ -188,7 +182,7 @@ private fun Likes(
             ) { i ->
                 PostCard(
                     post = myPostsUiState.likedPosts[i],
-                    myself = hubUiState.user,
+                    hubUiState = hubUiState,
                     isShowDetailButton = true,
                     isIncrementView = false,
                     onHubNavigate = onHubNavigate,
@@ -198,18 +192,11 @@ private fun Likes(
                 )
             }
         }
-        // action for fetching before post
         if (!myPostsUiState.hasNoMoreLikedPosts) {
             item {
                 Column {
                     Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_smaller)))
-                    LoadingUI(
-                        onLoading = {
-                            if (myPostsUiState.posts.isNotEmpty()) {
-                                myPostsUiAction.onGetBeforeLikedPosts(myPostsUiState.self.likes, myPostsUiState.likedPosts.last().id)
-                            }
-                        },
-                    )
+                    LoadingUI(onLoading = { myPostsUiAction.onGetLikedPosts() })
                 }
             }
         }
@@ -237,7 +224,7 @@ private fun Reposts(
             ) { i ->
                 PostCard(
                     post = myPostsUiState.repostedPosts[i],
-                    myself = hubUiState.user,
+                    hubUiState = hubUiState,
                     isShowDetailButton = true,
                     isIncrementView = false,
                     onHubNavigate = onHubNavigate,
@@ -247,21 +234,11 @@ private fun Reposts(
                 )
             }
         }
-        // action for fetching before post
         if (!myPostsUiState.hasNoMoreRepostedPosts) {
             item {
                 Column {
                     Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_smaller)))
-                    LoadingUI(
-                        onLoading = {
-                            if (myPostsUiState.repostedPosts.isNotEmpty()) {
-                                myPostsUiAction.onGetBeforeRepostedPosts(
-                                    myPostsUiState.self.reposts,
-                                    myPostsUiState.repostedPosts.last().id,
-                                )
-                            }
-                        },
-                    )
+                    LoadingUI(onLoading = { myPostsUiAction.onGetRepostedPosts() })
                 }
             }
         }

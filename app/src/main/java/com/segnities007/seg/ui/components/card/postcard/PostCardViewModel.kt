@@ -76,12 +76,12 @@ class PostCardViewModel
             if (myself.likes.contains(post.id)) {
                 newPost = post.copy(likeCount = post.likeCount - 1)
                 viewModelScope.launch(Dispatchers.IO) {
-                    postRepository.onLike(post = newPost, user = myself)
+                    postRepository.onUnLike(post = newPost, user = myself)
                 }
             } else {
                 newPost = post.copy(likeCount = post.likeCount + 1)
                 viewModelScope.launch(Dispatchers.IO) {
-                    postRepository.onUnLike(post = newPost, user = myself)
+                    postRepository.onLike(post = newPost, user = myself)
                 }
             }
             onGetEngagementProcess(newPost)
@@ -96,12 +96,12 @@ class PostCardViewModel
             if (myself.reposts.contains(post.id)) {
                 newPost = post.copy(repostCount = post.repostCount - 1)
                 viewModelScope.launch(Dispatchers.IO) {
-                    postRepository.onRepost(post = newPost, user = myself)
+                    postRepository.onUnRepost(post = newPost, user = myself)
                 }
             } else {
                 newPost = post.copy(repostCount = post.repostCount + 1)
                 viewModelScope.launch(Dispatchers.IO) {
-                    postRepository.onUnRepost(post = newPost, user = myself)
+                    postRepository.onRepost(post = newPost, user = myself)
                 }
             }
             onProcessOfEngagementAction(newPost)

@@ -100,7 +100,7 @@ private fun MostViewPosts(
         ) { i ->
             PostCard(
                 post = searchUiState.postsSortedByViewCount[i],
-                myself = hubUiState.user,
+                hubUiState = hubUiState,
                 onHubNavigate = onHubNavigate,
                 hubUiAction = hubUiAction,
                 isIncrementView = false,
@@ -151,7 +151,7 @@ private fun LatestPosts(
         ) { i ->
             PostCard(
                 post = searchUiState.posts[i],
-                myself = hubUiState.user,
+                hubUiState = hubUiState,
                 onHubNavigate = onHubNavigate,
                 hubUiAction = hubUiAction,
                 isIncrementView = false,

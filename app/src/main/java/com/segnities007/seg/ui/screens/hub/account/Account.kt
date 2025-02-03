@@ -78,7 +78,7 @@ private fun AccountUi(
         ) { i ->
             PostCard(
                 post = accountUiState.posts[i],
-                myself = hubUiState.user,
+                hubUiState = hubUiState,
                 onHubNavigate = onHubNavigate,
                 hubUiAction = hubUiAction,
                 postCardUiAction = postCardUiAction,

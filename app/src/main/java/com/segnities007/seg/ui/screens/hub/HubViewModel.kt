@@ -23,6 +23,7 @@ data class HubUiState(
 )
 
 data class HubUiAction(
+    val onUpdateMySelf: () -> Unit,
     val onChangeIsHideTopBar: () -> Unit,
     val onResetIsHideTopBar: () -> Unit,
     val onGetUser: () -> Unit,
@@ -58,7 +59,14 @@ class HubViewModel
                 onChangeCurrentRouteName = this::onChangeCurrentRouteName,
                 onChangeIsHideTopBar = this::onChangeIsHideTopBar,
                 onResetIsHideTopBar = this::onResetIsHideTopBar,
+                onUpdateMySelf = this::onUpdateMyself,
             )
+
+        private fun onUpdateMyself() {
+            viewModelScope.launch(Dispatchers.IO) {
+                userRepository.updateUser(hubUiState.user)
+            }
+        }
 
         private fun onChangeIsHideTopBar() {
             hubUiState = hubUiState.copy(isHideTopBar = !hubUiState.isHideTopBar)
@@ -91,27 +99,31 @@ class HubViewModel
             hubUiState = hubUiState.copy(currentRouteName = newRouteName)
         }
 
-        // TODO
         private fun onAddPostIDToMyLikes(postID: Int) {
-            val updatedUser = hubUiState.user.copy(likes = hubUiState.user.likes.plus(postID))
+            val newPosts = hubUiState.user.likes.plus(postID)
+            val updatedUser = hubUiState.user.copy(likes = newPosts)
             hubUiState = hubUiState.copy(user = updatedUser)
+            onUpdateMyself()
         }
 
         private fun onRemovePostIDFromMyLikes(postID: Int) {
-            val updatedUser = hubUiState.user.copy(likes = hubUiState.user.likes.minus(postID))
+            val newPosts = hubUiState.user.likes.minus(postID)
+            val updatedUser = hubUiState.user.copy(likes = newPosts)
             hubUiState = hubUiState.copy(user = updatedUser)
+            onUpdateMyself()
         }
 
         private fun onAddPostIDToMyReposts(postID: Int) {
             val newPosts = hubUiState.user.reposts.plus(postID)
             val updatedUser = hubUiState.user.copy(reposts = newPosts)
             hubUiState = hubUiState.copy(user = updatedUser)
+            onUpdateMyself()
         }
 
         private fun onRemovePostIDFromMyReposts(postID: Int) {
             val newPosts = hubUiState.user.reposts.minus(postID)
             val updatedUser = hubUiState.user.copy(reposts = newPosts)
-
             hubUiState = hubUiState.copy(user = updatedUser)
+            onUpdateMyself()
         }
     }

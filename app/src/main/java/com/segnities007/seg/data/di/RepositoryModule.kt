@@ -37,10 +37,12 @@ object RepositoryModule {
         auth: Auth,
         postgrest: Postgrest,
         imageRepository: ImageRepository,
-    ): UserRepository = UserRepositoryImpl(
-        auth = auth, postgrest = postgrest,
-        imageRepository = imageRepository,
-    )
+    ): UserRepository =
+        UserRepositoryImpl(
+            auth = auth,
+            postgrest = postgrest,
+            imageRepository = imageRepository,
+        )
 
     @Provides
     @Singleton

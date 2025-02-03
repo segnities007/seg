@@ -65,7 +65,7 @@ private fun HomeUi(
         ) { i ->
             PostCard(
                 post = homeUiState.posts[i],
-                myself = hubUiState.user,
+                hubUiState = hubUiState,
                 onHubNavigate = onHubNavigate,
                 hubUiAction = hubUiAction,
                 postCardUiAction = postCardUiAction,

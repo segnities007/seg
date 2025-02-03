@@ -8,7 +8,11 @@ interface UserRepository {
 
     suspend fun onCreateUser(user: User)
 
-    suspend fun onCreateUserWithIcon(user: User, path: String, byteArray: ByteArray,)
+    suspend fun onCreateUserWithIcon(
+        user: User,
+        path: String,
+        byteArray: ByteArray,
+    )
 
     suspend fun getOtherUser(userID: String): User
 

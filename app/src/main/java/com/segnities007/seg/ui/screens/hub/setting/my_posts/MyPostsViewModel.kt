@@ -1,5 +1,6 @@
 package com.segnities007.seg.ui.screens.hub.setting.my_posts
 
+import android.util.Log
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -35,18 +36,15 @@ data class MyPostsUiState(
 
 @Immutable
 data class MyPostsUiAction(
+    val onInit: () -> Unit,
     val onChangeHasNoMorePosts: () -> Unit,
     val onChangeHasNoMoreLikedPosts: () -> Unit,
     val onChangeHasNoMoreRepostedPosts: () -> Unit,
     val onUpdateSelectedTabIndex: (index: Int) -> Unit,
-    val onInit: () -> Unit,
     val onGetSelf: (self: User) -> Unit,
     val onGetPosts: () -> Unit,
-    val onGetBeforePosts: (updatedAt: LocalDateTime) -> Unit,
-    val onGetLikedPosts: (likedList: List<Int>) -> Unit,
-    val onGetBeforeLikedPosts: (likedList: List<Int>, lastLikedPostID: Int) -> Unit,
-    val onGetRepostedPosts: (repostedList: List<Int>) -> Unit,
-    val onGetBeforeRepostedPosts: (repostedList: List<Int>, lastRepostedPostID: Int) -> Unit,
+    val onGetLikedPosts: () -> Unit,
+    val onGetRepostedPosts: () -> Unit,
     val onProcessOfEngagementAction: (newPost: Post) -> Unit,
 )
 
@@ -70,49 +68,54 @@ class MyPostsViewModel
                 onUpdateSelectedTabIndex = this::onUpdateSelectedTabIndex,
                 onGetPosts = this::onGetPosts,
                 onGetLikedPosts = this::onGetLikedPosts,
-                onGetBeforeLikedPosts = this::onGetBeforeLikedPosts,
                 onGetRepostedPosts = this::onGetRepostedPosts,
-                onGetBeforeRepostedPosts = this::onGetBeforeRepostedPosts,
-                onGetBeforePosts = this::onGetBeforePosts,
-                onInit = this::onInit,
                 onProcessOfEngagementAction = this::onProcessOfEngagementAction,
+                onInit = this::onInit,
             )
 
+    private fun onInit(){
+        if(myPostsUiState.self.posts.isEmpty()){
+            onChangeHasNoMorePosts()
+        }
+        if(myPostsUiState.self.likes.isEmpty()){
+            onChangeHasNoMoreLikedPosts()
+        }
+        if(myPostsUiState.self.reposts.isEmpty()){
+            onChangeHasNoMoreRepostedPosts()
+        }
+    }
+
         private fun onProcessOfEngagementAction(newPost: Post) {
-            onUpdatePosts(newPost)
+            val newPosts =
+                myPostsUiState.posts.map { post ->
+                    if (newPost.id == post.id) newPost else post
+                }
+
+            val newLikedPosts =
+                myPostsUiState.likedPosts.map { post ->
+                    if (newPost.id == post.id) newPost else post
+                }
+
+            val newRepostedPosts =
+                myPostsUiState.repostedPosts.map { post ->
+                    if (newPost.id == post.id) newPost else post
+                }
+
+            myPostsUiState = myPostsUiState.copy(posts = newPosts, likedPosts = newLikedPosts, repostedPosts = newRepostedPosts)
         }
 
-        private fun onInit() {
+        private fun onGetLikedPosts() {
             viewModelScope.launch(Dispatchers.IO) {
-                val likedPosts: List<Post> =
-                    if (myPostsUiState.self.likes.isNotEmpty()) {
-                        postRepository.onGetPosts(
-                            myPostsUiState.self.likes.take(takeN),
-                        )
+                if (myPostsUiState.likedPosts.isEmpty()) {
+                    val posts = postRepository.onGetPosts(myPostsUiState.self.likes.take(takeN))
+                    if (posts.isEmpty()) {
+                        onChangeHasNoMoreLikedPosts()
                     } else {
-                        listOf()
+                        val newPosts = posts.filter { post -> post.id != 0 }
+                        myPostsUiState = myPostsUiState.copy(likedPosts = myPostsUiState.likedPosts.plus(newPosts))
                     }
-                val repostedPosts: List<Post> =
-                    if (myPostsUiState.self.reposts.isNotEmpty()) {
-                        postRepository.onGetPosts(
-                            myPostsUiState.self.reposts,
-                        )
-                    } else {
-                        listOf()
-                    }
-                val posts: List<Post> = postRepository.onGetPostsOfUser(myPostsUiState.self.userID)
-                myPostsUiState = myPostsUiState.copy(posts = posts, likedPosts = likedPosts, repostedPosts = repostedPosts)
-            }
-        }
-
-        private fun onGetLikedPosts(likedList: List<Int>) {
-            viewModelScope.launch(Dispatchers.IO) {
-                val posts = postRepository.onGetPosts(likedList.take(takeN))
-                if (posts.isEmpty()) {
-                    onChangeHasNoMoreLikedPosts()
                 } else {
-                    val newPosts = posts.filter { post -> post.id != 0 }
-                    myPostsUiState = myPostsUiState.copy(likedPosts = myPostsUiState.likedPosts.plus(newPosts))
+                    onGetBeforeLikedPosts(myPostsUiState.self.likes.take(takeN), myPostsUiState.likedPosts.last().id)
                 }
             }
         }
@@ -135,14 +138,18 @@ class MyPostsViewModel
             }
         }
 
-        private fun onGetRepostedPosts(repostedList: List<Int>) {
+        private fun onGetRepostedPosts() {
             viewModelScope.launch(Dispatchers.IO) {
-                val posts = postRepository.onGetPosts(repostedList)
-                if (posts.isEmpty()) {
-                    onChangeHasNoMoreRepostedPosts()
+                if (myPostsUiState.repostedPosts.isEmpty()) {
+                    val posts = postRepository.onGetPosts(myPostsUiState.self.reposts.take(takeN))
+                    if (posts.isEmpty()) {
+                        onChangeHasNoMoreRepostedPosts()
+                    } else {
+                        val newPosts = posts.filter { post -> post.id != 0 }
+                        myPostsUiState = myPostsUiState.copy(repostedPosts = myPostsUiState.repostedPosts.plus(newPosts))
+                    }
                 } else {
-                    val newPosts = posts.filter { post -> post.id != 0 }
-                    myPostsUiState = myPostsUiState.copy(repostedPosts = myPostsUiState.repostedPosts.plus(newPosts))
+                    onGetBeforeRepostedPosts(myPostsUiState.self.reposts.take(takeN), myPostsUiState.repostedPosts.last().id)
                 }
             }
         }
@@ -165,18 +172,14 @@ class MyPostsViewModel
             }
         }
 
-        private fun onUpdateSelectedTabIndex(index: Int) {
-            myPostsUiState = myPostsUiState.copy(selectedTabIndex = index)
-        }
-
-        private fun onGetSelf(self: User) {
-            myPostsUiState = myPostsUiState.copy(self = self)
-        }
-
         private fun onGetPosts() {
             viewModelScope.launch(Dispatchers.IO) {
-                val posts = postRepository.onGetPostsOfUser(myPostsUiState.self.userID)
-                myPostsUiState = myPostsUiState.copy(posts = posts)
+                if (myPostsUiState.posts.isEmpty()) {
+                    val posts = postRepository.onGetPostsOfUser(myPostsUiState.self.userID)
+                    myPostsUiState = myPostsUiState.copy(posts = posts)
+                } else {
+                    onGetBeforePosts(myPostsUiState.posts.last().createAt)
+                }
             }
         }
 
@@ -186,25 +189,6 @@ class MyPostsViewModel
                 if (posts.isEmpty()) onChangeHasNoMorePosts()
                 myPostsUiState = myPostsUiState.copy(posts = myPostsUiState.posts.plus(posts))
             }
-        }
-
-        private fun onUpdatePosts(newPost: Post) {
-            val newPosts =
-                myPostsUiState.posts.map { post ->
-                    if (newPost.id == post.id) newPost else post
-                }
-
-            val newLikedPosts =
-                myPostsUiState.likedPosts.map { post ->
-                    if (newPost.id == post.id) newPost else post
-                }
-
-            val newRepostedPosts =
-                myPostsUiState.repostedPosts.map { post ->
-                    if (newPost.id == post.id) newPost else post
-                }
-
-            myPostsUiState = myPostsUiState.copy(posts = newPosts, likedPosts = newLikedPosts, repostedPosts = newRepostedPosts)
         }
 
         private fun onChangeHasNoMorePosts() {
@@ -218,4 +202,13 @@ class MyPostsViewModel
         private fun onChangeHasNoMoreRepostedPosts() {
             myPostsUiState = myPostsUiState.copy(hasNoMoreRepostedPosts = !myPostsUiState.hasNoMoreRepostedPosts)
         }
+
+    private fun onUpdateSelectedTabIndex(index: Int) {
+        myPostsUiState = myPostsUiState.copy(selectedTabIndex = index)
     }
+
+    private fun onGetSelf(self: User) {
+        myPostsUiState = myPostsUiState.copy(self = self)
+    }
+
+}
