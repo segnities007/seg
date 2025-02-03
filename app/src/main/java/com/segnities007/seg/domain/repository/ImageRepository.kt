@@ -1,9 +1,9 @@
 package com.segnities007.seg.domain.repository
 
 interface ImageRepository {
-    suspend fun postImage(
+    suspend fun postAvatarImage(
+        path: String,
         byteArray: ByteArray,
-        fileName: String,
     ): String
 
     suspend fun deleteImage(url: String)

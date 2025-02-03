@@ -6,21 +6,22 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.Dp
 import com.segnities007.seg.R
 import com.segnities007.seg.domain.presentation.Route
-import com.segnities007.seg.ui.components.card.InputFormCard
+import com.segnities007.seg.ui.components.card.LoginCard
 import com.segnities007.seg.ui.navigation.login.NavigationLoginRoute
 import com.segnities007.seg.ui.screens.login.LoginUiAction
 import com.segnities007.seg.ui.screens.login.LoginUiState
 
 @Composable
 fun SignUp(
-    modifier: Modifier = Modifier,
+    modifier: Modifier,
     padding: Dp = dimensionResource(R.dimen.padding_normal),
     onNavigateToConfirmEmail: (Route) -> Unit,
     loginUiState: LoginUiState,
     loginUiAction: LoginUiAction,
 ) {
-    InputFormCard(
+    LoginCard(
         modifier = modifier,
+        textIDOfEnterLabel = R.string.sign_up,
         padding = padding,
         loginUiState = loginUiState,
         loginUiAction = loginUiAction,

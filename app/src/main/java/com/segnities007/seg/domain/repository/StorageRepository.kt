@@ -1,8 +1,8 @@
 package com.segnities007.seg.domain.repository
 
 interface StorageRepository {
-    suspend fun postImage(
-        fileName: String,
+    suspend fun postAvatarImage(
+        path: String,
         byteArray: ByteArray,
     ): String
 

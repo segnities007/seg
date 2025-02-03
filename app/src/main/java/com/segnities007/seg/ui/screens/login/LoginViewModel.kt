@@ -43,25 +43,6 @@ data class ConfirmEmailUiAction(
     val onConfirmEmail: (onNavigate: () -> Unit) -> Unit,
 )
 
-// class for CreateAccount UI
-
-data class CreateAccountUiState(
-    val isShow: Boolean = false,
-    val name: String = "",
-    val userID: String = "",
-    val birthday: LocalDate = LocalDate.now(),
-)
-
-data class CreateAccountUiAction(
-    val onDatePickerOpen: () -> Unit,
-    val onDatePickerClose: () -> Unit,
-    val onDateSelect: (Long?) -> Unit,
-    val onNameChange: (name: String) -> Unit,
-    val onChangeUserID: (userID: String) -> Unit,
-    val onBirthdayChange: (birthday: LocalDate) -> Unit,
-    val onCreateUser: () -> Unit,
-)
-
 @HiltViewModel
 class LoginViewModel
     @Inject
@@ -70,8 +51,6 @@ class LoginViewModel
         private val userRepository: UserRepository,
     ) : TopLayerViewModel() {
         var loginUiState by mutableStateOf(LoginUiState())
-            private set
-        var createAccountUiState by mutableStateOf(CreateAccountUiState())
             private set
 
         fun onGetConfirmEmailUiAction(): ConfirmEmailUiAction =
@@ -90,23 +69,8 @@ class LoginViewModel
                 onSignInWithEmailPassword = this::onSignInWithEmailPassword,
             )
 
-        fun onGetCreateAccountUiAction(): CreateAccountUiAction =
-            CreateAccountUiAction(
-                onDatePickerOpen = this::onDatePickerOpen,
-                onDatePickerClose = this::onDatePickerClose,
-                onDateSelect = this::onDateSelect,
-                onNameChange = this::onNameChange,
-                onBirthdayChange = this::onBirthdayChange,
-                onCreateUser = this::onCreateUser,
-                onChangeUserID = this::onChangeUserID,
-            )
-
         private fun onChangeCurrentRouteName(newCurrentRouteName: String) {
             loginUiState = loginUiState.copy(currentRouteName = newCurrentRouteName)
-        }
-
-        private fun onChangeUserID(userID: String) {
-            createAccountUiState = createAccountUiState.copy(userID = userID)
         }
 
         private fun onChangeIsFailedSignIn() {
@@ -115,16 +79,6 @@ class LoginViewModel
 
         private fun onResetIsFailedSignIn() {
             loginUiState = loginUiState.copy(isFailedSignIn = false)
-        }
-
-        private fun onDateSelect(millis: Long?) {
-            val instant = Instant.fromEpochMilliseconds(millis!!)
-            val localDateTime = instant.toLocalDateTime(TimeZone.currentSystemDefault())
-            val year = localDateTime.year
-            val month = localDateTime.monthNumber
-            val day = localDateTime.dayOfMonth
-
-            onBirthdayChange(LocalDate.of(year, month, day))
         }
 
         private fun onConfirmEmail(onNavigate: () -> Unit) {
@@ -138,35 +92,6 @@ class LoginViewModel
                     if (isConfirmed) onNavigate()
                 }
             }
-        }
-
-        private fun onCreateUser() {
-            val user =
-                User(
-                    id = "",
-                    userID = createAccountUiState.userID,
-                    name = createAccountUiState.name,
-                    birthday = createAccountUiState.birthday,
-                )
-            viewModelScope.launch(Dispatchers.IO) {
-                userRepository.createUser(user)
-            }
-        }
-
-        private fun onDatePickerOpen() {
-            createAccountUiState = createAccountUiState.copy(isShow = true)
-        }
-
-        private fun onDatePickerClose() {
-            createAccountUiState = createAccountUiState.copy(isShow = false)
-        }
-
-        private fun onBirthdayChange(newBirthday: LocalDate) {
-            createAccountUiState = createAccountUiState.copy(birthday = newBirthday)
-        }
-
-        private fun onNameChange(newName: String) {
-            createAccountUiState = createAccountUiState.copy(name = newName)
         }
 
         private fun onEmailChange(newEmail: String) {

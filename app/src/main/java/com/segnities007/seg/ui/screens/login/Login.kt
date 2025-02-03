@@ -21,7 +21,6 @@ import com.segnities007.seg.ui.navigation.login.NavigationLoginRoute
 
 @Composable
 fun Login(
-    modifier: Modifier = Modifier,
     topAction: TopAction,
     topState: TopState,
     onNavigate: (Route) -> Unit,

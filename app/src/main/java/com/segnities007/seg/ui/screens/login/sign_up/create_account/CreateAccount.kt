@@ -1,7 +1,8 @@
-package com.segnities007.seg.ui.screens.login.sign_up
+package com.segnities007.seg.ui.screens.login.sign_up.create_account
 
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,7 +15,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DatePickerState
-import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -23,23 +23,38 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.segnities007.seg.R
-import com.segnities007.seg.ui.screens.login.CreateAccountUiAction
-import com.segnities007.seg.ui.screens.login.CreateAccountUiState
+import com.segnities007.seg.ui.components.button.SmallButton
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateAccount(
     modifier: Modifier = Modifier,
     onNavigateToHub: () -> Unit,
+    createAccountViewModel: CreateAccountViewModel = hiltViewModel(),
+) {
+    CreateAccountUi(
+        modifier = modifier,
+        onNavigateToHub = onNavigateToHub,
+        createAccountUiState = createAccountViewModel.createAccountUiState,
+        createAccountUiAction = createAccountViewModel.onGetCreateAccountUiAction(),
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun CreateAccountUi(
+    modifier: Modifier = Modifier,
+    onNavigateToHub: () -> Unit,
     createAccountUiState: CreateAccountUiState,
     createAccountUiAction: CreateAccountUiAction,
-) {
+){
     if (createAccountUiState.isShow) {
         DatePickerDialog(
             onDateSelected = createAccountUiAction.onDateSelect,
@@ -60,45 +75,54 @@ fun CreateAccount(
         Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_normal)))
         InputForm(
             text = createAccountUiState.userID,
-            label = stringResource(id = R.string.new_user_id),
+            label = stringResource(id = R.string.user_id),
             onValueChange = createAccountUiAction.onChangeUserID,
         )
-        ElevatedButton(
+        ImagePickerButton(createAccountUiAction = createAccountUiAction)
+        SmallButton(
+            textID = R.string.select,
             onClick = createAccountUiAction.onDatePickerOpen,
-            modifier = Modifier.padding(dimensionResource(R.dimen.padding_normal)),
-        ) {
-            Text(stringResource(id = R.string.select))
-        }
-        ElevatedButton(
+        )
+        SmallButton(
+            textID = R.string.enter,
             onClick = {
-                createAccountUiAction.onCreateUser()
-                onNavigateToHub()
+                createAccountUiAction.onCreateUser(onNavigateToHub)
             },
-            modifier = Modifier.padding(dimensionResource(R.dimen.padding_normal)),
-        ) {
-            Text(stringResource(id = R.string.enter))
-        }
+        )
     }
 }
 
 @Composable
-private fun ImagePicker() {
-    val pickMedia =
-        rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-            // Callback is invoked after the user selects a media item or closes the
-            // photo picker.
+private fun ImagePickerButton(
+    createAccountUiAction: CreateAccountUiAction,
+){
+        val context = LocalContext.current
+        val tag = "PhotoPicker"
+
+        val pickMedia = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
             if (uri != null) {
-                Log.d("PhotoPicker", "Selected URI: $uri")
-            } else {
-                Log.d("PhotoPicker", "No media selected")
+                try {
+                    context.contentResolver.openInputStream(uri)?.use { inputStream ->
+                        val byteArray: ByteArray = inputStream.readBytes()
+                        Log.d(tag, "path is ${uri.path}")
+                        createAccountUiAction.onSetPicture(uri.path.toString(), byteArray)
+                    }
+                } catch (e: Exception) {
+                    Log.e(tag, " $e")
+                }
             }
         }
+
+        SmallButton(
+            textID = R.string.select_image,
+            onClick = {
+            pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+        })
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DatePickerDialog(
-    modifier: Modifier = Modifier,
     datePickerState: DatePickerState = rememberDatePickerState(),
     onDateSelected: (Long?) -> Unit,
     onDatePickerDismiss: () -> Unit,
@@ -147,7 +171,7 @@ private fun InputForm(
                 KeyboardActions(
                     onDone = {
                         focusManager.clearFocus() // フォーカスを外す
-                        keyboardController?.hide() // キーボードを閉じる
+                        keyboardController?.hide()
                     },
                 ),
         )

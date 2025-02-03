@@ -2,11 +2,14 @@ package com.segnities007.seg.data.repository
 
 import android.util.Log
 import com.segnities007.seg.data.model.User
+import com.segnities007.seg.domain.repository.ImageRepository
+import com.segnities007.seg.domain.repository.StorageRepository
 import com.segnities007.seg.domain.repository.UserRepository
 import io.github.jan.supabase.auth.Auth
 import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.postgrest.query.Columns
 import io.github.jan.supabase.postgrest.query.Order
+import okio.Path
 import java.time.LocalDateTime
 import javax.inject.Inject
 
@@ -15,6 +18,7 @@ class UserRepositoryImpl
     constructor(
         private val auth: Auth,
         private val postgrest: Postgrest,
+        private val imageRepository: ImageRepository,
     ) : UserRepository {
         private val tag = "UserRepository"
         private val tableName = "users"
@@ -30,19 +34,35 @@ class UserRepositoryImpl
                 val currentUser = auth.currentUserOrNull()
                 return currentUser?.emailConfirmedAt != null
             } catch (e: Exception) {
-                Log.e(tag, "Error checking email confirmation: $e")
+                Log.e(tag, "failed confirmEmail $e")
             }
             return false
         }
 
-        override suspend fun createUser(user: User) {
-            auth.awaitInitialization()
+    override suspend fun onCreateUser(user: User) {
+        auth.awaitInitialization()
+        try {
             val id = auth.currentUserOrNull()?.id
             val updatedUser = user.copy(id = id.toString())
+            postgrest.from(tableName).insert(updatedUser)
+        } catch (e: Exception) {
+            Log.e(tag, "failed onCreateUser $e")
+        }
+    }
+
+        override suspend fun onCreateUserWithIcon(
+            user: User,
+            path: String,
+            byteArray: ByteArray,
+        ) {
+            auth.awaitInitialization()
             try {
+                val id = auth.currentUserOrNull()?.id
+                val url = imageRepository.postAvatarImage(path, byteArray)
+                val updatedUser = user.copy(id = id.toString(), iconURL = url)
                 postgrest.from(tableName).insert(updatedUser)
             } catch (e: Exception) {
-                Log.e(tag, "error $e")
+                Log.e(tag, "failed onCreateUserWithIcon $e")
             }
         }
 
@@ -59,7 +79,7 @@ class UserRepositoryImpl
 
                 return result
             } catch (e: Exception) {
-                Log.e(tag, "failed to get user. error message is $e")
+                Log.e(tag, "failed getUser $e")
                 throw Exception()
             }
         }
@@ -85,7 +105,7 @@ class UserRepositoryImpl
 
                 return result
             } catch (e: Exception) {
-                Log.e(tag, "onGetUsersByKeyword $e")
+                Log.e(tag, "failed onGetUsersByKeyword $e")
                 throw e
             }
         }
@@ -112,7 +132,7 @@ class UserRepositoryImpl
 
                 return list
             } catch (e: Exception) {
-                Log.e(tag, "onGetUsersByKeyword $e")
+                Log.e(tag, "failed onGetUsersByKeyword $e")
                 throw e
             }
         }
@@ -128,7 +148,7 @@ class UserRepositoryImpl
 
                 return result
             } catch (e: Exception) {
-                Log.e(tag, "failed to get other user. error message is $e")
+                Log.e(tag, "failed getOtherUser $e")
                 throw e
             }
         }
@@ -139,7 +159,7 @@ class UserRepositoryImpl
                     filter { User::id eq user.id }
                 }
             } catch (e: Exception) {
-                Log.e(tag, "failed to update user. error message is $e")
+                Log.e(tag, "failed updateUser $e")
             }
         }
 
@@ -152,7 +172,7 @@ class UserRepositoryImpl
                         filter { eq("id", id) }
                     }.decodeSingle<User>()
             } catch (e: Exception) {
-                Log.e(tag, "failed to delete user. error message is $e")
+                Log.e(tag, "failed deleteUser $e")
             }
         }
 
@@ -179,7 +199,7 @@ class UserRepositoryImpl
                 onIncrementFollowCount(newMyself)
                 onIncrementFollowerCount(newOther)
             } catch (e: Exception) {
-                Log.e(tag, "failed to follow user: $e")
+                Log.e(tag, "failed followUser $e")
             }
         }
 
@@ -205,7 +225,7 @@ class UserRepositoryImpl
                 onDecrementFollowCount(newMyself)
                 onDecrementFollowerCount(newOther)
             } catch (e: Exception) {
-                Log.e(tag, "failed to follow user: $e")
+                Log.e(tag, "failed unFollowUser $e")
             }
         }
 
@@ -217,7 +237,7 @@ class UserRepositoryImpl
                     filter { User::userID eq user.userID }
                 }
             } catch (e: Exception) {
-                Log.e(tag, "failed to follow increment: $e")
+                Log.e(tag, "failed onIncrementFollowCount $e")
             }
         }
 
@@ -229,7 +249,7 @@ class UserRepositoryImpl
                     filter { User::userID eq user.userID }
                 }
             } catch (e: Exception) {
-                Log.e(tag, "failed to follow decrement: $e")
+                Log.e(tag, "failed onDecrementFollowCount $e")
             }
         }
 
@@ -241,7 +261,7 @@ class UserRepositoryImpl
                     filter { User::userID eq user.userID }
                 }
             } catch (e: Exception) {
-                Log.e(tag, "failed to follower increment: $e")
+                Log.e(tag, "failed onIncrementFollowerCount $e")
             }
         }
 
@@ -253,7 +273,7 @@ class UserRepositoryImpl
                     filter { User::userID eq user.userID }
                 }
             } catch (e: Exception) {
-                Log.e(tag, "failed to follower decrement: $e")
+                Log.e(tag, "failed onDecrementFollowerCount $e")
             }
         }
     }

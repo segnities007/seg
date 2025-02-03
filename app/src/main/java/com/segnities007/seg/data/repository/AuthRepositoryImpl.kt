@@ -11,10 +11,8 @@ class AuthRepositoryImpl
     constructor(
         private val auth: Auth,
     ) : AuthRepository {
-        private val tag = "AuthRepositoryImpl"
-        private val users = "users"
+        private val tag = "AuthRepositoryImpl" // tag of log
 
-        // 前回ログインしていたかを確認
         override suspend fun hasLogged(
             onNavigateToLogin: () -> Unit,
             onNavigateToHost: () -> Unit,
@@ -30,10 +28,14 @@ class AuthRepositoryImpl
         }
 
         override suspend fun logout() {
-            auth.signOut()
+            try {
+                auth.signOut()
+            } catch (e: Exception) {
+                Log.e(tag, "failed logout $e")
+                throw e
+            }
         }
 
-        // EmailとPasswordを使用してサインインする
         override suspend fun signInWithEmailPassword(
             email: String,
             password: String,
@@ -45,11 +47,10 @@ class AuthRepositoryImpl
                 }
                 true
             } catch (e: Exception) {
-                Log.e(tag, "$e")
+                Log.e(tag, "failed signInWithEmailPassword $e")
                 false
             }
 
-        // EmailとPasswordを使用してサインアップする
         override suspend fun signUpWithEmailPassword(
             email: String,
             password: String,
@@ -65,7 +66,7 @@ class AuthRepositoryImpl
                 }
                 true
             } catch (e: Exception) {
-                Log.e(tag, "$e")
+                Log.e(tag, "failed signUpWithEmailPassword $e")
                 false
             }
         }
