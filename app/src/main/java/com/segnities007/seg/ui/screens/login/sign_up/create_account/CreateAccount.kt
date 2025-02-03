@@ -29,6 +29,8 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.segnities007.seg.R
 import com.segnities007.seg.ui.components.button.SmallButton
@@ -54,7 +56,8 @@ private fun CreateAccountUi(
     onNavigateToHub: () -> Unit,
     createAccountUiState: CreateAccountUiState,
     createAccountUiAction: CreateAccountUiAction,
-){
+    commonPadding: Dp = dimensionResource(R.dimen.padding_normal),
+) {
     if (createAccountUiState.isShow) {
         DatePickerDialog(
             onDateSelected = createAccountUiAction.onDateSelect,
@@ -72,34 +75,32 @@ private fun CreateAccountUi(
             label = stringResource(id = R.string.name),
             onValueChange = createAccountUiAction.onNameChange,
         )
-        Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_normal)))
+        Spacer(modifier = Modifier.padding(commonPadding))
+
         InputForm(
             text = createAccountUiState.userID,
             label = stringResource(id = R.string.user_id),
             onValueChange = createAccountUiAction.onChangeUserID,
         )
+        Spacer(modifier = Modifier.padding(commonPadding))
+
         ImagePickerButton(createAccountUiAction = createAccountUiAction)
-        SmallButton(
-            textID = R.string.select,
-            onClick = createAccountUiAction.onDatePickerOpen,
-        )
-        SmallButton(
-            textID = R.string.enter,
-            onClick = {
-                createAccountUiAction.onCreateUser(onNavigateToHub)
-            },
-        )
+        Spacer(modifier = Modifier.padding(commonPadding))
+
+        SmallButton(textID = R.string.select_birthday, onClick = createAccountUiAction.onDatePickerOpen)
+        Spacer(modifier = Modifier.padding(commonPadding))
+
+        SmallButton(textID = R.string.enter, onClick = { createAccountUiAction.onCreateUser(onNavigateToHub) })
     }
 }
 
 @Composable
-private fun ImagePickerButton(
-    createAccountUiAction: CreateAccountUiAction,
-){
-        val context = LocalContext.current
-        val tag = "PhotoPicker"
+private fun ImagePickerButton(createAccountUiAction: CreateAccountUiAction) {
+    val context = LocalContext.current
+    val tag = "PhotoPicker"
 
-        val pickMedia = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+    val pickMedia =
+        rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
             if (uri != null) {
                 try {
                     context.contentResolver.openInputStream(uri)?.use { inputStream ->
@@ -113,11 +114,12 @@ private fun ImagePickerButton(
             }
         }
 
-        SmallButton(
-            textID = R.string.select_image,
-            onClick = {
+    SmallButton(
+        textID = R.string.select_image,
+        onClick = {
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-        })
+        },
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -176,4 +178,25 @@ private fun InputForm(
                 ),
         )
     }
+}
+
+@Composable
+@Preview
+private fun CreateAccountPreview() {
+    CreateAccountUi(
+        modifier = Modifier,
+        onNavigateToHub = {},
+        createAccountUiState = CreateAccountUiState(),
+        createAccountUiAction =
+            CreateAccountUiAction(
+                onDatePickerOpen = {},
+                onDatePickerClose = {},
+                onDateSelect = {},
+                onNameChange = {},
+                onChangeUserID = {},
+                onBirthdayChange = {},
+                onCreateUser = {},
+                onSetPicture = { _, _ -> },
+            ),
+    )
 }

@@ -4,7 +4,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
-import com.segnities007.seg.data.model.User
 import com.segnities007.seg.domain.presentation.TopLayerViewModel
 import com.segnities007.seg.domain.repository.AuthRepository
 import com.segnities007.seg.domain.repository.UserRepository
@@ -12,10 +11,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlinx.datetime.Instant
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
-import java.time.LocalDate
 import javax.inject.Inject
 
 // class for SignIn and SignUp UI

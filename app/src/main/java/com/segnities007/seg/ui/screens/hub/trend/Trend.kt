@@ -120,7 +120,7 @@ private fun TrendUi(
             for (post in postLists[page]) {
                 PostCard(
                     post = post,
-                    myself = hubUiState.user,
+                    hubUiState = hubUiState,
                     onHubNavigate = onHubNavigate,
                     isIncrementView = readMores[page],
                     hubUiAction = hubUiAction,

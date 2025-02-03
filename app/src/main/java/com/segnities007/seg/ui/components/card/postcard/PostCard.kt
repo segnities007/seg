@@ -43,20 +43,20 @@ import coil3.compose.AsyncImage
 import coil3.imageLoader
 import com.segnities007.seg.R
 import com.segnities007.seg.data.model.Post
-import com.segnities007.seg.data.model.User
 import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.ui.components.button.SmallButton
 import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
 import com.segnities007.seg.ui.screens.hub.HubUiAction
+import com.segnities007.seg.ui.screens.hub.HubUiState
 
 @Composable
 fun PostCard(
     modifier: Modifier = Modifier.padding(dimensionResource(R.dimen.padding_sn)),
     post: Post,
-    myself: User,
+    hubUiState: HubUiState,
     hubUiAction: HubUiAction,
     isShowDetailButton: Boolean = false,
-    isIncrementView: Boolean = true, // For disable when view my post
+    isIncrementView: Boolean = true,
     postCardUiAction: PostCardUiAction,
     onProcessOfEngagementAction: (newPost: Post) -> Unit,
     onHubNavigate: (Route) -> Unit,
@@ -115,7 +115,7 @@ fun PostCard(
                     ActionIcons(
                         modifier = modifier,
                         post = post,
-                        myself = myself,
+                        hubUiState = hubUiState,
                         hubUiAction = hubUiAction,
                         postCardUiAction = postCardUiAction,
                         onProcessOfEngagementAction = onProcessOfEngagementAction,
@@ -197,7 +197,7 @@ private fun PanelButton(
 @Composable
 private fun ActionIcons(
     modifier: Modifier = Modifier,
-    myself: User,
+    hubUiState: HubUiState,
     post: Post,
     hubUiAction: HubUiAction,
     postCardUiAction: PostCardUiAction,
@@ -217,45 +217,69 @@ private fun ActionIcons(
         horizontalArrangement = Arrangement.Start,
     ) {
         ActionIcon(
-            painterRes = if (myself.likes.contains(post.id)) EngagementIconState.pushIcons[0] else EngagementIconState.unPushIcons[0],
+            painterRes =
+                if (hubUiState.user.likes.contains(
+                        post.id,
+                    )
+                ) {
+                    EngagementIconState.pushIcons[0]
+                } else {
+                    EngagementIconState.unPushIcons[0]
+                },
             contentRes = EngagementIconState.contentDescriptions[0],
             count = counts[0],
             onClick = {
                 postCardUiAction.onLike(
                     post,
-                    myself,
+                    hubUiState.user,
                 ) {
-                    onProcessOfEngagementAction(it)
-                    if (myself.likes.contains(post.id)) {
+                    if (hubUiState.user.likes.contains(post.id)) {
                         hubUiAction.onRemovePostIDFromMyLikes(post.id)
                     } else {
                         hubUiAction.onAddPostIDToMyLikes(post.id)
                     }
+                    onProcessOfEngagementAction(it)
                 }
             },
         )
         Spacer(Modifier.weight(1f))
         ActionIcon(
-            painterRes = if (myself.reposts.contains(post.id)) EngagementIconState.pushIcons[1] else EngagementIconState.unPushIcons[1],
+            painterRes =
+                if (hubUiState.user.reposts.contains(
+                        post.id,
+                    )
+                ) {
+                    EngagementIconState.pushIcons[1]
+                } else {
+                    EngagementIconState.unPushIcons[1]
+                },
             contentRes = EngagementIconState.contentDescriptions[1],
             count = counts[1],
             onClick = {
                 postCardUiAction.onRepost(
                     post,
-                    myself,
+                    hubUiState.user,
                 ) {
-                    onProcessOfEngagementAction(it)
-                    if (myself.reposts.contains(post.id)) {
+                    if (hubUiState.user.reposts.contains(post.id)) {
                         hubUiAction.onRemovePostIDFromMyReposts(post.id)
                     } else {
                         hubUiAction.onAddPostIDToMyReposts(post.id)
                     }
+                    onProcessOfEngagementAction(it)
                 }
             },
         )
         Spacer(Modifier.weight(1f))
         ActionIcon(
-            painterRes = if (myself.comments.contains(post.id)) EngagementIconState.pushIcons[2] else EngagementIconState.unPushIcons[2],
+            painterRes =
+                if (hubUiState.user.comments.contains(
+                        post.id,
+                    )
+                ) {
+                    EngagementIconState.pushIcons[2]
+                } else {
+                    EngagementIconState.unPushIcons[2]
+                },
             contentRes = EngagementIconState.contentDescriptions[2],
             count = counts[2],
             onClick = {

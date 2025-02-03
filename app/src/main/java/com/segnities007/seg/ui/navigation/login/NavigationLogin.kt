@@ -14,9 +14,8 @@ import com.segnities007.seg.ui.navigation.NavigationRoute
 import com.segnities007.seg.ui.screens.login.Login
 import com.segnities007.seg.ui.screens.login.LoginViewModel
 import com.segnities007.seg.ui.screens.login.sign_in.SignIn
-import com.segnities007.seg.ui.screens.login.sign_up.ConfirmEmail
-import com.segnities007.seg.ui.screens.login.sign_up.create_account.CreateAccount
 import com.segnities007.seg.ui.screens.login.sign_up.SignUp
+import com.segnities007.seg.ui.screens.login.sign_up.create_account.CreateAccount
 
 @Composable
 fun NavigationLogin(

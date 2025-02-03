@@ -54,7 +54,7 @@ private fun CommentUi(
     ) {
         PostCard(
             post = commentUiState.comment,
-            myself = hubUiState.user,
+            hubUiState = hubUiState,
             hubUiAction = hubUiAction,
             postCardUiAction = postCardUiAction,
             onHubNavigate = onHubNavigate,
