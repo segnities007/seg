@@ -118,6 +118,7 @@ fun NavigationHub(
                 Accounts(
                     modifier = modifier,
                     hubUiAction = hubViewModel.getHubUiAction(),
+                    accountUiAction = accountViewModel.getAccountUiAction(),
                     onHubNavigate = onHubNavigate,
                     hubUiState = hubViewModel.hubUiState,
                 )

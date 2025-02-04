@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,6 +22,7 @@ import com.segnities007.seg.ui.components.card.postcard.PostCardUiAction
 import com.segnities007.seg.ui.components.indicator.LoadingUI
 import com.segnities007.seg.ui.screens.hub.HubUiAction
 import com.segnities007.seg.ui.screens.hub.HubUiState
+import kotlinx.coroutines.Dispatchers
 
 @Composable
 fun Account(
@@ -34,6 +36,12 @@ fun Account(
 ) {
     LaunchedEffect(Unit) {
         accountUiAction.onInitAccountUiState(hubUiState.userID)
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            accountUiAction.onReset()
+        }
     }
 
     AccountUi(
@@ -86,14 +94,13 @@ private fun AccountUi(
             )
         }
         // action for fetching before-post
-        if (accountUiState.posts.isNotEmpty() && accountUiState.isNotCompleted) {
+        if (accountUiState.isNotCompleted) {
             item {
                 Column {
                     Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_smaller)))
                     LoadingUI(
                         onLoading = {
-                            // get before posts
-                            accountUiAction.onGetBeforePosts(accountUiState.posts.last().updateAt)
+                            accountUiAction.onGetPosts()
                         },
                     )
                 }
