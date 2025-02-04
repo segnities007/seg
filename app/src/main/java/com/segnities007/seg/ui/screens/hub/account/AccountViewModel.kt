@@ -30,7 +30,7 @@ data class AccountUiAction(
     val onSetOtherUser: (user: User) -> Unit,
     val onGetUserPosts: (userID: String) -> Unit,
     val onChangeIsNotCompletedOfAccount: () -> Unit,
-    val onGetBeforePosts: (updateAt: LocalDateTime) -> Unit,
+    val onGetPosts: () -> Unit,
     val onFollow: (myself: User, other: User, onGetMyself: () -> Unit) -> Unit,
     val onUnFollow: (myself: User, other: User, onGetMyself: () -> Unit) -> Unit,
     val onProcessOfEngagementAction: (newPost: Post) -> Unit,
@@ -51,10 +51,10 @@ class AccountViewModel
                 onGetOtherUser = this::onGetOtherUser,
                 onSetOtherUser = this::onSetOtherUsers,
                 onGetUserPosts = this::onGetUserPosts,
-                onGetBeforePosts = this::onGetBeforePosts,
+                onGetPosts = this::onGetPosts,
                 onFollow = this::onFollow,
                 onUnFollow = this::onUnFollow,
-                onReset = this::onResetAccount,
+                onReset = this::onReset,
                 onInitAccountUiState = this::onInitAccountUiState,
                 onChangeIsNotCompletedOfAccount = this::onChangeIsNotCompletedOfAccount,
                 onProcessOfEngagementAction = this::onProcessOfEngagement,
@@ -63,7 +63,7 @@ class AccountViewModel
         private fun onInitAccountUiState(userID: String) {
             viewModelScope.launch(Dispatchers.IO) {
                 val user = userRepository.getOtherUser(userID)
-                accountUiState = accountUiState.copy(user = user)
+                accountUiState = accountUiState.copy(user = user, posts = listOf())
 
                 val posts = postRepository.onGetPostsOfUser(userID)
                 if (posts.isNotEmpty()) {
@@ -74,9 +74,25 @@ class AccountViewModel
             }
         }
 
-        private fun onGetBeforePosts(updateAt: LocalDateTime) {
+        private fun onGetPosts(){
             viewModelScope.launch(Dispatchers.IO) {
-                val posts = postRepository.onGetBeforePostsOfUser(accountUiState.user.userID, updateAt)
+                if (accountUiState.posts.isEmpty()) {
+                    val posts = postRepository.onGetPostsOfUser(accountUiState.user.userID)
+                    if(posts.isEmpty()){
+                        onChangeIsNotCompletedOfAccount()
+                        return@launch
+                    }
+                    accountUiState = accountUiState.copy(posts = posts)
+                } else {
+                    onGetBeforePosts()
+                }
+            }
+        }
+
+        private fun onGetBeforePosts() {
+            if(accountUiState.posts.isEmpty()) return
+            viewModelScope.launch(Dispatchers.IO) {
+                val posts = postRepository.onGetBeforePostsOfUser(accountUiState.user.userID, accountUiState.posts.last().updateAt)
                 if (posts.isNotEmpty()) {
                     accountUiState = accountUiState.copy(posts = accountUiState.posts.plus(posts))
                 } else {
@@ -149,7 +165,7 @@ class AccountViewModel
             accountUiState = accountUiState.copy(isNotCompleted = !accountUiState.isNotCompleted)
         }
 
-        private fun onResetAccount() {
-            accountUiState = accountUiState.copy(isNotCompleted = true)
+        private fun onReset() {
+            accountUiState = accountUiState.copy(isNotCompleted = true, posts = listOf())
         }
     }

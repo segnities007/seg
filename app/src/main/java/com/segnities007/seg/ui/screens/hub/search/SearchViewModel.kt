@@ -17,13 +17,6 @@ import javax.inject.Inject
 
 data class TopSearchBarUiState(
     val keyword: String = "",
-    val index: Int = 0,
-    val titles: List<String> =
-        listOf(
-            "Most View",
-            "Latest",
-            "Users",
-        ),
     val isCompletedLoadingUsers: Boolean = true,
     val isCompletedLoadingPosts: Boolean = true,
     val isCompletedLoadingPostsSortedByViewCount: Boolean = true,
@@ -31,7 +24,6 @@ data class TopSearchBarUiState(
 
 data class TopSearchBarUiAction(
     val onUpdateKeyword: (newKeyword: String) -> Unit,
-    val onUpdateIndex: (newIndex: Int) -> Unit,
 )
 
 data class SearchUiState(
@@ -68,7 +60,6 @@ class SearchViewModel
         fun onGetTopSearchBarUiAction(): TopSearchBarUiAction =
             TopSearchBarUiAction(
                 onUpdateKeyword = this::onUpdateKeyword,
-                onUpdateIndex = this::onUpdateIndex,
             )
 
         fun onGetSearchUiAction(): SearchUiAction =
@@ -135,10 +126,6 @@ class SearchViewModel
 
         private fun onUpdateKeyword(newKeyword: String) {
             topSearchBarUiState = topSearchBarUiState.copy(keyword = newKeyword)
-        }
-
-        private fun onUpdateIndex(newIndex: Int) {
-            topSearchBarUiState = topSearchBarUiState.copy(index = newIndex)
         }
 
         private fun onGetUsersByKeyword(keyword: String) {

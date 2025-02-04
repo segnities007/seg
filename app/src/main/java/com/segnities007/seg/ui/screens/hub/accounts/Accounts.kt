@@ -13,11 +13,14 @@ import com.segnities007.seg.ui.components.card.AvatarCard
 import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
 import com.segnities007.seg.ui.screens.hub.HubUiAction
 import com.segnities007.seg.ui.screens.hub.HubUiState
+import com.segnities007.seg.ui.screens.hub.account.AccountUiAction
+import com.segnities007.seg.ui.screens.login.sign_up.create_account.CreateAccountUiAction
 
 @Composable
 fun Accounts(
     modifier: Modifier = Modifier,
     accountsViewModel: AccountsViewModel = hiltViewModel(),
+    accountUiAction:    AccountUiAction,
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
     onHubNavigate: (Route) -> Unit,
@@ -30,8 +33,8 @@ fun Accounts(
 
     AccountsUi(
         modifier = modifier,
+        accountUiAction = accountUiAction,
         accountsUiState = accountsViewModel.accountsUiState,
-        accountsUiAction = accountsViewModel.onGetAccountsUiAction(),
         hubUiAction = hubUiAction,
         onHubNavigate = onHubNavigate,
     )
@@ -40,8 +43,8 @@ fun Accounts(
 @Composable
 private fun AccountsUi(
     modifier: Modifier = Modifier,
+    accountUiAction:    AccountUiAction,
     accountsUiState: AccountsUiState,
-    accountsUiAction: AccountsUiAction,
     hubUiAction: HubUiAction,
     onHubNavigate: (Route) -> Unit,
 ) {
@@ -57,6 +60,7 @@ private fun AccountsUi(
             AvatarCard(
                 user = accountsUiState.users[it],
                 onCardClick = {
+                    accountUiAction.onGetUserPosts(accountsUiState.users[it].userID)
                     hubUiAction.onSetUserID(accountsUiState.users[it].userID)
                     hubUiAction.onChangeCurrentRouteName(NavigationHubRoute.Account().name)
                     onHubNavigate(NavigationHubRoute.Account())
