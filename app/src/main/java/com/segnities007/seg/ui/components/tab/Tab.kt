@@ -7,25 +7,23 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
-import com.segnities007.seg.ui.screens.hub.search.TopSearchBarUiAction
-import com.segnities007.seg.ui.screens.hub.search.TopSearchBarUiState
 
 @Composable
 fun Tab(
     modifier: Modifier = Modifier,
-    topSearchBarUiState: TopSearchBarUiState,
-    topSearchBarUiAction: TopSearchBarUiAction,
+    tabUiState: TabUiState,
+    tabUiAction: TabUiAction,
 ) {
     TabRow(
         modifier = modifier,
-        selectedTabIndex = topSearchBarUiState.index,
+        selectedTabIndex = tabUiState.index,
     ) {
-        topSearchBarUiState.titles.forEachIndexed { index, title ->
+        tabUiState.labels.forEachIndexed { index, title ->
             androidx.compose.material3.Tab(
                 modifier = modifier,
-                selected = topSearchBarUiState.index == index,
+                selected = tabUiState.index == index,
                 onClick = {
-                    topSearchBarUiAction.onUpdateIndex(index)
+                    tabUiAction.onUpdateIndex(index)
                 },
                 text = { Text(text = title, overflow = TextOverflow.Ellipsis) },
             )

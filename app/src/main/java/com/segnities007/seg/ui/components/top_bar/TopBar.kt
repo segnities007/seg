@@ -24,7 +24,6 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopBar(
-    modifier: Modifier = Modifier,
     titleContent: @Composable () -> Unit,
     routeName: String,
     onDrawerOpen: suspend () -> Unit,

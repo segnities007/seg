@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -11,6 +12,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.ui.components.card.postcard.PostCardViewModel
+import com.segnities007.seg.ui.components.tab.TabViewModel
 import com.segnities007.seg.ui.navigation.hub.setting.NavigationSetting
 import com.segnities007.seg.ui.screens.hub.Hub
 import com.segnities007.seg.ui.screens.hub.HubViewModel
@@ -32,6 +34,7 @@ fun NavigationHub(
     accountViewModel: AccountViewModel = hiltViewModel(),
     searchViewModel: SearchViewModel = hiltViewModel(),
     hubViewModel: HubViewModel = hiltViewModel(),
+    tabViewModel: TabViewModel = viewModel(),
     onTopNavigate: (route: Route) -> Unit, // go to login
 ) {
     val navBackStackEntry by hubNavHostController.currentBackStackEntryAsState()
@@ -54,6 +57,8 @@ fun NavigationHub(
         hubUiAction = hubViewModel.getHubUiAction(),
         accountUiState = accountViewModel.accountUiState,
         searchUiAction = searchViewModel.onGetSearchUiAction(),
+        tabUiAction = tabViewModel.onGetTabUiAction(),
+        tabUiState = tabViewModel.tabUiState,
         topSearchBarUiState = searchViewModel.topSearchBarUiState,
         topSearchBarUiAction = searchViewModel.onGetTopSearchBarUiAction(),
     ) { modifier: Modifier ->
@@ -94,6 +99,7 @@ fun NavigationHub(
                     hubUiAction = hubViewModel.getHubUiAction(),
                     onTopNavigate = onTopNavigate,
                     postCardUiAction = postCardViewModel.onGetPostCardUiAction(),
+                    tabUiState = tabViewModel.tabUiState,
                     onHubNavigate = onHubNavigate,
                 )
             }

@@ -31,7 +31,7 @@ fun SearchInputForm(
     SearchBar(
         modifier = modifier,
         expanded = false,
-        onExpandedChange = { },
+        onExpandedChange = {},
         content = {},
         inputField = {
             SearchBarDefaults.InputField(

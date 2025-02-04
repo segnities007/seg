@@ -1,6 +1,5 @@
 package com.segnities007.seg.ui.screens.hub.setting.my_posts
 
-import android.util.Log
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,11 +36,8 @@ data class MyPostsUiState(
 @Immutable
 data class MyPostsUiAction(
     val onInit: () -> Unit,
-    val onChangeHasNoMorePosts: () -> Unit,
-    val onChangeHasNoMoreLikedPosts: () -> Unit,
-    val onChangeHasNoMoreRepostedPosts: () -> Unit,
     val onUpdateSelectedTabIndex: (index: Int) -> Unit,
-    val onGetSelf: (self: User) -> Unit,
+    val onSetSelf: (self: User) -> Unit,
     val onGetPosts: () -> Unit,
     val onGetLikedPosts: () -> Unit,
     val onGetRepostedPosts: () -> Unit,
@@ -61,10 +57,7 @@ class MyPostsViewModel
 
         fun onGetMyPostsUiAction(): MyPostsUiAction =
             MyPostsUiAction(
-                onGetSelf = this::onGetSelf,
-                onChangeHasNoMorePosts = this::onChangeHasNoMorePosts,
-                onChangeHasNoMoreLikedPosts = this::onChangeHasNoMoreLikedPosts,
-                onChangeHasNoMoreRepostedPosts = this::onChangeHasNoMoreRepostedPosts,
+                onSetSelf = this::onSetSelf,
                 onUpdateSelectedTabIndex = this::onUpdateSelectedTabIndex,
                 onGetPosts = this::onGetPosts,
                 onGetLikedPosts = this::onGetLikedPosts,
@@ -73,17 +66,17 @@ class MyPostsViewModel
                 onInit = this::onInit,
             )
 
-    private fun onInit(){
-        if(myPostsUiState.self.posts.isEmpty()){
-            onChangeHasNoMorePosts()
+        private fun onInit() {
+            if (myPostsUiState.self.posts.isEmpty()) {
+                onToggleHasNoMorePosts()
+            }
+            if (myPostsUiState.self.likes.isEmpty()) {
+                onToggleHasNoMoreLikedPosts()
+            }
+            if (myPostsUiState.self.reposts.isEmpty()) {
+                onToggleHasNoMoreRepostedPosts()
+            }
         }
-        if(myPostsUiState.self.likes.isEmpty()){
-            onChangeHasNoMoreLikedPosts()
-        }
-        if(myPostsUiState.self.reposts.isEmpty()){
-            onChangeHasNoMoreRepostedPosts()
-        }
-    }
 
         private fun onProcessOfEngagementAction(newPost: Post) {
             val newPosts =
@@ -109,7 +102,7 @@ class MyPostsViewModel
                 if (myPostsUiState.likedPosts.isEmpty()) {
                     val posts = postRepository.onGetPosts(myPostsUiState.self.likes.take(takeN))
                     if (posts.isEmpty()) {
-                        onChangeHasNoMoreLikedPosts()
+                        onToggleHasNoMoreLikedPosts()
                     } else {
                         val newPosts = posts.filter { post -> post.id != 0 }
                         myPostsUiState = myPostsUiState.copy(likedPosts = myPostsUiState.likedPosts.plus(newPosts))
@@ -130,7 +123,7 @@ class MyPostsViewModel
                 // 取得したいPostをtakeN個だけ取得
                 val posts = postRepository.onGetPosts(likedList.drop(index).take(takeN))
                 if (posts.isEmpty()) {
-                    onChangeHasNoMoreLikedPosts()
+                    onToggleHasNoMoreLikedPosts()
                 } else {
                     val newPosts = posts.filter { post -> post.id != 0 }
                     myPostsUiState = myPostsUiState.copy(likedPosts = myPostsUiState.likedPosts.plus(newPosts))
@@ -143,7 +136,7 @@ class MyPostsViewModel
                 if (myPostsUiState.repostedPosts.isEmpty()) {
                     val posts = postRepository.onGetPosts(myPostsUiState.self.reposts.take(takeN))
                     if (posts.isEmpty()) {
-                        onChangeHasNoMoreRepostedPosts()
+                        onToggleHasNoMoreRepostedPosts()
                     } else {
                         val newPosts = posts.filter { post -> post.id != 0 }
                         myPostsUiState = myPostsUiState.copy(repostedPosts = myPostsUiState.repostedPosts.plus(newPosts))
@@ -164,7 +157,7 @@ class MyPostsViewModel
                 // 取得したいPostをtakeN個だけ取得
                 val posts = postRepository.onGetPosts(repostedList.drop(index).take(takeN))
                 if (posts.isEmpty()) {
-                    onChangeHasNoMoreRepostedPosts()
+                    onToggleHasNoMoreRepostedPosts()
                 } else {
                     val newPosts = posts.filter { post -> post.id != 0 }
                     myPostsUiState = myPostsUiState.copy(repostedPosts = myPostsUiState.repostedPosts.plus(newPosts))
@@ -183,32 +176,31 @@ class MyPostsViewModel
             }
         }
 
+        private fun onSetSelf(self: User) {
+            myPostsUiState = myPostsUiState.copy(self = self)
+        }
+
         private fun onGetBeforePosts(createAt: LocalDateTime) {
             viewModelScope.launch(Dispatchers.IO) {
                 val posts = postRepository.onGetBeforePostsOfUser(userID = myPostsUiState.self.userID, updateAt = createAt)
-                if (posts.isEmpty()) onChangeHasNoMorePosts()
+                if (posts.isEmpty()) onToggleHasNoMorePosts()
                 myPostsUiState = myPostsUiState.copy(posts = myPostsUiState.posts.plus(posts))
             }
         }
 
-        private fun onChangeHasNoMorePosts() {
+        private fun onToggleHasNoMorePosts() {
             myPostsUiState = myPostsUiState.copy(hasNoMorePosts = !myPostsUiState.hasNoMorePosts)
         }
 
-        private fun onChangeHasNoMoreLikedPosts() {
+        private fun onToggleHasNoMoreLikedPosts() {
             myPostsUiState = myPostsUiState.copy(hasNoMoreLikedPosts = !myPostsUiState.hasNoMoreLikedPosts)
         }
 
-        private fun onChangeHasNoMoreRepostedPosts() {
+        private fun onToggleHasNoMoreRepostedPosts() {
             myPostsUiState = myPostsUiState.copy(hasNoMoreRepostedPosts = !myPostsUiState.hasNoMoreRepostedPosts)
         }
 
-    private fun onUpdateSelectedTabIndex(index: Int) {
-        myPostsUiState = myPostsUiState.copy(selectedTabIndex = index)
+        private fun onUpdateSelectedTabIndex(index: Int) {
+            myPostsUiState = myPostsUiState.copy(selectedTabIndex = index)
+        }
     }
-
-    private fun onGetSelf(self: User) {
-        myPostsUiState = myPostsUiState.copy(self = self)
-    }
-
-}
