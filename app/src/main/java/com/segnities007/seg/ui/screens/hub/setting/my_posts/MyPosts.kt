@@ -1,20 +1,13 @@
 package com.segnities007.seg.ui.screens.hub.setting.my_posts
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -24,6 +17,7 @@ import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.ui.components.card.postcard.PostCard
 import com.segnities007.seg.ui.components.card.postcard.PostCardUiAction
 import com.segnities007.seg.ui.components.indicator.LoadingUI
+import com.segnities007.seg.ui.components.tab.TabUiState
 import com.segnities007.seg.ui.screens.hub.HubUiAction
 import com.segnities007.seg.ui.screens.hub.HubUiState
 
@@ -31,6 +25,7 @@ import com.segnities007.seg.ui.screens.hub.HubUiState
 fun MyPosts(
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
+    tabUiState: TabUiState,
     myPostsViewModel: MyPostsViewModel = hiltViewModel(),
     postCardUiAction: PostCardUiAction,
     onHubNavigate: (Route) -> Unit,
@@ -38,18 +33,15 @@ fun MyPosts(
     LaunchedEffect(Unit) {
         hubUiAction.onChangeIsHideTopBar()
         val action = myPostsViewModel.onGetMyPostsUiAction()
-        action.onGetSelf(hubUiState.user)
+        action.onSetSelf(hubUiState.user)
         action.onInit()
     }
 
     Column {
-        Tabs(
-            myPostsUiState = myPostsViewModel.myPostsUiState,
-            myPostsUiAction = myPostsViewModel.onGetMyPostsUiAction(),
-        )
         MyPostsUi(
             hubUiState = hubUiState,
             hubUiAction = hubUiAction,
+            tabUiState = tabUiState,
             myPostsUiState = myPostsViewModel.myPostsUiState,
             myPostsUiAction = myPostsViewModel.onGetMyPostsUiAction(),
             postCardUiAction = postCardUiAction,
@@ -64,10 +56,11 @@ private fun MyPostsUi(
     hubUiAction: HubUiAction,
     myPostsUiState: MyPostsUiState,
     myPostsUiAction: MyPostsUiAction,
+    tabUiState: TabUiState,
     postCardUiAction: PostCardUiAction,
     onHubNavigate: (Route) -> Unit,
 ) {
-    when (myPostsUiState.selectedTabIndex) {
+    when (tabUiState.index) {
         0 ->
             Posts(
                 myPostsUiState = myPostsUiState,
@@ -95,27 +88,6 @@ private fun MyPostsUi(
                 postCardUiAction = postCardUiAction,
                 onHubNavigate = onHubNavigate,
             )
-    }
-}
-
-@Composable
-private fun Tabs(
-    myPostsUiState: MyPostsUiState,
-    myPostsUiAction: MyPostsUiAction,
-) {
-    Column {
-        TabRow(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            selectedTabIndex = myPostsUiState.selectedTabIndex,
-        ) {
-            myPostsUiState.titles.forEachIndexed { index, title ->
-                Tab(
-                    selected = myPostsUiState.selectedTabIndex == index,
-                    onClick = { myPostsUiAction.onUpdateSelectedTabIndex(index) },
-                    text = { Text(text = title) },
-                )
-            }
-        }
     }
 }
 

@@ -19,10 +19,12 @@ import com.segnities007.seg.domain.presentation.TopAction
 import com.segnities007.seg.ui.components.bottom_bar.BottomBar
 import com.segnities007.seg.ui.components.floating_button.FloatingButton
 import com.segnities007.seg.ui.components.navigation_drawer.NavigationDrawer
+import com.segnities007.seg.ui.components.tab.TabUiAction
+import com.segnities007.seg.ui.components.tab.TabUiState
 import com.segnities007.seg.ui.components.top_bar.TopBar
 import com.segnities007.seg.ui.components.top_bar.TopSearchBar
-import com.segnities007.seg.ui.components.top_bar.status_bar.TopStatusBar
 import com.segnities007.seg.ui.components.top_bar.status_bar.TopStatusBarWithFollows
+import com.segnities007.seg.ui.components.top_bar.status_bar.TopStatusBarWithTab
 import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
 import com.segnities007.seg.ui.screens.hub.account.AccountUiState
 import com.segnities007.seg.ui.screens.hub.search.SearchUiAction
@@ -37,6 +39,8 @@ fun Hub(
     currentRouteName: String,
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
+    tabUiState: TabUiState,
+    tabUiAction: TabUiAction,
     searchUiAction: SearchUiAction,
     topSearchBarUiState: TopSearchBarUiState,
     topSearchBarUiAction: TopSearchBarUiAction,
@@ -57,6 +61,8 @@ fun Hub(
             hubUiState = hubUiState,
             hubUiAction = hubUiAction,
             searchUiAction = searchUiAction,
+            tabUiState = tabUiState,
+            tabUiAction = tabUiAction,
             topSearchBarUiState = topSearchBarUiState,
             topSearchBarUiAction = topSearchBarUiAction,
             accountUiState = accountUiState,
@@ -73,6 +79,8 @@ private fun HubUi(
     hubUiAction: HubUiAction,
     accountUiState: AccountUiState,
     searchUiAction: SearchUiAction,
+    tabUiState: TabUiState,
+    tabUiAction: TabUiAction,
     topSearchBarUiState: TopSearchBarUiState,
     topSearchBarUiAction: TopSearchBarUiAction,
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(),
@@ -99,6 +107,8 @@ private fun HubUi(
                 NavigationHubRoute.Search().name ->
                     TopSearchBar(
                         searchUiAction = searchUiAction,
+                        tabUiState = tabUiState,
+                        tabUiAction = tabUiAction,
                         topSearchBarUiState = topSearchBarUiState,
                         topSearchBarUiAction = topSearchBarUiAction,
                     )
@@ -134,7 +144,11 @@ private fun HubUi(
                             hubUiAction = hubUiAction,
                         )
                     } else {
-                        TopStatusBar(user = hubUiState.user)
+                        TopStatusBarWithTab(
+                            user = hubUiState.user,
+                            tabUiState = tabUiState,
+                            tabUiAction = tabUiAction,
+                        )
                     }
                 NavigationHubRoute.Comment().name ->
                     TopBar(
