@@ -17,6 +17,7 @@ import com.segnities007.seg.ui.components.card.AvatarCard
 import com.segnities007.seg.ui.components.card.postcard.PostCard
 import com.segnities007.seg.ui.components.card.postcard.PostCardUiAction
 import com.segnities007.seg.ui.components.indicator.LoadingUI
+import com.segnities007.seg.ui.components.tab.TabUiState
 import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
 import com.segnities007.seg.ui.screens.hub.HubUiAction
 import com.segnities007.seg.ui.screens.hub.HubUiState
@@ -28,6 +29,7 @@ fun Search(
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
     postCardUiAction: PostCardUiAction,
+    tabUiState: TabUiState,
     topSearchBarUiState: TopSearchBarUiState,
     accountUiAction: AccountUiAction,
     searchUiState: SearchUiState,
@@ -40,7 +42,7 @@ fun Search(
         }
     }
 
-    when (topSearchBarUiState.index) {
+    when (tabUiState.index) {
         0 ->
             MostViewPosts(
                 modifier = modifier,

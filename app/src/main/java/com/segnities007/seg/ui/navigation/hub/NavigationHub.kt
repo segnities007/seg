@@ -127,6 +127,7 @@ fun NavigationHub(
                     modifier = modifier,
                     hubUiState = hubViewModel.hubUiState,
                     hubUiAction = hubViewModel.getHubUiAction(),
+                    tabUiState = tabViewModel.tabUiState,
                     postCardUiAction = postCardViewModel.onGetPostCardUiAction(),
                     topSearchBarUiState = searchViewModel.topSearchBarUiState,
                     accountUiAction = accountViewModel.getAccountUiAction(),
