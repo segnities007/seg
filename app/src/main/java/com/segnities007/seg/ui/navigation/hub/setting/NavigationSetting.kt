@@ -9,6 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.ui.components.card.postcard.PostCardUiAction
+import com.segnities007.seg.ui.components.tab.TabUiAction
 import com.segnities007.seg.ui.components.tab.TabUiState
 import com.segnities007.seg.ui.screens.hub.HubUiAction
 import com.segnities007.seg.ui.screens.hub.HubUiState
@@ -25,6 +26,7 @@ fun NavigationSetting(
     settingViewModel: SettingViewModel = hiltViewModel(),
     postCardUiAction: PostCardUiAction,
     tabUiState: TabUiState,
+    tabUiAction: TabUiAction,
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
     onTopNavigate: (Route) -> Unit,
@@ -57,6 +59,7 @@ fun NavigationSetting(
                     hubUiState = hubUiState,
                     hubUiAction = hubUiAction,
                     tabUiState = tabUiState,
+                    tabUiAction = tabUiAction,
                     postCardUiAction = postCardUiAction,
                     onHubNavigate = onHubNavigate,
                 )

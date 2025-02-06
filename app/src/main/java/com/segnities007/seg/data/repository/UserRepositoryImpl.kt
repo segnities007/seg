@@ -27,7 +27,7 @@ class UserRepositoryImpl
                     "follower_count," + "create_at," + "post_id_list"
             ).trimIndent()
 
-        override fun confirmEmail(): Boolean {
+        override fun onConfirmEmail(): Boolean {
             try {
                 val currentUser = auth.currentUserOrNull()
                 return currentUser?.emailConfirmedAt != null
@@ -64,7 +64,7 @@ class UserRepositoryImpl
             }
         }
 
-        override suspend fun getUser(): User {
+        override suspend fun onGetUser(): User {
             try {
                 auth.awaitInitialization()
                 val id = auth.currentUserOrNull()?.id
@@ -77,15 +77,15 @@ class UserRepositoryImpl
 
                 return result
             } catch (e: Exception) {
-                Log.e(tag, "failed getUser $e")
+                Log.e(tag, "failed onGetUser $e")
                 throw Exception()
             }
         }
 
-        override suspend fun getUsers(userIDs: List<String>): List<User> {
+        override suspend fun onGetUsers(userIDs: List<String>): List<User> {
             val users: MutableList<User> = mutableListOf()
             for (id in userIDs) {
-                users.add(getOtherUser(id))
+                users.add(onGetOtherUser(id))
             }
             return users.toList()
         }
@@ -135,7 +135,7 @@ class UserRepositoryImpl
             }
         }
 
-        override suspend fun getOtherUser(userID: String): User {
+        override suspend fun onGetOtherUser(userID: String): User {
             try {
                 val result =
                     postgrest
@@ -146,22 +146,37 @@ class UserRepositoryImpl
 
                 return result
             } catch (e: Exception) {
-                Log.e(tag, "failed getOtherUser $e")
+                Log.e(tag, "failed onGetOtherUser $e")
                 throw e
             }
         }
 
-        override suspend fun updateUser(user: User) {
+        override suspend fun onUpdateUser(user: User) {
             try {
                 postgrest.from(tableName).update<User>(user) {
                     filter { User::id eq user.id }
                 }
             } catch (e: Exception) {
-                Log.e(tag, "failed updateUser $e")
+                Log.e(tag, "failed onUpdateUser $e")
             }
         }
 
-        override suspend fun deleteUser(id: String) {
+        override suspend fun onUpdatePostsOfUser(user: User) {
+            val posts = "post_id_list"
+
+            Log.e(tag, user.posts.toString())
+            try {
+                postgrest.from(tableName).update({
+                    set(posts, user.posts)
+                }) {
+                    filter { User::id eq user.id }
+                }
+            } catch (e: Exception) {
+                Log.e(tag, "failed onUpdatePosts $e")
+            }
+        }
+
+        override suspend fun onDeleteUser(id: String) {
             try {
                 postgrest
                     .from(tableName)
@@ -170,26 +185,29 @@ class UserRepositoryImpl
                         filter { eq("id", id) }
                     }.decodeSingle<User>()
             } catch (e: Exception) {
-                Log.e(tag, "failed deleteUser $e")
+                Log.e(tag, "failed onDeleteUser $e")
             }
         }
 
-        override suspend fun followUser(
+        override suspend fun onFollowUser(
             myself: User,
             other: User,
         ) {
+            val follows = "follow_user_id_list"
+            val followers = "follower_user_id_list"
+
             try {
                 val newMyself = myself.copy(follows = myself.follows.plus(other.userID))
                 val newOther = other.copy(followers = other.followers.plus(myself.userID))
 
                 postgrest.from(tableName).update({
-                    set("follow_user_id_list", newMyself.follows)
+                    set(follows, newMyself.follows)
                 }) {
                     filter { User::userID eq newMyself.userID }
                 }
 
                 postgrest.from(tableName).update({
-                    set("follower_user_id_list", newOther.followers)
+                    set(followers, newOther.followers)
                 }) {
                     filter { User::userID eq newOther.userID }
                 }
@@ -197,25 +215,27 @@ class UserRepositoryImpl
                 onIncrementFollowCount(newMyself)
                 onIncrementFollowerCount(newOther)
             } catch (e: Exception) {
-                Log.e(tag, "failed followUser $e")
+                Log.e(tag, "onFailed followUser $e")
             }
         }
 
-        override suspend fun unFollowUser(
+        override suspend fun onUnFollowUser(
             myself: User,
             other: User,
         ) {
+            val follows = "follow_user_id_list"
+            val followers = "follower_user_id_list"
             try {
                 val newMyself = myself.copy(follows = myself.follows.minus(other.userID))
                 val newOther = other.copy(followers = other.followers.minus(myself.userID))
                 postgrest.from(tableName).update({
-                    set("follow_user_id_list", newMyself.follows)
+                    set(follows, newMyself.follows)
                 }) {
                     filter { User::userID eq newMyself.userID }
                 }
 
                 postgrest.from(tableName).update({
-                    set("follower_user_id_list", newOther.followers)
+                    set(followers, newOther.followers)
                 }) {
                     filter { User::userID eq newOther.userID }
                 }
@@ -223,7 +243,7 @@ class UserRepositoryImpl
                 onDecrementFollowCount(newMyself)
                 onDecrementFollowerCount(newOther)
             } catch (e: Exception) {
-                Log.e(tag, "failed unFollowUser $e")
+                Log.e(tag, "failed onUnFollowUser $e")
             }
         }
 

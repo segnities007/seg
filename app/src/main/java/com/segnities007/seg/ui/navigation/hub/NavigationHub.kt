@@ -1,6 +1,7 @@
 package com.segnities007.seg.ui.navigation.hub
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -37,6 +38,11 @@ fun NavigationHub(
     tabViewModel: TabViewModel = viewModel(),
     onTopNavigate: (route: Route) -> Unit, // go to login
 ) {
+    LaunchedEffect(Unit) {
+        val hubUiAction = hubViewModel.getHubUiAction()
+        hubUiAction.onGetUser()
+    }
+
     val navBackStackEntry by hubNavHostController.currentBackStackEntryAsState()
     val currentRoute =
         navBackStackEntry
@@ -85,7 +91,7 @@ fun NavigationHub(
                 Post(
                     modifier = modifier,
                     hubUiState = hubViewModel.hubUiState,
-                    postCardUiAction = postCardViewModel.onGetPostCardUiAction(),
+                    hubUiAction = hubViewModel.getHubUiAction(),
                     onNavigate = onHubNavigate,
                 )
             }
@@ -100,6 +106,7 @@ fun NavigationHub(
                     onTopNavigate = onTopNavigate,
                     postCardUiAction = postCardViewModel.onGetPostCardUiAction(),
                     tabUiState = tabViewModel.tabUiState,
+                    tabUiAction = tabViewModel.onGetTabUiAction(),
                     onHubNavigate = onHubNavigate,
                 )
             }

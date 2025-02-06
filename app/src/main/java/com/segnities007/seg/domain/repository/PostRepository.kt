@@ -5,7 +5,7 @@ import com.segnities007.seg.data.model.User
 
 interface PostRepository {
     // about post
-    suspend fun createPost(
+    suspend fun onCreatePost(
         description: String,
         user: User,
     ): Boolean

@@ -32,15 +32,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter.Companion.tint
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.sp
-import coil3.ImageLoader
 import coil3.compose.AsyncImage
-import coil3.imageLoader
 import com.segnities007.seg.R
 import com.segnities007.seg.data.model.Post
 import com.segnities007.seg.domain.presentation.Route
@@ -111,7 +108,6 @@ fun PostCard(
                 ) {
                     Name(modifier = modifier, post = post)
                     Description(modifier = modifier, post = post)
-                    Images(modifier = modifier, imageURLs = post.imageURLs)
                     ActionIcons(
                         modifier = modifier,
                         post = post,
@@ -348,22 +344,6 @@ private fun Description(
         contentAlignment = Alignment.CenterStart,
     ) {
         Text(post.description)
-    }
-}
-
-@Composable
-private fun Images(
-    modifier: Modifier = Modifier,
-    imageURLs: List<String>,
-    imageLoader: ImageLoader = LocalContext.current.imageLoader,
-) {
-    for (url in imageURLs) {
-        AsyncImage(
-            modifier = modifier,
-            model = url,
-            imageLoader = imageLoader,
-            contentDescription = "",
-        )
     }
 }
 

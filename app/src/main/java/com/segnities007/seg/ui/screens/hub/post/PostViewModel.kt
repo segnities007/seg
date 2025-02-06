@@ -19,7 +19,7 @@ data class PostUiState(
 
 data class PostUiAction(
     val onUpdateInputText: (newInputText: String) -> Unit,
-    val onCreatePost: (user: User) -> Unit,
+    val onCreatePost: (user: User, onUpdateSelf: () -> Unit, onNavigate: () -> Unit) -> Unit,
 )
 
 @HiltViewModel
@@ -31,16 +31,26 @@ class PostViewModel
         var postUiState by mutableStateOf(PostUiState())
             private set
 
-        fun getPostUiAction(): PostUiAction =
+        fun onGetPostUiAction(): PostUiAction =
             PostUiAction(
                 onUpdateInputText = this::onUpdateInputText,
                 onCreatePost = this::onCreatePost,
             )
 
-        private fun onCreatePost(user: User) {
+        private fun onCreatePost(
+            user: User,
+            onUpdateSelf: () -> Unit,
+            onNavigate: () -> Unit,
+        ) {
             val description = postUiState.inputText
             viewModelScope.launch(Dispatchers.IO) {
-                postRepository.createPost(description = description, user = user)
+                val result = postRepository.onCreatePost(description = description, user = user)
+                if (result) {
+                    onUpdateSelf()
+                    viewModelScope.launch(Dispatchers.Main) {
+                        onNavigate()
+                    }
+                }
             }
         }
 

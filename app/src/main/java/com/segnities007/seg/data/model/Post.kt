@@ -32,8 +32,6 @@ data class Post(
     @SerialName("update_at")
     @Serializable(with = LocalDateTimeSerializer::class)
     val updateAt: LocalDateTime = LocalDateTime.now(),
-    @SerialName("image_url_list")
-    val imageURLs: List<String> = listOf(),
     @SerialName("comment_id_list")
     val comments: List<Int> = listOf(),
 )

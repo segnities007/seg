@@ -14,13 +14,12 @@ import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
 import com.segnities007.seg.ui.screens.hub.HubUiAction
 import com.segnities007.seg.ui.screens.hub.HubUiState
 import com.segnities007.seg.ui.screens.hub.account.AccountUiAction
-import com.segnities007.seg.ui.screens.login.sign_up.create_account.CreateAccountUiAction
 
 @Composable
 fun Accounts(
     modifier: Modifier = Modifier,
     accountsViewModel: AccountsViewModel = hiltViewModel(),
-    accountUiAction:    AccountUiAction,
+    accountUiAction: AccountUiAction,
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
     onHubNavigate: (Route) -> Unit,
@@ -43,7 +42,7 @@ fun Accounts(
 @Composable
 private fun AccountsUi(
     modifier: Modifier = Modifier,
-    accountUiAction:    AccountUiAction,
+    accountUiAction: AccountUiAction,
     accountsUiState: AccountsUiState,
     hubUiAction: HubUiAction,
     onHubNavigate: (Route) -> Unit,

@@ -62,7 +62,7 @@ class UserInfoViewModel
                         userID = userInfoUiState.userID,
                         updateAt = LocalDateTime.now(),
                     )
-                userRepositoryImpl.updateUser(newUser)
+                userRepositoryImpl.onUpdateUser(newUser)
             }
         }
     }

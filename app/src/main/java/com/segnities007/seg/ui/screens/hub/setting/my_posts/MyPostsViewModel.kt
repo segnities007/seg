@@ -12,7 +12,6 @@ import com.segnities007.seg.domain.repository.PostRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
 import javax.inject.Inject
 
 @Immutable
@@ -67,14 +66,14 @@ class MyPostsViewModel
             )
 
         private fun onInit() {
-            if (myPostsUiState.self.posts.isEmpty()) {
-                onToggleHasNoMorePosts()
-            }
             if (myPostsUiState.self.likes.isEmpty()) {
                 onToggleHasNoMoreLikedPosts()
             }
             if (myPostsUiState.self.reposts.isEmpty()) {
                 onToggleHasNoMoreRepostedPosts()
+            }
+            if (myPostsUiState.self.posts.isEmpty()) {
+                onToggleHasNoMorePosts()
             }
         }
 
@@ -168,10 +167,15 @@ class MyPostsViewModel
         private fun onGetPosts() {
             viewModelScope.launch(Dispatchers.IO) {
                 if (myPostsUiState.posts.isEmpty()) {
-                    val posts = postRepository.onGetPostsOfUser(myPostsUiState.self.userID)
-                    myPostsUiState = myPostsUiState.copy(posts = posts)
+                    val posts = postRepository.onGetPosts(myPostsUiState.self.posts.take(takeN))
+                    if (posts.isEmpty()) {
+                        onToggleHasNoMorePosts()
+                    } else {
+                        val newPosts = posts.filter { post -> post.id != 0 }
+                        myPostsUiState = myPostsUiState.copy(posts = myPostsUiState.posts.plus(newPosts))
+                    }
                 } else {
-                    onGetBeforePosts(myPostsUiState.posts.last().createAt)
+                    onGetBeforePosts(myPostsUiState.self.posts, myPostsUiState.posts.last().id)
                 }
             }
         }
@@ -180,11 +184,21 @@ class MyPostsViewModel
             myPostsUiState = myPostsUiState.copy(self = self)
         }
 
-        private fun onGetBeforePosts(createAt: LocalDateTime) {
+        private fun onGetBeforePosts(
+            postIDs: List<Int>,
+            lastPostID: Int,
+        ) {
             viewModelScope.launch(Dispatchers.IO) {
-                val posts = postRepository.onGetBeforePostsOfUser(userID = myPostsUiState.self.userID, updateAt = createAt)
-                if (posts.isEmpty()) onToggleHasNoMorePosts()
-                myPostsUiState = myPostsUiState.copy(posts = myPostsUiState.posts.plus(posts))
+                // 取得したい塊の先頭の場所のIndexを取得
+                val index = postIDs.indexOf(lastPostID) + 1
+                // 取得したいPostをtakeN個だけ取得
+                val posts = postRepository.onGetPosts(postIDs.drop(index).take(takeN))
+                if (posts.isEmpty()) {
+                    onToggleHasNoMorePosts()
+                } else {
+                    val newPosts = posts.filter { post -> post.id != 0 }
+                    myPostsUiState = myPostsUiState.copy(posts = myPostsUiState.posts.plus(newPosts))
+                }
             }
         }
 

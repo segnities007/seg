@@ -23,15 +23,15 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.segnities007.seg.R
 import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.ui.components.button.SmallButton
-import com.segnities007.seg.ui.components.card.postcard.PostCardUiAction
 import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
+import com.segnities007.seg.ui.screens.hub.HubUiAction
 import com.segnities007.seg.ui.screens.hub.HubUiState
 
 @Composable
 fun Post(
     modifier: Modifier = Modifier,
     hubUiState: HubUiState,
-    postCardUiAction: PostCardUiAction,
+    hubUiAction: HubUiAction,
     postViewModel: PostViewModel = hiltViewModel(),
     onNavigate: (Route) -> Unit, // go to home
 ) {
@@ -40,15 +40,15 @@ fun Post(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         TopToolBar(
-            postUiAction = postViewModel.getPostUiAction(),
+            postUiAction = postViewModel.onGetPostUiAction(),
             hubUiState = hubUiState,
+            hubUiAction = hubUiAction,
             onNavigate = onNavigate,
-            postCardUiAction = postCardUiAction,
         )
         InputField(
             modifier = Modifier.weight(1f), // 余った枠埋め
             postUiState = postViewModel.postUiState,
-            postUiAction = postViewModel.getPostUiAction(),
+            postUiAction = postViewModel.onGetPostUiAction(),
         )
     }
 }
@@ -80,8 +80,8 @@ private fun InputField(
 private fun TopToolBar(
     modifier: Modifier = Modifier,
     hubUiState: HubUiState,
+    hubUiAction: HubUiAction,
     postUiAction: PostUiAction,
-    postCardUiAction: PostCardUiAction,
     onNavigate: (Route) -> Unit,
 ) {
     Row(
@@ -94,9 +94,13 @@ private fun TopToolBar(
         SmallButton(
             textID = R.string.post,
             onClick = {
-                postUiAction.onCreatePost(hubUiState.user)
-                postUiAction.onUpdateInputText("")
-                onNavigate(NavigationHubRoute.Home())
+                postUiAction.onCreatePost(
+                    hubUiState.user,
+                    hubUiAction.onGetUser,
+                ) {
+                    postUiAction.onUpdateInputText("")
+                    onNavigate(NavigationHubRoute.Home())
+                }
             },
         )
     }
