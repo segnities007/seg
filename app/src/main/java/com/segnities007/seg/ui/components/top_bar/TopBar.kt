@@ -42,14 +42,10 @@ fun TopBar(
             when (routeName) {
                 NavigationLoginRoute.CreateAccount.toString() -> Spacer(modifier = Modifier.padding(0.dp))
                 NavigationLoginRoute.ConfirmEmail.toString() -> Spacer(modifier = Modifier.padding(0.dp))
-
                 else ->
-                    IconButton(onClick = { scope.launch { onDrawerOpen() } }) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.baseline_menu_24),
-                            contentDescription = routeName,
-                        )
-                    }
+                    IconButton(onClick = {
+                        scope.launch { onDrawerOpen() }
+                    }) { Icon(painter = painterResource(id = R.drawable.baseline_menu_24), contentDescription = null) }
             }
         },
         scrollBehavior = scrollBehavior,

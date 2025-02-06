@@ -4,7 +4,7 @@ import com.segnities007.seg.data.model.User
 import java.time.LocalDateTime
 
 interface UserRepository {
-    fun confirmEmail(): Boolean
+    fun onConfirmEmail(): Boolean
 
     suspend fun onCreateUser(user: User)
 
@@ -14,11 +14,11 @@ interface UserRepository {
         byteArray: ByteArray,
     )
 
-    suspend fun getOtherUser(userID: String): User
+    suspend fun onGetOtherUser(userID: String): User
 
-    suspend fun getUser(): User
+    suspend fun onGetUser(): User
 
-    suspend fun getUsers(userIDs: List<String>): List<User>
+    suspend fun onGetUsers(userIDs: List<String>): List<User>
 
     suspend fun onGetUsersByKeyword(keyword: String): List<User>
 
@@ -27,16 +27,18 @@ interface UserRepository {
         afterUserCreateAt: LocalDateTime,
     ): List<User>
 
-    suspend fun updateUser(user: User)
+    suspend fun onUpdateUser(user: User)
 
-    suspend fun deleteUser(id: String)
+    suspend fun onUpdatePostsOfUser(user: User)
 
-    suspend fun followUser(
+    suspend fun onDeleteUser(id: String)
+
+    suspend fun onFollowUser(
         myself: User,
         other: User,
     )
 
-    suspend fun unFollowUser(
+    suspend fun onUnFollowUser(
         myself: User,
         other: User,
     )

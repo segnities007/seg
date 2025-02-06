@@ -12,7 +12,6 @@ import com.segnities007.seg.domain.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
 import javax.inject.Inject
 
 data class AccountUiState(
@@ -62,7 +61,7 @@ class AccountViewModel
 
         private fun onInitAccountUiState(userID: String) {
             viewModelScope.launch(Dispatchers.IO) {
-                val user = userRepository.getOtherUser(userID)
+                val user = userRepository.onGetOtherUser(userID)
                 accountUiState = accountUiState.copy(user = user, posts = listOf())
 
                 val posts = postRepository.onGetPostsOfUser(userID)
@@ -74,11 +73,11 @@ class AccountViewModel
             }
         }
 
-        private fun onGetPosts(){
+        private fun onGetPosts() {
             viewModelScope.launch(Dispatchers.IO) {
                 if (accountUiState.posts.isEmpty()) {
                     val posts = postRepository.onGetPostsOfUser(accountUiState.user.userID)
-                    if(posts.isEmpty()){
+                    if (posts.isEmpty()) {
                         onChangeIsNotCompletedOfAccount()
                         return@launch
                     }
@@ -90,7 +89,7 @@ class AccountViewModel
         }
 
         private fun onGetBeforePosts() {
-            if(accountUiState.posts.isEmpty()) return
+            if (accountUiState.posts.isEmpty()) return
             viewModelScope.launch(Dispatchers.IO) {
                 val posts = postRepository.onGetBeforePostsOfUser(accountUiState.user.userID, accountUiState.posts.last().updateAt)
                 if (posts.isNotEmpty()) {
@@ -121,7 +120,7 @@ class AccountViewModel
             onGetMyself: () -> Unit,
         ) {
             viewModelScope.launch(Dispatchers.IO) {
-                userRepository.followUser(myself, other)
+                userRepository.onFollowUser(myself, other)
                 onGetMyself()
             }
         }
@@ -132,7 +131,7 @@ class AccountViewModel
             onGetMyself: () -> Unit,
         ) {
             viewModelScope.launch(Dispatchers.IO) {
-                userRepository.unFollowUser(myself, other)
+                userRepository.onUnFollowUser(myself, other)
                 onGetMyself()
             }
         }
@@ -145,7 +144,7 @@ class AccountViewModel
 
         private fun onGetOtherUser(userID: String) {
             viewModelScope.launch(Dispatchers.IO) {
-                val user = userRepository.getOtherUser(userID)
+                val user = userRepository.onGetOtherUser(userID)
                 accountUiState = accountUiState.copy(user = user)
             }
         }

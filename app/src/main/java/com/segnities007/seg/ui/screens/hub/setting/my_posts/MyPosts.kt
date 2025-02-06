@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,6 +18,7 @@ import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.ui.components.card.postcard.PostCard
 import com.segnities007.seg.ui.components.card.postcard.PostCardUiAction
 import com.segnities007.seg.ui.components.indicator.LoadingUI
+import com.segnities007.seg.ui.components.tab.TabUiAction
 import com.segnities007.seg.ui.components.tab.TabUiState
 import com.segnities007.seg.ui.screens.hub.HubUiAction
 import com.segnities007.seg.ui.screens.hub.HubUiState
@@ -26,6 +28,7 @@ fun MyPosts(
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
     tabUiState: TabUiState,
+    tabUiAction: TabUiAction,
     myPostsViewModel: MyPostsViewModel = hiltViewModel(),
     postCardUiAction: PostCardUiAction,
     onHubNavigate: (Route) -> Unit,
@@ -35,6 +38,12 @@ fun MyPosts(
         val action = myPostsViewModel.onGetMyPostsUiAction()
         action.onSetSelf(hubUiState.user)
         action.onInit()
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            tabUiAction.onUpdateIndex(0)
+        }
     }
 
     Column {
@@ -155,7 +164,6 @@ private fun Likes(
                 PostCard(
                     post = myPostsUiState.likedPosts[i],
                     hubUiState = hubUiState,
-                    isShowDetailButton = true,
                     isIncrementView = false,
                     onHubNavigate = onHubNavigate,
                     hubUiAction = hubUiAction,
@@ -197,7 +205,6 @@ private fun Reposts(
                 PostCard(
                     post = myPostsUiState.repostedPosts[i],
                     hubUiState = hubUiState,
-                    isShowDetailButton = true,
                     isIncrementView = false,
                     onHubNavigate = onHubNavigate,
                     hubUiAction = hubUiAction,

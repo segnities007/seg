@@ -83,7 +83,7 @@ class LoginViewModel
                     password = loginUiState.password,
                 )
                 withContext(Dispatchers.Main) {
-                    val isConfirmed = userRepository.confirmEmail()
+                    val isConfirmed = userRepository.onConfirmEmail()
                     if (isConfirmed) onNavigate()
                 }
             }

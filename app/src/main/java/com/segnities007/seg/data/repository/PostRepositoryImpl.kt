@@ -25,7 +25,7 @@ class PostRepositoryImpl
         private val posts = "posts"
 
         // about post
-        override suspend fun createPost(
+        override suspend fun onCreatePost(
             description: String,
             user: User,
         ): Boolean {
@@ -38,15 +38,20 @@ class PostRepositoryImpl
                         iconURL = user.iconURL,
                     )
 
-                postgrest
-                    .from(posts)
-                    .insert(post) {
-                        select()
-                    }.decodeSingle<Post>()
+                val result =
+                    postgrest
+                        .from(posts)
+                        .insert(post) {
+                            select()
+                        }.decodeSingle<Post>()
+
+                val updatedUser = user.copy(posts = user.posts.plus(result.id))
+
+                userRepository.onUpdatePostsOfUser(updatedUser)
 
                 return true
             } catch (e: Exception) {
-                Log.e(tag, e.toString())
+                Log.e(tag, "failed onCreatePost $e")
             }
             return false
         }
@@ -63,7 +68,7 @@ class PostRepositoryImpl
                         }.decodeList<Post>()
                 return result
             } catch (e: Exception) {
-                Log.e(tag, e.toString())
+                Log.e(tag, "failed onGetPostsOfUser $e")
                 throw e
             }
         }
@@ -109,15 +114,15 @@ class PostRepositoryImpl
                         }.decodeList<Post>()
 
                 if (result.isEmpty()) {
-                    var user = userRepository.getUser()
+                    var user = userRepository.onGetUser()
                     user =
                         user.copy(posts = user.posts.minus(postID), likes = user.likes.minus(postID), reposts = user.reposts.minus(postID))
-                    userRepository.updateUser(user)
+                    userRepository.onUpdateUser(user)
                 }
 
                 return if (result.isNotEmpty()) result.first() else Post()
             } catch (e: Exception) {
-                Log.e(tag, "failed to get post $e")
+                Log.e(tag, "failed onGetPost $e")
                 throw e
             }
         }
@@ -146,7 +151,7 @@ class PostRepositoryImpl
                         }.decodeSingle<Post>()
                 return result
             } catch (e: Exception) {
-                Log.e(tag, "failed to get new post $e")
+                Log.e(tag, "failed onGetNewPost $e")
                 throw e
             }
         }
@@ -169,7 +174,7 @@ class PostRepositoryImpl
 
                 return list
             } catch (e: Exception) {
-                Log.e(tag, "failed to get new post $e")
+                Log.e(tag, "failed onGetBeforePosts $e")
                 throw e
             }
         }
@@ -185,7 +190,7 @@ class PostRepositoryImpl
                         }.decodeList<Post>()
                 return result
             } catch (e: Exception) {
-                Log.e(tag, "failed to get new posts $e")
+                Log.e(tag, "failed onGetNewPosts $e")
                 throw e
             }
         }
@@ -411,9 +416,6 @@ class PostRepositoryImpl
             try {
                 postgrest.from(posts).delete {
                     filter { Post::id eq post.id }
-                }
-                for (url in post.imageURLs) {
-                    imageRepository.deleteImage(url)
                 }
             } catch (e: Exception) {
                 Log.e(tag, e.toString())

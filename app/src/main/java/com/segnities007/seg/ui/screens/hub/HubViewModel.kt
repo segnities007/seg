@@ -64,7 +64,7 @@ class HubViewModel
 
         private fun onUpdateMyself() {
             viewModelScope.launch(Dispatchers.IO) {
-                userRepository.updateUser(hubUiState.user)
+                userRepository.onUpdateUser(hubUiState.user)
             }
         }
 
@@ -90,7 +90,7 @@ class HubViewModel
 
         private fun onGetUser() {
             viewModelScope.launch(Dispatchers.IO) {
-                val user = userRepository.getUser()
+                val user = userRepository.onGetUser()
                 hubUiState = hubUiState.copy(user = user, userID = user.userID)
             }
         }

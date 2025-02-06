@@ -11,7 +11,7 @@ class AuthRepositoryImpl
     constructor(
         private val auth: Auth,
     ) : AuthRepository {
-        private val tag = "AuthRepositoryImpl" // tag of log
+        private val tag = "AuthRepositoryImpl" // tag for log
 
         override suspend fun hasLogged(
             onNavigateToLogin: () -> Unit,
