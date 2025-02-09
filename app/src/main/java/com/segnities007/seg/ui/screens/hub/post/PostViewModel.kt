@@ -14,12 +14,18 @@ import javax.inject.Inject
 
 data class PostUiState(
     val inputText: String = "",
-    val selectedUris: List<String> = listOf(),
+    val isLoading: Boolean = false,
 )
 
 data class PostUiAction(
+    val onUpdateIsLoading: (isLoading: Boolean) -> Unit,
     val onUpdateInputText: (newInputText: String) -> Unit,
-    val onCreatePost: (user: User, onUpdateSelf: () -> Unit, onNavigate: () -> Unit) -> Unit,
+    val onCreatePost: (
+        user: User,
+        onUpdateIsLoading: (isLoading: Boolean) -> Unit,
+        onUpdateSelf: () -> Unit,
+        onNavigate: () -> Unit,
+    ) -> Unit,
 )
 
 @HiltViewModel
@@ -35,14 +41,21 @@ class PostViewModel
             PostUiAction(
                 onUpdateInputText = this::onUpdateInputText,
                 onCreatePost = this::onCreatePost,
+                onUpdateIsLoading = this::onUpdateIsLoading,
             )
+
+        private fun onUpdateIsLoading(isLoading: Boolean) {
+            postUiState = postUiState.copy(isLoading = isLoading)
+        }
 
         private fun onCreatePost(
             user: User,
+            onUpdateIsLoading: (isLoading: Boolean) -> Unit,
             onUpdateSelf: () -> Unit,
             onNavigate: () -> Unit,
         ) {
             val description = postUiState.inputText
+            onUpdateIsLoading(true)
             viewModelScope.launch(Dispatchers.IO) {
                 val result = postRepository.onCreatePost(description = description, user = user)
                 if (result) {
@@ -51,6 +64,7 @@ class PostViewModel
                         onNavigate()
                     }
                 }
+                onUpdateIsLoading(false)
             }
         }
 

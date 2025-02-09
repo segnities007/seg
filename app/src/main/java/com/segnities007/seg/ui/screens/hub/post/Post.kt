@@ -23,6 +23,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.segnities007.seg.R
 import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.ui.components.button.SmallButton
+import com.segnities007.seg.ui.components.indicator.CircleIndicator
 import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
 import com.segnities007.seg.ui.screens.hub.HubUiAction
 import com.segnities007.seg.ui.screens.hub.HubUiState
@@ -35,27 +36,48 @@ fun Post(
     postViewModel: PostViewModel = hiltViewModel(),
     onNavigate: (Route) -> Unit, // go to home
 ) {
+    PostUi(
+        modifier = modifier,
+        hubUiState = hubUiState,
+        hubUiAction = hubUiAction,
+        postUiState = postViewModel.postUiState,
+        postUiAction = postViewModel.onGetPostUiAction(),
+        onNavigate = onNavigate,
+    )
+}
+
+@Composable
+private fun PostUi(
+    modifier: Modifier = Modifier,
+    hubUiState: HubUiState,
+    hubUiAction: HubUiAction,
+    postUiState: PostUiState,
+    postUiAction: PostUiAction,
+    onNavigate: (Route) -> Unit,
+) {
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         TopToolBar(
-            postUiAction = postViewModel.onGetPostUiAction(),
+            postUiAction = postUiAction,
             hubUiState = hubUiState,
             hubUiAction = hubUiAction,
             onNavigate = onNavigate,
         )
         InputField(
-            modifier = Modifier.weight(1f), // 余った枠埋め
-            postUiState = postViewModel.postUiState,
-            postUiAction = postViewModel.onGetPostUiAction(),
+            modifier = Modifier.weight(1f),
+            postUiState = postUiState,
+            postUiAction = postUiAction,
         )
     }
+
+    CircleIndicator(isLoading = postUiState.isLoading)
 }
 
 @Composable
 private fun InputField(
-    modifier: Modifier = Modifier,
+    modifier: Modifier,
     postUiState: PostUiState,
     postUiAction: PostUiAction,
 ) {
@@ -96,6 +118,7 @@ private fun TopToolBar(
             onClick = {
                 postUiAction.onCreatePost(
                     hubUiState.user,
+                    postUiAction.onUpdateIsLoading,
                     hubUiAction.onGetUser,
                 ) {
                     postUiAction.onUpdateInputText("")
