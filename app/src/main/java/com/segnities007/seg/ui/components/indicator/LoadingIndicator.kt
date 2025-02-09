@@ -8,7 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun LoadingUI(
+fun LoadingUI( // for fetching post
     modifier: Modifier = Modifier,
     onLoading: () -> Unit,
 ) {
