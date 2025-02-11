@@ -1,5 +1,6 @@
 package com.segnities007.seg.ui.screens.login.sign_up.create_account
 
+import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -23,6 +24,7 @@ data class CreateAccountUiState(
     val name: String = "",
     val userID: String = "",
     val birthday: LocalDate = LocalDate.now(),
+    val uri: Uri? = null,
     val path: String = "",
     val byteArray: ByteArray? = null,
 )
@@ -35,6 +37,7 @@ data class CreateAccountUiAction(
     val onChangeUserID: (userID: String) -> Unit,
     val onBirthdayChange: (birthday: LocalDate) -> Unit,
     val onCreateUser: (onNavigateToHub: () -> Unit) -> Unit,
+    val onSetUri: (uri: Uri) -> Unit,
     val onSetPicture: (path: String, byteArray: ByteArray) -> Unit,
 )
 
@@ -58,8 +61,15 @@ class CreateAccountViewModel
                 onBirthdayChange = this::onBirthdayChange,
                 onCreateUser = this::onCreateUser,
                 onChangeUserID = this::onChangeUserID,
+                onSetUri = this::onSetUri,
                 onSetPicture = this::onSetPicture,
             )
+
+        private fun onSetUri(
+            uri: Uri?
+        ){
+            createAccountUiState = createAccountUiState.copy(uri = uri)
+        }
 
         private fun onSetPicture(
             path: String,

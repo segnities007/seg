@@ -1,4 +1,4 @@
-package com.segnities007.seg.ui.components.bottom_bar
+package com.segnities007.seg.ui.components.bar.bottom_bar
 
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
