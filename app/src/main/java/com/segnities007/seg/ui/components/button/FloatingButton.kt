@@ -1,4 +1,4 @@
-package com.segnities007.seg.ui.components.floating_button
+package com.segnities007.seg.ui.components.button
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.size

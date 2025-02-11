@@ -1,4 +1,4 @@
-package com.segnities007.seg.ui.components.top_bar
+package com.segnities007.seg.ui.components.bar.top_bar
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding

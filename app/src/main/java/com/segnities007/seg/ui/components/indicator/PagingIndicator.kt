@@ -17,11 +17,12 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun PagingIndicator(
+    modifier: Modifier = Modifier,
     pageCount: Int,
     currentPageCount: Int,
 ) {
     Row(
-        Modifier
+        modifier
             .wrapContentHeight()
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.Center,

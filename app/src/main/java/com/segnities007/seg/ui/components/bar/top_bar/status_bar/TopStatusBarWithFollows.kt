@@ -1,4 +1,4 @@
-package com.segnities007.seg.ui.components.top_bar.status_bar
+package com.segnities007.seg.ui.components.bar.top_bar.status_bar
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
