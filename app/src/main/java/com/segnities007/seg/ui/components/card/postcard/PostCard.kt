@@ -16,16 +16,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,86 +44,101 @@ import com.segnities007.seg.ui.screens.hub.HubUiState
 
 @Composable
 fun PostCard(
-    modifier: Modifier = Modifier.padding(dimensionResource(R.dimen.padding_sn)),
     post: Post,
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
-    isShowDetailButton: Boolean = false,
-    isIncrementView: Boolean = true,
     postCardUiAction: PostCardUiAction,
-    onProcessOfEngagementAction: (newPost: Post) -> Unit,
+    isIncrementView: Boolean = true,
     onHubNavigate: (Route) -> Unit,
+    onProcessOfEngagementAction: (newPost: Post) -> Unit,
 ) {
-    var isShowBottomSheet by remember { mutableStateOf(false) }
-    val onClickDetailButton = {
-        isShowBottomSheet = !isShowBottomSheet
+    PostCardUi(
+        post = post,
+        hubUiState = hubUiState,
+        hubUiAction = hubUiAction,
+        postCardUiAction = postCardUiAction,
+        isIncrementView = isIncrementView,
+        onHubNavigate = onHubNavigate,
+    ) {
+        CardContents{
+            Column(modifier = Modifier.padding(horizontal = commonPadding)){
+                Name()
+                Description()
+                ActionIcons(onProcessOfEngagementAction = onProcessOfEngagementAction)
+            }
+        }
     }
+}
+
+@Composable
+fun PostCardUi(
+    post: Post,
+    hubUiState: HubUiState,
+    hubUiAction: HubUiAction,
+    postCardUiAction: PostCardUiAction,
+    isIncrementView: Boolean = true,
+    onHubNavigate: (Route) -> Unit,
+    content: @Composable PostCardScope.() -> Unit,
+) {
+    val scope =
+        DefaultPostCardScope(
+            post = post,
+            commonPadding = dimensionResource(R.dimen.padding_sn),
+            hubUiState = hubUiState,
+            hubUiAction = hubUiAction,
+            postCardUiAction = postCardUiAction,
+            onHubNavigate = onHubNavigate,
+        )
 
     LaunchedEffect(Unit) {
         if (isIncrementView) postCardUiAction.onIncrementViewCount(post)
     }
 
-    if (isShowBottomSheet) BottomSheet(post = post, onClickDetailButton = onClickDetailButton, postCardUiAction = postCardUiAction)
-
     ElevatedCard(
         modifier =
-            Modifier
-                .padding(
-                    start = dimensionResource(R.dimen.padding_small),
-                    top = dimensionResource(R.dimen.padding_smaller),
-                    end = dimensionResource(R.dimen.padding_small),
-                ),
+            Modifier.padding(
+                start = dimensionResource(R.dimen.padding_small),
+                top = dimensionResource(R.dimen.padding_smaller),
+                end = dimensionResource(R.dimen.padding_small),
+            ),
         elevation = CardDefaults.cardElevation(dimensionResource(R.dimen.elevation_small)),
     ) {
-        Box {
-            Row(
-                modifier =
-                    Modifier
-                        .clickable {
-                            hubUiAction.onSetComment(post)
-                            postCardUiAction.onClickPostCard(onHubNavigate)
-                        }.fillMaxWidth(),
-            ) {
-                AsyncImage(
-                    modifier =
-                        modifier
-                            .size(dimensionResource(R.dimen.icon_sn))
-                            .clip(CircleShape)
-                            .clickable {
-                                hubUiAction.onSetUserID(post.userID) // for viewing other user
-                                hubUiAction.onChangeCurrentRouteName(NavigationHubRoute.Account().name)
-                                onHubNavigate(NavigationHubRoute.Account())
-                            },
-                    model = post.iconURL,
-                    contentDescription = post.iconURL,
-                    contentScale = ContentScale.Crop,
-                )
-                Column(
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.Start,
-                ) {
-                    Name(modifier = modifier, post = post)
-                    Description(modifier = modifier, post = post)
-                    ActionIcons(
-                        modifier = modifier,
-                        post = post,
-                        hubUiState = hubUiState,
-                        hubUiAction = hubUiAction,
-                        postCardUiAction = postCardUiAction,
-                        onProcessOfEngagementAction = onProcessOfEngagementAction,
-                    )
-                }
-            }
-            if (isShowDetailButton) DetailButton(modifier = Modifier.align(Alignment.TopEnd), onClick = onClickDetailButton)
-        }
+        scope.content()
+    }
+}
+
+@Composable
+fun PostCardScope.CardContents(content: @Composable () -> Unit) {
+    Row(
+        modifier =
+            Modifier
+                .padding(commonPadding)
+                .clickable {
+                    hubUiAction.onSetComment(post)
+                    postCardUiAction.onClickPostCard(onHubNavigate)
+                }.fillMaxWidth(),
+    ) {
+        AsyncImage(
+            modifier =
+                Modifier
+                    .size(dimensionResource(R.dimen.icon_sn))
+                    .clip(CircleShape)
+                    .clickable {
+                        hubUiAction.onSetUserID(post.userID) // for viewing other user
+                        hubUiAction.onChangeCurrentRouteName(NavigationHubRoute.Account().name)
+                        onHubNavigate(NavigationHubRoute.Account())
+                    },
+            model = post.iconURL,
+            contentDescription = post.iconURL,
+            contentScale = ContentScale.Crop,
+        )
+        content()
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun BottomSheet(
-    post: Post,
-    postCardUiAction: PostCardUiAction,
+fun PostCardScope.BottomSheet(
     onClickDetailButton: () -> Unit,
     commonPadding: Dp = dimensionResource(R.dimen.padding_sn),
 ) {
@@ -138,7 +149,11 @@ private fun BottomSheet(
         },
     ) {
         PanelButton(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = commonPadding),
+            modifier =
+                Modifier
+                    .padding(vertical = commonPadding)
+                    .fillMaxWidth()
+                    .padding(vertical = commonPadding),
             iconID = R.drawable.baseline_delete_24,
             textID = R.string.delete,
             onClick = {
@@ -148,7 +163,10 @@ private fun BottomSheet(
         )
         Spacer(Modifier.padding(commonPadding))
         SmallButton(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = commonPadding),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = commonPadding),
             textID = R.string.cancel,
             onClick = {
                 onClickDetailButton()
@@ -159,7 +177,7 @@ private fun BottomSheet(
 }
 
 @Composable
-private fun PanelButton(
+fun PanelButton(
     modifier: Modifier = Modifier,
     iconID: Int,
     textID: Int,
@@ -169,6 +187,7 @@ private fun PanelButton(
     Row(
         modifier =
             modifier
+                .padding(vertical = commonPadding)
                 .height(dimensionResource(R.dimen.button_height_small_size))
                 .clickable {
                     onClick()
@@ -180,7 +199,7 @@ private fun PanelButton(
         Image(
             modifier = Modifier.size(dimensionResource(R.dimen.icon_smaller)),
             painter = painterResource(iconID),
-            contentDescription = "Delete post",
+            contentDescription = null,
         )
         Spacer(modifier = Modifier.padding(commonPadding))
         Text(
@@ -191,14 +210,7 @@ private fun PanelButton(
 }
 
 @Composable
-private fun ActionIcons(
-    modifier: Modifier = Modifier,
-    hubUiState: HubUiState,
-    post: Post,
-    hubUiAction: HubUiAction,
-    postCardUiAction: PostCardUiAction,
-    onProcessOfEngagementAction: (newPost: Post) -> Unit,
-) {
+fun PostCardScope.ActionIcons(onProcessOfEngagementAction: (newPost: Post) -> Unit) {
     val counts: List<Int> =
         listOf(
             post.likeCount,
@@ -208,11 +220,12 @@ private fun ActionIcons(
         )
 
     Row(
-        modifier = modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start,
     ) {
         ActionIcon(
+            modifier = Modifier.padding(top = commonPadding),
             painterRes =
                 if (hubUiState.user.likes.contains(
                         post.id,
@@ -222,7 +235,6 @@ private fun ActionIcons(
                 } else {
                     EngagementIconState.unPushIcons[0]
                 },
-            contentRes = EngagementIconState.contentDescriptions[0],
             count = counts[0],
             onClick = {
                 postCardUiAction.onLike(
@@ -240,6 +252,7 @@ private fun ActionIcons(
         )
         Spacer(Modifier.weight(1f))
         ActionIcon(
+            modifier = Modifier.padding(top = commonPadding),
             painterRes =
                 if (hubUiState.user.reposts.contains(
                         post.id,
@@ -249,7 +262,6 @@ private fun ActionIcons(
                 } else {
                     EngagementIconState.unPushIcons[1]
                 },
-            contentRes = EngagementIconState.contentDescriptions[1],
             count = counts[1],
             onClick = {
                 postCardUiAction.onRepost(
@@ -267,6 +279,7 @@ private fun ActionIcons(
         )
         Spacer(Modifier.weight(1f))
         ActionIcon(
+            modifier = Modifier.padding(top = commonPadding),
             painterRes =
                 if (hubUiState.user.comments.contains(
                         post.id,
@@ -276,7 +289,6 @@ private fun ActionIcons(
                 } else {
                     EngagementIconState.unPushIcons[2]
                 },
-            contentRes = EngagementIconState.contentDescriptions[2],
             count = counts[2],
             onClick = {
                 // TODO
@@ -284,12 +296,12 @@ private fun ActionIcons(
         )
         Spacer(Modifier.weight(1f))
         ActionIcon(
+            modifier = Modifier.padding(top = commonPadding),
             painterRes = EngagementIconState.pushIcons[3],
-            contentRes = EngagementIconState.contentDescriptions[3],
             count = counts[3],
             isClickable = false,
         )
-        Spacer(Modifier.weight(1f))
+//        Spacer(Modifier.weight(1f))
     }
 }
 
@@ -297,7 +309,6 @@ private fun ActionIcons(
 private fun ActionIcon(
     modifier: Modifier = Modifier,
     painterRes: Int,
-    contentRes: Int,
     count: Int,
     isClickable: Boolean = true,
     onClick: () -> Unit = {},
@@ -307,11 +318,11 @@ private fun ActionIcon(
             modifier
                 .clip(RoundedCornerShape(dimensionResource(R.dimen.padding_small)))
                 .let { if (isClickable) it.clickable { onClick() } else it }
-                .padding(dimensionResource(R.dimen.padding_action_icon)),
+                .padding(vertical = dimensionResource(R.dimen.padding_action_icon)),
     ) {
         Image(
             painter = painterResource(painterRes),
-            contentDescription = stringResource(contentRes),
+            contentDescription = null,
             colorFilter = tint(MaterialTheme.colorScheme.secondary),
         )
         Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_action_icon)))
@@ -320,45 +331,16 @@ private fun ActionIcon(
 }
 
 @Composable
-private fun Name(
-    modifier: Modifier = Modifier,
-    post: Post = Post(),
-) {
-    Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Start,
-    ) {
+fun PostCardScope.Name() {
+    Row(modifier = Modifier.padding(vertical = commonPadding), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Start) {
         Text(post.name)
         Text("@${post.userID}", color = MaterialTheme.colorScheme.secondaryContainer)
     }
 }
 
 @Composable
-private fun Description(
-    modifier: Modifier = Modifier,
-    post: Post,
-) {
-    Box(
-        modifier = modifier,
-        contentAlignment = Alignment.CenterStart,
-    ) {
+fun PostCardScope.Description() {
+    Box(modifier = Modifier.padding(vertical = commonPadding), contentAlignment = Alignment.CenterStart) {
         Text(post.description)
-    }
-}
-
-@Composable
-private fun DetailButton(
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit,
-) {
-    IconButton(
-        modifier = modifier,
-        onClick = onClick,
-    ) {
-        Icon(
-            painter = painterResource(R.drawable.baseline_more_vert_24),
-            contentDescription = "more vert",
-        )
     }
 }

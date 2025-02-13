@@ -2,14 +2,11 @@ package com.segnities007.seg.ui.components.bar
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SearchBar
@@ -27,7 +24,6 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import com.segnities007.seg.R
 import com.segnities007.seg.ui.screens.hub.search.SearchUiAction
 import com.segnities007.seg.ui.screens.hub.search.TopSearchBarUiAction
@@ -42,7 +38,6 @@ fun SearchInputForm(
     topSearchBarUiAction: TopSearchBarUiAction,
     focusManager: FocusManager = LocalFocusManager.current,
 ) {
-
     val iconSize = dimensionResource(R.dimen.icon_smaller)
 
     val onQueryChange = { it: String ->
@@ -67,8 +62,14 @@ fun SearchInputForm(
                 onSearch = onSearch,
                 onExpandedChange = {},
                 placeholder = { Text(stringResource(R.string.search)) },
-                leadingIcon = { Icon(modifier = Modifier.padding(dimensionResource(R.dimen.padding_small)).size(iconSize), imageVector = Icons.Default.Search, contentDescription = null) },
-                trailingIcon = { DeleteButton(iconSize, topSearchBarUiAction) }
+                leadingIcon = {
+                    Icon(
+                        modifier = Modifier.padding(dimensionResource(R.dimen.padding_small)).size(iconSize),
+                        imageVector = Icons.Default.Search,
+                        contentDescription = null,
+                    )
+                },
+                trailingIcon = { DeleteButton(iconSize, topSearchBarUiAction) },
             )
         },
     )
@@ -78,21 +79,22 @@ fun SearchInputForm(
 private fun DeleteButton(
     iconSize: Dp,
     topSearchBarUiAction: TopSearchBarUiAction,
-){
+) {
     val buttonSize = dimensionResource(R.dimen.button_height_normal_size)
 
     val clickAction = {
-        topSearchBarUiAction.onUpdateKeyword("")// reset keyword
+        topSearchBarUiAction.onUpdateKeyword("") // reset keyword
     }
 
     Box(
-        modifier = Modifier
-            .size(buttonSize)
-            .padding(dimensionResource(R.dimen.padding_small))
-            .clip(CircleShape)
-            .clickable(onClick = clickAction),
+        modifier =
+            Modifier
+                .size(buttonSize)
+                .padding(dimensionResource(R.dimen.padding_small))
+                .clip(CircleShape)
+                .clickable(onClick = clickAction),
         contentAlignment = Alignment.Center,
-    ){
+    ) {
         Icon(
             modifier = Modifier.size(iconSize),
             painter = painterResource(R.drawable.baseline_close_24),
