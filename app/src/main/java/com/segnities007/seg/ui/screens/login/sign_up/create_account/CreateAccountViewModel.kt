@@ -65,9 +65,7 @@ class CreateAccountViewModel
                 onSetPicture = this::onSetPicture,
             )
 
-        private fun onSetUri(
-            uri: Uri?
-        ){
+        private fun onSetUri(uri: Uri?) {
             createAccountUiState = createAccountUiState.copy(uri = uri)
         }
 

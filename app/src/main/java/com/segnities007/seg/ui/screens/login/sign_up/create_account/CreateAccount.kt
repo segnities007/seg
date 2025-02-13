@@ -4,20 +4,16 @@ import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DatePickerState
@@ -27,10 +23,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -68,10 +62,10 @@ private fun CreateAccountUi(
     createAccountUiAction: CreateAccountUiAction,
     commonPadding: Dp = dimensionResource(R.dimen.padding_normal),
 ) {
-
-    val pagerState = rememberPagerState(pageCount = {
-        3
-    })
+    val pagerState =
+        rememberPagerState(pageCount = {
+            3
+        })
     DatePickerDialog(
         createAccountUiState.isShow,
         onDateSelected = createAccountUiAction.onDateSelect,
@@ -79,28 +73,31 @@ private fun CreateAccountUi(
     )
 
     HorizontalPager(
-        state = pagerState
+        state = pagerState,
     ) { page ->
         Column(
             modifier = modifier,
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
-        ){
+        ) {
             Spacer(Modifier.weight(1f))
-            when(page){
-                0 -> FirstPage(
-                    createAccountUiState = createAccountUiState,
-                    createAccountUiAction = createAccountUiAction,
-                    commonPadding = commonPadding,
-                )
-                1 -> SecondPage(
-                    createAccountUiAction = createAccountUiAction,
-                    commonPadding = commonPadding,
-                )
-                2 -> ThirdPage(
-                    createAccountUiAction = createAccountUiAction,
-                    onNavigateToHub = onNavigateToHub,
-                )
+            when (page) {
+                0 ->
+                    FirstPage(
+                        createAccountUiState = createAccountUiState,
+                        createAccountUiAction = createAccountUiAction,
+                        commonPadding = commonPadding,
+                    )
+                1 ->
+                    SecondPage(
+                        createAccountUiAction = createAccountUiAction,
+                        commonPadding = commonPadding,
+                    )
+                2 ->
+                    ThirdPage(
+                        createAccountUiAction = createAccountUiAction,
+                        onNavigateToHub = onNavigateToHub,
+                    )
             }
             Spacer(Modifier.weight(1f))
             PagingIndicator(
@@ -117,7 +114,7 @@ private fun FirstPage(
     createAccountUiState: CreateAccountUiState,
     createAccountUiAction: CreateAccountUiAction,
     commonPadding: Dp,
-){
+) {
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -141,7 +138,7 @@ private fun FirstPage(
 private fun SecondPage(
     createAccountUiAction: CreateAccountUiAction,
     commonPadding: Dp,
-){
+) {
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -156,7 +153,7 @@ private fun SecondPage(
 private fun ThirdPage(
     createAccountUiAction: CreateAccountUiAction,
     onNavigateToHub: () -> Unit,
-){
+) {
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -166,9 +163,7 @@ private fun ThirdPage(
 }
 
 @Composable
-private fun ImagePickerButton(
-    createAccountUiAction: CreateAccountUiAction
-) {
+private fun ImagePickerButton(createAccountUiAction: CreateAccountUiAction) {
     val context = LocalContext.current
     val tag = "PhotoPicker"
 
@@ -203,7 +198,7 @@ private fun DatePickerDialog(
     onDateSelected: (Long?) -> Unit,
     onDatePickerDismiss: () -> Unit,
 ) {
-    if(isShow){
+    if (isShow) {
         DatePickerDialog(
             modifier = Modifier.fillMaxSize(),
             onDismissRequest = onDatePickerDismiss,

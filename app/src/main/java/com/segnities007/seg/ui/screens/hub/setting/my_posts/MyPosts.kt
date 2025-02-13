@@ -17,6 +17,7 @@ import com.segnities007.seg.R
 import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.ui.components.card.postcard.PostCard
 import com.segnities007.seg.ui.components.card.postcard.PostCardUiAction
+import com.segnities007.seg.ui.components.card.postcard.PostCardWithDetailButton
 import com.segnities007.seg.ui.components.indicator.LoadingUI
 import com.segnities007.seg.ui.components.tab.TabUiAction
 import com.segnities007.seg.ui.components.tab.TabUiState
@@ -119,11 +120,9 @@ private fun Posts(
                 myPostsUiState.posts.size,
                 key = { index: Int -> myPostsUiState.posts[index].id },
             ) { i ->
-                PostCard(
+                PostCardWithDetailButton(
                     post = myPostsUiState.posts[i],
                     hubUiState = hubUiState,
-                    isShowDetailButton = true,
-                    isIncrementView = false,
                     onHubNavigate = onHubNavigate,
                     hubUiAction = hubUiAction,
                     postCardUiAction = postCardUiAction,
