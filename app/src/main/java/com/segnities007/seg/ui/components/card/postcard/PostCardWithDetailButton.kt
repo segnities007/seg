@@ -42,7 +42,7 @@ fun PostCardWithDetailButton(
 
         Box {
             CardContents {
-                Column(modifier = Modifier.padding(horizontal = commonPadding)){
+                Column(modifier = Modifier.padding(horizontal = commonPadding)) {
                     Name()
                     Description()
                     ActionIcons(onProcessOfEngagementAction = onProcessOfEngagementAction)
@@ -60,7 +60,7 @@ private fun DetailButton(
 ) {
     IconButton(
         modifier = modifier,
-        onClick = onClick
+        onClick = onClick,
     ) {
         Icon(painter = painterResource(R.drawable.baseline_more_vert_24), contentDescription = null)
     }
