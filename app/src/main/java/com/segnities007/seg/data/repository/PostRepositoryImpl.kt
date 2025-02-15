@@ -3,7 +3,6 @@ package com.segnities007.seg.data.repository
 import android.util.Log
 import com.segnities007.seg.data.model.Post
 import com.segnities007.seg.data.model.User
-import com.segnities007.seg.domain.repository.ImageRepository
 import com.segnities007.seg.domain.repository.PostRepository
 import com.segnities007.seg.domain.repository.UserRepository
 import io.github.jan.supabase.postgrest.Postgrest

@@ -43,7 +43,6 @@ class HubViewModel
     constructor(
         private val userRepository: UserRepository,
     ) : TopLayerViewModel() {
-
         var hubUiState by mutableStateOf(HubUiState())
             private set
 
@@ -63,7 +62,7 @@ class HubViewModel
                 onResetIsHideTopBar = this::onResetIsHideTopBar,
             )
 
-        private fun onUpdateSelf(newSelf: User){
+        private fun onUpdateSelf(newSelf: User) {
             hubUiState = hubUiState.copy(user = newSelf)
             onUpdateMyself()
         }

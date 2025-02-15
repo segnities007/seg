@@ -40,12 +40,14 @@ fun PostCardWithDetailButton(
         postCardUiAction = postCardUiAction,
         onHubNavigate = onHubNavigate,
     ) {
-        if (isShowBottomSheet) BottomSheet(
-            onClickDetailButton = toggleIsShowBottomSheet,
-            myPostUiAction = myPostsUiAction,
-            hubUiState = hubUiState,
-            hubUiAction = hubUiAction,
-        )
+        if (isShowBottomSheet) {
+            BottomSheet(
+                onClickDetailButton = toggleIsShowBottomSheet,
+                myPostUiAction = myPostsUiAction,
+                hubUiState = hubUiState,
+                hubUiAction = hubUiAction,
+            )
+        }
 
         Box {
             CardContents {

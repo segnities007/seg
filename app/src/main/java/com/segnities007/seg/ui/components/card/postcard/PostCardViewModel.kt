@@ -22,7 +22,7 @@ data class PostCardUiAction(
         myPostUiAction: MyPostsUiAction,
         hubUiState: HubUiState,
         hubUiAction: HubUiAction,
-            ) -> Unit,
+    ) -> Unit,
     val onClickIcon: (onHubNavigate: (Route) -> Unit) -> Unit,
     val onClickPostCard: (onHubNavigate: (Route) -> Unit) -> Unit,
     val onIncrementViewCount: (post: Post) -> Unit,

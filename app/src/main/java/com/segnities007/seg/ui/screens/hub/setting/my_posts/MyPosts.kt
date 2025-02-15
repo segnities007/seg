@@ -110,7 +110,6 @@ private fun Posts(
     postCardUiAction: PostCardUiAction,
     onHubNavigate: (Route) -> Unit,
 ) {
-
     LazyColumn(
         modifier = Modifier.fillMaxSize().padding(top = dimensionResource(R.dimen.padding_smallest)),
         horizontalAlignment = Alignment.CenterHorizontally,
