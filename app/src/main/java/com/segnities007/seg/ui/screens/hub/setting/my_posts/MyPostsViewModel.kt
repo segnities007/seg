@@ -67,7 +67,7 @@ class MyPostsViewModel
                 onRemovePostFromPosts = this::onRemovePostFromPosts,
             )
 
-        private fun onRemovePostFromPosts(post: Post){
+        private fun onRemovePostFromPosts(post: Post) {
             myPostsUiState = myPostsUiState.copy(posts = myPostsUiState.posts.minus(post))
         }
 
@@ -105,7 +105,13 @@ class MyPostsViewModel
         private fun onGetLikedPosts() {
             viewModelScope.launch(Dispatchers.IO) {
                 if (myPostsUiState.likedPosts.isEmpty()) {
-                    val posts = postRepository.onGetPosts(myPostsUiState.self.likes.take(takeN))
+                    // using reversing for sorted by descending order
+                    val posts =
+                        postRepository.onGetPosts(
+                            myPostsUiState.self.likes
+                                .reversed()
+                                .take(takeN),
+                        )
                     if (posts.isEmpty()) {
                         onToggleHasNoMoreLikedPosts()
                     } else {
@@ -113,7 +119,13 @@ class MyPostsViewModel
                         myPostsUiState = myPostsUiState.copy(likedPosts = myPostsUiState.likedPosts.plus(newPosts))
                     }
                 } else {
-                    onGetBeforeLikedPosts(myPostsUiState.self.likes.take(takeN), myPostsUiState.likedPosts.last().id)
+                    // using reversing for sorted by descending order
+                    onGetBeforeLikedPosts(
+                        myPostsUiState.self.likes
+                            .reversed()
+                            .take(takeN),
+                        myPostsUiState.likedPosts.last().id,
+                    )
                 }
             }
         }
@@ -139,7 +151,13 @@ class MyPostsViewModel
         private fun onGetRepostedPosts() {
             viewModelScope.launch(Dispatchers.IO) {
                 if (myPostsUiState.repostedPosts.isEmpty()) {
-                    val posts = postRepository.onGetPosts(myPostsUiState.self.reposts.take(takeN))
+                    // using reversing for sorted by descending order
+                    val posts =
+                        postRepository.onGetPosts(
+                            myPostsUiState.self.reposts
+                                .reversed()
+                                .take(takeN),
+                        )
                     if (posts.isEmpty()) {
                         onToggleHasNoMoreRepostedPosts()
                     } else {
@@ -147,7 +165,13 @@ class MyPostsViewModel
                         myPostsUiState = myPostsUiState.copy(repostedPosts = myPostsUiState.repostedPosts.plus(newPosts))
                     }
                 } else {
-                    onGetBeforeRepostedPosts(myPostsUiState.self.reposts.take(takeN), myPostsUiState.repostedPosts.last().id)
+                    // using reversing for sorted by descending order
+                    onGetBeforeRepostedPosts(
+                        myPostsUiState.self.reposts
+                            .reversed()
+                            .take(takeN),
+                        myPostsUiState.repostedPosts.last().id,
+                    )
                 }
             }
         }
@@ -173,7 +197,13 @@ class MyPostsViewModel
         private fun onGetPosts() {
             viewModelScope.launch(Dispatchers.IO) {
                 if (myPostsUiState.posts.isEmpty()) {
-                    val posts = postRepository.onGetPosts(myPostsUiState.self.posts.take(takeN))
+                    // using reversing for sorted by descending order
+                    val posts =
+                        postRepository.onGetPosts(
+                            myPostsUiState.self.posts
+                                .reversed()
+                                .take(takeN),
+                        )
                     if (posts.isEmpty()) {
                         onToggleHasNoMorePosts()
                     } else {
@@ -181,7 +211,8 @@ class MyPostsViewModel
                         myPostsUiState = myPostsUiState.copy(posts = myPostsUiState.posts.plus(newPosts))
                     }
                 } else {
-                    onGetBeforePosts(myPostsUiState.self.posts, myPostsUiState.posts.last().id)
+                    // using reversing for sorted by descending order
+                    onGetBeforePosts(myPostsUiState.self.posts.reversed(), myPostsUiState.posts.last().id)
                 }
             }
         }
