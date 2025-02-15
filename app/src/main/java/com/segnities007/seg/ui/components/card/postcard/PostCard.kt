@@ -60,8 +60,8 @@ fun PostCard(
         isIncrementView = isIncrementView,
         onHubNavigate = onHubNavigate,
     ) {
-        CardContents{
-            Column(modifier = Modifier.padding(horizontal = commonPadding)){
+        CardContents {
+            Column(modifier = Modifier.padding(horizontal = commonPadding)) {
                 Name()
                 Description()
                 ActionIcons(onProcessOfEngagementAction = onProcessOfEngagementAction)
@@ -239,57 +239,41 @@ fun PostCardScope.ActionIcons(onProcessOfEngagementAction: (newPost: Post) -> Un
             onClick = {
                 postCardUiAction.onLike(
                     post,
-                    hubUiState.user,
-                ) {
-                    if (hubUiState.user.likes.contains(post.id)) {
-                        hubUiAction.onRemovePostIDFromMyLikes(post.id)
-                    } else {
-                        hubUiAction.onAddPostIDToMyLikes(post.id)
-                    }
-                    onProcessOfEngagementAction(it)
-                }
+                    hubUiState,
+                    hubUiAction,
+                    onProcessOfEngagementAction,
+                )
             },
         )
         Spacer(Modifier.weight(1f))
         ActionIcon(
             modifier = Modifier.padding(top = commonPadding),
+            count = counts[1],
             painterRes =
-                if (hubUiState.user.reposts.contains(
-                        post.id,
-                    )
-                ) {
+                if (hubUiState.user.reposts.contains(post.id)) {
                     EngagementIconState.pushIcons[1]
                 } else {
                     EngagementIconState.unPushIcons[1]
                 },
-            count = counts[1],
             onClick = {
                 postCardUiAction.onRepost(
                     post,
-                    hubUiState.user,
-                ) {
-                    if (hubUiState.user.reposts.contains(post.id)) {
-                        hubUiAction.onRemovePostIDFromMyReposts(post.id)
-                    } else {
-                        hubUiAction.onAddPostIDToMyReposts(post.id)
-                    }
-                    onProcessOfEngagementAction(it)
-                }
+                    hubUiState,
+                    hubUiAction,
+                    onProcessOfEngagementAction,
+                )
             },
         )
         Spacer(Modifier.weight(1f))
         ActionIcon(
             modifier = Modifier.padding(top = commonPadding),
+            count = counts[2],
             painterRes =
-                if (hubUiState.user.comments.contains(
-                        post.id,
-                    )
-                ) {
+                if (hubUiState.user.comments.contains(post.id)) {
                     EngagementIconState.pushIcons[2]
                 } else {
                     EngagementIconState.unPushIcons[2]
                 },
-            count = counts[2],
             onClick = {
                 // TODO
             },
@@ -301,7 +285,6 @@ fun PostCardScope.ActionIcons(onProcessOfEngagementAction: (newPost: Post) -> Un
             count = counts[3],
             isClickable = false,
         )
-//        Spacer(Modifier.weight(1f))
     }
 }
 
@@ -332,7 +315,11 @@ private fun ActionIcon(
 
 @Composable
 fun PostCardScope.Name() {
-    Row(modifier = Modifier.padding(vertical = commonPadding), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Start) {
+    Row(
+        modifier = Modifier.padding(vertical = commonPadding),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Start,
+    ) {
         Text(post.name)
         Text("@${post.userID}", color = MaterialTheme.colorScheme.secondaryContainer)
     }
