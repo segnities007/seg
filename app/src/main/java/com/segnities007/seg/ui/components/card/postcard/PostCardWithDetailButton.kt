@@ -18,12 +18,14 @@ import com.segnities007.seg.data.model.Post
 import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.ui.screens.hub.HubUiAction
 import com.segnities007.seg.ui.screens.hub.HubUiState
+import com.segnities007.seg.ui.screens.hub.setting.my_posts.MyPostsUiAction
 
 @Composable
 fun PostCardWithDetailButton(
     post: Post,
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
+    myPostsUiAction: MyPostsUiAction,
     postCardUiAction: PostCardUiAction,
     onHubNavigate: (Route) -> Unit,
     onProcessOfEngagementAction: (newPost: Post) -> Unit,
@@ -38,7 +40,12 @@ fun PostCardWithDetailButton(
         postCardUiAction = postCardUiAction,
         onHubNavigate = onHubNavigate,
     ) {
-        if (isShowBottomSheet) BottomSheet(onClickDetailButton = toggleIsShowBottomSheet)
+        if (isShowBottomSheet) BottomSheet(
+            onClickDetailButton = toggleIsShowBottomSheet,
+            myPostUiAction = myPostsUiAction,
+            hubUiState = hubUiState,
+            hubUiAction = hubUiAction,
+        )
 
         Box {
             CardContents {
