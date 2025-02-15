@@ -15,7 +15,6 @@ class PostRepositoryImpl
     @Inject
     constructor(
         private val postgrest: Postgrest,
-        private val imageRepository: ImageRepository,
         private val userRepository: UserRepository,
     ) : PostRepository {
         private val tag = "PostRepositoryImpl"

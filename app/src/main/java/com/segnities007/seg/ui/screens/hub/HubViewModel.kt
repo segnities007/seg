@@ -23,7 +23,7 @@ data class HubUiState(
 )
 
 data class HubUiAction(
-    val onUpdateMySelf: () -> Unit,
+    val onUpdateSelf: (newSelf: User) -> Unit,
     val onChangeIsHideTopBar: () -> Unit,
     val onResetIsHideTopBar: () -> Unit,
     val onGetUser: () -> Unit,
@@ -43,6 +43,7 @@ class HubViewModel
     constructor(
         private val userRepository: UserRepository,
     ) : TopLayerViewModel() {
+
         var hubUiState by mutableStateOf(HubUiState())
             private set
 
@@ -52,6 +53,7 @@ class HubViewModel
                 onSetUserID = this::onSetUserID,
                 onSetAccounts = this::onSetAccounts,
                 onSetComment = this::onSetComment,
+                onUpdateSelf = this::onUpdateSelf,
                 onAddPostIDToMyLikes = this::onAddPostIDToMyLikes,
                 onRemovePostIDFromMyLikes = this::onRemovePostIDFromMyLikes,
                 onAddPostIDToMyReposts = this::onAddPostIDToMyReposts,
@@ -59,8 +61,12 @@ class HubViewModel
                 onChangeCurrentRouteName = this::onChangeCurrentRouteName,
                 onChangeIsHideTopBar = this::onChangeIsHideTopBar,
                 onResetIsHideTopBar = this::onResetIsHideTopBar,
-                onUpdateMySelf = this::onUpdateMyself,
             )
+
+        private fun onUpdateSelf(newSelf: User){
+            hubUiState = hubUiState.copy(user = newSelf)
+            onUpdateMyself()
+        }
 
         private fun onUpdateMyself() {
             viewModelScope.launch(Dispatchers.IO) {

@@ -38,6 +38,7 @@ data class MyPostsUiAction(
     val onUpdateSelectedTabIndex: (index: Int) -> Unit,
     val onSetSelf: (self: User) -> Unit,
     val onGetPosts: () -> Unit,
+    val onRemovePostFromPosts: (post: Post) -> Unit,
     val onGetLikedPosts: () -> Unit,
     val onGetRepostedPosts: () -> Unit,
     val onProcessOfEngagementAction: (newPost: Post) -> Unit,
@@ -63,7 +64,12 @@ class MyPostsViewModel
                 onGetRepostedPosts = this::onGetRepostedPosts,
                 onProcessOfEngagementAction = this::onProcessOfEngagementAction,
                 onInit = this::onInit,
+                onRemovePostFromPosts = this::onRemovePostFromPosts,
             )
+
+        private fun onRemovePostFromPosts(post: Post){
+            myPostsUiState = myPostsUiState.copy(posts = myPostsUiState.posts.minus(post))
+        }
 
         private fun onInit() {
             if (myPostsUiState.self.likes.isEmpty()) {

@@ -48,12 +48,10 @@ object RepositoryModule {
     @Singleton
     fun providePostRepository(
         postgrest: Postgrest,
-        imageRepository: ImageRepository,
         userRepository: UserRepository,
     ): PostRepository =
         PostRepositoryImpl(
             postgrest = postgrest,
-            imageRepository = imageRepository,
             userRepository = userRepository,
         )
 

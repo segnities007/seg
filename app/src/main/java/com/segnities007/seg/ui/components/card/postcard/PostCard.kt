@@ -41,6 +41,7 @@ import com.segnities007.seg.ui.components.button.SmallButton
 import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
 import com.segnities007.seg.ui.screens.hub.HubUiAction
 import com.segnities007.seg.ui.screens.hub.HubUiState
+import com.segnities007.seg.ui.screens.hub.setting.my_posts.MyPostsUiAction
 
 @Composable
 fun PostCard(
@@ -139,6 +140,9 @@ fun PostCardScope.CardContents(content: @Composable () -> Unit) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PostCardScope.BottomSheet(
+    hubUiState: HubUiState,
+    hubUiAction: HubUiAction,
+    myPostUiAction: MyPostsUiAction,
     onClickDetailButton: () -> Unit,
     commonPadding: Dp = dimensionResource(R.dimen.padding_sn),
 ) {
@@ -157,7 +161,12 @@ fun PostCardScope.BottomSheet(
             iconID = R.drawable.baseline_delete_24,
             textID = R.string.delete,
             onClick = {
-                postCardUiAction.onDeletePost(post)
+                postCardUiAction.onDeletePost(
+                    post,
+                    myPostUiAction,
+                    hubUiState,
+                    hubUiAction,
+                )
                 onClickDetailButton()
             },
         )

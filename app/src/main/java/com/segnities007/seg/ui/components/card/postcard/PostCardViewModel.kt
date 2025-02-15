@@ -9,6 +9,7 @@ import com.segnities007.seg.domain.repository.PostRepository
 import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
 import com.segnities007.seg.ui.screens.hub.HubUiAction
 import com.segnities007.seg.ui.screens.hub.HubUiState
+import com.segnities007.seg.ui.screens.hub.setting.my_posts.MyPostsUiAction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -16,7 +17,12 @@ import javax.inject.Inject
 
 @Immutable
 data class PostCardUiAction(
-    val onDeletePost: (post: Post) -> Unit,
+    val onDeletePost: (
+        post: Post,
+        myPostUiAction: MyPostsUiAction,
+        hubUiState: HubUiState,
+        hubUiAction: HubUiAction,
+            ) -> Unit,
     val onClickIcon: (onHubNavigate: (Route) -> Unit) -> Unit,
     val onClickPostCard: (onHubNavigate: (Route) -> Unit) -> Unit,
     val onIncrementViewCount: (post: Post) -> Unit,
@@ -50,7 +56,16 @@ class PostCardViewModel
                 onRepost = this::onRepost,
             )
 
-        private fun onDeletePost(post: Post) {
+        private fun onDeletePost(
+            post: Post,
+            myPostsUiAction: MyPostsUiAction,
+            hubUiState: HubUiState,
+            hubUiAction: HubUiAction,
+        ) {
+            val newPostsOfSelf = hubUiState.user.posts.minus(post.id)
+            myPostsUiAction.onRemovePostFromPosts(post)
+            val newSelf = hubUiState.user.copy(posts = newPostsOfSelf)
+            hubUiAction.onUpdateSelf(newSelf)
             viewModelScope.launch(Dispatchers.IO) {
                 postRepository.onDeletePost(post)
             }
