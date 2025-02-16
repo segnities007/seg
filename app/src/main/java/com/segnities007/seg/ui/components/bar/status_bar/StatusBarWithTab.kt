@@ -1,4 +1,4 @@
-package com.segnities007.seg.ui.components.bar.top_bar.status_bar
+package com.segnities007.seg.ui.components.bar.status_bar
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,7 +12,7 @@ import com.segnities007.seg.ui.components.tab.TabUiAction
 import com.segnities007.seg.ui.components.tab.TabUiState
 
 @Composable
-fun TopStatusBarWithTab(
+fun StatusBarWithTab(
     user: User,
     tabUiState: TabUiState,
     tabUiAction: TabUiAction,
@@ -27,7 +27,10 @@ fun TopStatusBarWithTab(
         tabUiAction.onSetLabels(labels)
     }
 
-    TopStatusBar(modifier = Modifier.fillMaxWidth(), user = user) {
+    StatusBarUi(
+        modifier = Modifier.fillMaxWidth(),
+        user = user,
+    ) {
         Tab(
             modifier = Modifier.background(color = MaterialTheme.colorScheme.primaryContainer),
             tabUiState = tabUiState,
@@ -35,3 +38,4 @@ fun TopStatusBarWithTab(
         )
     }
 }
+

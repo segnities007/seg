@@ -130,6 +130,7 @@ fun PostCardScope.CardContents(content: @Composable () -> Unit) {
                         onHubNavigate(NavigationHubRoute.Account())
                     },
             model = post.iconURL,
+            placeholder = painterResource(R.mipmap.segnities007),
             contentDescription = post.iconURL,
             contentScale = ContentScale.Crop,
         )

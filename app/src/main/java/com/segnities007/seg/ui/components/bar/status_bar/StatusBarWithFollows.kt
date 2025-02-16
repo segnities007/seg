@@ -1,8 +1,9 @@
-package com.segnities007.seg.ui.components.bar.top_bar.status_bar
+package com.segnities007.seg.ui.components.bar.status_bar
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,6 +18,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import com.segnities007.seg.R
 import com.segnities007.seg.data.model.User
@@ -25,47 +27,33 @@ import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
 import com.segnities007.seg.ui.screens.hub.HubUiAction
 
 @Composable
-fun TopStatusBarWithFollows(
+fun StatusBarWithFollows(
+    modifier: Modifier = Modifier,
     user: User,
     onHubNavigate: (Route) -> Unit,
     hubUiAction: HubUiAction,
-    commonPadding: Dp = dimensionResource(R.dimen.padding_small),
 ) {
-    val shape = dimensionResource(R.dimen.padding_large)
-
-    TopStatusBar(
-        modifier =
-            Modifier
-                .fillMaxWidth()
-                .shadow(
-                    shape =
-                        RoundedCornerShape(
-                            bottomStart = shape,
-                            bottomEnd = shape,
-                        ),
-                    elevation = dimensionResource(R.dimen.elevation_nl),
-                ).clip(
-                    shape =
-                        RoundedCornerShape(
-                            bottomStart = shape,
-                            bottomEnd = shape,
-                        ),
-                ),
-        user = user,
-    ) {
-        AboutFollow(user = user, onHubNavigate = onHubNavigate, hubUiAction = hubUiAction)
-        Spacer(modifier = Modifier.padding(commonPadding))
+    Column(
+        modifier = modifier,
+    ){
+        StatusBarUi(
+            modifier = modifier,
+            user = user,
+        ) {
+            Column{
+                AboutFollow(hubUiAction = hubUiAction, onHubNavigate = onHubNavigate)
+            }
+        }
+        Bottom()
     }
 }
 
 @Composable
-private fun AboutFollow(
-    user: User,
-    commonPadding: Dp = dimensionResource(R.dimen.padding_smaller),
+private fun StatusBarScope.AboutFollow(
     hubUiAction: HubUiAction,
-    fontColor: Color = MaterialTheme.colorScheme.primary,
     onHubNavigate: (Route) -> Unit,
 ) {
+    val fontColor: Color = MaterialTheme.colorScheme.primary
     val followsText = stringResource(R.string.follows) + ": ${user.followCount}"
     val followersText = stringResource(R.string.followers) + ": ${user.followerCount}"
 
@@ -96,4 +84,28 @@ private fun AboutFollow(
             Text(text = followersText, color = fontColor)
         }
     }
+}
+
+@Composable
+@Preview
+private fun StatusBarWithFollowsPreview(){
+    StatusBarWithFollows(
+        modifier = Modifier,
+        user = User(),
+        onHubNavigate = {},
+        hubUiAction = HubUiAction(
+            onUpdateSelf = {},
+            onChangeIsHideTopBar = {},
+            onResetIsHideTopBar = {},
+            onGetUser = {},
+            onSetComment = {},
+            onSetUserID = {},
+            onSetAccounts = {},
+            onAddPostIDToMyLikes = {},
+            onRemovePostIDFromMyLikes = {},
+            onAddPostIDToMyReposts = {},
+            onRemovePostIDFromMyReposts = {},
+            onChangeCurrentRouteName = {}
+        )
+    )
 }

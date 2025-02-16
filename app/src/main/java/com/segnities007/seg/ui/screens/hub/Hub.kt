@@ -17,10 +17,10 @@ import com.segnities007.seg.data.model.bottom_bar.HubItem
 import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.domain.presentation.TopAction
 import com.segnities007.seg.ui.components.bar.bottom_bar.BottomBar
+import com.segnities007.seg.ui.components.bar.status_bar.StatusBarWithFollows
+import com.segnities007.seg.ui.components.bar.status_bar.StatusBarWithTab
 import com.segnities007.seg.ui.components.bar.top_bar.TopBar
 import com.segnities007.seg.ui.components.bar.top_bar.TopSearchBar
-import com.segnities007.seg.ui.components.bar.top_bar.status_bar.TopStatusBarWithFollows
-import com.segnities007.seg.ui.components.bar.top_bar.status_bar.TopStatusBarWithTab
 import com.segnities007.seg.ui.components.button.FloatingButton
 import com.segnities007.seg.ui.components.navigation_drawer.NavigationDrawer
 import com.segnities007.seg.ui.components.tab.TabUiAction
@@ -125,7 +125,7 @@ private fun HubUi(
                         routeName = currentRouteName,
                     )
                 NavigationHubRoute.Account().name ->
-                    TopStatusBarWithFollows(
+                    StatusBarWithFollows(
                         user = accountUiState.user,
                         onHubNavigate = onHubNavigate,
                         hubUiAction = hubUiAction,
@@ -138,13 +138,13 @@ private fun HubUi(
                     )
                 NavigationHubRoute.Setting().name ->
                     if (!hubUiState.isHideTopBar) {
-                        TopStatusBarWithFollows(
+                        StatusBarWithFollows(
                             user = hubUiState.user,
                             onHubNavigate = onHubNavigate,
                             hubUiAction = hubUiAction,
                         )
                     } else {
-                        TopStatusBarWithTab(
+                        StatusBarWithTab(
                             user = hubUiState.user,
                             tabUiState = tabUiState,
                             tabUiAction = tabUiAction,

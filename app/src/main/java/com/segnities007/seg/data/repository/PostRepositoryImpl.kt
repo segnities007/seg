@@ -111,6 +111,7 @@ class PostRepositoryImpl
                             }
                         }.decodeList<Post>()
 
+                //The process of removing deleted and nonexistent Posts from its own list.
                 if (result.isEmpty()) {
                     var user = userRepository.onGetUser()
                     user =
