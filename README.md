@@ -11,8 +11,10 @@ This project is SNS such as Twitter(X), Facebook, etc...
 
 - Ktlint
 
-## 設計パターン
+## 設計パターン等
 - UDF (単方向データフロー)
+- Slot Pattern
+- Comound Component Pattern
 
 ## アプリを使用する際の注意点
 
