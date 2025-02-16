@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
 import coil3.compose.AsyncImage
 import com.segnities007.seg.R
 import com.segnities007.seg.data.model.User
@@ -51,6 +52,7 @@ fun AvatarCard(
                         .size(dimensionResource(R.dimen.icon_small))
                         .clip(CircleShape),
                 model = user.iconURL,
+                placeholder = painterResource(R.mipmap.segnities007),
                 contentDescription = user.iconURL,
                 contentScale = ContentScale.Crop,
             )
