@@ -21,6 +21,7 @@ import com.segnities007.seg.ui.screens.hub.account.Account
 import com.segnities007.seg.ui.screens.hub.account.AccountViewModel
 import com.segnities007.seg.ui.screens.hub.accounts.Accounts
 import com.segnities007.seg.ui.screens.hub.home.Home
+import com.segnities007.seg.ui.screens.hub.home.HomeViewModel
 import com.segnities007.seg.ui.screens.hub.home.comment.Comment
 import com.segnities007.seg.ui.screens.hub.notify.Notify
 import com.segnities007.seg.ui.screens.hub.post.Post
@@ -34,6 +35,7 @@ fun NavigationHub(
     postCardViewModel: PostCardViewModel = hiltViewModel(),
     accountViewModel: AccountViewModel = hiltViewModel(),
     searchViewModel: SearchViewModel = hiltViewModel(),
+    homeViewModel: HomeViewModel = hiltViewModel(),
     hubViewModel: HubViewModel = hiltViewModel(),
     tabViewModel: TabViewModel = viewModel(),
     onTopNavigate: (route: Route) -> Unit, // go to login
@@ -41,6 +43,7 @@ fun NavigationHub(
     LaunchedEffect(Unit) {
         val hubUiAction = hubViewModel.getHubUiAction()
         hubUiAction.onGetUser()
+        homeViewModel.onGetHomeUiAction().onGetNewPosts()
     }
 
     val navBackStackEntry by hubNavHostController.currentBackStackEntryAsState()
@@ -74,6 +77,8 @@ fun NavigationHub(
                     modifier = modifier,
                     hubUiState = hubViewModel.hubUiState,
                     hubUiAction = hubViewModel.getHubUiAction(),
+                    homeUiState = homeViewModel.homeUiState,
+                    homeUiAction = homeViewModel.onGetHomeUiAction(),
                     postCardUiAction = postCardViewModel.onGetPostCardUiAction(),
                     onHubNavigate = onHubNavigate,
                 )
