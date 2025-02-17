@@ -13,4 +13,4 @@ interface StatusBarScope {
 data class DefaultStatusBarScope(
     override val user: User,
     override val commonPadding: Dp,
-): StatusBarScope
+) : StatusBarScope

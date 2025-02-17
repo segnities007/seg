@@ -22,7 +22,7 @@ import com.segnities007.seg.ui.components.bar.status_bar.StatusBarWithTab
 import com.segnities007.seg.ui.components.bar.top_bar.TopBar
 import com.segnities007.seg.ui.components.bar.top_bar.TopSearchBar
 import com.segnities007.seg.ui.components.button.FloatingButton
-import com.segnities007.seg.ui.components.navigation_drawer.NavigationDrawer
+import com.segnities007.seg.ui.components.navigation_drawer.NavigationDrawerWithState
 import com.segnities007.seg.ui.components.tab.TabUiAction
 import com.segnities007.seg.ui.components.tab.TabUiState
 import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
@@ -47,11 +47,12 @@ fun Hub(
     accountUiState: AccountUiState,
     content: @Composable (Modifier) -> Unit,
 ) {
-    NavigationDrawer(
+    NavigationDrawerWithState(
         items = HubItem(),
         drawerState = hubViewModel.topState.drawerState,
         onNavigate = onHubNavigate,
         onDrawerClose = hubViewModel.onGetTopAction().closeDrawer,
+        user = hubUiState.user,
     ) {
         HubUi(
             topAction = hubViewModel.onGetTopAction(),

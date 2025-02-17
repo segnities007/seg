@@ -1,5 +1,6 @@
 package com.segnities007.seg.ui.components.navigation_drawer
 
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.HorizontalDivider
@@ -13,15 +14,17 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.segnities007.seg.data.model.User
 import com.segnities007.seg.data.model.bottom_bar.HubItem
 import com.segnities007.seg.domain.model.BottomBarItem
 import com.segnities007.seg.domain.presentation.Route
+import com.segnities007.seg.ui.components.bar.status_bar.StatusBar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
-fun NavigationDrawer(
-    modifier: Modifier = Modifier,
+fun NavigationDrawerWithState(
+    user: User,
     drawerState: DrawerState,
     items: BottomBarItem,
     onNavigate: (route: Route) -> Unit,
@@ -29,11 +32,13 @@ fun NavigationDrawer(
     content: @Composable () -> Unit,
 ) {
     ModalNavigationDrawer(
-        modifier = modifier,
         drawerState = drawerState,
         gesturesEnabled = false,
         drawerContent = {
-            ModalDrawerSheet {
+            ModalDrawerSheet(
+                windowInsets = WindowInsets(0),
+            ) {
+                StatusBar(user = user)
                 items.unSelectedIconIDs.forEachIndexed { index, iconID ->
                     DrawerSheet(
                         route = items.routes[index],
@@ -78,7 +83,8 @@ private fun DrawerSheet(
 @Composable
 @Preview
 private fun NavigationDrawerPreview() {
-    NavigationDrawer(
+    NavigationDrawerWithState(
+        user = User(),
         drawerState =
             DrawerState(
                 initialValue = DrawerValue.Open,
