@@ -3,7 +3,6 @@ package com.segnities007.seg.ui.components.bar.status_bar
 import android.net.http.UrlRequest.Status
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -37,7 +36,7 @@ fun StatusBar(
     StatusBarUi(
         modifier = modifier,
         user = user,
-    ){}
+    ) {}
 }
 
 @Composable
@@ -45,13 +44,13 @@ fun StatusBarUi(
     modifier: Modifier,
     user: User,
     content: @Composable StatusBarScope.() -> Unit,
-){
-
+) {
     val commonPadding: Dp = dimensionResource(R.dimen.padding_small)
-    val scope = DefaultStatusBarScope(
-        user = user,
-        commonPadding = commonPadding,
-    )
+    val scope =
+        DefaultStatusBarScope(
+            user = user,
+            commonPadding = commonPadding,
+        )
 
     Column(
         modifier = modifier.fillMaxWidth().background(color = MaterialTheme.colorScheme.primaryContainer),
@@ -62,7 +61,6 @@ fun StatusBarUi(
         Spacer(modifier = Modifier.padding(commonPadding))
         scope.content()
     }
-
 }
 
 @Composable
@@ -88,8 +86,7 @@ private fun Status(
 }
 
 @Composable
-fun Bottom(){
-
+fun Bottom() {
     val shape = dimensionResource(R.dimen.padding_large)
     val height = dimensionResource(R.dimen.padding_sn)
 
@@ -110,10 +107,8 @@ fun Bottom(){
                             bottomStart = shape,
                             bottomEnd = shape,
                         ),
-                )
-                .background(color = MaterialTheme.colorScheme.primaryContainer)
-    ){
+                ).background(color = MaterialTheme.colorScheme.primaryContainer),
+    ) {
         Spacer(Modifier.padding(height))
     }
 }
-
