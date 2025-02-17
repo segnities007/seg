@@ -25,20 +25,18 @@ fun Home(
     modifier: Modifier,
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
-    homeViewModel: HomeViewModel = hiltViewModel(),
+    homeUiState: HomeUiState,
+    homeUiAction: HomeUiAction,
     postCardUiAction: PostCardUiAction,
     onHubNavigate: (Route) -> Unit,
 ) {
-    LaunchedEffect(Unit) {
-        homeViewModel.onGetHomeUiAction().onGetNewPosts()
-    }
 
     HomeUi(
         modifier = modifier,
         hubUiState = hubUiState,
         hubUiAction = hubUiAction,
-        homeUiState = homeViewModel.homeUiState,
-        homeUiAction = homeViewModel.onGetHomeUiAction(),
+        homeUiState = homeUiState,
+        homeUiAction = homeUiAction,
         postCardUiAction = postCardUiAction,
         onHubNavigate = onHubNavigate,
     )
