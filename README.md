@@ -20,5 +20,5 @@ This project is SNS such as Twitter(X), Facebook, etc...
 
 Supabaseを使用するので、local.propertyファイルに以下のコードを記述してください。
 
-SUPABASE_URL=https://twxdngcbimgolvfbglpk.supabase.co
-SUPABASE_PUBLIC_KEY= ここにこれを記載するの怖いので、Twitter(新X)のDMでキープリーズみたいな感じで言ってくだされば、渡します。(@segnities007)
+SUPABASE_URL=https://twxdngcbimgolvfbglpk.supabase.co <br>
+SUPABASE_PUBLIC_KEY= Twitter(新X)のDMでキープリーズみたいな感じで言ってくだされば渡します。(@segnities007)
