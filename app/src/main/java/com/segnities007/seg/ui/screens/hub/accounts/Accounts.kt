@@ -8,7 +8,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.segnities007.seg.domain.presentation.Route
+import com.segnities007.seg.domain.presentation.Navigation
 import com.segnities007.seg.ui.components.card.AvatarCard
 import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
 import com.segnities007.seg.ui.screens.hub.HubUiAction
@@ -22,7 +22,7 @@ fun Accounts(
     accountUiAction: AccountUiAction,
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
-    onHubNavigate: (Route) -> Unit,
+    onHubNavigate: (Navigation) -> Unit,
 ) {
     LaunchedEffect(Unit) {
         val action = accountsViewModel.onGetAccountsUiAction()
@@ -45,7 +45,7 @@ private fun AccountsUi(
     accountUiAction: AccountUiAction,
     accountsUiState: AccountsUiState,
     hubUiAction: HubUiAction,
-    onHubNavigate: (Route) -> Unit,
+    onHubNavigate: (Navigation) -> Unit,
 ) {
     LazyColumn(
         modifier = modifier.fillMaxSize(),
@@ -61,21 +61,10 @@ private fun AccountsUi(
                 onCardClick = {
                     accountUiAction.onGetUserPosts(accountsUiState.users[it].userID)
                     hubUiAction.onSetUserID(accountsUiState.users[it].userID)
-                    hubUiAction.onChangeCurrentRouteName(NavigationHubRoute.Account().name)
-                    onHubNavigate(NavigationHubRoute.Account())
+                    hubUiAction.onChangeCurrentRouteName(NavigationHubRoute.Account.name)
+                    onHubNavigate(NavigationHubRoute.Account)
                 },
             )
         }
-//        item {
-//            if(accountsUiState.users.isNotEmpty() && accountsUiState.isNotCompleted){
-//                Column {
-//                    Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_smaller)))
-//                    LoadingUI(
-//                        onLoading = {
-//                        },
-//                    )
-//                }
-//            }
-//        }
     }
 }

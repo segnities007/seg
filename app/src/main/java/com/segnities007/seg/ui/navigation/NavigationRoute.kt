@@ -1,31 +1,15 @@
 package com.segnities007.seg.ui.navigation
 
-import com.segnities007.seg.domain.presentation.Route
+import com.segnities007.seg.domain.presentation.Navigation
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed class NavigationRoute : Route {
-    @Serializable
-    data class Splash(
-        override val name: String = "Splash",
-    ) : NavigationRoute()
+sealed class NavigationRoute(
+    override val name: String,
+) : Navigation {
+    @Serializable data object Splash : NavigationRoute(name = "Splash")
 
-    @Serializable
-    data class Login(
-        override val name: String = "Login",
-    ) : NavigationRoute()
+    @Serializable data object Login : NavigationRoute(name = "Login")
 
-    @Serializable
-    data class Hub(
-        override val name: String = "Hub",
-    ) : NavigationRoute()
-
-    companion object {
-        val routes: List<Route> =
-            listOf(
-                Splash(),
-                Login(),
-                Hub(),
-            )
-    }
+    @Serializable data object Hub : NavigationRoute(name = "Hub")
 }

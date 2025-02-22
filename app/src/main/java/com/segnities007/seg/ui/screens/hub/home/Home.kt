@@ -7,13 +7,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.segnities007.seg.R
-import com.segnities007.seg.domain.presentation.Route
+import com.segnities007.seg.domain.presentation.Navigation
 import com.segnities007.seg.ui.components.card.postcard.PostCard
 import com.segnities007.seg.ui.components.card.postcard.PostCardUiAction
 import com.segnities007.seg.ui.components.indicator.LoadingUI
@@ -28,9 +26,8 @@ fun Home(
     homeUiState: HomeUiState,
     homeUiAction: HomeUiAction,
     postCardUiAction: PostCardUiAction,
-    onHubNavigate: (Route) -> Unit,
+    onHubNavigate: (Navigation) -> Unit,
 ) {
-
     HomeUi(
         modifier = modifier,
         hubUiState = hubUiState,
@@ -50,7 +47,7 @@ private fun HomeUi(
     homeUiState: HomeUiState,
     homeUiAction: HomeUiAction,
     postCardUiAction: PostCardUiAction,
-    onHubNavigate: (Route) -> Unit,
+    onHubNavigate: (Navigation) -> Unit,
 ) {
     LazyColumn(
         modifier = modifier.fillMaxSize().padding(top = dimensionResource(R.dimen.padding_smaller)),

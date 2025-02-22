@@ -3,7 +3,7 @@ package com.segnities007.seg.ui.components.card.postcard
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.unit.Dp
 import com.segnities007.seg.data.model.Post
-import com.segnities007.seg.domain.presentation.Route
+import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
 import com.segnities007.seg.ui.screens.hub.HubUiAction
 import com.segnities007.seg.ui.screens.hub.HubUiState
 
@@ -14,7 +14,7 @@ interface PostCardScope {
     val hubUiState: HubUiState
     val hubUiAction: HubUiAction
     val postCardUiAction: PostCardUiAction
-    val onHubNavigate: (Route) -> Unit
+    val onHubNavigate: (NavigationHubRoute) -> Unit
 }
 
 data class DefaultPostCardScope(
@@ -23,5 +23,5 @@ data class DefaultPostCardScope(
     override val hubUiState: HubUiState,
     override val hubUiAction: HubUiAction,
     override val postCardUiAction: PostCardUiAction,
-    override val onHubNavigate: (Route) -> Unit,
+    override val onHubNavigate: (NavigationHubRoute) -> Unit,
 ) : PostCardScope

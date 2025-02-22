@@ -35,7 +35,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.segnities007.seg.R
-import com.segnities007.seg.domain.presentation.Route
+import com.segnities007.seg.domain.presentation.Navigation
 import com.segnities007.seg.ui.components.button.BasicButton
 import com.segnities007.seg.ui.navigation.hub.setting.NavigationSettingRoute
 import com.segnities007.seg.ui.screens.hub.HubUiAction
@@ -54,7 +54,7 @@ fun UserInfo(
     settingUiAction: SettingUiAction,
     userInfoViewModel: UserInfoViewModel = hiltViewModel(),
     commonPadding: Dp = dimensionResource(R.dimen.padding_normal),
-    onNavigate: (Route) -> Unit,
+    onNavigate: (Navigation) -> Unit,
 ) {
     LaunchedEffect(Unit) {
         val action = userInfoViewModel.getUserInfoUiAction()
@@ -94,7 +94,6 @@ fun UserInfo(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DatePickerDialog(
-    modifier: Modifier = Modifier,
     datePickerState: DatePickerState = rememberDatePickerState(),
     onDateSelected: (Long?) -> Unit,
     onDatePickerDismiss: () -> Unit,
@@ -124,7 +123,6 @@ private fun DatePickerDialog(
 
 @Composable
 private fun TextFields(
-    modifier: Modifier = Modifier,
     userInfoUiState: UserInfoUiState,
     userInfoUiAction: UserInfoUiAction,
     commonPadding: Dp = dimensionResource(R.dimen.padding_normal),
@@ -183,12 +181,11 @@ private fun TextFields(
 
 @Composable
 private fun SelectionButtons(
-    modifier: Modifier = Modifier,
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
     userInfoUiAction: UserInfoUiAction,
     commonPadding: Dp = dimensionResource(R.dimen.padding_normal),
-    onNavigate: (Route) -> Unit,
+    onNavigate: (Navigation) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
 
@@ -200,7 +197,7 @@ private fun SelectionButtons(
         BasicButton(
             modifier = Modifier.weight(1f).fillMaxWidth(),
             textID = R.string.cancel,
-            onClick = { onNavigate(NavigationSettingRoute.Preference()) },
+            onClick = { onNavigate(NavigationSettingRoute.Preference) },
         )
         Spacer(modifier = Modifier.padding(commonPadding))
         BasicButton(
@@ -210,7 +207,7 @@ private fun SelectionButtons(
                 scope.launch {
                     userInfoUiAction.onUserUpdate(hubUiState.user)
                     hubUiAction.onGetUser()
-                    onNavigate(NavigationSettingRoute.Preference())
+                    onNavigate(NavigationSettingRoute.Preference)
                 }
             },
         )

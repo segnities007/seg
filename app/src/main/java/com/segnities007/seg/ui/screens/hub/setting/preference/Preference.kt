@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.Dp
 import com.segnities007.seg.R
-import com.segnities007.seg.domain.presentation.Route
+import com.segnities007.seg.domain.presentation.Navigation
 import com.segnities007.seg.ui.components.button.SmallButton
 import com.segnities007.seg.ui.navigation.NavigationRoute
 import com.segnities007.seg.ui.navigation.hub.setting.NavigationSettingRoute
@@ -25,8 +25,8 @@ fun Preference(
     settingUiAction: SettingUiAction,
     hubUiAction: HubUiAction,
     commonPadding: Dp = dimensionResource(R.dimen.padding_normal),
-    onSettingNavigate: (Route) -> Unit,
-    onTopNavigate: (Route) -> Unit,
+    onSettingNavigate: (Navigation) -> Unit,
+    onTopNavigate: (Navigation) -> Unit,
 ) {
     LaunchedEffect(Unit) {
         hubUiAction.onResetIsHideTopBar()
@@ -47,45 +47,38 @@ fun Preference(
 }
 
 @Composable
-private fun ShowMyPostsButton(
-    modifier: Modifier = Modifier,
-    onSettingNavigate: (Route) -> Unit,
-) {
+private fun ShowMyPostsButton(onSettingNavigate: (Navigation) -> Unit) {
     SmallButton(
         modifier = Modifier.fillMaxWidth(),
         textID = R.string.my_posts,
         onClick = {
-            onSettingNavigate(NavigationSettingRoute.Posts())
+            onSettingNavigate(NavigationSettingRoute.Posts)
         },
     )
 }
 
 @Composable
-private fun ModifyUserInfoButton(
-    modifier: Modifier = Modifier,
-    onSettingNavigate: (Route) -> Unit,
-) {
+private fun ModifyUserInfoButton(onSettingNavigate: (Navigation) -> Unit) {
     SmallButton(
         modifier = Modifier.fillMaxWidth(),
         textID = R.string.user_info,
         onClick = {
-            onSettingNavigate(NavigationSettingRoute.UserInfo())
+            onSettingNavigate(NavigationSettingRoute.UserInfo)
         },
     )
 }
 
 @Composable
 private fun LogoutButton(
-    modifier: Modifier = Modifier,
     settingUiAction: SettingUiAction,
-    onTopNavigate: (Route) -> Unit,
+    onTopNavigate: (Navigation) -> Unit,
 ) {
     SmallButton(
         modifier = Modifier.fillMaxWidth(),
         textID = R.string.logout,
         onClick = {
             settingUiAction.onLogout()
-            onTopNavigate(NavigationRoute.Login())
+            onTopNavigate(NavigationRoute.Login)
         },
     )
 }

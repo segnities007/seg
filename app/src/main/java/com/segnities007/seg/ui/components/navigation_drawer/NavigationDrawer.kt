@@ -13,9 +13,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.segnities007.seg.data.model.bottom_bar.HubItem
+import com.segnities007.seg.data.model.bottom_bar.BottomBarHubItem
 import com.segnities007.seg.domain.model.BottomBarItem
-import com.segnities007.seg.domain.presentation.Route
+import com.segnities007.seg.domain.presentation.Navigation
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -24,7 +24,7 @@ fun NavigationDrawer(
     modifier: Modifier = Modifier,
     drawerState: DrawerState,
     items: BottomBarItem,
-    onNavigate: (route: Route) -> Unit,
+    onNavigate: (route: Navigation) -> Unit,
     onDrawerClose: suspend () -> Unit,
     content: @Composable () -> Unit,
 ) {
@@ -52,10 +52,10 @@ fun NavigationDrawer(
 @Composable
 private fun DrawerSheet(
     modifier: Modifier = Modifier,
-    route: Route,
+    route: Navigation,
     painterResourceID: Int,
     scope: CoroutineScope = rememberCoroutineScope(),
-    onNavigate: (route: Route) -> Unit,
+    onNavigate: (route: Navigation) -> Unit,
     onDrawerClose: suspend () -> Unit,
 ) {
     HorizontalDivider()
@@ -83,7 +83,7 @@ private fun NavigationDrawerPreview() {
             DrawerState(
                 initialValue = DrawerValue.Open,
             ),
-        items = HubItem(),
+        items = BottomBarHubItem(),
         onNavigate = {},
         onDrawerClose = {},
     ) { }

@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.segnities007.seg.R
-import com.segnities007.seg.domain.presentation.Route
+import com.segnities007.seg.domain.presentation.Navigation
 import com.segnities007.seg.ui.components.card.postcard.PostCard
 import com.segnities007.seg.ui.components.card.postcard.PostCardUiAction
 import com.segnities007.seg.ui.components.card.postcard.PostCardWithDetailButton
@@ -32,7 +32,7 @@ fun MyPosts(
     tabUiAction: TabUiAction,
     myPostsViewModel: MyPostsViewModel = hiltViewModel(),
     postCardUiAction: PostCardUiAction,
-    onHubNavigate: (Route) -> Unit,
+    onHubNavigate: (Navigation) -> Unit,
 ) {
     LaunchedEffect(Unit) {
         hubUiAction.onChangeIsHideTopBar()
@@ -68,7 +68,7 @@ private fun MyPostsUi(
     myPostsUiAction: MyPostsUiAction,
     tabUiState: TabUiState,
     postCardUiAction: PostCardUiAction,
-    onHubNavigate: (Route) -> Unit,
+    onHubNavigate: (Navigation) -> Unit,
 ) {
     when (tabUiState.index) {
         0 ->
@@ -108,7 +108,7 @@ private fun Posts(
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
     postCardUiAction: PostCardUiAction,
-    onHubNavigate: (Route) -> Unit,
+    onHubNavigate: (Navigation) -> Unit,
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize().padding(top = dimensionResource(R.dimen.padding_smallest)),
@@ -149,7 +149,7 @@ private fun Likes(
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
     postCardUiAction: PostCardUiAction,
-    onHubNavigate: (Route) -> Unit,
+    onHubNavigate: (Navigation) -> Unit,
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize().padding(top = dimensionResource(R.dimen.padding_smallest)),
@@ -190,7 +190,7 @@ private fun Reposts(
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
     postCardUiAction: PostCardUiAction,
-    onHubNavigate: (Route) -> Unit,
+    onHubNavigate: (Navigation) -> Unit,
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize().padding(top = dimensionResource(R.dimen.padding_smallest)),

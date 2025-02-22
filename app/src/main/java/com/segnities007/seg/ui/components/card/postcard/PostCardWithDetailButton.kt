@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import com.segnities007.seg.R
 import com.segnities007.seg.data.model.Post
-import com.segnities007.seg.domain.presentation.Route
+import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
 import com.segnities007.seg.ui.screens.hub.HubUiAction
 import com.segnities007.seg.ui.screens.hub.HubUiState
 import com.segnities007.seg.ui.screens.hub.setting.my_posts.MyPostsUiAction
@@ -27,7 +27,7 @@ fun PostCardWithDetailButton(
     hubUiAction: HubUiAction,
     myPostsUiAction: MyPostsUiAction,
     postCardUiAction: PostCardUiAction,
-    onHubNavigate: (Route) -> Unit,
+    onHubNavigate: (NavigationHubRoute) -> Unit,
     onProcessOfEngagementAction: (newPost: Post) -> Unit,
 ) {
     var isShowBottomSheet by remember { mutableStateOf(false) }

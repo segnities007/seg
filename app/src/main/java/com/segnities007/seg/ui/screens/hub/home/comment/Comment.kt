@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.segnities007.seg.domain.presentation.Route
+import com.segnities007.seg.domain.presentation.Navigation
 import com.segnities007.seg.ui.components.card.postcard.PostCard
 import com.segnities007.seg.ui.components.card.postcard.PostCardUiAction
 import com.segnities007.seg.ui.screens.hub.HubUiAction
@@ -20,7 +20,7 @@ fun Comment(
     hubUiAction: HubUiAction,
     commentViewModel: CommentViewModel = hiltViewModel(),
     postCardUiAction: PostCardUiAction,
-    onHubNavigate: (Route) -> Unit,
+    onHubNavigate: (Navigation) -> Unit,
 ) {
     LaunchedEffect(Unit) {
         val commentUiAction = commentViewModel.onGetCommentUiAction()
@@ -46,7 +46,7 @@ private fun CommentUi(
     commentUiState: CommentUiState,
     postCardUiAction: PostCardUiAction,
     commentUiAction: CommentUiAction,
-    onHubNavigate: (Route) -> Unit,
+    onHubNavigate: (Navigation) -> Unit,
 ) {
     Column(
         modifier = modifier.fillMaxSize(),

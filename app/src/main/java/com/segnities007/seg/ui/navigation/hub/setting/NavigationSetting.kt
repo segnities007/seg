@@ -7,7 +7,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.segnities007.seg.domain.presentation.Route
+import com.segnities007.seg.domain.presentation.Navigation
 import com.segnities007.seg.ui.components.card.postcard.PostCardUiAction
 import com.segnities007.seg.ui.components.tab.TabUiAction
 import com.segnities007.seg.ui.components.tab.TabUiState
@@ -29,20 +29,20 @@ fun NavigationSetting(
     tabUiAction: TabUiAction,
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
-    onTopNavigate: (Route) -> Unit,
-    onHubNavigate: (Route) -> Unit,
+    onTopNavigate: (Navigation) -> Unit,
+    onHubNavigate: (Navigation) -> Unit,
 ) {
     Setting(
         modifier = modifier,
         hubUiAction = hubUiAction,
     ) {
-        NavHost(navController = settingNavHostController, startDestination = NavigationSettingRoute.Preference()) {
+        NavHost(navController = settingNavHostController, startDestination = NavigationSettingRoute.Preference) {
             composable<NavigationSettingRoute.Preference> {
                 Preference(
                     settingUiAction = settingViewModel.getSettingUiAction(),
                     hubUiAction = hubUiAction,
                     onTopNavigate = onTopNavigate, // logout
-                    onSettingNavigate = { route: Route -> settingNavHostController.navigate(route) },
+                    onSettingNavigate = { route: Navigation -> settingNavHostController.navigate(route) },
                 )
             }
             composable<NavigationSettingRoute.UserInfo> {
@@ -51,7 +51,7 @@ fun NavigationSetting(
                     hubUiAction = hubUiAction,
                     settingUiState = settingViewModel.settingUiState,
                     settingUiAction = settingViewModel.getSettingUiAction(),
-                    onNavigate = { route: Route -> settingNavHostController.navigate(route) },
+                    onNavigate = { route: Navigation -> settingNavHostController.navigate(route) },
                 )
             }
             composable<NavigationSettingRoute.Posts> {

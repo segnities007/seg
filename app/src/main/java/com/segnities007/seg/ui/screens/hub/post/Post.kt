@@ -21,7 +21,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.segnities007.seg.R
-import com.segnities007.seg.domain.presentation.Route
+import com.segnities007.seg.domain.presentation.Navigation
 import com.segnities007.seg.ui.components.button.SmallButton
 import com.segnities007.seg.ui.components.indicator.CircleIndicator
 import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
@@ -34,7 +34,7 @@ fun Post(
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
     postViewModel: PostViewModel = hiltViewModel(),
-    onNavigate: (Route) -> Unit, // go to home
+    onNavigate: (Navigation) -> Unit, // go to home
 ) {
     PostUi(
         modifier = modifier,
@@ -53,7 +53,7 @@ private fun PostUi(
     hubUiAction: HubUiAction,
     postUiState: PostUiState,
     postUiAction: PostUiAction,
-    onNavigate: (Route) -> Unit,
+    onNavigate: (Navigation) -> Unit,
 ) {
     Column(
         modifier = modifier.fillMaxSize(),
@@ -104,7 +104,7 @@ private fun TopToolBar(
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
     postUiAction: PostUiAction,
-    onNavigate: (Route) -> Unit,
+    onNavigate: (Navigation) -> Unit,
 ) {
     Row(
         modifier = modifier.padding(dimensionResource(R.dimen.padding_normal)).fillMaxWidth(),
@@ -122,7 +122,7 @@ private fun TopToolBar(
                     hubUiAction.onGetUser,
                 ) {
                     postUiAction.onUpdateInputText("")
-                    onNavigate(NavigationHubRoute.Home())
+                    onNavigate(NavigationHubRoute.Home)
                 }
             },
         )

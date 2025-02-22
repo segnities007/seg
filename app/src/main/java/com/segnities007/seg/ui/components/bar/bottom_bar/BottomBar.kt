@@ -7,22 +7,21 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
 import com.segnities007.seg.domain.model.BottomBarItem
-import com.segnities007.seg.domain.presentation.Route
+import com.segnities007.seg.domain.presentation.Navigation
 
 @Composable
 fun BottomBar(
     items: BottomBarItem,
     currentRouteName: String,
-    onNavigate: (Route) -> Unit,
+    onNavigate: (Navigation) -> Unit,
 ) {
     NavigationBar {
-        items.unSelectedIconIDs.forEachIndexed { index, _ ->
-            val routeName = items.routes[index].name
+        items.routes.forEachIndexed { index, route ->
             NavigationBarItem(
                 icon = {
                     Icon(
                         painter =
-                            if (routeName == currentRouteName) {
+                            if (route.name == currentRouteName) {
                                 painterResource(items.selectedIconIDs[index])
                             } else {
                                 painterResource(items.unSelectedIconIDs[index])
@@ -30,9 +29,9 @@ fun BottomBar(
                         contentDescription = currentRouteName,
                     )
                 },
-                label = { Text(routeName) },
-                selected = routeName == currentRouteName,
-                onClick = { onNavigate(items.routes[index]) },
+                label = { Text(route.name) },
+                selected = route.name == currentRouteName,
+                onClick = { onNavigate(route) },
             )
         }
     }

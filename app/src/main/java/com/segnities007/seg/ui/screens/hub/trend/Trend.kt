@@ -19,7 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.segnities007.seg.R
-import com.segnities007.seg.domain.presentation.Route
+import com.segnities007.seg.domain.presentation.Navigation
 import com.segnities007.seg.ui.components.button.SmallButton
 import com.segnities007.seg.ui.components.card.postcard.PostCard
 import com.segnities007.seg.ui.components.card.postcard.PostCardUiAction
@@ -35,7 +35,7 @@ fun Trend(
     hubUiAction: HubUiAction,
     trendViewModel: TrendViewModel = hiltViewModel(),
     postCardUiAction: PostCardUiAction,
-    onHubNavigate: (Route) -> Unit,
+    onHubNavigate: (Navigation) -> Unit,
 ) {
     LaunchedEffect(Unit) {
         trendViewModel.onGetTrendUiAction().onResetReadMore()
@@ -66,7 +66,7 @@ private fun TrendUi(
     trendUiState: TrendUiState,
     trendUiAction: TrendUiAction,
     postCardUiAction: PostCardUiAction,
-    onHubNavigate: (Route) -> Unit,
+    onHubNavigate: (Navigation) -> Unit,
 ) {
     val postLists =
         listOf(

@@ -4,7 +4,6 @@ import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.segnities007.seg.data.model.Post
-import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.domain.repository.PostRepository
 import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
 import com.segnities007.seg.ui.screens.hub.HubUiAction
@@ -23,8 +22,8 @@ data class PostCardUiAction(
         hubUiState: HubUiState,
         hubUiAction: HubUiAction,
     ) -> Unit,
-    val onClickIcon: (onHubNavigate: (Route) -> Unit) -> Unit,
-    val onClickPostCard: (onHubNavigate: (Route) -> Unit) -> Unit,
+    val onClickIcon: (onHubNavigate: (NavigationHubRoute) -> Unit) -> Unit,
+    val onClickPostCard: (onHubNavigate: (NavigationHubRoute) -> Unit) -> Unit,
     val onIncrementViewCount: (post: Post) -> Unit,
     val onLike: (
         post: Post,
@@ -71,12 +70,12 @@ class PostCardViewModel
             }
         }
 
-        private fun onClickIcon(onHubNavigate: (Route) -> Unit) {
-            onHubNavigate(NavigationHubRoute.Account())
+        private fun onClickIcon(onHubNavigate: (NavigationHubRoute) -> Unit) {
+            onHubNavigate(NavigationHubRoute.Account)
         }
 
-        private fun onClickPostCard(onHubNavigate: (Route) -> Unit) {
-            onHubNavigate(NavigationHubRoute.Comment())
+        private fun onClickPostCard(onHubNavigate: (NavigationHubRoute) -> Unit) {
+            onHubNavigate(NavigationHubRoute.Comment)
         }
 
         private fun onIncrementViewCount(post: Post) {
