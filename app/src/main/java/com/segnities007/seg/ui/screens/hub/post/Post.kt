@@ -27,10 +27,12 @@ import com.segnities007.seg.ui.components.indicator.CircleIndicator
 import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
 import com.segnities007.seg.ui.screens.hub.HubUiAction
 import com.segnities007.seg.ui.screens.hub.HubUiState
+import com.segnities007.seg.ui.screens.hub.home.HomeUiAction
 
 @Composable
 fun Post(
     modifier: Modifier = Modifier,
+    homeUiAction: HomeUiAction,
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
     postViewModel: PostViewModel = hiltViewModel(),
@@ -38,6 +40,7 @@ fun Post(
 ) {
     PostUi(
         modifier = modifier,
+        homeUiAction = homeUiAction,
         hubUiState = hubUiState,
         hubUiAction = hubUiAction,
         postUiState = postViewModel.postUiState,
@@ -49,6 +52,7 @@ fun Post(
 @Composable
 private fun PostUi(
     modifier: Modifier = Modifier,
+    homeUiAction: HomeUiAction,
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
     postUiState: PostUiState,
@@ -61,6 +65,7 @@ private fun PostUi(
     ) {
         TopToolBar(
             postUiAction = postUiAction,
+            homeUiAction = homeUiAction,
             hubUiState = hubUiState,
             hubUiAction = hubUiAction,
             onNavigate = onNavigate,
@@ -101,6 +106,7 @@ private fun InputField(
 @Composable
 private fun TopToolBar(
     modifier: Modifier = Modifier,
+    homeUiAction: HomeUiAction,
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
     postUiAction: PostUiAction,
@@ -122,6 +128,7 @@ private fun TopToolBar(
                     hubUiAction.onGetUser,
                 ) {
                     postUiAction.onUpdateInputText("")
+                    homeUiAction.onGetNewPosts()
                     onNavigate(NavigationHubRoute.Home)
                 }
             },

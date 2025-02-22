@@ -1,4 +1,4 @@
-package com.segnities007.seg.ui.screens.hub.home.comment
+package com.segnities007.seg.ui.screens.hub.comment
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
