@@ -11,7 +11,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.segnities007.seg.domain.presentation.Route
+import com.segnities007.seg.domain.presentation.Navigation
 import com.segnities007.seg.ui.components.card.postcard.PostCardViewModel
 import com.segnities007.seg.ui.components.tab.TabViewModel
 import com.segnities007.seg.ui.navigation.hub.setting.NavigationSetting
@@ -38,7 +38,7 @@ fun NavigationHub(
     homeViewModel: HomeViewModel = hiltViewModel(),
     hubViewModel: HubViewModel = hiltViewModel(),
     tabViewModel: TabViewModel = viewModel(),
-    onTopNavigate: (route: Route) -> Unit, // go to login
+    onTopNavigate: (route: Navigation) -> Unit, // go to login
 ) {
     LaunchedEffect(Unit) {
         val hubUiAction = hubViewModel.getHubUiAction()
@@ -54,7 +54,7 @@ fun NavigationHub(
             ?.substringBefore("?") // クエリパラメータを除去
             ?.substringAfterLast(".") // 最後のドット以降を取得
 
-    val onHubNavigate = { route: Route ->
+    val onHubNavigate = { route: Navigation ->
         hubViewModel.getHubUiAction().onChangeCurrentRouteName(route.name)
         hubNavHostController.navigate(route)
     }
@@ -71,7 +71,7 @@ fun NavigationHub(
         topSearchBarUiState = searchViewModel.topSearchBarUiState,
         topSearchBarUiAction = searchViewModel.onGetTopSearchBarUiAction(),
     ) { modifier: Modifier ->
-        NavHost(navController = hubNavHostController, startDestination = NavigationHubRoute.Home()) {
+        NavHost(navController = hubNavHostController, startDestination = NavigationHubRoute.Home) {
             composable<NavigationHubRoute.Home> {
                 Home(
                     modifier = modifier,

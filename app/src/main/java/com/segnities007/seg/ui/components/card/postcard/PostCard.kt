@@ -36,7 +36,6 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.segnities007.seg.R
 import com.segnities007.seg.data.model.Post
-import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.ui.components.button.SmallButton
 import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
 import com.segnities007.seg.ui.screens.hub.HubUiAction
@@ -50,7 +49,7 @@ fun PostCard(
     hubUiAction: HubUiAction,
     postCardUiAction: PostCardUiAction,
     isIncrementView: Boolean = true,
-    onHubNavigate: (Route) -> Unit,
+    onHubNavigate: (NavigationHubRoute) -> Unit,
     onProcessOfEngagementAction: (newPost: Post) -> Unit,
 ) {
     PostCardUi(
@@ -78,7 +77,7 @@ fun PostCardUi(
     hubUiAction: HubUiAction,
     postCardUiAction: PostCardUiAction,
     isIncrementView: Boolean = true,
-    onHubNavigate: (Route) -> Unit,
+    onHubNavigate: (NavigationHubRoute) -> Unit,
     content: @Composable PostCardScope.() -> Unit,
 ) {
     val scope =
@@ -126,8 +125,8 @@ fun PostCardScope.CardContents(content: @Composable () -> Unit) {
                     .clip(CircleShape)
                     .clickable {
                         hubUiAction.onSetUserID(post.userID) // for viewing other user
-                        hubUiAction.onChangeCurrentRouteName(NavigationHubRoute.Account().name)
-                        onHubNavigate(NavigationHubRoute.Account())
+                        hubUiAction.onChangeCurrentRouteName(NavigationHubRoute.Account.name)
+                        onHubNavigate(NavigationHubRoute.Account)
                     },
             model = post.iconURL,
             placeholder = painterResource(R.mipmap.segnities007),

@@ -18,7 +18,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.segnities007.seg.R
 import com.segnities007.seg.data.model.User
-import com.segnities007.seg.domain.presentation.Route
 import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
 import com.segnities007.seg.ui.screens.hub.HubUiAction
 
@@ -26,7 +25,7 @@ import com.segnities007.seg.ui.screens.hub.HubUiAction
 fun StatusBarWithFollows(
     modifier: Modifier = Modifier,
     user: User,
-    onHubNavigate: (Route) -> Unit,
+    onHubNavigate: (NavigationHubRoute) -> Unit,
     hubUiAction: HubUiAction,
 ) {
     Column(
@@ -47,7 +46,7 @@ fun StatusBarWithFollows(
 @Composable
 private fun StatusBarScope.AboutFollow(
     hubUiAction: HubUiAction,
-    onHubNavigate: (Route) -> Unit,
+    onHubNavigate: (NavigationHubRoute) -> Unit,
 ) {
     val fontColor: Color = MaterialTheme.colorScheme.primary
     val followsText = stringResource(R.string.follows) + ": ${user.followCount}"
@@ -63,7 +62,7 @@ private fun StatusBarScope.AboutFollow(
                     .clip(RoundedCornerShape(commonPadding))
                     .clickable {
                         hubUiAction.onSetAccounts(user.follows)
-                        onHubNavigate(NavigationHubRoute.Accounts())
+                        onHubNavigate(NavigationHubRoute.Accounts)
                     }.padding(commonPadding),
         ) {
             Text(text = followsText, color = fontColor)
@@ -74,7 +73,7 @@ private fun StatusBarScope.AboutFollow(
                     .clip(RoundedCornerShape(commonPadding))
                     .clickable {
                         hubUiAction.onSetAccounts(user.followers)
-                        onHubNavigate(NavigationHubRoute.Accounts())
+                        onHubNavigate(NavigationHubRoute.Accounts)
                     }.padding(commonPadding),
         ) {
             Text(text = followersText, color = fontColor)

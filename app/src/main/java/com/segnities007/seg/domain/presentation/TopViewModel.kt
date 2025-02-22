@@ -7,13 +7,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
+import com.segnities007.seg.ui.navigation.NavigationRoute
 
 data class TopState(
     val drawerState: DrawerState = DrawerState(initialValue = DrawerValue.Closed),
 )
 
 data class TopAction(
-    val onNavigate: (navHostController: NavHostController, route: Route) -> Unit,
+    val onNavigate: (navHostController: NavHostController, route: NavigationRoute) -> Unit,
     val openDrawer: () -> Unit,
     val closeDrawer: () -> Unit,
 )
@@ -30,7 +31,7 @@ open class TopLayerViewModel : ViewModel() {
 
     protected fun onNavigate(
         navHostController: NavHostController,
-        route: Route,
+        route: NavigationRoute,
     ) {
         navHostController.navigate(route)
     }

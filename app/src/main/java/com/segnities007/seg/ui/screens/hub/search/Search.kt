@@ -12,7 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import com.segnities007.seg.R
-import com.segnities007.seg.domain.presentation.Route
+import com.segnities007.seg.domain.presentation.Navigation
 import com.segnities007.seg.ui.components.card.AvatarCard
 import com.segnities007.seg.ui.components.card.postcard.PostCard
 import com.segnities007.seg.ui.components.card.postcard.PostCardUiAction
@@ -34,7 +34,7 @@ fun Search(
     accountUiAction: AccountUiAction,
     searchUiState: SearchUiState,
     searchUiAction: SearchUiAction,
-    onHubNavigate: (Route) -> Unit,
+    onHubNavigate: (Navigation) -> Unit,
 ) {
     DisposableEffect(Unit) {
         onDispose {
@@ -87,7 +87,7 @@ private fun MostViewPosts(
     topSearchBarUiState: TopSearchBarUiState,
     searchUiState: SearchUiState,
     searchUiAction: SearchUiAction,
-    onHubNavigate: (Route) -> Unit,
+    onHubNavigate: (Navigation) -> Unit,
 ) {
     LazyColumn(
         modifier = modifier.fillMaxSize().padding(top = dimensionResource(R.dimen.padding_smaller)),
@@ -138,7 +138,7 @@ private fun LatestPosts(
     topSearchBarUiState: TopSearchBarUiState,
     searchUiState: SearchUiState,
     searchUiAction: SearchUiAction,
-    onHubNavigate: (Route) -> Unit,
+    onHubNavigate: (Navigation) -> Unit,
 ) {
     LazyColumn(
         modifier = modifier.fillMaxSize().padding(top = dimensionResource(R.dimen.padding_smaller)),
@@ -188,7 +188,7 @@ private fun Users(
     accountUiAction: AccountUiAction,
     searchUiState: SearchUiState,
     searchUiAction: SearchUiAction,
-    onHubNavigate: (Route) -> Unit,
+    onHubNavigate: (Navigation) -> Unit,
 ) {
     LazyColumn(
         modifier = modifier.fillMaxSize().padding(top = dimensionResource(R.dimen.padding_smaller)),
@@ -205,8 +205,8 @@ private fun Users(
                 onCardClick = {
                     accountUiAction.onGetUserPosts(searchUiState.users[i].userID)
                     hubUiAction.onSetUserID(searchUiState.users[i].userID)
-                    hubUiAction.onChangeCurrentRouteName(NavigationHubRoute.Account().name)
-                    onHubNavigate(NavigationHubRoute.Account())
+                    hubUiAction.onChangeCurrentRouteName(NavigationHubRoute.Account.name)
+                    onHubNavigate(NavigationHubRoute.Account)
                 },
                 user = searchUiState.users[i],
             )

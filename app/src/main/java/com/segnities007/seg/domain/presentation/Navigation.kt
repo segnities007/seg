@@ -1,5 +1,5 @@
 package com.segnities007.seg.domain.presentation
 
-interface Route {
+interface Navigation {
     val name: String
 }

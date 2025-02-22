@@ -10,8 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.segnities007.seg.R
-import com.segnities007.seg.data.model.bottom_bar.LoginItem
-import com.segnities007.seg.domain.presentation.Route
+import com.segnities007.seg.data.model.bottom_bar.BottomBarLoginItem
+import com.segnities007.seg.domain.presentation.Navigation
 import com.segnities007.seg.domain.presentation.TopAction
 import com.segnities007.seg.domain.presentation.TopState
 import com.segnities007.seg.ui.components.bar.bottom_bar.BottomBar
@@ -23,12 +23,12 @@ import com.segnities007.seg.ui.navigation.login.NavigationLoginRoute
 fun Login(
     topAction: TopAction,
     topState: TopState,
-    onNavigate: (Route) -> Unit,
+    onNavigate: (Navigation) -> Unit,
     currentRouteName: String,
     content: @Composable (Modifier) -> Unit,
 ) {
     NavigationDrawer(
-        items = LoginItem(),
+        items = BottomBarLoginItem(),
         drawerState = topState.drawerState,
         onNavigate = onNavigate,
         onDrawerClose = topAction.closeDrawer,
@@ -47,7 +47,7 @@ fun Login(
 private fun LoginUi(
     topAction: TopAction,
     currentRouteName: String,
-    onNavigate: (Route) -> Unit,
+    onNavigate: (Navigation) -> Unit,
     content: @Composable (Modifier) -> Unit,
 ) {
     Scaffold(
@@ -60,15 +60,15 @@ private fun LoginUi(
         },
         bottomBar = {
             when (currentRouteName) {
-                NavigationLoginRoute.SignIn().name ->
+                NavigationLoginRoute.SignIn.name ->
                     BottomBar(
-                        items = LoginItem(),
+                        items = BottomBarLoginItem(),
                         currentRouteName = currentRouteName,
                         onNavigate = onNavigate,
                     )
-                NavigationLoginRoute.SignUp().name ->
+                NavigationLoginRoute.SignUp.name ->
                     BottomBar(
-                        items = LoginItem(),
+                        items = BottomBarLoginItem(),
                         currentRouteName = currentRouteName,
                         onNavigate = onNavigate,
                     )

@@ -15,7 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import com.segnities007.seg.R
-import com.segnities007.seg.domain.presentation.Route
+import com.segnities007.seg.domain.presentation.Navigation
 import com.segnities007.seg.ui.components.button.SmallButton
 import com.segnities007.seg.ui.components.card.postcard.PostCard
 import com.segnities007.seg.ui.components.card.postcard.PostCardUiAction
@@ -31,7 +31,7 @@ fun Account(
     accountUiState: AccountUiState,
     accountUiAction: AccountUiAction,
     postCardUiAction: PostCardUiAction,
-    onHubNavigate: (Route) -> Unit,
+    onHubNavigate: (Navigation) -> Unit,
 ) {
     LaunchedEffect(Unit) {
         accountUiAction.onInitAccountUiState(hubUiState.userID)
@@ -62,7 +62,7 @@ private fun AccountUi(
     accountUiState: AccountUiState,
     accountUiAction: AccountUiAction,
     postCardUiAction: PostCardUiAction,
-    onHubNavigate: (Route) -> Unit,
+    onHubNavigate: (Navigation) -> Unit,
 ) {
     LazyColumn(
         modifier = modifier.fillMaxSize().padding(top = dimensionResource(R.dimen.padding_smaller)),
