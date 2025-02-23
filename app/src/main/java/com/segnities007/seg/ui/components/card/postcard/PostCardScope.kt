@@ -10,7 +10,6 @@ import com.segnities007.seg.ui.screens.hub.HubUiState
 @Stable
 interface PostCardScope {
     val post: Post
-    val commonPadding: Dp
     val hubUiState: HubUiState
     val hubUiAction: HubUiAction
     val postCardUiAction: PostCardUiAction

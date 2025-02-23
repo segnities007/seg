@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.segnities007.seg.data.model.Post
 import com.segnities007.seg.data.model.User
 import com.segnities007.seg.domain.repository.PostRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,6 +27,13 @@ data class PostUiAction(
         onUpdateSelf: () -> Unit,
         onNavigate: () -> Unit,
     ) -> Unit,
+    val onCreateComment: (
+        self: User,
+        commentedPost: Post,
+        onUpdateIsLoading: (isLoading: Boolean) -> Unit,
+        onUpdateSelf: () -> Unit,
+        onNavigate: () -> Unit,
+    ) -> Unit,
 )
 
 @HiltViewModel
@@ -41,6 +49,7 @@ class PostViewModel
             PostUiAction(
                 onUpdateInputText = this::onUpdateInputText,
                 onCreatePost = this::onCreatePost,
+                onCreateComment = this::onCreateComment,
                 onUpdateIsLoading = this::onUpdateIsLoading,
             )
 
@@ -58,6 +67,31 @@ class PostViewModel
             onUpdateIsLoading(true)
             viewModelScope.launch(Dispatchers.IO) {
                 val result = postRepository.onCreatePost(description = description, user = user)
+                if (result) {
+                    onUpdateSelf()
+                    viewModelScope.launch(Dispatchers.Main) {
+                        onNavigate()
+                    }
+                }
+                onUpdateIsLoading(false)
+            }
+        }
+
+        private fun onCreateComment(
+            self: User,
+            commentedPost: Post,
+            onUpdateIsLoading: (isLoading: Boolean) -> Unit,
+            onUpdateSelf: () -> Unit,
+            onNavigate: () -> Unit,
+        ){
+            val description = postUiState.inputText
+            onUpdateIsLoading(true)
+            viewModelScope.launch(Dispatchers.IO) {
+                val result = postRepository.onCreateComment(
+                    description = description,
+                    self = self,
+                    commentedPost = commentedPost,
+                )
                 if (result) {
                     onUpdateSelf()
                     viewModelScope.launch(Dispatchers.Main) {

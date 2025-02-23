@@ -8,7 +8,6 @@ import com.segnities007.seg.ui.screens.hub.HubUiState
 
 data class DefaultPostCardScope(
     override val post: Post,
-    override val commonPadding: Dp,
     override val hubUiState: HubUiState,
     override val hubUiAction: HubUiAction,
     override val postCardUiAction: PostCardUiAction,
