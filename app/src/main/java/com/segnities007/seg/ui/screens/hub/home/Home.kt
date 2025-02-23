@@ -50,10 +50,13 @@ private fun HomeUi(
     onHubNavigate: (Navigation) -> Unit,
 ) {
     LazyColumn(
-        modifier = modifier.fillMaxSize().padding(
-            top = dimensionResource(R.dimen.padding_smaller),
-            bottom = dimensionResource(R.dimen.padding_smaller)
-        ),
+        modifier = modifier
+            .fillMaxSize()
+            .padding(
+                top = dimensionResource(R.dimen.padding_smallest),
+                start = dimensionResource(R.dimen.padding_small),
+                end = dimensionResource(R.dimen.padding_small),
+            ),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
     ) {
@@ -70,6 +73,7 @@ private fun HomeUi(
                 isIncrementView = true,
                 onProcessOfEngagementAction = homeUiAction.onProcessOfEngagementAction,
             )
+            Spacer(Modifier.padding(dimensionResource(R.dimen.padding_smallest)))
         }
         // action for fetching before post
         item {

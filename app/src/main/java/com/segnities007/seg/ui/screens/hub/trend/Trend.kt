@@ -127,6 +127,7 @@ private fun TrendUi(
                     postCardUiAction = postCardUiAction,
                     onProcessOfEngagementAction = trendUiAction.onProcessOfEngagementAction,
                 )
+                Spacer(Modifier.padding(dimensionResource(R.dimen.padding_smallest)))
             }
             if (!readMores[page]) {
                 Spacer(Modifier.padding(commonPadding))

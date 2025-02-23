@@ -14,6 +14,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.tooling.preview.Preview
 import com.segnities007.seg.R
 import com.segnities007.seg.domain.presentation.Navigation
 import com.segnities007.seg.ui.components.button.SmallButton
@@ -65,7 +66,13 @@ private fun AccountUi(
     onHubNavigate: (Navigation) -> Unit,
 ) {
     LazyColumn(
-        modifier = modifier.fillMaxSize().padding(top = dimensionResource(R.dimen.padding_smaller)),
+        modifier = modifier
+            .fillMaxSize()
+            .padding(
+                top = dimensionResource(R.dimen.padding_smallest),
+                start = dimensionResource(R.dimen.padding_small),
+                end = dimensionResource(R.dimen.padding_small),
+            ),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
     ) {
@@ -91,6 +98,7 @@ private fun AccountUi(
                 postCardUiAction = postCardUiAction,
                 onProcessOfEngagementAction = accountUiAction.onProcessOfEngagementAction,
             )
+            Spacer(Modifier.padding(dimensionResource(R.dimen.padding_smallest)))
         }
         // action for fetching before-post
         if (accountUiState.isNotCompleted) {
