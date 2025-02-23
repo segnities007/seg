@@ -10,6 +10,12 @@ interface PostRepository {
         user: User,
     ): Boolean
 
+    suspend fun onCreateComment(
+        description: String,
+        self: User,
+        commentedPost: Post,
+    ): Boolean
+
     suspend fun onGetPostsOfUser(userID: String): List<Post>
 
     suspend fun onGetBeforePostsOfUser(

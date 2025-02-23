@@ -60,15 +60,15 @@ fun PostForComment(
         onHubNavigate = onHubNavigate,
     ) {
         Column {
-            TopToolBarForCommentForComment(onBackHubNavigate = onBackHubNavigate)
             Box{
-                PostSimpleCard(
+                PostCard(
                     post = commentViewModel.commentUiState.comment,
                     hubUiState = hubUiState,
                     hubUiAction = hubUiAction,
                     postCardUiAction = postCardUiAction,
                     isIncrementView = false,
                     onHubNavigate = onHubNavigate,
+                    onProcessOfEngagementAction = commentViewModel.onGetCommentUiAction().onProcessOfEngagementAction,
                 )
                 Spacer(// Prevent to click PostCard
                     modifier = Modifier
@@ -76,7 +76,10 @@ fun PostForComment(
                         .clickable(enabled = false, onClick = {})
                 )
             }
-            Spacer(Modifier.padding(dimensionResource(R.dimen.padding_smaller)))
+            TopToolBarForCommentForComment(
+                commentedPost = commentViewModel.commentUiState.comment,
+                onBackHubNavigate = onBackHubNavigate,
+            )
             InputField(
                 modifier = Modifier.weight(1f),
                 label = { Text(stringResource(R.string.post_comment_label)) },
@@ -88,10 +91,13 @@ fun PostForComment(
 @Composable
 fun PostScope.TopToolBarForCommentForComment(
     modifier: Modifier = Modifier,
+    commentedPost: Post,
     onBackHubNavigate: () -> Unit,
 ) {
     Row(
-        modifier = modifier.padding(dimensionResource(R.dimen.padding_normal)).fillMaxWidth(),
+        modifier = modifier
+            .padding(vertical = dimensionResource(R.dimen.padding_normal))
+            .fillMaxWidth(),
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -100,11 +106,12 @@ fun PostScope.TopToolBarForCommentForComment(
         SmallButton(
             textID = R.string.post,
             onClick = {
-                postUiAction.onCreatePost(
+                postUiAction.onCreateComment(
                     hubUiState.user,
+                    commentedPost,
                     postUiAction.onUpdateIsLoading,
                     hubUiAction.onGetUser,
-                ) {
+                ){
                     postUiAction.onUpdateInputText("")
                     homeUiAction.onGetNewPosts()
                     onHubNavigate(NavigationHubRoute.Home)
@@ -148,11 +155,11 @@ private fun PostPreview() {
                 onUpdateIsLoading = {},
                 onUpdateInputText = {},
                 onCreatePost = { a, b, c, d -> },
+                onCreateComment = {_,_,_,_,_ -> },
             ),
         onHubNavigate = {},
     ) {
         Column {
-            TopToolBar()
             PostSimpleCard(
                 post = Post(),
                 hubUiState = hubUiState,
@@ -168,7 +175,9 @@ private fun PostPreview() {
                     ),
                 onHubNavigate = {},
             )
-            Spacer(Modifier.padding(dimensionResource(R.dimen.padding_smaller)))
+            TopToolBarForCommentForComment(
+                commentedPost = Post(),
+            ){}
             InputField(
                 modifier = Modifier.weight(1f),
                 label = { Text(stringResource(R.string.post_comment_label)) },

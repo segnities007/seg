@@ -29,6 +29,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
@@ -59,7 +60,7 @@ fun PostCard(
         onHubNavigate = onHubNavigate,
     ) {
         CardContents {
-            Column(modifier = Modifier.padding(horizontal = commonPadding)) {
+            Column(modifier = Modifier.padding(horizontal = dimensionResource(R.dimen.padding_sn))) {
                 Name()
                 Description()
                 ActionIcons(onProcessOfEngagementAction = onProcessOfEngagementAction)
@@ -81,7 +82,6 @@ fun PostCardUi(
     val scope =
         DefaultPostCardScope(
             post = post,
-            commonPadding = dimensionResource(R.dimen.padding_sn),
             hubUiState = hubUiState,
             hubUiAction = hubUiAction,
             postCardUiAction = postCardUiAction,
@@ -93,12 +93,6 @@ fun PostCardUi(
     }
 
     ElevatedCard(
-        modifier =
-            Modifier.padding(
-                start = dimensionResource(R.dimen.padding_small),
-                top = dimensionResource(R.dimen.padding_smaller),
-                end = dimensionResource(R.dimen.padding_small),
-            ),
         elevation = CardDefaults.cardElevation(dimensionResource(R.dimen.elevation_small)),
     ) {
         scope.content()
@@ -110,7 +104,7 @@ fun PostCardScope.CardContents(content: @Composable () -> Unit) {
     Row(
         modifier =
             Modifier
-                .padding(commonPadding)
+                .padding(dimensionResource(R.dimen.padding_sn))
                 .clickable {
                     hubUiAction.onSetComment(post)
                     postCardUiAction.onClickPostCard(onHubNavigate)
@@ -232,7 +226,7 @@ fun PostCardScope.ActionIcons(onProcessOfEngagementAction: (newPost: Post) -> Un
         horizontalArrangement = Arrangement.Start,
     ) {
         ActionIcon(
-            modifier = Modifier.padding(top = commonPadding),
+            modifier = Modifier.padding(top = dimensionResource(R.dimen.padding_sn)),
             painterRes =
                 if (hubUiState.user.likes.contains(
                         post.id,
@@ -254,7 +248,7 @@ fun PostCardScope.ActionIcons(onProcessOfEngagementAction: (newPost: Post) -> Un
         )
         Spacer(Modifier.weight(1f))
         ActionIcon(
-            modifier = Modifier.padding(top = commonPadding),
+            modifier = Modifier.padding(top = dimensionResource(R.dimen.padding_sn)),
             count = counts[1],
             painterRes =
                 if (hubUiState.user.reposts.contains(post.id)) {
@@ -273,7 +267,7 @@ fun PostCardScope.ActionIcons(onProcessOfEngagementAction: (newPost: Post) -> Un
         )
         Spacer(Modifier.weight(1f))
         ActionIcon(
-            modifier = Modifier.padding(top = commonPadding),
+            modifier = Modifier.padding(top = dimensionResource(R.dimen.padding_sn)),
             count = counts[2],
             painterRes =
                 if (hubUiState.user.comments.contains(post.id)) {
@@ -287,7 +281,7 @@ fun PostCardScope.ActionIcons(onProcessOfEngagementAction: (newPost: Post) -> Un
         )
         Spacer(Modifier.weight(1f))
         ActionIcon(
-            modifier = Modifier.padding(top = commonPadding),
+            modifier = Modifier.padding(top = dimensionResource(R.dimen.padding_sn)),
             painterRes = EngagementIconState.pushIcons[3],
             count = counts[3],
             isClickable = false,
@@ -323,7 +317,7 @@ private fun ActionIcon(
 @Composable
 fun PostCardScope.Name() {
     Row(
-        modifier = Modifier.padding(vertical = commonPadding),
+        modifier = Modifier.padding(vertical = dimensionResource(R.dimen.padding_sn)),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start,
     ) {
@@ -334,7 +328,40 @@ fun PostCardScope.Name() {
 
 @Composable
 fun PostCardScope.Description() {
-    Box(modifier = Modifier.padding(vertical = commonPadding), contentAlignment = Alignment.CenterStart) {
+    Box(modifier = Modifier.padding(vertical = dimensionResource(R.dimen.padding_sn)), contentAlignment = Alignment.CenterStart) {
         Text(post.description)
     }
+}
+
+@Composable
+@Preview
+private fun PostCardPreview(){
+    PostCard(
+        post = Post(),
+        hubUiState = HubUiState(),
+        hubUiAction = HubUiAction(
+            onUpdateSelf = {},
+            onChangeIsHideTopBar = {},
+            onResetIsHideTopBar = {},
+            onGetUser = {},
+            onSetComment = {},
+            onSetUserID = {},
+            onSetAccounts = {},
+            onAddPostIDToMyLikes = {},
+            onRemovePostIDFromMyLikes = {},
+            onAddPostIDToMyReposts = {},
+            onRemovePostIDFromMyReposts = {},
+            onChangeCurrentRouteName = {}
+        ),
+        postCardUiAction = PostCardUiAction(
+            onDeletePost = {_,_,_,_ ->},
+            onClickIcon = {},
+            onClickPostCard = {},
+            onIncrementViewCount = {},
+            onLike = {_,_,_,_ ->},
+            onRepost = {_,_,_,_ ->}
+        ),
+        isIncrementView = false,
+        onHubNavigate = {}
+    ) { }
 }

@@ -50,7 +50,10 @@ private fun HomeUi(
     onHubNavigate: (Navigation) -> Unit,
 ) {
     LazyColumn(
-        modifier = modifier.fillMaxSize().padding(top = dimensionResource(R.dimen.padding_smaller)),
+        modifier = modifier.fillMaxSize().padding(
+            top = dimensionResource(R.dimen.padding_smaller),
+            bottom = dimensionResource(R.dimen.padding_smaller)
+        ),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
     ) {

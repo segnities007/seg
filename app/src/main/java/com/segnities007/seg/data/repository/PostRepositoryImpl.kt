@@ -54,6 +54,40 @@ class PostRepositoryImpl
             return false
         }
 
+    override suspend fun onCreateComment(
+        description: String,
+        self: User,
+        commentedPost: Post,
+    ): Boolean {
+        try {
+            val comment =
+                Post(
+                    userID = self.userID,
+                    name = self.name,
+                    description = description,
+                    iconURL = self.iconURL,
+                )
+
+            val result =
+                postgrest
+                    .from(posts)
+                    .insert(comment) {
+                        select()
+                    }.decodeSingle<Post>()
+
+            val updatedSelf = self.copy(posts = self.posts.plus(result.id))
+            userRepository.onUpdateUser(updatedSelf)
+
+            val newCommentedPost = commentedPost.copy(comments = commentedPost.comments.plus(result.id))
+            onUpdatePost(newCommentedPost)
+
+            return true
+        }catch (e: Exception){
+            Log.e(tag, "failed onCreatePost $e")
+        }
+        return false
+    }
+
         override suspend fun onGetPostsOfUser(userID: String): List<Post> {
             try {
                 val result =
@@ -407,7 +441,7 @@ class PostRepositoryImpl
             try {
                 postgrest.from(posts).update(post)
             } catch (e: Exception) {
-                Log.e(tag, e.toString())
+                Log.e(tag, "failed onUpdatePost: $e")
             }
         }
 
