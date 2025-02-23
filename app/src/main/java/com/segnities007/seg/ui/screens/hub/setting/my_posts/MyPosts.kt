@@ -111,7 +111,13 @@ private fun Posts(
     onHubNavigate: (Navigation) -> Unit,
 ) {
     LazyColumn(
-        modifier = Modifier.fillMaxSize().padding(top = dimensionResource(R.dimen.padding_smallest)),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(
+                top = dimensionResource(R.dimen.padding_smallest),
+                start = dimensionResource(R.dimen.padding_small),
+                end = dimensionResource(R.dimen.padding_small),
+            ),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
     ) {
@@ -129,6 +135,7 @@ private fun Posts(
                     onHubNavigate = onHubNavigate,
                     onProcessOfEngagementAction = myPostsUiAction.onProcessOfEngagementAction,
                 )
+                Spacer(Modifier.padding(dimensionResource(R.dimen.padding_smallest)))
             }
         }
         if (!myPostsUiState.hasNoMorePosts) {
@@ -152,7 +159,13 @@ private fun Likes(
     onHubNavigate: (Navigation) -> Unit,
 ) {
     LazyColumn(
-        modifier = Modifier.fillMaxSize().padding(top = dimensionResource(R.dimen.padding_smallest)),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(
+                top = dimensionResource(R.dimen.padding_smallest),
+                start = dimensionResource(R.dimen.padding_small),
+                end = dimensionResource(R.dimen.padding_small),
+            ),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
     ) {
@@ -170,6 +183,7 @@ private fun Likes(
                     postCardUiAction = postCardUiAction,
                     onProcessOfEngagementAction = myPostsUiAction.onProcessOfEngagementAction,
                 )
+                Spacer(Modifier.padding(dimensionResource(R.dimen.padding_smallest)))
             }
         }
         if (!myPostsUiState.hasNoMoreLikedPosts) {
@@ -193,7 +207,13 @@ private fun Reposts(
     onHubNavigate: (Navigation) -> Unit,
 ) {
     LazyColumn(
-        modifier = Modifier.fillMaxSize().padding(top = dimensionResource(R.dimen.padding_smallest)),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(
+                top = dimensionResource(R.dimen.padding_smallest),
+                start = dimensionResource(R.dimen.padding_small),
+                end = dimensionResource(R.dimen.padding_small),
+            ),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
     ) {
@@ -211,6 +231,7 @@ private fun Reposts(
                     postCardUiAction = postCardUiAction,
                     onProcessOfEngagementAction = myPostsUiAction.onProcessOfEngagementAction,
                 )
+                Spacer(Modifier.padding(dimensionResource(R.dimen.padding_smallest)))
             }
         }
         if (!myPostsUiState.hasNoMoreRepostedPosts) {

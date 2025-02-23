@@ -90,7 +90,13 @@ private fun MostViewPosts(
     onHubNavigate: (Navigation) -> Unit,
 ) {
     LazyColumn(
-        modifier = modifier.fillMaxSize().padding(top = dimensionResource(R.dimen.padding_smaller)),
+        modifier = modifier
+            .fillMaxSize()
+            .padding(
+                top = dimensionResource(R.dimen.padding_smallest),
+                start = dimensionResource(R.dimen.padding_small),
+                end = dimensionResource(R.dimen.padding_small),
+            ),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
     ) {
@@ -109,6 +115,7 @@ private fun MostViewPosts(
                 postCardUiAction = postCardUiAction,
                 onProcessOfEngagementAction = searchUiAction.onProcessOfEngagementAction,
             )
+            Spacer(Modifier.padding(dimensionResource(R.dimen.padding_smallest)))
         }
         // action for fetching before post
         item {
@@ -141,7 +148,13 @@ private fun LatestPosts(
     onHubNavigate: (Navigation) -> Unit,
 ) {
     LazyColumn(
-        modifier = modifier.fillMaxSize().padding(top = dimensionResource(R.dimen.padding_smaller)),
+        modifier = modifier
+            .fillMaxSize()
+            .padding(
+                top = dimensionResource(R.dimen.padding_smallest),
+                start = dimensionResource(R.dimen.padding_small),
+                end = dimensionResource(R.dimen.padding_small),
+            ),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
     ) {
@@ -160,6 +173,7 @@ private fun LatestPosts(
                 postCardUiAction = postCardUiAction,
                 onProcessOfEngagementAction = searchUiAction.onProcessOfEngagementAction,
             )
+            Spacer(Modifier.padding(dimensionResource(R.dimen.padding_smallest)))
         }
         // action for fetching before post
         item {

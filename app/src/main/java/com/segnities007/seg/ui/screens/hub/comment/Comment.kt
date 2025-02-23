@@ -1,6 +1,7 @@
 package com.segnities007.seg.ui.screens.hub.comment
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -55,10 +56,9 @@ private fun CommentUi(
         modifier = modifier
             .fillMaxSize()
             .padding(
-                top = dimensionResource(R.dimen.padding_smaller),
-                bottom = dimensionResource(R.dimen.padding_smaller),
-                start = dimensionResource(R.dimen.padding_smallest),
-                end = dimensionResource(R.dimen.padding_smallest),
+                top = dimensionResource(R.dimen.padding_smallest),
+                start = dimensionResource(R.dimen.padding_small),
+                end = dimensionResource(R.dimen.padding_small),
             ),
         verticalArrangement = Arrangement.Top,
     ){
@@ -71,6 +71,7 @@ private fun CommentUi(
                 onHubNavigate = onHubNavigate,
                 onProcessOfEngagementAction = commentUiAction.onProcessOfEngagementAction,
             )
+            Spacer(Modifier.padding(dimensionResource(R.dimen.padding_normal)))
         }
         items(
             commentUiState.comments.size,
@@ -84,6 +85,7 @@ private fun CommentUi(
                 onHubNavigate = onHubNavigate,
                 onProcessOfEngagementAction = commentUiAction.onProcessOfEngagementAction,
             )
+            Spacer(Modifier.padding(dimensionResource(R.dimen.padding_smaller)))
         }
     }
 }
