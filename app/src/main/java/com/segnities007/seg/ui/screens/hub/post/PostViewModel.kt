@@ -8,6 +8,9 @@ import androidx.lifecycle.viewModelScope
 import com.segnities007.seg.data.model.Post
 import com.segnities007.seg.data.model.User
 import com.segnities007.seg.domain.repository.PostRepository
+import com.segnities007.seg.ui.screens.hub.HubUiAction
+import com.segnities007.seg.ui.screens.hub.HubUiState
+import com.segnities007.seg.ui.screens.hub.home.HomeUiAction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -28,10 +31,9 @@ data class PostUiAction(
         onNavigate: () -> Unit,
     ) -> Unit,
     val onCreateComment: (
-        self: User,
-        commentedPost: Post,
+        hubUiState: HubUiState,
+        hubUiAction: HubUiAction,
         onUpdateIsLoading: (isLoading: Boolean) -> Unit,
-        onUpdateSelf: () -> Unit,
         onNavigate: () -> Unit,
     ) -> Unit,
 )
@@ -78,10 +80,9 @@ class PostViewModel
         }
 
         private fun onCreateComment(
-            self: User,
-            commentedPost: Post,
+            hubUiState: HubUiState,
+            hubUiAction: HubUiAction,
             onUpdateIsLoading: (isLoading: Boolean) -> Unit,
-            onUpdateSelf: () -> Unit,
             onNavigate: () -> Unit,
         ){
             val description = postUiState.inputText
@@ -89,11 +90,13 @@ class PostViewModel
             viewModelScope.launch(Dispatchers.IO) {
                 val result = postRepository.onCreateComment(
                     description = description,
-                    self = self,
-                    commentedPost = commentedPost,
+                    self = hubUiState.user,
+                    commentedPost = hubUiState.comment,
                 )
                 if (result) {
-                    onUpdateSelf()
+                    hubUiAction.onGetUser()
+                    val updatedCommentedPost = postRepository.onGetPost(hubUiState.comment.id)
+                    hubUiAction.onSetComment(updatedCommentedPost)
                     viewModelScope.launch(Dispatchers.Main) {
                         onNavigate()
                     }

@@ -47,7 +47,7 @@ fun PostForComment(
 
     LaunchedEffect(Unit) {
         val commentUiAction = commentViewModel.onGetCommentUiAction()
-        commentUiAction.onGetComment(hubUiState.comment)
+        commentUiAction.onGetComments(hubUiState.comment)
     }
 
     PostUi(
@@ -62,7 +62,7 @@ fun PostForComment(
         Column {
             Box{
                 PostCard(
-                    post = commentViewModel.commentUiState.comment,
+                    post = hubUiState.comment,
                     hubUiState = hubUiState,
                     hubUiAction = hubUiAction,
                     postCardUiAction = postCardUiAction,
@@ -77,7 +77,6 @@ fun PostForComment(
                 )
             }
             TopToolBarForCommentForComment(
-                commentedPost = commentViewModel.commentUiState.comment,
                 onBackHubNavigate = onBackHubNavigate,
             )
             InputField(
@@ -91,7 +90,6 @@ fun PostForComment(
 @Composable
 fun PostScope.TopToolBarForCommentForComment(
     modifier: Modifier = Modifier,
-    commentedPost: Post,
     onBackHubNavigate: () -> Unit,
 ) {
     Row(
@@ -107,14 +105,13 @@ fun PostScope.TopToolBarForCommentForComment(
             textID = R.string.post,
             onClick = {
                 postUiAction.onCreateComment(
-                    hubUiState.user,
-                    commentedPost,
+                    hubUiState,
+                    hubUiAction,
                     postUiAction.onUpdateIsLoading,
-                    hubUiAction.onGetUser,
                 ){
                     postUiAction.onUpdateInputText("")
                     homeUiAction.onGetNewPosts()
-                    onHubNavigate(NavigationHubRoute.Home)
+                    onBackHubNavigate()
                 }
             },
         )
@@ -155,7 +152,7 @@ private fun PostPreview() {
                 onUpdateIsLoading = {},
                 onUpdateInputText = {},
                 onCreatePost = { a, b, c, d -> },
-                onCreateComment = {_,_,_,_,_ -> },
+                onCreateComment = {_,_,_,_ -> },
             ),
         onHubNavigate = {},
     ) {
@@ -175,9 +172,7 @@ private fun PostPreview() {
                     ),
                 onHubNavigate = {},
             )
-            TopToolBarForCommentForComment(
-                commentedPost = Post(),
-            ){}
+            TopToolBarForCommentForComment(){}
             InputField(
                 modifier = Modifier.weight(1f),
                 label = { Text(stringResource(R.string.post_comment_label)) },

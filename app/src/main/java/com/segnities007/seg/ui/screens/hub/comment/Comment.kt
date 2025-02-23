@@ -1,9 +1,9 @@
 package com.segnities007.seg.ui.screens.hub.comment
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
@@ -25,9 +25,9 @@ fun Comment(
     postCardUiAction: PostCardUiAction,
     onHubNavigate: (Navigation) -> Unit,
 ) {
+
     LaunchedEffect(Unit) {
-        val commentUiAction = commentViewModel.onGetCommentUiAction()
-        commentUiAction.onGetComment(hubUiState.comment)
+        commentViewModel.onGetCommentUiAction().onGetComments(hubUiState.comment)
     }
 
     CommentUi(
@@ -51,7 +51,7 @@ private fun CommentUi(
     commentUiAction: CommentUiAction,
     onHubNavigate: (Navigation) -> Unit,
 ) {
-    Column(
+    LazyColumn(
         modifier = modifier
             .fillMaxSize()
             .padding(
@@ -61,14 +61,29 @@ private fun CommentUi(
                 end = dimensionResource(R.dimen.padding_smallest),
             ),
         verticalArrangement = Arrangement.Top,
-    ) {
-        PostCard(
-            post = commentUiState.comment,
-            hubUiState = hubUiState,
-            hubUiAction = hubUiAction,
-            postCardUiAction = postCardUiAction,
-            onHubNavigate = onHubNavigate,
-            onProcessOfEngagementAction = commentUiAction.onProcessOfEngagementAction,
-        )
+    ){
+        item{
+            PostCard(
+                post = hubUiState.comment,
+                hubUiState = hubUiState,
+                hubUiAction = hubUiAction,
+                postCardUiAction = postCardUiAction,
+                onHubNavigate = onHubNavigate,
+                onProcessOfEngagementAction = commentUiAction.onProcessOfEngagementAction,
+            )
+        }
+        items(
+            commentUiState.comments.size,
+            key = {index: Int -> commentUiState.comments[index].id}
+        ){
+            PostCard(
+                post = commentUiState.comments[it],
+                hubUiState = hubUiState,
+                hubUiAction = hubUiAction,
+                postCardUiAction = postCardUiAction,
+                onHubNavigate = onHubNavigate,
+                onProcessOfEngagementAction = commentUiAction.onProcessOfEngagementAction,
+            )
+        }
     }
 }
