@@ -157,7 +157,14 @@ private fun HubUi(
                         onDrawerOpen = topAction.openDrawer,
                         routeName = currentRouteName,
                     )
+                NavigationHubRoute.PostForComment.name ->
+                    TopBar(
+                        titleContent = {Text(text = currentRouteName)},
+                        onDrawerOpen = topAction.openDrawer,
+                        routeName = currentRouteName,
+                    )
                 else -> Spacer(modifier = Modifier.padding(0.dp))
+
             }
         },
         bottomBar = {
@@ -178,6 +185,11 @@ private fun HubUi(
                     FloatingButton(
                         iconID = R.drawable.baseline_search_24,
                         onClick = { onHubNavigate(NavigationHubRoute.Search) },
+                    )
+                NavigationHubRoute.Comment.name ->
+                    FloatingButton(
+                        iconID = R.drawable.baseline_create_24,
+                        onClick = { onHubNavigate(NavigationHubRoute.PostForComment) }
                     )
                 else -> Spacer(modifier = Modifier.padding(0.dp))
             }

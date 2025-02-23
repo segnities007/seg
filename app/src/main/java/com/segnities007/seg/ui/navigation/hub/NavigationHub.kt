@@ -25,6 +25,7 @@ import com.segnities007.seg.ui.screens.hub.home.Home
 import com.segnities007.seg.ui.screens.hub.home.HomeViewModel
 import com.segnities007.seg.ui.screens.hub.notify.Notify
 import com.segnities007.seg.ui.screens.hub.post.Post
+import com.segnities007.seg.ui.screens.hub.post.PostForComment
 import com.segnities007.seg.ui.screens.hub.search.Search
 import com.segnities007.seg.ui.screens.hub.search.SearchViewModel
 import com.segnities007.seg.ui.screens.hub.trend.Trend
@@ -156,6 +157,17 @@ fun NavigationHub(
                     hubUiState = hubViewModel.hubUiState,
                     hubUiAction = hubViewModel.getHubUiAction(),
                     postCardUiAction = postCardViewModel.onGetPostCardUiAction(),
+                    onHubNavigate = onHubNavigate,
+                )
+            }
+            composable<NavigationHubRoute.PostForComment> { 
+                PostForComment(
+                    modifier = modifier,
+                    homeUiAction = homeViewModel.onGetHomeUiAction(),
+                    hubUiState = hubViewModel.hubUiState,
+                    hubUiAction = hubViewModel.getHubUiAction(),
+                    postCardUiAction = postCardViewModel.onGetPostCardUiAction(),
+                    onBackHubNavigate = { hubNavHostController.navigateUp() },
                     onHubNavigate = onHubNavigate,
                 )
             }
