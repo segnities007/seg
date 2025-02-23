@@ -23,6 +23,7 @@
     <string name="image">Image</string>
     <string name="delete">delete</string>
     <string name="post_label">投稿内容をここに入力してください</string>
+    <string name="post_comment_label">コメントをここに入力してください</string>
     <string name="post">Post</string>
     <string name="clear">Clear</string>
     <string name="logout">Logout</string>

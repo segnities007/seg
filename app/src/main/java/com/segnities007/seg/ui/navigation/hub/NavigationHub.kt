@@ -20,9 +20,9 @@ import com.segnities007.seg.ui.screens.hub.HubViewModel
 import com.segnities007.seg.ui.screens.hub.account.Account
 import com.segnities007.seg.ui.screens.hub.account.AccountViewModel
 import com.segnities007.seg.ui.screens.hub.accounts.Accounts
+import com.segnities007.seg.ui.screens.hub.comment.Comment
 import com.segnities007.seg.ui.screens.hub.home.Home
 import com.segnities007.seg.ui.screens.hub.home.HomeViewModel
-import com.segnities007.seg.ui.screens.hub.comment.Comment
 import com.segnities007.seg.ui.screens.hub.notify.Notify
 import com.segnities007.seg.ui.screens.hub.post.Post
 import com.segnities007.seg.ui.screens.hub.search.Search
@@ -98,7 +98,7 @@ fun NavigationHub(
                     homeUiAction = homeViewModel.onGetHomeUiAction(),
                     hubUiState = hubViewModel.hubUiState,
                     hubUiAction = hubViewModel.getHubUiAction(),
-                    onNavigate = onHubNavigate,
+                    onHubNavigate = onHubNavigate,
                 )
             }
             composable<NavigationHubRoute.Notify> {
