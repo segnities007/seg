@@ -16,12 +16,3 @@ interface PostCardScope {
     val postCardUiAction: PostCardUiAction
     val onHubNavigate: (NavigationHubRoute) -> Unit
 }
-
-data class DefaultPostCardScope(
-    override val post: Post,
-    override val commonPadding: Dp,
-    override val hubUiState: HubUiState,
-    override val hubUiAction: HubUiAction,
-    override val postCardUiAction: PostCardUiAction,
-    override val onHubNavigate: (NavigationHubRoute) -> Unit,
-) : PostCardScope

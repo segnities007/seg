@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.segnities007.seg.R
@@ -35,9 +36,10 @@ fun Post(
     homeUiAction: HomeUiAction,
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
-    postViewModel: PostViewModel = hiltViewModel(),
-    onNavigate: (Navigation) -> Unit, // go to home
+    onHubNavigate: (Navigation) -> Unit, // go to home
 ) {
+    val postViewModel: PostViewModel = hiltViewModel()
+
     PostUi(
         modifier = modifier,
         homeUiAction = homeUiAction,
@@ -45,52 +47,59 @@ fun Post(
         hubUiAction = hubUiAction,
         postUiState = postViewModel.postUiState,
         postUiAction = postViewModel.onGetPostUiAction(),
-        onNavigate = onNavigate,
-    )
+        onHubNavigate = onHubNavigate,
+    ) {
+        Column {
+            TopToolBar()
+            InputField(
+                modifier = Modifier.weight(1f),
+                label = { Text(stringResource(R.string.post_label)) },
+            )
+        }
+    }
 }
 
 @Composable
-private fun PostUi(
+fun PostUi(
     modifier: Modifier = Modifier,
     homeUiAction: HomeUiAction,
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
     postUiState: PostUiState,
     postUiAction: PostUiAction,
-    onNavigate: (Navigation) -> Unit,
+    onHubNavigate: (Navigation) -> Unit,
+    content: @Composable PostScope.() -> Unit,
 ) {
+    val scope =
+        DefaultPostScope(
+            homeUiAction = homeUiAction,
+            hubUiState = hubUiState,
+            hubUiAction = hubUiAction,
+            postUiState = postUiState,
+            postUiAction = postUiAction,
+            onHubNavigate = onHubNavigate,
+        )
+
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        TopToolBar(
-            postUiAction = postUiAction,
-            homeUiAction = homeUiAction,
-            hubUiState = hubUiState,
-            hubUiAction = hubUiAction,
-            onNavigate = onNavigate,
-        )
-        InputField(
-            modifier = Modifier.weight(1f),
-            postUiState = postUiState,
-            postUiAction = postUiAction,
-        )
+        scope.content()
     }
 
     CircleIndicator(isLoading = postUiState.isLoading)
 }
 
 @Composable
-private fun InputField(
+fun PostScope.InputField(
     modifier: Modifier,
-    postUiState: PostUiState,
-    postUiAction: PostUiAction,
+    label: @Composable () -> Unit,
 ) {
     TextField(
         modifier = modifier.padding(horizontal = dimensionResource(R.dimen.padding_small)).fillMaxSize(),
         value = postUiState.inputText,
         onValueChange = { postUiAction.onUpdateInputText(it) },
-        label = { Text(stringResource(R.string.post_label)) },
+        label = label,
         textStyle = TextStyle.Default.copy(fontSize = 24.sp),
         shape = RoundedCornerShape(dimensionResource(R.dimen.rounded_corner_shape)),
         colors =
@@ -104,14 +113,7 @@ private fun InputField(
 }
 
 @Composable
-private fun TopToolBar(
-    modifier: Modifier = Modifier,
-    homeUiAction: HomeUiAction,
-    hubUiState: HubUiState,
-    hubUiAction: HubUiAction,
-    postUiAction: PostUiAction,
-    onNavigate: (Navigation) -> Unit,
-) {
+fun PostScope.TopToolBar(modifier: Modifier = Modifier) {
     Row(
         modifier = modifier.padding(dimensionResource(R.dimen.padding_normal)).fillMaxWidth(),
         horizontalArrangement = Arrangement.Start,
@@ -129,9 +131,53 @@ private fun TopToolBar(
                 ) {
                     postUiAction.onUpdateInputText("")
                     homeUiAction.onGetNewPosts()
-                    onNavigate(NavigationHubRoute.Home)
+                    onHubNavigate(NavigationHubRoute.Home)
                 }
             },
         )
+    }
+}
+
+@Composable
+@Preview
+private fun PostPreview() {
+    PostUi(
+        modifier = Modifier,
+        homeUiAction =
+            HomeUiAction(
+                onGetNewPosts = {},
+                onGetBeforeNewPosts = {},
+                onChangeHasNoMorePost = {},
+                onProcessOfEngagementAction = {},
+            ),
+        hubUiState = HubUiState(),
+        hubUiAction =
+            HubUiAction(
+                onUpdateSelf = {},
+                onChangeIsHideTopBar = {},
+                onResetIsHideTopBar = {},
+                onGetUser = {},
+                onSetComment = {},
+                onSetUserID = {},
+                onSetAccounts = {},
+                onAddPostIDToMyLikes = {},
+                onRemovePostIDFromMyLikes = {},
+                onAddPostIDToMyReposts = {},
+                onRemovePostIDFromMyReposts = {},
+                onChangeCurrentRouteName = {},
+            ),
+        postUiState = PostUiState(),
+        postUiAction =
+            PostUiAction(
+                onUpdateIsLoading = {},
+                onUpdateInputText = {},
+                onCreatePost = { a, b, c, d -> },
+            ),
+        onHubNavigate = {},
+    ) {
+        Column {
+            TopToolBar()
+            InputField(modifier = Modifier.weight(1f), label = { Text(stringResource(R.string.post_label)) })
+        }
     }
 }
