@@ -180,7 +180,7 @@ private fun PostPreview() {
                 onUpdateIsLoading = {},
                 onUpdateInputText = {},
                 onCreatePost = { a, b, c, d -> },
-                onCreateComment = {_,_,_,_,_ ->},
+                onCreateComment = {_,_,_,_ ->},
             ),
         onHubNavigate = {},
     ) {

@@ -439,7 +439,11 @@ class PostRepositoryImpl
 
         override suspend fun onUpdatePost(post: Post) {
             try {
-                postgrest.from(posts).update(post)
+                postgrest.from(posts).update(post){
+                    filter {
+                        Post::id eq post.id
+                    }
+                }
             } catch (e: Exception) {
                 Log.e(tag, "failed onUpdatePost: $e")
             }
