@@ -13,6 +13,8 @@ sealed class NavigationHubRoute(
 
     @Serializable data object Post : NavigationHubRoute(name = "Post")
 
+    @Serializable data object PostForComment : NavigationHubRoute(name = "PostForComment")
+
     @Serializable data object Notify : NavigationHubRoute(name = "Notify")
 
     @Serializable data object Setting : NavigationHubRoute(name = "Setting")
@@ -24,4 +26,5 @@ sealed class NavigationHubRoute(
     @Serializable data object Search : NavigationHubRoute(name = "Search")
 
     @Serializable data object Comment : NavigationHubRoute(name = "Comment")
+
 }

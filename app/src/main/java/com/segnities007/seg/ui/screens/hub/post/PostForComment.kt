@@ -1,14 +1,20 @@
 package com.segnities007.seg.ui.screens.hub.post
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -16,8 +22,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.segnities007.seg.R
 import com.segnities007.seg.data.model.Post
 import com.segnities007.seg.domain.presentation.Navigation
+import com.segnities007.seg.ui.components.button.SmallButton
 import com.segnities007.seg.ui.components.card.postcard.PostCard
 import com.segnities007.seg.ui.components.card.postcard.PostCardUiAction
+import com.segnities007.seg.ui.components.card.postcard.PostSimpleCard
+import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
 import com.segnities007.seg.ui.screens.hub.HubUiAction
 import com.segnities007.seg.ui.screens.hub.HubUiState
 import com.segnities007.seg.ui.screens.hub.comment.CommentViewModel
@@ -30,6 +39,7 @@ fun PostForComment(
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
     postCardUiAction: PostCardUiAction,
+    onBackHubNavigate: () -> Unit,
     onHubNavigate: (Navigation) -> Unit, // go to home
 ) {
     val commentViewModel: CommentViewModel = hiltViewModel()
@@ -50,18 +60,20 @@ fun PostForComment(
         onHubNavigate = onHubNavigate,
     ) {
         Column {
-            TopToolBar()
-            Box(
-                modifier = Modifier.clickable(false) {},
-            ) {
-                PostCard(
+            TopToolBarForCommentForComment(onBackHubNavigate = onBackHubNavigate)
+            Box{
+                PostSimpleCard(
                     post = commentViewModel.commentUiState.comment,
                     hubUiState = hubUiState,
                     hubUiAction = hubUiAction,
                     postCardUiAction = postCardUiAction,
                     isIncrementView = false,
                     onHubNavigate = onHubNavigate,
-                    onProcessOfEngagementAction = commentViewModel.onGetCommentUiAction().onProcessOfEngagementAction,
+                )
+                Spacer(// Prevent to click PostCard
+                    modifier = Modifier
+                        .matchParentSize()
+                        .clickable(enabled = false, onClick = {})
                 )
             }
             Spacer(Modifier.padding(dimensionResource(R.dimen.padding_smaller)))
@@ -70,6 +82,35 @@ fun PostForComment(
                 label = { Text(stringResource(R.string.post_comment_label)) },
             )
         }
+    }
+}
+
+@Composable
+fun PostScope.TopToolBarForCommentForComment(
+    modifier: Modifier = Modifier,
+    onBackHubNavigate: () -> Unit,
+) {
+    Row(
+        modifier = modifier.padding(dimensionResource(R.dimen.padding_normal)).fillMaxWidth(),
+        horizontalArrangement = Arrangement.Start,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        SmallButton(textID = R.string.back, onClick = onBackHubNavigate)
+        Spacer(modifier = Modifier.weight(1f))
+        SmallButton(
+            textID = R.string.post,
+            onClick = {
+                postUiAction.onCreatePost(
+                    hubUiState.user,
+                    postUiAction.onUpdateIsLoading,
+                    hubUiAction.onGetUser,
+                ) {
+                    postUiAction.onUpdateInputText("")
+                    homeUiAction.onGetNewPosts()
+                    onHubNavigate(NavigationHubRoute.Home)
+                }
+            },
+        )
     }
 }
 
@@ -112,7 +153,7 @@ private fun PostPreview() {
     ) {
         Column {
             TopToolBar()
-            PostCard(
+            PostSimpleCard(
                 post = Post(),
                 hubUiState = hubUiState,
                 hubUiAction = hubUiAction,
@@ -126,7 +167,7 @@ private fun PostPreview() {
                         onRepost = { _, _, _, _ -> },
                     ),
                 onHubNavigate = {},
-            ) { }
+            )
             Spacer(Modifier.padding(dimensionResource(R.dimen.padding_smaller)))
             InputField(
                 modifier = Modifier.weight(1f),
