@@ -8,6 +8,7 @@ import com.segnities007.seg.domain.repository.PostRepository
 import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
 import com.segnities007.seg.ui.screens.hub.HubUiAction
 import com.segnities007.seg.ui.screens.hub.HubUiState
+import com.segnities007.seg.ui.screens.hub.home.HomeUiAction
 import com.segnities007.seg.ui.screens.hub.setting.my_posts.MyPostsUiAction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -19,6 +20,7 @@ data class PostCardUiAction(
     val onDeletePost: (
         post: Post,
         myPostUiAction: MyPostsUiAction,
+        homeUiAction: HomeUiAction,
         hubUiState: HubUiState,
         hubUiAction: HubUiAction,
     ) -> Unit,
@@ -58,6 +60,7 @@ class PostCardViewModel
         private fun onDeletePost(
             post: Post,
             myPostsUiAction: MyPostsUiAction,
+            homeUiAction: HomeUiAction,
             hubUiState: HubUiState,
             hubUiAction: HubUiAction,
         ) {
@@ -67,6 +70,7 @@ class PostCardViewModel
             hubUiAction.onUpdateSelf(newSelf)
             viewModelScope.launch(Dispatchers.IO) {
                 postRepository.onDeletePost(post)
+                homeUiAction.onGetNewPosts()
             }
         }
 

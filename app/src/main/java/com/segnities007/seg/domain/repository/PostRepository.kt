@@ -27,7 +27,11 @@ interface PostRepository {
 
     suspend fun onGetPost(postID: Int): Post
 
+    suspend fun onGetComment(commentID: Int): Post
+
     suspend fun onGetPosts(postIDs: List<Int>): List<Post>
+
+    suspend fun onGetComments(comment: Post): List<Post>
 
     suspend fun onGetNewPost(): Post
 
@@ -83,17 +87,4 @@ interface PostRepository {
         post: Post,
         user: User,
     )
-//
-//    // about comment
-//    suspend fun onComment(
-//        post: Post,
-//        comment: Post,
-//        user: User,
-//    )
-//
-//    suspend fun onUnComment(
-//        post: Post,
-//        comment: Post,
-//        user: User,
-//    )
 }

@@ -90,13 +90,14 @@ private fun MostViewPosts(
     onHubNavigate: (Navigation) -> Unit,
 ) {
     LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(
-                top = dimensionResource(R.dimen.padding_smallest),
-                start = dimensionResource(R.dimen.padding_small),
-                end = dimensionResource(R.dimen.padding_small),
-            ),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .padding(
+                    top = dimensionResource(R.dimen.padding_smallest),
+                    start = dimensionResource(R.dimen.padding_small),
+                    end = dimensionResource(R.dimen.padding_small),
+                ),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
     ) {
@@ -148,13 +149,14 @@ private fun LatestPosts(
     onHubNavigate: (Navigation) -> Unit,
 ) {
     LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(
-                top = dimensionResource(R.dimen.padding_smallest),
-                start = dimensionResource(R.dimen.padding_small),
-                end = dimensionResource(R.dimen.padding_small),
-            ),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .padding(
+                    top = dimensionResource(R.dimen.padding_smallest),
+                    start = dimensionResource(R.dimen.padding_small),
+                    end = dimensionResource(R.dimen.padding_small),
+                ),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
     ) {

@@ -5,12 +5,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.segnities007.seg.data.model.Post
 import com.segnities007.seg.data.model.User
 import com.segnities007.seg.domain.repository.PostRepository
 import com.segnities007.seg.ui.screens.hub.HubUiAction
 import com.segnities007.seg.ui.screens.hub.HubUiState
-import com.segnities007.seg.ui.screens.hub.home.HomeUiAction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -84,15 +82,16 @@ class PostViewModel
             hubUiAction: HubUiAction,
             onUpdateIsLoading: (isLoading: Boolean) -> Unit,
             onNavigate: () -> Unit,
-        ){
+        ) {
             val description = postUiState.inputText
             onUpdateIsLoading(true)
             viewModelScope.launch(Dispatchers.IO) {
-                val result = postRepository.onCreateComment(
-                    description = description,
-                    self = hubUiState.user,
-                    commentedPost = hubUiState.comment,
-                )
+                val result =
+                    postRepository.onCreateComment(
+                        description = description,
+                        self = hubUiState.user,
+                        commentedPost = hubUiState.comment,
+                    )
                 if (result) {
                     hubUiAction.onGetUser()
                     val updatedCommentedPost = postRepository.onGetPost(hubUiState.comment.id)

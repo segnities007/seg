@@ -26,7 +26,6 @@ fun Comment(
     postCardUiAction: PostCardUiAction,
     onHubNavigate: (Navigation) -> Unit,
 ) {
-
     LaunchedEffect(Unit) {
         commentViewModel.onGetCommentUiAction().onGetComments(hubUiState.comment)
     }
@@ -53,16 +52,17 @@ private fun CommentUi(
     onHubNavigate: (Navigation) -> Unit,
 ) {
     LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(
-                top = dimensionResource(R.dimen.padding_smallest),
-                start = dimensionResource(R.dimen.padding_small),
-                end = dimensionResource(R.dimen.padding_small),
-            ),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .padding(
+                    top = dimensionResource(R.dimen.padding_smallest),
+                    start = dimensionResource(R.dimen.padding_small),
+                    end = dimensionResource(R.dimen.padding_small),
+                ),
         verticalArrangement = Arrangement.Top,
-    ){
-        item{
+    ) {
+        item {
             PostCard(
                 post = hubUiState.comment,
                 hubUiState = hubUiState,
@@ -75,8 +75,8 @@ private fun CommentUi(
         }
         items(
             commentUiState.comments.size,
-            key = {index: Int -> commentUiState.comments[index].id}
-        ){
+            key = { index: Int -> commentUiState.comments[index].id },
+        ) {
             PostCard(
                 post = commentUiState.comments[it],
                 hubUiState = hubUiState,

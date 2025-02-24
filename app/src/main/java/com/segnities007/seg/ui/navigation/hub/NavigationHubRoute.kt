@@ -26,5 +26,4 @@ sealed class NavigationHubRoute(
     @Serializable data object Search : NavigationHubRoute(name = "Search")
 
     @Serializable data object Comment : NavigationHubRoute(name = "Comment")
-
 }

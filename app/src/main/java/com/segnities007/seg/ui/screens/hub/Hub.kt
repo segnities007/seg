@@ -159,12 +159,11 @@ private fun HubUi(
                     )
                 NavigationHubRoute.PostForComment.name ->
                     TopBar(
-                        titleContent = {Text(text = currentRouteName)},
+                        titleContent = { Text(text = currentRouteName) },
                         onDrawerOpen = topAction.openDrawer,
                         routeName = currentRouteName,
                     )
                 else -> Spacer(modifier = Modifier.padding(0.dp))
-
             }
         },
         bottomBar = {
@@ -189,7 +188,7 @@ private fun HubUi(
                 NavigationHubRoute.Comment.name ->
                     FloatingButton(
                         iconID = R.drawable.baseline_create_24,
-                        onClick = { onHubNavigate(NavigationHubRoute.PostForComment) }
+                        onClick = { onHubNavigate(NavigationHubRoute.PostForComment) },
                     )
                 else -> Spacer(modifier = Modifier.padding(0.dp))
             }

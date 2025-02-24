@@ -23,9 +23,11 @@ import com.segnities007.seg.ui.components.tab.TabUiAction
 import com.segnities007.seg.ui.components.tab.TabUiState
 import com.segnities007.seg.ui.screens.hub.HubUiAction
 import com.segnities007.seg.ui.screens.hub.HubUiState
+import com.segnities007.seg.ui.screens.hub.home.HomeUiAction
 
 @Composable
 fun MyPosts(
+    homeUiAction: HomeUiAction,
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
     tabUiState: TabUiState,
@@ -49,6 +51,7 @@ fun MyPosts(
 
     Column {
         MyPostsUi(
+            homeUiAction = homeUiAction,
             hubUiState = hubUiState,
             hubUiAction = hubUiAction,
             tabUiState = tabUiState,
@@ -62,6 +65,7 @@ fun MyPosts(
 
 @Composable
 private fun MyPostsUi(
+    homeUiAction: HomeUiAction,
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
     myPostsUiState: MyPostsUiState,
@@ -73,6 +77,7 @@ private fun MyPostsUi(
     when (tabUiState.index) {
         0 ->
             Posts(
+                homeUiAction = homeUiAction,
                 myPostsUiState = myPostsUiState,
                 myPostsUiAction = myPostsUiAction,
                 hubUiState = hubUiState,
@@ -103,6 +108,7 @@ private fun MyPostsUi(
 
 @Composable
 private fun Posts(
+    homeUiAction: HomeUiAction,
     myPostsUiState: MyPostsUiState,
     myPostsUiAction: MyPostsUiAction,
     hubUiState: HubUiState,
@@ -111,13 +117,14 @@ private fun Posts(
     onHubNavigate: (Navigation) -> Unit,
 ) {
     LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(
-                top = dimensionResource(R.dimen.padding_smallest),
-                start = dimensionResource(R.dimen.padding_small),
-                end = dimensionResource(R.dimen.padding_small),
-            ),
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .padding(
+                    top = dimensionResource(R.dimen.padding_smallest),
+                    start = dimensionResource(R.dimen.padding_small),
+                    end = dimensionResource(R.dimen.padding_small),
+                ),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
     ) {
@@ -128,6 +135,7 @@ private fun Posts(
             ) { i ->
                 PostCardWithDetailButton(
                     post = myPostsUiState.posts[i],
+                    homeUiAction = homeUiAction,
                     hubUiState = hubUiState,
                     hubUiAction = hubUiAction,
                     myPostsUiAction = myPostsUiAction,
@@ -159,13 +167,14 @@ private fun Likes(
     onHubNavigate: (Navigation) -> Unit,
 ) {
     LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(
-                top = dimensionResource(R.dimen.padding_smallest),
-                start = dimensionResource(R.dimen.padding_small),
-                end = dimensionResource(R.dimen.padding_small),
-            ),
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .padding(
+                    top = dimensionResource(R.dimen.padding_smallest),
+                    start = dimensionResource(R.dimen.padding_small),
+                    end = dimensionResource(R.dimen.padding_small),
+                ),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
     ) {
@@ -207,13 +216,14 @@ private fun Reposts(
     onHubNavigate: (Navigation) -> Unit,
 ) {
     LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(
-                top = dimensionResource(R.dimen.padding_smallest),
-                start = dimensionResource(R.dimen.padding_small),
-                end = dimensionResource(R.dimen.padding_small),
-            ),
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .padding(
+                    top = dimensionResource(R.dimen.padding_smallest),
+                    start = dimensionResource(R.dimen.padding_small),
+                    end = dimensionResource(R.dimen.padding_small),
+                ),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
     ) {

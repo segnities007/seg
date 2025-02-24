@@ -108,6 +108,7 @@ fun NavigationHub(
             composable<NavigationHubRoute.Setting> {
                 NavigationSetting(
                     modifier = modifier,
+                    homeUiAction = homeViewModel.onGetHomeUiAction(),
                     hubUiState = hubViewModel.hubUiState,
                     hubUiAction = hubViewModel.getHubUiAction(),
                     onTopNavigate = onTopNavigate,
@@ -160,7 +161,7 @@ fun NavigationHub(
                     onHubNavigate = onHubNavigate,
                 )
             }
-            composable<NavigationHubRoute.PostForComment> { 
+            composable<NavigationHubRoute.PostForComment> {
                 PostForComment(
                     modifier = modifier,
                     homeUiAction = homeViewModel.onGetHomeUiAction(),

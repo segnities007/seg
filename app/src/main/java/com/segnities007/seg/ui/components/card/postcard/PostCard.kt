@@ -129,54 +129,6 @@ fun PostCardScope.CardContents(content: @Composable () -> Unit) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun PostCardScope.BottomSheet(
-    hubUiState: HubUiState,
-    hubUiAction: HubUiAction,
-    myPostUiAction: MyPostsUiAction,
-    onClickDetailButton: () -> Unit,
-    commonPadding: Dp = dimensionResource(R.dimen.padding_sn),
-) {
-    ModalBottomSheet(
-        containerColor = MaterialTheme.colorScheme.secondaryContainer,
-        onDismissRequest = {
-            onClickDetailButton()
-        },
-    ) {
-        PanelButton(
-            modifier =
-                Modifier
-                    .padding(vertical = commonPadding)
-                    .fillMaxWidth()
-                    .padding(vertical = commonPadding),
-            iconID = R.drawable.baseline_delete_24,
-            textID = R.string.delete,
-            onClick = {
-                postCardUiAction.onDeletePost(
-                    post,
-                    myPostUiAction,
-                    hubUiState,
-                    hubUiAction,
-                )
-                onClickDetailButton()
-            },
-        )
-        Spacer(Modifier.padding(commonPadding))
-        SmallButton(
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = commonPadding),
-            textID = R.string.cancel,
-            onClick = {
-                onClickDetailButton()
-            },
-        )
-        Spacer(Modifier.padding(commonPadding))
-    }
-}
-
 @Composable
 fun PanelButton(
     modifier: Modifier = Modifier,
@@ -216,7 +168,7 @@ fun PostCardScope.ActionIcons(onProcessOfEngagementAction: (newPost: Post) -> Un
         listOf(
             post.likeCount,
             post.repostCount,
-            post.commentCount,
+            post.comments.size,
             post.viewCount,
         )
 
@@ -335,33 +287,35 @@ fun PostCardScope.Description() {
 
 @Composable
 @Preview
-private fun PostCardPreview(){
+private fun PostCardPreview() {
     PostCard(
         post = Post(),
         hubUiState = HubUiState(),
-        hubUiAction = HubUiAction(
-            onUpdateSelf = {},
-            onChangeIsHideTopBar = {},
-            onResetIsHideTopBar = {},
-            onGetUser = {},
-            onSetComment = {},
-            onSetUserID = {},
-            onSetAccounts = {},
-            onAddPostIDToMyLikes = {},
-            onRemovePostIDFromMyLikes = {},
-            onAddPostIDToMyReposts = {},
-            onRemovePostIDFromMyReposts = {},
-            onChangeCurrentRouteName = {}
-        ),
-        postCardUiAction = PostCardUiAction(
-            onDeletePost = {_,_,_,_ ->},
-            onClickIcon = {},
-            onClickPostCard = {},
-            onIncrementViewCount = {},
-            onLike = {_,_,_,_ ->},
-            onRepost = {_,_,_,_ ->}
-        ),
+        hubUiAction =
+            HubUiAction(
+                onUpdateSelf = {},
+                onChangeIsHideTopBar = {},
+                onResetIsHideTopBar = {},
+                onGetUser = {},
+                onSetComment = {},
+                onSetUserID = {},
+                onSetAccounts = {},
+                onAddPostIDToMyLikes = {},
+                onRemovePostIDFromMyLikes = {},
+                onAddPostIDToMyReposts = {},
+                onRemovePostIDFromMyReposts = {},
+                onChangeCurrentRouteName = {},
+            ),
+        postCardUiAction =
+            PostCardUiAction(
+                onDeletePost = { _,_, _, _, _ -> },
+                onClickIcon = {},
+                onClickPostCard = {},
+                onIncrementViewCount = {},
+                onLike = { _, _, _, _ -> },
+                onRepost = { _, _, _, _ -> },
+            ),
         isIncrementView = false,
-        onHubNavigate = {}
+        onHubNavigate = {},
     ) { }
 }
