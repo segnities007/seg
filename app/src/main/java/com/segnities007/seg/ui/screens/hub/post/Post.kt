@@ -81,13 +81,12 @@ fun PostUi(
         )
 
     Column(
-        modifier = modifier
-            .padding(
-                vertical = dimensionResource(R.dimen.padding_smaller),
-                horizontal = dimensionResource(R.dimen.padding_small),
-            )
-            .fillMaxSize()
-            ,
+        modifier =
+            modifier
+                .padding(
+                    vertical = dimensionResource(R.dimen.padding_smaller),
+                    horizontal = dimensionResource(R.dimen.padding_small),
+                ).fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         scope.content()
@@ -121,9 +120,11 @@ fun PostScope.InputField(
 @Composable
 fun PostScope.TopToolBar(modifier: Modifier = Modifier) {
     Row(
-        modifier = modifier.padding(
-            vertical = dimensionResource(R.dimen.padding_normal),
-        ).fillMaxWidth(),
+        modifier =
+            modifier
+                .padding(
+                    vertical = dimensionResource(R.dimen.padding_normal),
+                ).fillMaxWidth(),
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -180,7 +181,7 @@ private fun PostPreview() {
                 onUpdateIsLoading = {},
                 onUpdateInputText = {},
                 onCreatePost = { a, b, c, d -> },
-                onCreateComment = {_,_,_,_ ->},
+                onCreateComment = { _, _, _, _ -> },
             ),
         onHubNavigate = {},
     ) {

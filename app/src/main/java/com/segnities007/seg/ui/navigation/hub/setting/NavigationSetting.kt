@@ -13,6 +13,7 @@ import com.segnities007.seg.ui.components.tab.TabUiAction
 import com.segnities007.seg.ui.components.tab.TabUiState
 import com.segnities007.seg.ui.screens.hub.HubUiAction
 import com.segnities007.seg.ui.screens.hub.HubUiState
+import com.segnities007.seg.ui.screens.hub.home.HomeUiAction
 import com.segnities007.seg.ui.screens.hub.setting.Setting
 import com.segnities007.seg.ui.screens.hub.setting.SettingViewModel
 import com.segnities007.seg.ui.screens.hub.setting.my_posts.MyPosts
@@ -27,6 +28,7 @@ fun NavigationSetting(
     postCardUiAction: PostCardUiAction,
     tabUiState: TabUiState,
     tabUiAction: TabUiAction,
+    homeUiAction: HomeUiAction,
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
     onTopNavigate: (Navigation) -> Unit,
@@ -56,6 +58,7 @@ fun NavigationSetting(
             }
             composable<NavigationSettingRoute.Posts> {
                 MyPosts(
+                    homeUiAction = homeUiAction,
                     hubUiState = hubUiState,
                     hubUiAction = hubUiAction,
                     tabUiState = tabUiState,
