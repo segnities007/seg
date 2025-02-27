@@ -42,12 +42,4 @@ interface UserRepository {
         myself: User,
         other: User,
     )
-
-    suspend fun onIncrementFollowCount(user: User)
-
-    suspend fun onDecrementFollowCount(user: User)
-
-    suspend fun onIncrementFollowerCount(user: User)
-
-    suspend fun onDecrementFollowerCount(user: User)
 }

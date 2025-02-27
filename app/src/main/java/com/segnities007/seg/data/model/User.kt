@@ -22,12 +22,8 @@ data class User(
     val iconURL: String = "https://avatars.githubusercontent.com/u/174174755?v=4", // default image
     @SerialName("follow_user_id_list")
     val follows: List<String> = listOf(),
-    @SerialName("follow_count")
-    val followCount: Int = 0,
     @SerialName("follower_user_id_list")
     val followers: List<String> = listOf(),
-    @SerialName("follower_count")
-    val followerCount: Int = 0,
     @SerialName("post_id_list")
     val posts: List<Int> = listOf(),
     @SerialName("post_like_id_list")

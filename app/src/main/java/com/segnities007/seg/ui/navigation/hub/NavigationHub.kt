@@ -123,6 +123,7 @@ fun NavigationHub(
                     modifier = modifier,
                     hubUiState = hubViewModel.hubUiState,
                     hubUiAction = hubViewModel.getHubUiAction(),
+                    accountUiFlagState = accountViewModel.accountUiFlagState,
                     accountUiState = accountViewModel.accountUiState,
                     accountUiAction = accountViewModel.getAccountUiAction(),
                     postCardUiAction = postCardViewModel.onGetPostCardUiAction(),

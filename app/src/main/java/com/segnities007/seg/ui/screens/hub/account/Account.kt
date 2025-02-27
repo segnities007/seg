@@ -28,6 +28,7 @@ fun Account(
     modifier: Modifier = Modifier,
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
+    accountUiFlagState: AccountUiFlagState,
     accountUiState: AccountUiState,
     accountUiAction: AccountUiAction,
     postCardUiAction: PostCardUiAction,
@@ -47,6 +48,7 @@ fun Account(
         modifier = modifier,
         hubUiState = hubUiState,
         hubUiAction = hubUiAction,
+        accountUiFlagState = accountUiFlagState,
         accountUiState = accountUiState,
         accountUiAction = accountUiAction,
         postCardUiAction = postCardUiAction,
@@ -59,6 +61,7 @@ private fun AccountUi(
     modifier: Modifier = Modifier,
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
+    accountUiFlagState: AccountUiFlagState,
     accountUiState: AccountUiState,
     accountUiAction: AccountUiAction,
     postCardUiAction: PostCardUiAction,
@@ -81,6 +84,7 @@ private fun AccountUi(
                 FollowButtons(
                     hubUiState = hubUiState,
                     hubUiAction = hubUiAction,
+                    accountUiFlagState = accountUiFlagState,
                     accountUiState = accountUiState,
                     accountUiAction = accountUiAction,
                 )
@@ -101,7 +105,7 @@ private fun AccountUi(
             Spacer(Modifier.padding(dimensionResource(R.dimen.padding_smallest)))
         }
         // action for fetching before-post
-        if (accountUiState.isNotCompleted) {
+        if (!accountUiFlagState.isCompletedFetchPosts) {
             item {
                 Column {
                     Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_smaller)))
@@ -121,6 +125,7 @@ private fun FollowButtons(
     modifier: Modifier = Modifier,
     hubUiState: HubUiState,
     hubUiAction: HubUiAction,
+    accountUiFlagState: AccountUiFlagState,
     accountUiState: AccountUiState,
     accountUiAction: AccountUiAction,
 ) {
@@ -131,15 +136,18 @@ private fun FollowButtons(
         Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_normal)))
         SmallButton(
             modifier = Modifier.weight(1f),
+            isLoading = accountUiFlagState.isLoading,
             textID =
                 if (hubUiState.user.follows.contains(accountUiState.user.userID)) R.string.followed else R.string.follow,
             onClick = {
-                // IDがある場合unfollow
-                if (hubUiState.user.follows.contains(accountUiState.user.userID)) {
-                    accountUiAction.onUnFollow(hubUiState.user, accountUiState.user, hubUiAction.onGetUser)
-                } else {
-                    accountUiAction.onFollow(hubUiState.user, accountUiState.user, hubUiAction.onGetUser)
-                }
+                accountUiAction.onToggleIsLoading()
+                accountUiAction.onFollow(
+                    hubUiState.user.follows.contains(accountUiState.user.userID),
+                    hubUiState.user,
+                    accountUiState.user,
+                    hubUiAction.onGetUser,
+                    accountUiAction.onToggleIsLoading,
+                )
             },
         )
         Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_normal)))
