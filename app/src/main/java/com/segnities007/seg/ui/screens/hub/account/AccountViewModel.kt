@@ -19,7 +19,11 @@ data class AccountUiState(
     val posts: List<Post> = listOf(),
     val likedPosts: List<Post> = listOf(),
     val repostedPosts: List<Post> = listOf(),
-    val isNotCompleted: Boolean = true,
+)
+
+data class AccountUiFlagState(
+    val isCompletedFetchPosts: Boolean = false,
+    val isLoading: Boolean = false,
 )
 
 data class AccountUiAction(
@@ -28,10 +32,15 @@ data class AccountUiAction(
     val onGetOtherUser: (userID: String) -> Unit,
     val onSetOtherUser: (user: User) -> Unit,
     val onGetUserPosts: (userID: String) -> Unit,
-    val onChangeIsNotCompletedOfAccount: () -> Unit,
+    val onToggleIsLoading: () -> Unit,
+    val onToggleIsCompletedFetchPosts: () -> Unit,
     val onGetPosts: () -> Unit,
-    val onFollow: (myself: User, other: User, onGetMyself: () -> Unit) -> Unit,
-    val onUnFollow: (myself: User, other: User, onGetMyself: () -> Unit) -> Unit,
+    val onFollow: (
+        isFollow: Boolean,
+        myself: User,
+        other: User,
+        onToggleIsLoading: () -> Unit,
+        onGetMyself: () -> Unit) -> Unit,
     val onProcessOfEngagementAction: (newPost: Post) -> Unit,
 )
 
@@ -45,6 +54,9 @@ class AccountViewModel
         var accountUiState by mutableStateOf(AccountUiState())
             private set
 
+        var accountUiFlagState by mutableStateOf(AccountUiFlagState())
+            private set
+
         fun getAccountUiAction(): AccountUiAction =
             AccountUiAction(
                 onGetOtherUser = this::onGetOtherUser,
@@ -52,10 +64,10 @@ class AccountViewModel
                 onGetUserPosts = this::onGetUserPosts,
                 onGetPosts = this::onGetPosts,
                 onFollow = this::onFollow,
-                onUnFollow = this::onUnFollow,
                 onReset = this::onReset,
                 onInitAccountUiState = this::onInitAccountUiState,
-                onChangeIsNotCompletedOfAccount = this::onChangeIsNotCompletedOfAccount,
+                onToggleIsLoading = this::onToggleIsLoading,
+                onToggleIsCompletedFetchPosts = this::onToggleIsCompletedFetchPosts,
                 onProcessOfEngagementAction = this::onProcessOfEngagement,
             )
 
@@ -68,7 +80,7 @@ class AccountViewModel
                 if (posts.isNotEmpty()) {
                     accountUiState = accountUiState.copy(posts = posts)
                 } else {
-                    onChangeIsNotCompletedOfAccount()
+                    onToggleIsCompletedFetchPosts()
                 }
             }
         }
@@ -78,7 +90,7 @@ class AccountViewModel
                 if (accountUiState.posts.isEmpty()) {
                     val posts = postRepository.onGetPostsOfUser(accountUiState.user.userID)
                     if (posts.isEmpty()) {
-                        onChangeIsNotCompletedOfAccount()
+                        onToggleIsCompletedFetchPosts()
                         return@launch
                     }
                     accountUiState = accountUiState.copy(posts = posts)
@@ -95,7 +107,7 @@ class AccountViewModel
                 if (posts.isNotEmpty()) {
                     accountUiState = accountUiState.copy(posts = accountUiState.posts.plus(posts))
                 } else {
-                    onChangeIsNotCompletedOfAccount()
+                    onToggleIsCompletedFetchPosts()
                 }
             }
         }
@@ -115,24 +127,16 @@ class AccountViewModel
         }
 
         private fun onFollow(
+            isFollow: Boolean,
             myself: User,
             other: User,
+            onToggleIsLoading: () -> Unit,
             onGetMyself: () -> Unit,
         ) {
             viewModelScope.launch(Dispatchers.IO) {
-                userRepository.onFollowUser(myself, other)
+                if(isFollow) userRepository.onUnFollowUser(myself, other) else userRepository.onFollowUser(myself, other)
                 onGetMyself()
-            }
-        }
-
-        private fun onUnFollow(
-            myself: User,
-            other: User,
-            onGetMyself: () -> Unit,
-        ) {
-            viewModelScope.launch(Dispatchers.IO) {
-                userRepository.onUnFollowUser(myself, other)
-                onGetMyself()
+                onToggleIsLoading()
             }
         }
 
@@ -155,16 +159,21 @@ class AccountViewModel
                 if (posts.isNotEmpty()) {
                     accountUiState = accountUiState.copy(posts = posts)
                 } else {
-                    onChangeIsNotCompletedOfAccount()
+                    onToggleIsCompletedFetchPosts()
                 }
             }
         }
 
-        private fun onChangeIsNotCompletedOfAccount() {
-            accountUiState = accountUiState.copy(isNotCompleted = !accountUiState.isNotCompleted)
+        private fun onToggleIsCompletedFetchPosts() {
+            accountUiFlagState = accountUiFlagState.copy(isCompletedFetchPosts = !accountUiFlagState.isCompletedFetchPosts)
+        }
+
+        private fun onToggleIsLoading() {
+            accountUiFlagState = accountUiFlagState.copy(isLoading = !accountUiFlagState.isLoading)
         }
 
         private fun onReset() {
-            accountUiState = accountUiState.copy(isNotCompleted = true, posts = listOf())
+            accountUiFlagState = accountUiFlagState.copy(isCompletedFetchPosts = false)
+            accountUiState = accountUiState.copy(posts = listOf())
         }
     }

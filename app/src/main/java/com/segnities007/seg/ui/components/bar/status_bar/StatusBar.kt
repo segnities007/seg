@@ -1,6 +1,5 @@
 package com.segnities007.seg.ui.components.bar.status_bar
 
-import android.net.http.UrlRequest.Status
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

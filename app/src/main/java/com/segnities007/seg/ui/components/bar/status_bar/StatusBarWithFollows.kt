@@ -49,8 +49,8 @@ private fun StatusBarScope.AboutFollow(
     onHubNavigate: (NavigationHubRoute) -> Unit,
 ) {
     val fontColor: Color = MaterialTheme.colorScheme.primary
-    val followsText = stringResource(R.string.follows) + ": ${user.followCount}"
-    val followersText = stringResource(R.string.followers) + ": ${user.followerCount}"
+    val followsText = stringResource(R.string.follows) + ": ${user.follows.count { it != "" }}"
+    val followersText = stringResource(R.string.followers) + ": ${user.followers.count { it != "" }}"
 
     Row(
         modifier = Modifier.fillMaxWidth(),

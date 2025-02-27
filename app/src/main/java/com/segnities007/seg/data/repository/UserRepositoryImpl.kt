@@ -22,9 +22,8 @@ class UserRepositoryImpl
         private val tableName = "users"
         private val userColumn =
             (
-                "name," + "user_id," + "birthday," + "is_prime," +
-                    "icon_url," + "follow_user_id_list," + "follow_count," + "follower_user_id_list," +
-                    "follower_count," + "create_at," + "post_id_list"
+                "name," + "user_id," + "birthday," + "is_prime," + "icon_url,"
+                        + "follow_user_id_list," +  "follower_user_id_list," + "create_at," + "post_id_list"
             ).trimIndent()
 
         override fun onConfirmEmail(): Boolean {
@@ -32,7 +31,7 @@ class UserRepositoryImpl
                 val currentUser = auth.currentUserOrNull()
                 return currentUser?.emailConfirmedAt != null
             } catch (e: Exception) {
-                Log.e(tag, "failed confirmEmail $e")
+                Log.e(tag, "failed onConfirmEmail $e")
             }
             return false
         }
@@ -212,8 +211,6 @@ class UserRepositoryImpl
                     filter { User::userID eq newOther.userID }
                 }
 
-                onIncrementFollowCount(newMyself)
-                onIncrementFollowerCount(newOther)
             } catch (e: Exception) {
                 Log.e(tag, "onFailed followUser $e")
             }
@@ -240,58 +237,9 @@ class UserRepositoryImpl
                     filter { User::userID eq newOther.userID }
                 }
 
-                onDecrementFollowCount(newMyself)
-                onDecrementFollowerCount(newOther)
             } catch (e: Exception) {
                 Log.e(tag, "failed onUnFollowUser $e")
             }
         }
 
-        override suspend fun onIncrementFollowCount(user: User) {
-            try {
-                postgrest.from(tableName).update({
-                    User::followCount setTo user.followCount + 1
-                }) {
-                    filter { User::userID eq user.userID }
-                }
-            } catch (e: Exception) {
-                Log.e(tag, "failed onIncrementFollowCount $e")
-            }
-        }
-
-        override suspend fun onDecrementFollowCount(user: User) {
-            try {
-                postgrest.from(tableName).update({
-                    User::followCount setTo user.followCount - 1
-                }) {
-                    filter { User::userID eq user.userID }
-                }
-            } catch (e: Exception) {
-                Log.e(tag, "failed onDecrementFollowCount $e")
-            }
-        }
-
-        override suspend fun onIncrementFollowerCount(user: User) {
-            try {
-                postgrest.from(tableName).update({
-                    User::followerCount setTo user.followerCount + 1
-                }) {
-                    filter { User::userID eq user.userID }
-                }
-            } catch (e: Exception) {
-                Log.e(tag, "failed onIncrementFollowerCount $e")
-            }
-        }
-
-        override suspend fun onDecrementFollowerCount(user: User) {
-            try {
-                postgrest.from(tableName).update({
-                    User::followerCount setTo user.followerCount - 1
-                }) {
-                    filter { User::userID eq user.userID }
-                }
-            } catch (e: Exception) {
-                Log.e(tag, "failed onDecrementFollowerCount $e")
-            }
-        }
     }
