@@ -15,10 +15,6 @@ Segではあえてこれらのメディア機能を排除し、言葉による�
 
 使用アーキテクチャ: MVVM, Clean Architecture<br>
 使用ツール: Ktlint<br>
-設計パターン等: (誤り・不正確な説明あり)<br>
-        UIコンポーネント設計パターン: Slot Pattern, <br>
-                                　Compound Component Pattern<br>
-        UIの状態管理に関する設計パターン: UDF (単方向データフロー)<br>
 
 ## 工夫した点
 
