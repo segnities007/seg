@@ -1,6 +1,5 @@
 package com.segnities007.seg.ui.screens.hub.home
 
-import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -13,31 +12,17 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@Immutable
-data class HomeUiState(
-    val posts: List<Post> = listOf(),
-    val hasNoMorePost: Boolean = false,
-)
-
-@Immutable
-data class HomeUiAction(
-    val onGetNewPosts: () -> Unit,
-    val onGetBeforeNewPosts: (updatedAt: java.time.LocalDateTime) -> Unit,
-    val onChangeHasNoMorePost: () -> Unit,
-    val onProcessOfEngagementAction: (newPost: Post) -> Unit,
-)
-
 @HiltViewModel
 class HomeViewModel
     @Inject
     constructor(
         private val postRepository: PostRepository,
     ) : ViewModel() {
-        var homeUiState by mutableStateOf(HomeUiState())
+        var homeState by mutableStateOf(HomeState())
             private set
 
-        fun onGetHomeUiAction(): HomeUiAction =
-            HomeUiAction(
+        fun onGetHomeUiAction(): HomeAction =
+            HomeAction(
                 onGetNewPosts = this::onGetNewPosts,
                 onChangeHasNoMorePost = this::onChangeHasNoMorePost,
                 onGetBeforeNewPosts = this::onGetBeforeNewPosts,
@@ -51,7 +36,7 @@ class HomeViewModel
         private fun onGetNewPosts() {
             viewModelScope.launch(Dispatchers.IO) {
                 val posts = postRepository.onGetNewPosts()
-                homeUiState = homeUiState.copy(posts = posts)
+                homeState = homeState.copy(posts = posts)
             }
         }
 
@@ -59,20 +44,20 @@ class HomeViewModel
             viewModelScope.launch(Dispatchers.IO) {
                 val posts = postRepository.onGetBeforePosts(updatedAt)
                 if (posts.isEmpty()) onChangeHasNoMorePost()
-                homeUiState = homeUiState.copy(posts = homeUiState.posts.plus(posts))
+                homeState = homeState.copy(posts = homeState.posts.plus(posts))
             }
         }
 
         private fun onChangeHasNoMorePost() {
-            homeUiState = homeUiState.copy(hasNoMorePost = !homeUiState.hasNoMorePost)
+            homeState = homeState.copy(hasNoMorePost = !homeState.hasNoMorePost)
         }
 
         private fun onUpdatePosts(newPost: Post) {
             val newPosts =
-                homeUiState.posts.map { post ->
+                homeState.posts.map { post ->
                     if (newPost.id == post.id) newPost else post
                 }
 
-            homeUiState = homeUiState.copy(posts = newPosts)
+            homeState = homeState.copy(posts = newPosts)
         }
     }

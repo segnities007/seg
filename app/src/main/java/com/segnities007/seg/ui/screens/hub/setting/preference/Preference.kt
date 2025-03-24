@@ -16,20 +16,20 @@ import com.segnities007.seg.domain.presentation.Navigation
 import com.segnities007.seg.ui.components.button.SmallButton
 import com.segnities007.seg.ui.navigation.NavigationRoute
 import com.segnities007.seg.ui.navigation.hub.setting.NavigationSettingRoute
-import com.segnities007.seg.ui.screens.hub.HubUiAction
-import com.segnities007.seg.ui.screens.hub.setting.SettingUiAction
+import com.segnities007.seg.ui.screens.hub.HubAction
+import com.segnities007.seg.ui.screens.hub.setting.SettingAction
 
 @Composable
 fun Preference(
     modifier: Modifier = Modifier,
-    settingUiAction: SettingUiAction,
-    hubUiAction: HubUiAction,
+    settingAction: SettingAction,
+    hubAction: HubAction,
     commonPadding: Dp = dimensionResource(R.dimen.padding_normal),
     onSettingNavigate: (Navigation) -> Unit,
     onTopNavigate: (Navigation) -> Unit,
 ) {
     LaunchedEffect(Unit) {
-        hubUiAction.onResetIsHideTopBar()
+        hubAction.onResetIsHideTopBar()
     }
 
     Column(
@@ -42,7 +42,7 @@ fun Preference(
         Spacer(modifier = Modifier.padding(commonPadding))
         ModifyUserInfoButton(onSettingNavigate = onSettingNavigate)
         Spacer(modifier = Modifier.padding(commonPadding))
-        LogoutButton(settingUiAction = settingUiAction, onTopNavigate = onTopNavigate)
+        LogoutButton(settingAction = settingAction, onTopNavigate = onTopNavigate)
     }
 }
 
@@ -70,14 +70,14 @@ private fun ModifyUserInfoButton(onSettingNavigate: (Navigation) -> Unit) {
 
 @Composable
 private fun LogoutButton(
-    settingUiAction: SettingUiAction,
+    settingAction: SettingAction,
     onTopNavigate: (Navigation) -> Unit,
 ) {
     SmallButton(
         modifier = Modifier.fillMaxWidth(),
         textID = R.string.logout,
         onClick = {
-            settingUiAction.onLogout()
+            settingAction.onLogout()
             onTopNavigate(NavigationRoute.Login)
         },
     )

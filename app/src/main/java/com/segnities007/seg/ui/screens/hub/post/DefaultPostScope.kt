@@ -1,15 +1,15 @@
 package com.segnities007.seg.ui.screens.hub.post
 
 import com.segnities007.seg.domain.presentation.Navigation
-import com.segnities007.seg.ui.screens.hub.HubUiAction
-import com.segnities007.seg.ui.screens.hub.HubUiState
-import com.segnities007.seg.ui.screens.hub.home.HomeUiAction
+import com.segnities007.seg.ui.screens.hub.HubAction
+import com.segnities007.seg.ui.screens.hub.HubState
+import com.segnities007.seg.ui.screens.hub.home.HomeAction
 
 data class DefaultPostScope(
-    override val homeUiAction: HomeUiAction,
-    override val hubUiState: HubUiState,
-    override val hubUiAction: HubUiAction,
-    override val postUiState: PostUiState,
-    override val postUiAction: PostUiAction,
+    override val homeAction: HomeAction,
+    override val hubState: HubState,
+    override val hubAction: HubAction,
+    override val postState: PostState,
+    override val postAction: PostAction,
     override val onHubNavigate: (Navigation) -> Unit,
 ) : PostScope

@@ -13,27 +13,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-// class for SignIn and SignUp UI
-
-data class LoginUiState(
-    val email: String = "",
-    val password: String = "",
-    val currentRouteName: String = "SignIn",
-    val isFailedSignIn: Boolean = false,
-)
-
-data class LoginUiAction(
-    val onChangeIsFailedSignIn: () -> Unit,
-    val onResetIsFailedSignIn: () -> Unit,
-    val onChangeCurrentRouteName: (newCurrentRouteName: String) -> Unit,
-    val onPasswordChange: (password: String) -> Unit,
-    val onEmailChange: (email: String) -> Unit,
-    val onSignUpWithEmailPassword: (onNavigate: () -> Unit) -> Unit,
-    val onSignInWithEmailPassword: (onNavigate: () -> Unit) -> Unit,
-)
-
-// class for ConfirmEmail UI
-
 data class ConfirmEmailUiAction(
     val onConfirmEmail: (onNavigate: () -> Unit) -> Unit,
 )
@@ -45,7 +24,7 @@ class LoginViewModel
         private val authRepository: AuthRepository,
         private val userRepository: UserRepository,
     ) : TopLayerViewModel() {
-        var loginUiState by mutableStateOf(LoginUiState())
+        var loginUiState by mutableStateOf(LoginState())
             private set
 
         fun onGetConfirmEmailUiAction(): ConfirmEmailUiAction =
@@ -53,8 +32,8 @@ class LoginViewModel
                 onConfirmEmail = this::onConfirmEmail,
             )
 
-        fun onGetLoginAction(): LoginUiAction =
-            LoginUiAction(
+        fun onGetLoginAction(): LoginAction =
+            LoginAction(
                 onChangeIsFailedSignIn = this::onChangeIsFailedSignIn,
                 onResetIsFailedSignIn = this::onResetIsFailedSignIn,
                 onChangeCurrentRouteName = this::onChangeCurrentRouteName,

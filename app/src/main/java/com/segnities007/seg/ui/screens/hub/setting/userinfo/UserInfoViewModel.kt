@@ -12,29 +12,16 @@ import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
 import javax.inject.Inject
 
-data class UserInfoUiState(
-    val name: String = "",
-    val userID: String = "",
-    val description: String = "",
-)
-
-data class UserInfoUiAction(
-    val onUserUpdate: suspend (user: User) -> Unit,
-    val onDescriptionChange: (newDescription: String) -> Unit,
-    val onNameChange: (newName: String) -> Unit,
-    val onUserIDChange: (newUserID: String) -> Unit,
-)
-
 @HiltViewModel
 class UserInfoViewModel
     @Inject
     constructor(
         private val userRepositoryImpl: UserRepositoryImpl,
     ) : ViewModel() {
-        var userInfoUiState by mutableStateOf(UserInfoUiState())
+        var userInfoState by mutableStateOf(UserInfoState())
 
-        fun getUserInfoUiAction(): UserInfoUiAction =
-            UserInfoUiAction(
+        fun getUserInfoUiAction(): UserInfoAction =
+            UserInfoAction(
                 onUserUpdate = this::onUserUpdate,
                 onUserIDChange = this::onUserIDChange,
                 onNameChange = this::onNameChange,
@@ -42,24 +29,24 @@ class UserInfoViewModel
             )
 
         private fun onNameChange(newName: String) {
-            userInfoUiState = userInfoUiState.copy(name = newName)
+            userInfoState = userInfoState.copy(name = newName)
         }
 
         private fun onUserIDChange(newUserID: String) {
-            userInfoUiState = userInfoUiState.copy(userID = newUserID)
+            userInfoState = userInfoState.copy(userID = newUserID)
         }
 
         private fun onDescriptionChange(newDescription: String) {
-            userInfoUiState = userInfoUiState.copy(description = newDescription)
+            userInfoState = userInfoState.copy(description = newDescription)
         }
 
         private suspend fun onUserUpdate(user: User) {
             withContext(Dispatchers.IO) {
                 val newUser =
                     user.copy(
-                        name = userInfoUiState.name,
-                        description = userInfoUiState.description,
-                        userID = userInfoUiState.userID,
+                        name = userInfoState.name,
+                        description = userInfoState.description,
+                        userID = userInfoState.userID,
                         updateAt = LocalDateTime.now(),
                     )
                 userRepositoryImpl.onUpdateUser(newUser)

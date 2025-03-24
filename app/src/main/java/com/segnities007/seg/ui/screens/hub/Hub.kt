@@ -26,8 +26,8 @@ import com.segnities007.seg.ui.components.navigation_drawer.NavigationDrawerWith
 import com.segnities007.seg.ui.components.tab.TabUiAction
 import com.segnities007.seg.ui.components.tab.TabUiState
 import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
-import com.segnities007.seg.ui.screens.hub.account.AccountUiState
-import com.segnities007.seg.ui.screens.hub.search.SearchUiAction
+import com.segnities007.seg.ui.screens.hub.account.AccountState
+import com.segnities007.seg.ui.screens.hub.search.SearchAction
 import com.segnities007.seg.ui.screens.hub.search.TopSearchBarUiAction
 import com.segnities007.seg.ui.screens.hub.search.TopSearchBarUiState
 
@@ -37,14 +37,14 @@ fun Hub(
     hubViewModel: HubViewModel = hiltViewModel(),
     onHubNavigate: (Navigation) -> Unit,
     currentRouteName: String,
-    hubUiState: HubUiState,
-    hubUiAction: HubUiAction,
+    hubState: HubState,
+    hubAction: HubAction,
     tabUiState: TabUiState,
     tabUiAction: TabUiAction,
-    searchUiAction: SearchUiAction,
+    searchUiAction: SearchAction,
     topSearchBarUiState: TopSearchBarUiState,
     topSearchBarUiAction: TopSearchBarUiAction,
-    accountUiState: AccountUiState,
+    accountState: AccountState,
     content: @Composable (Modifier) -> Unit,
 ) {
     NavigationDrawerWithState(
@@ -52,21 +52,21 @@ fun Hub(
         drawerState = hubViewModel.topState.drawerState,
         onNavigate = onHubNavigate,
         onDrawerClose = hubViewModel.onGetTopAction().closeDrawer,
-        user = hubUiState.user,
+        user = hubState.user,
     ) {
         HubUi(
             topAction = hubViewModel.onGetTopAction(),
             content = content,
             currentRouteName = currentRouteName,
             onHubNavigate = onHubNavigate,
-            hubUiState = hubUiState,
-            hubUiAction = hubUiAction,
+            hubState = hubState,
+            hubAction = hubAction,
             searchUiAction = searchUiAction,
             tabUiState = tabUiState,
             tabUiAction = tabUiAction,
             topSearchBarUiState = topSearchBarUiState,
             topSearchBarUiAction = topSearchBarUiAction,
-            accountUiState = accountUiState,
+            accountState = accountState,
         )
     }
 }
@@ -76,10 +76,10 @@ fun Hub(
 private fun HubUi(
     topAction: TopAction,
     currentRouteName: String,
-    hubUiState: HubUiState,
-    hubUiAction: HubUiAction,
-    accountUiState: AccountUiState,
-    searchUiAction: SearchUiAction,
+    hubState: HubState,
+    hubAction: HubAction,
+    accountState: AccountState,
+    searchUiAction: SearchAction,
     tabUiState: TabUiState,
     tabUiAction: TabUiAction,
     topSearchBarUiState: TopSearchBarUiState,
@@ -127,9 +127,9 @@ private fun HubUi(
                     )
                 NavigationHubRoute.Account.name ->
                     StatusBarWithFollows(
-                        user = accountUiState.user,
+                        user = accountState.user,
                         onHubNavigate = onHubNavigate,
-                        hubUiAction = hubUiAction,
+                        hubAction = hubAction,
                     )
                 NavigationHubRoute.Accounts.name ->
                     TopBar(
@@ -138,15 +138,15 @@ private fun HubUi(
                         routeName = currentRouteName,
                     )
                 NavigationHubRoute.Setting.name ->
-                    if (!hubUiState.isHideTopBar) {
+                    if (!hubState.isHideTopBar) {
                         StatusBarWithFollows(
-                            user = hubUiState.user,
+                            user = hubState.user,
                             onHubNavigate = onHubNavigate,
-                            hubUiAction = hubUiAction,
+                            hubAction = hubAction,
                         )
                     } else {
                         StatusBarWithTab(
-                            user = hubUiState.user,
+                            user = hubState.user,
                             tabUiState = tabUiState,
                             tabUiAction = tabUiAction,
                         )

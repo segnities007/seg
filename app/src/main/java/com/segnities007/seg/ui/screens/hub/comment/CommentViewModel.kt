@@ -1,6 +1,5 @@
 package com.segnities007.seg.ui.screens.hub.comment
 
-import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -13,28 +12,17 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@Immutable
-data class CommentUiState(
-    val comments: List<Post> = listOf(),
-)
-
-@Immutable
-data class CommentUiAction(
-    val onGetComments: (comment: Post) -> Unit,
-    val onProcessOfEngagementAction: (updatedPost: Post) -> Unit,
-)
-
 @HiltViewModel
 class CommentViewModel
     @Inject
     constructor(
         private val postRepository: PostRepository,
     ) : ViewModel() {
-        var commentUiState by mutableStateOf(CommentUiState())
+        var commentState by mutableStateOf(CommentState())
             private set
 
-        fun onGetCommentUiAction(): CommentUiAction =
-            CommentUiAction(
+        fun onGetCommentUiAction(): CommentAction =
+            CommentAction(
                 onGetComments = this::onGetComments,
                 onProcessOfEngagementAction = this::onProcessOfEngagementAction,
             )
@@ -46,7 +34,7 @@ class CommentViewModel
         private fun onGetComments(comment: Post) {
             viewModelScope.launch(Dispatchers.IO) {
                 val comments = postRepository.onGetComments(comment)
-                commentUiState = commentUiState.copy(comments = comments)
+                commentState = commentState.copy(comments = comments)
             }
         }
 
@@ -54,9 +42,9 @@ class CommentViewModel
 
         private fun onUpdatePosts(updatedPost: Post) {
             val newPosts =
-                commentUiState.comments.map { post ->
+                commentState.comments.map { post ->
                     if (updatedPost.id == post.id) updatedPost else post
                 }
-            commentUiState = commentUiState.copy(comments = newPosts)
+            commentState = commentState.copy(comments = newPosts)
         }
     }

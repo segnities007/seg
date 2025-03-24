@@ -19,28 +19,6 @@ import kotlinx.datetime.toLocalDateTime
 import java.time.LocalDate
 import javax.inject.Inject
 
-data class CreateAccountUiState(
-    val isShow: Boolean = false,
-    val name: String = "",
-    val userID: String = "",
-    val birthday: LocalDate = LocalDate.now(),
-    val uri: Uri? = null,
-    val path: String = "",
-    val byteArray: ByteArray? = null,
-)
-
-data class CreateAccountUiAction(
-    val onDatePickerOpen: () -> Unit,
-    val onDatePickerClose: () -> Unit,
-    val onDateSelect: (Long?) -> Unit,
-    val onNameChange: (name: String) -> Unit,
-    val onChangeUserID: (userID: String) -> Unit,
-    val onBirthdayChange: (birthday: LocalDate) -> Unit,
-    val onCreateUser: (onNavigateToHub: () -> Unit) -> Unit,
-    val onSetUri: (uri: Uri) -> Unit,
-    val onSetPicture: (path: String, byteArray: ByteArray) -> Unit,
-)
-
 @HiltViewModel
 class CreateAccountViewModel
     @Inject
@@ -49,11 +27,11 @@ class CreateAccountViewModel
     ) : ViewModel() {
         private val tag = "CreateAccountViewModel"
 
-        var createAccountUiState by mutableStateOf(CreateAccountUiState())
+        var createAccountUiState by mutableStateOf(CreateAccountState())
             private set
 
-        fun onGetCreateAccountUiAction(): CreateAccountUiAction =
-            CreateAccountUiAction(
+        fun onGetCreateAccountUiAction(): CreateAccountAction =
+            CreateAccountAction(
                 onDatePickerOpen = this::onDatePickerOpen,
                 onDatePickerClose = this::onDatePickerClose,
                 onDateSelect = this::onDateSelect,

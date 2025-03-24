@@ -14,30 +14,17 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import javax.inject.Inject
 
-data class SettingUiState(
-    val isDatePickerDialogShow: Boolean = false,
-    val newName: String = "",
-    val newUserID: String = "",
-)
-
-data class SettingUiAction(
-    val onLogout: () -> Unit,
-    val onDatePickerClose: () -> Unit,
-    val onDatePickerOpen: () -> Unit,
-    val onDateSelect: (Long?) -> Unit,
-)
-
 @HiltViewModel
 class SettingViewModel
     @Inject
     constructor(
         private val authRepositoryImpl: AuthRepositoryImpl,
     ) : ViewModel() {
-        var settingUiState by mutableStateOf(SettingUiState())
+        var settingState by mutableStateOf(SettingState())
             private set
 
-        fun getSettingUiAction(): SettingUiAction =
-            SettingUiAction(
+        fun getSettingUiAction(): SettingAction =
+            SettingAction(
                 onLogout = this::onLogout,
                 onDatePickerClose = this::onDatePickerClose,
                 onDatePickerOpen = this::onDatePickerOpen,
@@ -45,11 +32,11 @@ class SettingViewModel
             )
 
         private fun onDatePickerClose() {
-            settingUiState = settingUiState.copy(isDatePickerDialogShow = false)
+            settingState = settingState.copy(isDatePickerDialogShow = false)
         }
 
         private fun onDatePickerOpen() {
-            settingUiState = settingUiState.copy(isDatePickerDialogShow = true)
+            settingState = settingState.copy(isDatePickerDialogShow = true)
         }
 
         private fun onLogout() {

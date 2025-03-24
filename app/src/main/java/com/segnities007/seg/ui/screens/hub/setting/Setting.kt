@@ -8,16 +8,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.segnities007.seg.ui.screens.hub.HubUiAction
+import com.segnities007.seg.ui.screens.hub.HubAction
 
 @Composable
 fun Setting(
     modifier: Modifier = Modifier,
-    hubUiAction: HubUiAction,
+    hubAction: HubAction,
     content: @Composable () -> Unit,
 ) {
     LaunchedEffect(Unit) {
-        hubUiAction.onGetUser()
+        hubAction.onGetUser()
     }
 
     Box(

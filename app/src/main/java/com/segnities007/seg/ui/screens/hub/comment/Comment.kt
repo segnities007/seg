@@ -14,28 +14,28 @@ import com.segnities007.seg.R
 import com.segnities007.seg.domain.presentation.Navigation
 import com.segnities007.seg.ui.components.card.postcard.PostCard
 import com.segnities007.seg.ui.components.card.postcard.PostCardUiAction
-import com.segnities007.seg.ui.screens.hub.HubUiAction
-import com.segnities007.seg.ui.screens.hub.HubUiState
+import com.segnities007.seg.ui.screens.hub.HubAction
+import com.segnities007.seg.ui.screens.hub.HubState
 
 @Composable
 fun Comment(
     modifier: Modifier = Modifier,
-    hubUiState: HubUiState,
-    hubUiAction: HubUiAction,
+    hubState: HubState,
+    hubAction: HubAction,
     commentViewModel: CommentViewModel = hiltViewModel(),
     postCardUiAction: PostCardUiAction,
     onHubNavigate: (Navigation) -> Unit,
 ) {
     LaunchedEffect(Unit) {
-        commentViewModel.onGetCommentUiAction().onGetComments(hubUiState.comment)
+        commentViewModel.onGetCommentUiAction().onGetComments(hubState.comment)
     }
 
     CommentUi(
         modifier = modifier,
-        hubUiState = hubUiState,
-        hubUiAction = hubUiAction,
-        commentUiState = commentViewModel.commentUiState,
-        commentUiAction = commentViewModel.onGetCommentUiAction(),
+        hubState = hubState,
+        hubAction = hubAction,
+        commentState = commentViewModel.commentState,
+        commentAction = commentViewModel.onGetCommentUiAction(),
         postCardUiAction = postCardUiAction,
         onHubNavigate = onHubNavigate,
     )
@@ -44,11 +44,11 @@ fun Comment(
 @Composable
 private fun CommentUi(
     modifier: Modifier = Modifier,
-    hubUiState: HubUiState,
-    hubUiAction: HubUiAction,
-    commentUiState: CommentUiState,
+    hubState: HubState,
+    hubAction: HubAction,
+    commentState: CommentState,
     postCardUiAction: PostCardUiAction,
-    commentUiAction: CommentUiAction,
+    commentAction: CommentAction,
     onHubNavigate: (Navigation) -> Unit,
 ) {
     LazyColumn(
@@ -64,26 +64,26 @@ private fun CommentUi(
     ) {
         item {
             PostCard(
-                post = hubUiState.comment,
-                hubUiState = hubUiState,
-                hubUiAction = hubUiAction,
+                post = hubState.comment,
+                hubState = hubState,
+                hubAction = hubAction,
                 postCardUiAction = postCardUiAction,
                 onHubNavigate = onHubNavigate,
-                onProcessOfEngagementAction = commentUiAction.onProcessOfEngagementAction,
+                onProcessOfEngagementAction = commentAction.onProcessOfEngagementAction,
             )
             Spacer(Modifier.padding(dimensionResource(R.dimen.padding_normal)))
         }
         items(
-            commentUiState.comments.size,
-            key = { index: Int -> commentUiState.comments[index].id },
+            commentState.comments.size,
+            key = { index: Int -> commentState.comments[index].id },
         ) {
             PostCard(
-                post = commentUiState.comments[it],
-                hubUiState = hubUiState,
-                hubUiAction = hubUiAction,
+                post = commentState.comments[it],
+                hubState = hubState,
+                hubAction = hubAction,
                 postCardUiAction = postCardUiAction,
                 onHubNavigate = onHubNavigate,
-                onProcessOfEngagementAction = commentUiAction.onProcessOfEngagementAction,
+                onProcessOfEngagementAction = commentAction.onProcessOfEngagementAction,
             )
             Spacer(Modifier.padding(dimensionResource(R.dimen.padding_smaller)))
         }

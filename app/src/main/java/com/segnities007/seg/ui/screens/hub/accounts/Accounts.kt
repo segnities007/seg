@@ -11,30 +11,30 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.segnities007.seg.domain.presentation.Navigation
 import com.segnities007.seg.ui.components.card.AvatarCard
 import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
-import com.segnities007.seg.ui.screens.hub.HubUiAction
-import com.segnities007.seg.ui.screens.hub.HubUiState
-import com.segnities007.seg.ui.screens.hub.account.AccountUiAction
+import com.segnities007.seg.ui.screens.hub.HubAction
+import com.segnities007.seg.ui.screens.hub.HubState
+import com.segnities007.seg.ui.screens.hub.account.AccountAction
 
 @Composable
 fun Accounts(
     modifier: Modifier = Modifier,
     accountsViewModel: AccountsViewModel = hiltViewModel(),
-    accountUiAction: AccountUiAction,
-    hubUiState: HubUiState,
-    hubUiAction: HubUiAction,
+    accountAction: AccountAction,
+    hubState: HubState,
+    hubAction: HubAction,
     onHubNavigate: (Navigation) -> Unit,
 ) {
     LaunchedEffect(Unit) {
         val action = accountsViewModel.onGetAccountsUiAction()
-        action.onGetUser(hubUiState.userID)
-        action.onGetUsers(hubUiState.accounts)
+        action.onGetUser(hubState.userID)
+        action.onGetUsers(hubState.accounts)
     }
 
     AccountsUi(
         modifier = modifier,
-        accountUiAction = accountUiAction,
-        accountsUiState = accountsViewModel.accountsUiState,
-        hubUiAction = hubUiAction,
+        accountAction = accountAction,
+        accountsState = accountsViewModel.accountsState,
+        hubAction = hubAction,
         onHubNavigate = onHubNavigate,
     )
 }
@@ -42,9 +42,9 @@ fun Accounts(
 @Composable
 private fun AccountsUi(
     modifier: Modifier = Modifier,
-    accountUiAction: AccountUiAction,
-    accountsUiState: AccountsUiState,
-    hubUiAction: HubUiAction,
+    accountAction: AccountAction,
+    accountsState: AccountsState,
+    hubAction: HubAction,
     onHubNavigate: (Navigation) -> Unit,
 ) {
     LazyColumn(
@@ -53,15 +53,15 @@ private fun AccountsUi(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         items(
-            count = accountsUiState.users.size,
-            key = { index -> accountsUiState.users[index].id },
+            count = accountsState.users.size,
+            key = { index -> accountsState.users[index].id },
         ) {
             AvatarCard(
-                user = accountsUiState.users[it],
+                user = accountsState.users[it],
                 onCardClick = {
-                    accountUiAction.onGetUserPosts(accountsUiState.users[it].userID)
-                    hubUiAction.onSetUserID(accountsUiState.users[it].userID)
-                    hubUiAction.onChangeCurrentRouteName(NavigationHubRoute.Account.name)
+                    accountAction.onGetUserPosts(accountsState.users[it].userID)
+                    hubAction.onSetUserID(accountsState.users[it].userID)
+                    hubAction.onChangeCurrentRouteName(NavigationHubRoute.Account.name)
                     onHubNavigate(NavigationHubRoute.Account)
                 },
             )

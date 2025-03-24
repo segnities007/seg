@@ -23,16 +23,16 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.Dp
 import com.segnities007.seg.R
 import com.segnities007.seg.ui.components.button.BasicButton
-import com.segnities007.seg.ui.screens.login.LoginUiAction
-import com.segnities007.seg.ui.screens.login.LoginUiState
+import com.segnities007.seg.ui.screens.login.LoginAction
+import com.segnities007.seg.ui.screens.login.LoginState
 
 @Composable
 fun LoginCard(
     modifier: Modifier,
     padding: Dp,
     textIDOfEnterLabel: Int,
-    loginUiState: LoginUiState,
-    loginUiAction: LoginUiAction,
+    loginState: LoginState,
+    loginAction: LoginAction,
     onClickSignButton: () -> Unit,
 ) {
     Box(
@@ -46,14 +46,14 @@ fun LoginCard(
                 verticalArrangement = Arrangement.Center,
             ) {
                 InputForm(
-                    text = loginUiState.email,
+                    text = loginState.email,
                     label = stringResource(R.string.email),
-                ) { loginUiAction.onEmailChange(it) }
+                ) { loginAction.onEmailChange(it) }
                 Spacer(Modifier.padding(padding))
                 InputForm(
-                    text = loginUiState.password,
+                    text = loginState.password,
                     label = stringResource(R.string.password),
-                ) { loginUiAction.onPasswordChange(it) }
+                ) { loginAction.onPasswordChange(it) }
                 Spacer(Modifier.padding(padding))
                 Row {
                     BasicButton(

@@ -63,9 +63,9 @@ fun NavigationHub(
     Hub(
         currentRouteName = currentRoute.toString(),
         onHubNavigate = onHubNavigate,
-        hubUiState = hubViewModel.hubUiState,
-        hubUiAction = hubViewModel.getHubUiAction(),
-        accountUiState = accountViewModel.accountUiState,
+        hubState = hubViewModel.hubState,
+        hubAction = hubViewModel.getHubUiAction(),
+        accountState = accountViewModel.accountUiState,
         searchUiAction = searchViewModel.onGetSearchUiAction(),
         tabUiAction = tabViewModel.onGetTabUiAction(),
         tabUiState = tabViewModel.tabUiState,
@@ -76,10 +76,10 @@ fun NavigationHub(
             composable<NavigationHubRoute.Home> {
                 Home(
                     modifier = modifier,
-                    hubUiState = hubViewModel.hubUiState,
-                    hubUiAction = hubViewModel.getHubUiAction(),
-                    homeUiState = homeViewModel.homeUiState,
-                    homeUiAction = homeViewModel.onGetHomeUiAction(),
+                    hubState = hubViewModel.hubState,
+                    hubAction = hubViewModel.getHubUiAction(),
+                    homeState = homeViewModel.homeState,
+                    homeAction = homeViewModel.onGetHomeUiAction(),
                     postCardUiAction = postCardViewModel.onGetPostCardUiAction(),
                     onHubNavigate = onHubNavigate,
                 )
@@ -87,8 +87,8 @@ fun NavigationHub(
             composable<NavigationHubRoute.Trend> {
                 Trend(
                     modifier = modifier,
-                    hubUiState = hubViewModel.hubUiState,
-                    hubUiAction = hubViewModel.getHubUiAction(),
+                    hubState = hubViewModel.hubState,
+                    hubAction = hubViewModel.getHubUiAction(),
                     postCardUiAction = postCardViewModel.onGetPostCardUiAction(),
                     onHubNavigate = onHubNavigate,
                 )
@@ -96,9 +96,9 @@ fun NavigationHub(
             composable<NavigationHubRoute.Post> {
                 Post(
                     modifier = modifier,
-                    homeUiAction = homeViewModel.onGetHomeUiAction(),
-                    hubUiState = hubViewModel.hubUiState,
-                    hubUiAction = hubViewModel.getHubUiAction(),
+                    homeAction = homeViewModel.onGetHomeUiAction(),
+                    hubState = hubViewModel.hubState,
+                    hubAction = hubViewModel.getHubUiAction(),
                     onHubNavigate = onHubNavigate,
                 )
             }
@@ -108,9 +108,9 @@ fun NavigationHub(
             composable<NavigationHubRoute.Setting> {
                 NavigationSetting(
                     modifier = modifier,
-                    homeUiAction = homeViewModel.onGetHomeUiAction(),
-                    hubUiState = hubViewModel.hubUiState,
-                    hubUiAction = hubViewModel.getHubUiAction(),
+                    homeAction = homeViewModel.onGetHomeUiAction(),
+                    hubState = hubViewModel.hubState,
+                    hubAction = hubViewModel.getHubUiAction(),
                     onTopNavigate = onTopNavigate,
                     postCardUiAction = postCardViewModel.onGetPostCardUiAction(),
                     tabUiState = tabViewModel.tabUiState,
@@ -121,11 +121,11 @@ fun NavigationHub(
             composable<NavigationHubRoute.Account> {
                 Account(
                     modifier = modifier,
-                    hubUiState = hubViewModel.hubUiState,
-                    hubUiAction = hubViewModel.getHubUiAction(),
+                    hubState = hubViewModel.hubState,
+                    hubAction = hubViewModel.getHubUiAction(),
                     accountUiFlagState = accountViewModel.accountUiFlagState,
-                    accountUiState = accountViewModel.accountUiState,
-                    accountUiAction = accountViewModel.getAccountUiAction(),
+                    accountState = accountViewModel.accountUiState,
+                    accountAction = accountViewModel.getAccountUiAction(),
                     postCardUiAction = postCardViewModel.onGetPostCardUiAction(),
                     onHubNavigate = onHubNavigate,
                 )
@@ -133,22 +133,22 @@ fun NavigationHub(
             composable<NavigationHubRoute.Accounts> {
                 Accounts(
                     modifier = modifier,
-                    hubUiAction = hubViewModel.getHubUiAction(),
-                    accountUiAction = accountViewModel.getAccountUiAction(),
+                    hubAction = hubViewModel.getHubUiAction(),
+                    accountAction = accountViewModel.getAccountUiAction(),
                     onHubNavigate = onHubNavigate,
-                    hubUiState = hubViewModel.hubUiState,
+                    hubState = hubViewModel.hubState,
                 )
             }
             composable<NavigationHubRoute.Search> {
                 Search(
                     modifier = modifier,
-                    hubUiState = hubViewModel.hubUiState,
-                    hubUiAction = hubViewModel.getHubUiAction(),
+                    hubState = hubViewModel.hubState,
+                    hubAction = hubViewModel.getHubUiAction(),
                     tabUiState = tabViewModel.tabUiState,
                     postCardUiAction = postCardViewModel.onGetPostCardUiAction(),
                     topSearchBarUiState = searchViewModel.topSearchBarUiState,
-                    accountUiAction = accountViewModel.getAccountUiAction(),
-                    searchUiState = searchViewModel.searchUiState,
+                    accountAction = accountViewModel.getAccountUiAction(),
+                    searchState = searchViewModel.searchState,
                     searchUiAction = searchViewModel.onGetSearchUiAction(),
                     onHubNavigate = onHubNavigate,
                 )
@@ -156,8 +156,8 @@ fun NavigationHub(
             composable<NavigationHubRoute.Comment> {
                 Comment(
                     modifier = modifier,
-                    hubUiState = hubViewModel.hubUiState,
-                    hubUiAction = hubViewModel.getHubUiAction(),
+                    hubState = hubViewModel.hubState,
+                    hubAction = hubViewModel.getHubUiAction(),
                     postCardUiAction = postCardViewModel.onGetPostCardUiAction(),
                     onHubNavigate = onHubNavigate,
                 )
@@ -165,9 +165,9 @@ fun NavigationHub(
             composable<NavigationHubRoute.PostForComment> {
                 PostForComment(
                     modifier = modifier,
-                    homeUiAction = homeViewModel.onGetHomeUiAction(),
-                    hubUiState = hubViewModel.hubUiState,
-                    hubUiAction = hubViewModel.getHubUiAction(),
+                    homeAction = homeViewModel.onGetHomeUiAction(),
+                    hubState = hubViewModel.hubState,
+                    hubAction = hubViewModel.getHubUiAction(),
                     postCardUiAction = postCardViewModel.onGetPostCardUiAction(),
                     onBackHubNavigate = { hubNavHostController.navigateUp() },
                     onHubNavigate = onHubNavigate,

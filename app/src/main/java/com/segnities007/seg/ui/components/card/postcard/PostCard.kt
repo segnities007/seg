@@ -15,9 +15,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -35,17 +33,15 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.segnities007.seg.R
 import com.segnities007.seg.data.model.Post
-import com.segnities007.seg.ui.components.button.SmallButton
 import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
-import com.segnities007.seg.ui.screens.hub.HubUiAction
-import com.segnities007.seg.ui.screens.hub.HubUiState
-import com.segnities007.seg.ui.screens.hub.setting.my_posts.MyPostsUiAction
+import com.segnities007.seg.ui.screens.hub.HubAction
+import com.segnities007.seg.ui.screens.hub.HubState
 
 @Composable
 fun PostCard(
     post: Post,
-    hubUiState: HubUiState,
-    hubUiAction: HubUiAction,
+    hubState: HubState,
+    hubAction: HubAction,
     postCardUiAction: PostCardUiAction,
     isIncrementView: Boolean = true,
     onHubNavigate: (NavigationHubRoute) -> Unit,
@@ -53,8 +49,8 @@ fun PostCard(
 ) {
     PostCardUi(
         post = post,
-        hubUiState = hubUiState,
-        hubUiAction = hubUiAction,
+        hubState = hubState,
+        hubAction = hubAction,
         postCardUiAction = postCardUiAction,
         isIncrementView = isIncrementView,
         onHubNavigate = onHubNavigate,
@@ -72,8 +68,8 @@ fun PostCard(
 @Composable
 fun PostCardUi(
     post: Post,
-    hubUiState: HubUiState,
-    hubUiAction: HubUiAction,
+    hubState: HubState,
+    hubAction: HubAction,
     postCardUiAction: PostCardUiAction,
     isIncrementView: Boolean = true,
     onHubNavigate: (NavigationHubRoute) -> Unit,
@@ -82,8 +78,8 @@ fun PostCardUi(
     val scope =
         DefaultPostCardScope(
             post = post,
-            hubUiState = hubUiState,
-            hubUiAction = hubUiAction,
+            hubState = hubState,
+            hubAction = hubAction,
             postCardUiAction = postCardUiAction,
             onHubNavigate = onHubNavigate,
         )
@@ -106,7 +102,7 @@ fun PostCardScope.CardContents(content: @Composable () -> Unit) {
             Modifier
                 .padding(dimensionResource(R.dimen.padding_sn))
                 .clickable {
-                    hubUiAction.onSetComment(post)
+                    hubAction.onSetComment(post)
                     postCardUiAction.onClickPostCard(onHubNavigate)
                 }.fillMaxWidth(),
     ) {
@@ -116,8 +112,8 @@ fun PostCardScope.CardContents(content: @Composable () -> Unit) {
                     .size(dimensionResource(R.dimen.icon_sn))
                     .clip(CircleShape)
                     .clickable {
-                        hubUiAction.onSetUserID(post.userID) // for viewing other user
-                        hubUiAction.onChangeCurrentRouteName(NavigationHubRoute.Account.name)
+                        hubAction.onSetUserID(post.userID) // for viewing other user
+                        hubAction.onChangeCurrentRouteName(NavigationHubRoute.Account.name)
                         onHubNavigate(NavigationHubRoute.Account)
                     },
             model = post.iconURL,
@@ -180,7 +176,7 @@ fun PostCardScope.ActionIcons(onProcessOfEngagementAction: (newPost: Post) -> Un
         ActionIcon(
             modifier = Modifier.padding(top = dimensionResource(R.dimen.padding_sn)),
             painterRes =
-                if (hubUiState.user.likes.contains(
+                if (hubState.user.likes.contains(
                         post.id,
                     )
                 ) {
@@ -192,8 +188,8 @@ fun PostCardScope.ActionIcons(onProcessOfEngagementAction: (newPost: Post) -> Un
             onClick = {
                 postCardUiAction.onLike(
                     post,
-                    hubUiState,
-                    hubUiAction,
+                    hubState,
+                    hubAction,
                     onProcessOfEngagementAction,
                 )
             },
@@ -203,7 +199,7 @@ fun PostCardScope.ActionIcons(onProcessOfEngagementAction: (newPost: Post) -> Un
             modifier = Modifier.padding(top = dimensionResource(R.dimen.padding_sn)),
             count = counts[1],
             painterRes =
-                if (hubUiState.user.reposts.contains(post.id)) {
+                if (hubState.user.reposts.contains(post.id)) {
                     EngagementIconState.pushIcons[1]
                 } else {
                     EngagementIconState.unPushIcons[1]
@@ -211,8 +207,8 @@ fun PostCardScope.ActionIcons(onProcessOfEngagementAction: (newPost: Post) -> Un
             onClick = {
                 postCardUiAction.onRepost(
                     post,
-                    hubUiState,
-                    hubUiAction,
+                    hubState,
+                    hubAction,
                     onProcessOfEngagementAction,
                 )
             },
@@ -222,7 +218,7 @@ fun PostCardScope.ActionIcons(onProcessOfEngagementAction: (newPost: Post) -> Un
             modifier = Modifier.padding(top = dimensionResource(R.dimen.padding_sn)),
             count = counts[2],
             painterRes =
-                if (hubUiState.user.comments.contains(post.id)) {
+                if (hubState.user.comments.contains(post.id)) {
                     EngagementIconState.pushIcons[2]
                 } else {
                     EngagementIconState.unPushIcons[2]
@@ -290,9 +286,9 @@ fun PostCardScope.Description() {
 private fun PostCardPreview() {
     PostCard(
         post = Post(),
-        hubUiState = HubUiState(),
-        hubUiAction =
-            HubUiAction(
+        hubState = HubState(),
+        hubAction =
+            HubAction(
                 onUpdateSelf = {},
                 onChangeIsHideTopBar = {},
                 onResetIsHideTopBar = {},

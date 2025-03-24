@@ -24,17 +24,17 @@ import com.segnities007.seg.ui.components.button.SmallButton
 import com.segnities007.seg.ui.components.card.postcard.PostCard
 import com.segnities007.seg.ui.components.card.postcard.PostCardUiAction
 import com.segnities007.seg.ui.components.card.postcard.PostSimpleCard
-import com.segnities007.seg.ui.screens.hub.HubUiAction
-import com.segnities007.seg.ui.screens.hub.HubUiState
+import com.segnities007.seg.ui.screens.hub.HubAction
+import com.segnities007.seg.ui.screens.hub.HubState
 import com.segnities007.seg.ui.screens.hub.comment.CommentViewModel
-import com.segnities007.seg.ui.screens.hub.home.HomeUiAction
+import com.segnities007.seg.ui.screens.hub.home.HomeAction
 
 @Composable
 fun PostForComment(
     modifier: Modifier = Modifier,
-    homeUiAction: HomeUiAction,
-    hubUiState: HubUiState,
-    hubUiAction: HubUiAction,
+    homeAction: HomeAction,
+    hubState: HubState,
+    hubAction: HubAction,
     postCardUiAction: PostCardUiAction,
     onBackHubNavigate: () -> Unit,
     onHubNavigate: (Navigation) -> Unit, // go to home
@@ -44,24 +44,24 @@ fun PostForComment(
 
     LaunchedEffect(Unit) {
         val commentUiAction = commentViewModel.onGetCommentUiAction()
-        commentUiAction.onGetComments(hubUiState.comment)
+        commentUiAction.onGetComments(hubState.comment)
     }
 
     PostUi(
         modifier = modifier,
-        homeUiAction = homeUiAction,
-        hubUiState = hubUiState,
-        hubUiAction = hubUiAction,
-        postUiState = postViewModel.postUiState,
-        postUiAction = postViewModel.onGetPostUiAction(),
+        homeAction = homeAction,
+        hubState = hubState,
+        hubAction = hubAction,
+        postState = postViewModel.postState,
+        postAction = postViewModel.onGetPostUiAction(),
         onHubNavigate = onHubNavigate,
     ) {
         Column {
             Box {
                 PostCard(
-                    post = hubUiState.comment,
-                    hubUiState = hubUiState,
-                    hubUiAction = hubUiAction,
+                    post = hubState.comment,
+                    hubState = hubState,
+                    hubAction = hubAction,
                     postCardUiAction = postCardUiAction,
                     isIncrementView = false,
                     onHubNavigate = onHubNavigate,
@@ -103,13 +103,13 @@ fun PostScope.TopToolBarForCommentForComment(
         SmallButton(
             textID = R.string.post,
             onClick = {
-                postUiAction.onCreateComment(
-                    hubUiState,
-                    hubUiAction,
-                    postUiAction.onUpdateIsLoading,
+                postAction.onCreateComment(
+                    hubState,
+                    hubAction,
+                    postAction.onUpdateIsLoading,
                 ) {
-                    postUiAction.onUpdateInputText("")
-                    homeUiAction.onGetNewPosts()
+                    postAction.onUpdateInputText("")
+                    homeAction.onGetNewPosts()
                     onBackHubNavigate()
                 }
             },
@@ -122,16 +122,16 @@ fun PostScope.TopToolBarForCommentForComment(
 private fun PostPreview() {
     PostUi(
         modifier = Modifier,
-        homeUiAction =
-            HomeUiAction(
+        homeAction =
+            HomeAction(
                 onGetNewPosts = {},
                 onGetBeforeNewPosts = {},
                 onChangeHasNoMorePost = {},
                 onProcessOfEngagementAction = {},
             ),
-        hubUiState = HubUiState(),
-        hubUiAction =
-            HubUiAction(
+        hubState = HubState(),
+        hubAction =
+            HubAction(
                 onUpdateSelf = {},
                 onChangeIsHideTopBar = {},
                 onResetIsHideTopBar = {},
@@ -145,9 +145,9 @@ private fun PostPreview() {
                 onRemovePostIDFromMyReposts = {},
                 onChangeCurrentRouteName = {},
             ),
-        postUiState = PostUiState(),
-        postUiAction =
-            PostUiAction(
+        postState = PostState(),
+        postAction =
+            PostAction(
                 onUpdateIsLoading = {},
                 onUpdateInputText = {},
                 onCreatePost = { a, b, c, d -> },
@@ -158,8 +158,8 @@ private fun PostPreview() {
         Column {
             PostSimpleCard(
                 post = Post(),
-                hubUiState = hubUiState,
-                hubUiAction = hubUiAction,
+                hubState = hubState,
+                hubAction = hubAction,
                 postCardUiAction =
                     PostCardUiAction(
                         onDeletePost = {_, _, _, _, _ -> },

@@ -37,7 +37,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.segnities007.seg.R
 import com.segnities007.seg.ui.components.button.SmallButton
 import com.segnities007.seg.ui.components.indicator.PagingIndicator
-import kotlinx.coroutines.launch
 
 @Composable
 fun CreateAccount(
@@ -48,8 +47,8 @@ fun CreateAccount(
     CreateAccountUi(
         modifier = modifier,
         onNavigateToHub = onNavigateToHub,
-        createAccountUiState = createAccountViewModel.createAccountUiState,
-        createAccountUiAction = createAccountViewModel.onGetCreateAccountUiAction(),
+        createAccountState = createAccountViewModel.createAccountUiState,
+        createAccountAction = createAccountViewModel.onGetCreateAccountUiAction(),
     )
 }
 
@@ -58,8 +57,8 @@ fun CreateAccount(
 private fun CreateAccountUi(
     modifier: Modifier = Modifier,
     onNavigateToHub: () -> Unit,
-    createAccountUiState: CreateAccountUiState,
-    createAccountUiAction: CreateAccountUiAction,
+    createAccountState: CreateAccountState,
+    createAccountAction: CreateAccountAction,
     commonPadding: Dp = dimensionResource(R.dimen.padding_normal),
 ) {
     val pagerState =
@@ -67,9 +66,9 @@ private fun CreateAccountUi(
             3
         })
     DatePickerDialog(
-        createAccountUiState.isShow,
-        onDateSelected = createAccountUiAction.onDateSelect,
-        onDatePickerDismiss = createAccountUiAction.onDatePickerClose,
+        createAccountState.isShow,
+        onDateSelected = createAccountAction.onDateSelect,
+        onDatePickerDismiss = createAccountAction.onDatePickerClose,
     )
 
     HorizontalPager(
@@ -84,18 +83,18 @@ private fun CreateAccountUi(
             when (page) {
                 0 ->
                     FirstPage(
-                        createAccountUiState = createAccountUiState,
-                        createAccountUiAction = createAccountUiAction,
+                        createAccountState = createAccountState,
+                        createAccountAction = createAccountAction,
                         commonPadding = commonPadding,
                     )
                 1 ->
                     SecondPage(
-                        createAccountUiAction = createAccountUiAction,
+                        createAccountAction = createAccountAction,
                         commonPadding = commonPadding,
                     )
                 2 ->
                     ThirdPage(
-                        createAccountUiAction = createAccountUiAction,
+                        createAccountAction = createAccountAction,
                         onNavigateToHub = onNavigateToHub,
                     )
             }
@@ -111,8 +110,8 @@ private fun CreateAccountUi(
 
 @Composable
 private fun FirstPage(
-    createAccountUiState: CreateAccountUiState,
-    createAccountUiAction: CreateAccountUiAction,
+    createAccountState: CreateAccountState,
+    createAccountAction: CreateAccountAction,
     commonPadding: Dp,
 ) {
     Column(
@@ -120,50 +119,50 @@ private fun FirstPage(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         InputForm(
-            text = createAccountUiState.name,
+            text = createAccountState.name,
             label = stringResource(id = R.string.name),
-            onValueChange = createAccountUiAction.onNameChange,
+            onValueChange = createAccountAction.onNameChange,
         )
         Spacer(modifier = Modifier.padding(commonPadding))
 
         InputForm(
-            text = createAccountUiState.userID,
+            text = createAccountState.userID,
             label = stringResource(id = R.string.user_id),
-            onValueChange = createAccountUiAction.onChangeUserID,
+            onValueChange = createAccountAction.onChangeUserID,
         )
     }
 }
 
 @Composable
 private fun SecondPage(
-    createAccountUiAction: CreateAccountUiAction,
+    createAccountAction: CreateAccountAction,
     commonPadding: Dp,
 ) {
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        ImagePickerButton(createAccountUiAction = createAccountUiAction)
+        ImagePickerButton(createAccountAction = createAccountAction)
         Spacer(modifier = Modifier.padding(commonPadding))
-        SmallButton(textID = R.string.select_birthday, onClick = createAccountUiAction.onDatePickerOpen)
+        SmallButton(textID = R.string.select_birthday, onClick = createAccountAction.onDatePickerOpen)
     }
 }
 
 @Composable
 private fun ThirdPage(
-    createAccountUiAction: CreateAccountUiAction,
+    createAccountAction: CreateAccountAction,
     onNavigateToHub: () -> Unit,
 ) {
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        SmallButton(textID = R.string.enter, onClick = { createAccountUiAction.onCreateUser(onNavigateToHub) })
+        SmallButton(textID = R.string.enter, onClick = { createAccountAction.onCreateUser(onNavigateToHub) })
     }
 }
 
 @Composable
-private fun ImagePickerButton(createAccountUiAction: CreateAccountUiAction) {
+private fun ImagePickerButton(createAccountAction: CreateAccountAction) {
     val context = LocalContext.current
     val tag = "PhotoPicker"
 
@@ -173,8 +172,8 @@ private fun ImagePickerButton(createAccountUiAction: CreateAccountUiAction) {
                 try {
                     context.contentResolver.openInputStream(uri)?.use { inputStream ->
                         val byteArray: ByteArray = inputStream.readBytes()
-                        createAccountUiAction.onSetPicture(uri.path.toString(), byteArray)
-                        createAccountUiAction.onSetUri(uri)
+                        createAccountAction.onSetPicture(uri.path.toString(), byteArray)
+                        createAccountAction.onSetUri(uri)
                     }
                 } catch (e: Exception) {
                     Log.e(tag, " $e")
@@ -257,9 +256,9 @@ private fun CreateAccountPreview() {
     CreateAccountUi(
         modifier = Modifier,
         onNavigateToHub = {},
-        createAccountUiState = CreateAccountUiState(),
-        createAccountUiAction =
-            CreateAccountUiAction(
+        createAccountState = CreateAccountState(),
+        createAccountAction =
+            CreateAccountAction(
                 onDatePickerOpen = {},
                 onDatePickerClose = {},
                 onDateSelect = {},

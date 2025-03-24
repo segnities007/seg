@@ -47,16 +47,16 @@ fun NavigationLogin(
             composable<NavigationLoginRoute.SignIn> {
                 SignIn(
                     modifier = modifier,
-                    loginUiState = loginViewModel.loginUiState,
-                    loginUiAction = loginViewModel.onGetLoginAction(),
+                    loginState = loginViewModel.loginUiState,
+                    loginAction = loginViewModel.onGetLoginAction(),
                     onNavigate = { navHostController.navigate(NavigationRoute.Hub) },
                 )
             }
             composable<NavigationLoginRoute.SignUp> {
                 SignUp(
                     modifier = modifier,
-                    loginUiState = loginViewModel.loginUiState,
-                    loginUiAction = loginViewModel.onGetLoginAction(),
+                    loginState = loginViewModel.loginUiState,
+                    loginAction = loginViewModel.onGetLoginAction(),
                     onNavigateToConfirmEmail = { it ->
                         loginNavHostController.navigate(
                             NavigationLoginRoute.CreateAccount,

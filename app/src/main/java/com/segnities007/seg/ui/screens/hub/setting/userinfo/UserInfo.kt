@@ -38,35 +38,35 @@ import com.segnities007.seg.R
 import com.segnities007.seg.domain.presentation.Navigation
 import com.segnities007.seg.ui.components.button.BasicButton
 import com.segnities007.seg.ui.navigation.hub.setting.NavigationSettingRoute
-import com.segnities007.seg.ui.screens.hub.HubUiAction
-import com.segnities007.seg.ui.screens.hub.HubUiState
-import com.segnities007.seg.ui.screens.hub.setting.SettingUiAction
-import com.segnities007.seg.ui.screens.hub.setting.SettingUiState
+import com.segnities007.seg.ui.screens.hub.HubAction
+import com.segnities007.seg.ui.screens.hub.HubState
+import com.segnities007.seg.ui.screens.hub.setting.SettingAction
+import com.segnities007.seg.ui.screens.hub.setting.SettingState
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserInfo(
     modifier: Modifier = Modifier,
-    hubUiState: HubUiState,
-    hubUiAction: HubUiAction,
-    settingUiState: SettingUiState,
-    settingUiAction: SettingUiAction,
+    hubState: HubState,
+    hubAction: HubAction,
+    settingState: SettingState,
+    settingAction: SettingAction,
     userInfoViewModel: UserInfoViewModel = hiltViewModel(),
     commonPadding: Dp = dimensionResource(R.dimen.padding_normal),
     onNavigate: (Navigation) -> Unit,
 ) {
     LaunchedEffect(Unit) {
         val action = userInfoViewModel.getUserInfoUiAction()
-        action.onNameChange(hubUiState.user.name)
-        action.onUserIDChange(hubUiState.user.userID)
-        action.onDescriptionChange(hubUiState.user.description)
+        action.onNameChange(hubState.user.name)
+        action.onUserIDChange(hubState.user.userID)
+        action.onDescriptionChange(hubState.user.description)
     }
 
-    if (settingUiState.isDatePickerDialogShow) {
+    if (settingState.isDatePickerDialogShow) {
         DatePickerDialog(
-            onDateSelected = settingUiAction.onDateSelect,
-            onDatePickerDismiss = settingUiAction.onDatePickerClose,
+            onDateSelected = settingAction.onDateSelect,
+            onDatePickerDismiss = settingAction.onDatePickerClose,
         )
     }
 
@@ -79,13 +79,13 @@ fun UserInfo(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
     ) {
-        TextFields(userInfoUiState = userInfoViewModel.userInfoUiState, userInfoUiAction = userInfoViewModel.getUserInfoUiAction())
+        TextFields(userInfoState = userInfoViewModel.userInfoState, userInfoAction = userInfoViewModel.getUserInfoUiAction())
         Spacer(modifier = Modifier.padding(commonPadding))
         SelectionButtons(
             onNavigate = onNavigate,
-            userInfoUiAction = userInfoViewModel.getUserInfoUiAction(),
-            hubUiState = hubUiState,
-            hubUiAction = hubUiAction,
+            userInfoAction = userInfoViewModel.getUserInfoUiAction(),
+            hubState = hubState,
+            hubAction = hubAction,
         )
         Spacer(modifier = Modifier.padding(commonPadding))
     }
@@ -123,8 +123,8 @@ private fun DatePickerDialog(
 
 @Composable
 private fun TextFields(
-    userInfoUiState: UserInfoUiState,
-    userInfoUiAction: UserInfoUiAction,
+    userInfoState: UserInfoState,
+    userInfoAction: UserInfoAction,
     commonPadding: Dp = dimensionResource(R.dimen.padding_normal),
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -137,8 +137,8 @@ private fun TextFields(
     Column {
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
-            value = userInfoUiState.name,
-            onValueChange = { userInfoUiAction.onNameChange(it) },
+            value = userInfoState.name,
+            onValueChange = { userInfoAction.onNameChange(it) },
             label = { Text(stringResource(R.string.new_name)) },
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
             keyboardActions =
@@ -152,8 +152,8 @@ private fun TextFields(
         Spacer(modifier = Modifier.padding(commonPadding))
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
-            value = userInfoUiState.userID,
-            onValueChange = { userInfoUiAction.onUserIDChange(it) },
+            value = userInfoState.userID,
+            onValueChange = { userInfoAction.onUserIDChange(it) },
             label = { Text(stringResource(R.string.new_user_id)) },
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
             keyboardActions =
@@ -172,8 +172,8 @@ private fun TextFields(
                     .heightIn(min = lineHeightDp * maxLines),
             // 高さを`maxLines`に合わせる
             maxLines = maxLines,
-            value = userInfoUiState.description,
-            onValueChange = { userInfoUiAction.onDescriptionChange(it) },
+            value = userInfoState.description,
+            onValueChange = { userInfoAction.onDescriptionChange(it) },
             label = { Text(stringResource(R.string.new_description)) },
         )
     }
@@ -181,9 +181,9 @@ private fun TextFields(
 
 @Composable
 private fun SelectionButtons(
-    hubUiState: HubUiState,
-    hubUiAction: HubUiAction,
-    userInfoUiAction: UserInfoUiAction,
+    hubState: HubState,
+    hubAction: HubAction,
+    userInfoAction: UserInfoAction,
     commonPadding: Dp = dimensionResource(R.dimen.padding_normal),
     onNavigate: (Navigation) -> Unit,
 ) {
@@ -205,8 +205,8 @@ private fun SelectionButtons(
             textID = R.string.enter,
             onClick = {
                 scope.launch {
-                    userInfoUiAction.onUserUpdate(hubUiState.user)
-                    hubUiAction.onGetUser()
+                    userInfoAction.onUserUpdate(hubState.user)
+                    hubAction.onGetUser()
                     onNavigate(NavigationSettingRoute.Preference)
                 }
             },

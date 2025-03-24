@@ -24,15 +24,15 @@ import com.segnities007.seg.ui.components.button.SmallButton
 import com.segnities007.seg.ui.components.card.postcard.PostCard
 import com.segnities007.seg.ui.components.card.postcard.PostCardUiAction
 import com.segnities007.seg.ui.components.indicator.PagingIndicator
-import com.segnities007.seg.ui.screens.hub.HubUiAction
-import com.segnities007.seg.ui.screens.hub.HubUiState
+import com.segnities007.seg.ui.screens.hub.HubAction
+import com.segnities007.seg.ui.screens.hub.HubState
 
 @Composable
 fun Trend(
     modifier: Modifier,
     commonPadding: Dp = dimensionResource(R.dimen.padding_sn),
-    hubUiState: HubUiState,
-    hubUiAction: HubUiAction,
+    hubState: HubState,
+    hubAction: HubAction,
     trendViewModel: TrendViewModel = hiltViewModel(),
     postCardUiAction: PostCardUiAction,
     onHubNavigate: (Navigation) -> Unit,
@@ -48,10 +48,10 @@ fun Trend(
     TrendUi(
         modifier = modifier,
         commonPadding = commonPadding,
-        hubUiState = hubUiState,
-        hubUiAction = hubUiAction,
-        trendUiState = trendViewModel.trendUiState,
-        trendUiAction = trendViewModel.onGetTrendUiAction(),
+        hubState = hubState,
+        hubAction = hubAction,
+        trendState = trendViewModel.trendState,
+        trendAction = trendViewModel.onGetTrendUiAction(),
         postCardUiAction = postCardUiAction,
         onHubNavigate = onHubNavigate,
     )
@@ -61,46 +61,46 @@ fun Trend(
 private fun TrendUi(
     modifier: Modifier,
     commonPadding: Dp,
-    hubUiState: HubUiState,
-    hubUiAction: HubUiAction,
-    trendUiState: TrendUiState,
-    trendUiAction: TrendUiAction,
+    hubState: HubState,
+    hubAction: HubAction,
+    trendState: TrendState,
+    trendAction: TrendAction,
     postCardUiAction: PostCardUiAction,
     onHubNavigate: (Navigation) -> Unit,
 ) {
     val postLists =
         listOf(
-            trendUiState.trendOfToday,
-            trendUiState.trendOfWeek,
-            trendUiState.trendOfMonth,
-            trendUiState.trendOfYear,
+            trendState.trendOfToday,
+            trendState.trendOfWeek,
+            trendState.trendOfMonth,
+            trendState.trendOfYear,
         )
 
     val readMores =
         listOf(
-            trendUiState.isReadMoreAboutTrendOfToday,
-            trendUiState.isReadMoreAboutTrendOfWeek,
-            trendUiState.isReadMoreAboutTrendOfMonth,
-            trendUiState.isReadMoreAboutTrendOfYear,
+            trendState.isReadMoreAboutTrendOfToday,
+            trendState.isReadMoreAboutTrendOfWeek,
+            trendState.isReadMoreAboutTrendOfMonth,
+            trendState.isReadMoreAboutTrendOfYear,
         )
 
     val onClicks =
         listOf(
             {
-                trendUiAction.onReadMoreAboutTrendOfToday()
-                trendUiAction.onGetTrendPostOfToday(10)
+                trendAction.onReadMoreAboutTrendOfToday()
+                trendAction.onGetTrendPostOfToday(10)
             },
             {
-                trendUiAction.onReadMoreAboutTrendOfWeek()
-                trendUiAction.onGetTrendPostOfWeek(10)
+                trendAction.onReadMoreAboutTrendOfWeek()
+                trendAction.onGetTrendPostOfWeek(10)
             },
             {
-                trendUiAction.onReadMoreAboutTrendOfMonth()
-                trendUiAction.onGetTrendPostOfMonth(10)
+                trendAction.onReadMoreAboutTrendOfMonth()
+                trendAction.onGetTrendPostOfMonth(10)
             },
             {
-                trendUiAction.onReadMoreAboutTrendOfYear()
-                trendUiAction.onGetTrendPostOfYear(10)
+                trendAction.onReadMoreAboutTrendOfYear()
+                trendAction.onGetTrendPostOfYear(10)
             },
         )
 
@@ -116,16 +116,16 @@ private fun TrendUi(
         Column(
             modifier = Modifier.verticalScroll(rememberScrollState()),
         ) {
-            SubTitle(textID = trendUiState.textIDs[page])
+            SubTitle(textID = trendState.textIDs[page])
             for (post in postLists[page]) {
                 PostCard(
                     post = post,
-                    hubUiState = hubUiState,
+                    hubState = hubState,
                     onHubNavigate = onHubNavigate,
                     isIncrementView = readMores[page],
-                    hubUiAction = hubUiAction,
+                    hubAction = hubAction,
                     postCardUiAction = postCardUiAction,
-                    onProcessOfEngagementAction = trendUiAction.onProcessOfEngagementAction,
+                    onProcessOfEngagementAction = trendAction.onProcessOfEngagementAction,
                 )
                 Spacer(Modifier.padding(dimensionResource(R.dimen.padding_smallest)))
             }

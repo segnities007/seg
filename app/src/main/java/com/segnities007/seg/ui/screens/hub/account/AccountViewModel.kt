@@ -14,34 +14,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-data class AccountUiState(
-    val user: User = User(),
-    val posts: List<Post> = listOf(),
-    val likedPosts: List<Post> = listOf(),
-    val repostedPosts: List<Post> = listOf(),
-)
-
 data class AccountUiFlagState(
     val isCompletedFetchPosts: Boolean = false,
     val isLoading: Boolean = false,
-)
-
-data class AccountUiAction(
-    val onReset: () -> Unit,
-    val onInitAccountUiState: (userID: String) -> Unit,
-    val onGetOtherUser: (userID: String) -> Unit,
-    val onSetOtherUser: (user: User) -> Unit,
-    val onGetUserPosts: (userID: String) -> Unit,
-    val onToggleIsLoading: () -> Unit,
-    val onToggleIsCompletedFetchPosts: () -> Unit,
-    val onGetPosts: () -> Unit,
-    val onFollow: (
-        isFollow: Boolean,
-        myself: User,
-        other: User,
-        onToggleIsLoading: () -> Unit,
-        onGetMyself: () -> Unit) -> Unit,
-    val onProcessOfEngagementAction: (newPost: Post) -> Unit,
 )
 
 @HiltViewModel
@@ -51,14 +26,14 @@ class AccountViewModel
         private val userRepository: UserRepository,
         private val postRepository: PostRepository,
     ) : ViewModel() {
-        var accountUiState by mutableStateOf(AccountUiState())
+        var accountUiState by mutableStateOf(AccountState())
             private set
 
         var accountUiFlagState by mutableStateOf(AccountUiFlagState())
             private set
 
-        fun getAccountUiAction(): AccountUiAction =
-            AccountUiAction(
+        fun getAccountUiAction(): AccountAction =
+            AccountAction(
                 onGetOtherUser = this::onGetOtherUser,
                 onSetOtherUser = this::onSetOtherUsers,
                 onGetUserPosts = this::onGetUserPosts,

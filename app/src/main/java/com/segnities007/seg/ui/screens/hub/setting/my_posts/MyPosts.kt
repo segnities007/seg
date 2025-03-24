@@ -21,15 +21,15 @@ import com.segnities007.seg.ui.components.card.postcard.PostCardWithDetailButton
 import com.segnities007.seg.ui.components.indicator.LoadingUI
 import com.segnities007.seg.ui.components.tab.TabUiAction
 import com.segnities007.seg.ui.components.tab.TabUiState
-import com.segnities007.seg.ui.screens.hub.HubUiAction
-import com.segnities007.seg.ui.screens.hub.HubUiState
-import com.segnities007.seg.ui.screens.hub.home.HomeUiAction
+import com.segnities007.seg.ui.screens.hub.HubAction
+import com.segnities007.seg.ui.screens.hub.HubState
+import com.segnities007.seg.ui.screens.hub.home.HomeAction
 
 @Composable
 fun MyPosts(
-    homeUiAction: HomeUiAction,
-    hubUiState: HubUiState,
-    hubUiAction: HubUiAction,
+    homeAction: HomeAction,
+    hubState: HubState,
+    hubAction: HubAction,
     tabUiState: TabUiState,
     tabUiAction: TabUiAction,
     myPostsViewModel: MyPostsViewModel = hiltViewModel(),
@@ -37,9 +37,9 @@ fun MyPosts(
     onHubNavigate: (Navigation) -> Unit,
 ) {
     LaunchedEffect(Unit) {
-        hubUiAction.onChangeIsHideTopBar()
+        hubAction.onChangeIsHideTopBar()
         val action = myPostsViewModel.onGetMyPostsUiAction()
-        action.onSetSelf(hubUiState.user)
+        action.onSetSelf(hubState.user)
         action.onInit()
     }
 
@@ -51,12 +51,12 @@ fun MyPosts(
 
     Column {
         MyPostsUi(
-            homeUiAction = homeUiAction,
-            hubUiState = hubUiState,
-            hubUiAction = hubUiAction,
+            homeAction = homeAction,
+            hubState = hubState,
+            hubAction = hubAction,
             tabUiState = tabUiState,
-            myPostsUiState = myPostsViewModel.myPostsUiState,
-            myPostsUiAction = myPostsViewModel.onGetMyPostsUiAction(),
+            myPostsState = myPostsViewModel.myPostsState,
+            myPostsAction = myPostsViewModel.onGetMyPostsUiAction(),
             postCardUiAction = postCardUiAction,
             onHubNavigate = onHubNavigate,
         )
@@ -65,11 +65,11 @@ fun MyPosts(
 
 @Composable
 private fun MyPostsUi(
-    homeUiAction: HomeUiAction,
-    hubUiState: HubUiState,
-    hubUiAction: HubUiAction,
-    myPostsUiState: MyPostsUiState,
-    myPostsUiAction: MyPostsUiAction,
+    homeAction: HomeAction,
+    hubState: HubState,
+    hubAction: HubAction,
+    myPostsState: MyPostsState,
+    myPostsAction: MyPostsAction,
     tabUiState: TabUiState,
     postCardUiAction: PostCardUiAction,
     onHubNavigate: (Navigation) -> Unit,
@@ -77,29 +77,29 @@ private fun MyPostsUi(
     when (tabUiState.index) {
         0 ->
             Posts(
-                homeUiAction = homeUiAction,
-                myPostsUiState = myPostsUiState,
-                myPostsUiAction = myPostsUiAction,
-                hubUiState = hubUiState,
-                hubUiAction = hubUiAction,
+                homeAction = homeAction,
+                myPostsState = myPostsState,
+                myPostsAction = myPostsAction,
+                hubState = hubState,
+                hubAction = hubAction,
                 postCardUiAction = postCardUiAction,
                 onHubNavigate = onHubNavigate,
             )
         1 ->
             Likes(
-                myPostsUiState = myPostsUiState,
-                myPostsUiAction = myPostsUiAction,
-                hubUiState = hubUiState,
-                hubUiAction = hubUiAction,
+                myPostsState = myPostsState,
+                myPostsAction = myPostsAction,
+                hubState = hubState,
+                hubAction = hubAction,
                 postCardUiAction = postCardUiAction,
                 onHubNavigate = onHubNavigate,
             )
         2 ->
             Reposts(
-                myPostsUiState = myPostsUiState,
-                myPostsUiAction = myPostsUiAction,
-                hubUiState = hubUiState,
-                hubUiAction = hubUiAction,
+                myPostsState = myPostsState,
+                myPostsAction = myPostsAction,
+                hubState = hubState,
+                hubAction = hubAction,
                 postCardUiAction = postCardUiAction,
                 onHubNavigate = onHubNavigate,
             )
@@ -108,11 +108,11 @@ private fun MyPostsUi(
 
 @Composable
 private fun Posts(
-    homeUiAction: HomeUiAction,
-    myPostsUiState: MyPostsUiState,
-    myPostsUiAction: MyPostsUiAction,
-    hubUiState: HubUiState,
-    hubUiAction: HubUiAction,
+    homeAction: HomeAction,
+    myPostsState: MyPostsState,
+    myPostsAction: MyPostsAction,
+    hubState: HubState,
+    hubAction: HubAction,
     postCardUiAction: PostCardUiAction,
     onHubNavigate: (Navigation) -> Unit,
 ) {
@@ -128,29 +128,29 @@ private fun Posts(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
     ) {
-        if (myPostsUiState.posts.isNotEmpty()) {
+        if (myPostsState.posts.isNotEmpty()) {
             items(
-                myPostsUiState.posts.size,
-                key = { index: Int -> myPostsUiState.posts[index].id },
+                myPostsState.posts.size,
+                key = { index: Int -> myPostsState.posts[index].id },
             ) { i ->
                 PostCardWithDetailButton(
-                    post = myPostsUiState.posts[i],
-                    homeUiAction = homeUiAction,
-                    hubUiState = hubUiState,
-                    hubUiAction = hubUiAction,
-                    myPostsUiAction = myPostsUiAction,
+                    post = myPostsState.posts[i],
+                    homeAction = homeAction,
+                    hubState = hubState,
+                    hubAction = hubAction,
+                    myPostsAction = myPostsAction,
                     postCardUiAction = postCardUiAction,
                     onHubNavigate = onHubNavigate,
-                    onProcessOfEngagementAction = myPostsUiAction.onProcessOfEngagementAction,
+                    onProcessOfEngagementAction = myPostsAction.onProcessOfEngagementAction,
                 )
                 Spacer(Modifier.padding(dimensionResource(R.dimen.padding_smallest)))
             }
         }
-        if (!myPostsUiState.hasNoMorePosts) {
+        if (!myPostsState.hasNoMorePosts) {
             item {
                 Column {
                     Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_smaller)))
-                    LoadingUI(onLoading = { myPostsUiAction.onGetPosts() })
+                    LoadingUI(onLoading = { myPostsAction.onGetPosts() })
                 }
             }
         }
@@ -159,10 +159,10 @@ private fun Posts(
 
 @Composable
 private fun Likes(
-    myPostsUiState: MyPostsUiState,
-    myPostsUiAction: MyPostsUiAction,
-    hubUiState: HubUiState,
-    hubUiAction: HubUiAction,
+    myPostsState: MyPostsState,
+    myPostsAction: MyPostsAction,
+    hubState: HubState,
+    hubAction: HubAction,
     postCardUiAction: PostCardUiAction,
     onHubNavigate: (Navigation) -> Unit,
 ) {
@@ -178,28 +178,28 @@ private fun Likes(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
     ) {
-        if (myPostsUiState.likedPosts.isNotEmpty()) {
+        if (myPostsState.likedPosts.isNotEmpty()) {
             items(
-                myPostsUiState.likedPosts.size,
-                key = { index: Int -> myPostsUiState.likedPosts[index].id },
+                myPostsState.likedPosts.size,
+                key = { index: Int -> myPostsState.likedPosts[index].id },
             ) { i ->
                 PostCard(
-                    post = myPostsUiState.likedPosts[i],
-                    hubUiState = hubUiState,
+                    post = myPostsState.likedPosts[i],
+                    hubState = hubState,
                     isIncrementView = false,
                     onHubNavigate = onHubNavigate,
-                    hubUiAction = hubUiAction,
+                    hubAction = hubAction,
                     postCardUiAction = postCardUiAction,
-                    onProcessOfEngagementAction = myPostsUiAction.onProcessOfEngagementAction,
+                    onProcessOfEngagementAction = myPostsAction.onProcessOfEngagementAction,
                 )
                 Spacer(Modifier.padding(dimensionResource(R.dimen.padding_smallest)))
             }
         }
-        if (!myPostsUiState.hasNoMoreLikedPosts) {
+        if (!myPostsState.hasNoMoreLikedPosts) {
             item {
                 Column {
                     Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_smaller)))
-                    LoadingUI(onLoading = { myPostsUiAction.onGetLikedPosts() })
+                    LoadingUI(onLoading = { myPostsAction.onGetLikedPosts() })
                 }
             }
         }
@@ -208,10 +208,10 @@ private fun Likes(
 
 @Composable
 private fun Reposts(
-    myPostsUiState: MyPostsUiState,
-    myPostsUiAction: MyPostsUiAction,
-    hubUiState: HubUiState,
-    hubUiAction: HubUiAction,
+    myPostsState: MyPostsState,
+    myPostsAction: MyPostsAction,
+    hubState: HubState,
+    hubAction: HubAction,
     postCardUiAction: PostCardUiAction,
     onHubNavigate: (Navigation) -> Unit,
 ) {
@@ -227,28 +227,28 @@ private fun Reposts(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
     ) {
-        if (myPostsUiState.repostedPosts.isNotEmpty()) {
+        if (myPostsState.repostedPosts.isNotEmpty()) {
             items(
-                myPostsUiState.repostedPosts.size,
-                key = { index: Int -> myPostsUiState.repostedPosts[index].id },
+                myPostsState.repostedPosts.size,
+                key = { index: Int -> myPostsState.repostedPosts[index].id },
             ) { i ->
                 PostCard(
-                    post = myPostsUiState.repostedPosts[i],
-                    hubUiState = hubUiState,
+                    post = myPostsState.repostedPosts[i],
+                    hubState = hubState,
                     isIncrementView = false,
                     onHubNavigate = onHubNavigate,
-                    hubUiAction = hubUiAction,
+                    hubAction = hubAction,
                     postCardUiAction = postCardUiAction,
-                    onProcessOfEngagementAction = myPostsUiAction.onProcessOfEngagementAction,
+                    onProcessOfEngagementAction = myPostsAction.onProcessOfEngagementAction,
                 )
                 Spacer(Modifier.padding(dimensionResource(R.dimen.padding_smallest)))
             }
         }
-        if (!myPostsUiState.hasNoMoreRepostedPosts) {
+        if (!myPostsState.hasNoMoreRepostedPosts) {
             item {
                 Column {
                     Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_smaller)))
-                    LoadingUI(onLoading = { myPostsUiAction.onGetRepostedPosts() })
+                    LoadingUI(onLoading = { myPostsAction.onGetRepostedPosts() })
                 }
             }
         }

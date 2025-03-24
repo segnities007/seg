@@ -26,27 +26,27 @@ import com.segnities007.seg.domain.presentation.Navigation
 import com.segnities007.seg.ui.components.button.SmallButton
 import com.segnities007.seg.ui.components.indicator.CircleIndicator
 import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
-import com.segnities007.seg.ui.screens.hub.HubUiAction
-import com.segnities007.seg.ui.screens.hub.HubUiState
-import com.segnities007.seg.ui.screens.hub.home.HomeUiAction
+import com.segnities007.seg.ui.screens.hub.HubAction
+import com.segnities007.seg.ui.screens.hub.HubState
+import com.segnities007.seg.ui.screens.hub.home.HomeAction
 
 @Composable
 fun Post(
     modifier: Modifier = Modifier,
-    homeUiAction: HomeUiAction,
-    hubUiState: HubUiState,
-    hubUiAction: HubUiAction,
+    homeAction: HomeAction,
+    hubState: HubState,
+    hubAction: HubAction,
     onHubNavigate: (Navigation) -> Unit, // go to home
 ) {
     val postViewModel: PostViewModel = hiltViewModel()
 
     PostUi(
         modifier = modifier,
-        homeUiAction = homeUiAction,
-        hubUiState = hubUiState,
-        hubUiAction = hubUiAction,
-        postUiState = postViewModel.postUiState,
-        postUiAction = postViewModel.onGetPostUiAction(),
+        homeAction = homeAction,
+        hubState = hubState,
+        hubAction = hubAction,
+        postState = postViewModel.postState,
+        postAction = postViewModel.onGetPostUiAction(),
         onHubNavigate = onHubNavigate,
     ) {
         Column {
@@ -62,21 +62,21 @@ fun Post(
 @Composable
 fun PostUi(
     modifier: Modifier = Modifier,
-    homeUiAction: HomeUiAction,
-    hubUiState: HubUiState,
-    hubUiAction: HubUiAction,
-    postUiState: PostUiState,
-    postUiAction: PostUiAction,
+    homeAction: HomeAction,
+    hubState: HubState,
+    hubAction: HubAction,
+    postState: PostState,
+    postAction: PostAction,
     onHubNavigate: (Navigation) -> Unit,
     content: @Composable PostScope.() -> Unit,
 ) {
     val scope =
         DefaultPostScope(
-            homeUiAction = homeUiAction,
-            hubUiState = hubUiState,
-            hubUiAction = hubUiAction,
-            postUiState = postUiState,
-            postUiAction = postUiAction,
+            homeAction = homeAction,
+            hubState = hubState,
+            hubAction = hubAction,
+            postState = postState,
+            postAction = postAction,
             onHubNavigate = onHubNavigate,
         )
 
@@ -92,7 +92,7 @@ fun PostUi(
         scope.content()
     }
 
-    CircleIndicator(isLoading = postUiState.isLoading)
+    CircleIndicator(isLoading = postState.isLoading)
 }
 
 @Composable
@@ -102,8 +102,8 @@ fun PostScope.InputField(
 ) {
     TextField(
         modifier = modifier.fillMaxSize(),
-        value = postUiState.inputText,
-        onValueChange = { postUiAction.onUpdateInputText(it) },
+        value = postState.inputText,
+        onValueChange = { postAction.onUpdateInputText(it) },
         label = label,
         textStyle = TextStyle.Default.copy(fontSize = 24.sp),
         shape = RoundedCornerShape(dimensionResource(R.dimen.rounded_corner_shape)),
@@ -128,18 +128,18 @@ fun PostScope.TopToolBar(modifier: Modifier = Modifier) {
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        SmallButton(textID = R.string.clear, onClick = { postUiAction.onUpdateInputText("") })
+        SmallButton(textID = R.string.clear, onClick = { postAction.onUpdateInputText("") })
         Spacer(modifier = Modifier.weight(1f))
         SmallButton(
             textID = R.string.post,
             onClick = {
-                postUiAction.onCreatePost(
-                    hubUiState.user,
-                    postUiAction.onUpdateIsLoading,
-                    hubUiAction.onGetUser,
+                postAction.onCreatePost(
+                    hubState.user,
+                    postAction.onUpdateIsLoading,
+                    hubAction.onGetUser,
                 ) {
-                    postUiAction.onUpdateInputText("")
-                    homeUiAction.onGetNewPosts()
+                    postAction.onUpdateInputText("")
+                    homeAction.onGetNewPosts()
                     onHubNavigate(NavigationHubRoute.Home)
                 }
             },
@@ -152,16 +152,16 @@ fun PostScope.TopToolBar(modifier: Modifier = Modifier) {
 private fun PostPreview() {
     PostUi(
         modifier = Modifier,
-        homeUiAction =
-            HomeUiAction(
+        homeAction =
+            HomeAction(
                 onGetNewPosts = {},
                 onGetBeforeNewPosts = {},
                 onChangeHasNoMorePost = {},
                 onProcessOfEngagementAction = {},
             ),
-        hubUiState = HubUiState(),
-        hubUiAction =
-            HubUiAction(
+        hubState = HubState(),
+        hubAction =
+            HubAction(
                 onUpdateSelf = {},
                 onChangeIsHideTopBar = {},
                 onResetIsHideTopBar = {},
@@ -175,9 +175,9 @@ private fun PostPreview() {
                 onRemovePostIDFromMyReposts = {},
                 onChangeCurrentRouteName = {},
             ),
-        postUiState = PostUiState(),
-        postUiAction =
-            PostUiAction(
+        postState = PostState(),
+        postAction =
+            PostAction(
                 onUpdateIsLoading = {},
                 onUpdateInputText = {},
                 onCreatePost = { a, b, c, d -> },
