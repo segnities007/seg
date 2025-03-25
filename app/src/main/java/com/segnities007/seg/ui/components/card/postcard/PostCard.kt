@@ -304,7 +304,7 @@ private fun PostCardPreview() {
             ),
         postCardUiAction =
             PostCardUiAction(
-                onDeletePost = { _,_, _, _, _ -> },
+                onDeletePost = { _, _, _, _, _ -> },
                 onClickIcon = {},
                 onClickPostCard = {},
                 onIncrementViewCount = {},

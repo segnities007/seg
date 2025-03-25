@@ -1,6 +1,5 @@
 package com.segnities007.seg.ui.screens.login.sign_up.create_account
 
-import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,89 +29,81 @@ class CreateAccountViewModel
         var createAccountUiState by mutableStateOf(CreateAccountState())
             private set
 
-        fun onGetCreateAccountUiAction(): CreateAccountAction =
-            CreateAccountAction(
-                onDatePickerOpen = this::onDatePickerOpen,
-                onDatePickerClose = this::onDatePickerClose,
-                onDateSelect = this::onDateSelect,
-                onNameChange = this::onNameChange,
-                onBirthdayChange = this::onBirthdayChange,
-                onCreateUser = this::onCreateUser,
-                onChangeUserID = this::onChangeUserID,
-                onSetUri = this::onSetUri,
-                onSetPicture = this::onSetPicture,
-            )
+        fun onCreateAccountAction(action: CreateAccountAction) {
+            when (action) {
+                CreateAccountAction.OpenDatePicker -> {
+                    createAccountUiState = createAccountUiState.copy(isShow = true)
+                }
 
-        private fun onSetUri(uri: Uri?) {
-            createAccountUiState = createAccountUiState.copy(uri = uri)
-        }
+                CreateAccountAction.CloseDatePicker -> {
+                    createAccountUiState = createAccountUiState.copy(isShow = false)
+                }
 
-        private fun onSetPicture(
-            path: String,
-            byteArray: ByteArray,
-        ) {
-            createAccountUiState = createAccountUiState.copy(path = path, byteArray = byteArray)
-        }
-
-        private fun onChangeUserID(userID: String) {
-            createAccountUiState = createAccountUiState.copy(userID = userID)
-        }
-
-        private fun onDateSelect(millis: Long?) {
-            val instant = Instant.fromEpochMilliseconds(millis!!)
-            val localDateTime = instant.toLocalDateTime(TimeZone.currentSystemDefault())
-            val year = localDateTime.year
-            val month = localDateTime.monthNumber
-            val day = localDateTime.dayOfMonth
-
-            onBirthdayChange(LocalDate.of(year, month, day))
-        }
-
-        private fun onCreateUser(onNavigateToHub: () -> Unit) {
-            val user =
-                User(
-                    id = "",
-                    userID = createAccountUiState.userID,
-                    name = createAccountUiState.name,
-                    birthday = createAccountUiState.birthday,
-                )
-            val updatedPath = createAccountUiState.path.substringAfterLast("/") + ".png"
-            viewModelScope.launch(Dispatchers.IO) {
-                try {
-                    if (createAccountUiState.byteArray != null) {
-                        userRepository.onCreateUserWithIcon(
-                            user = user,
-                            path = updatedPath,
-                            byteArray = createAccountUiState.byteArray!!,
+                is CreateAccountAction.CreateUser -> {
+                    val user =
+                        User(
+                            id = "",
+                            userID = createAccountUiState.userID,
+                            name = createAccountUiState.name,
+                            birthday = createAccountUiState.birthday,
                         )
-                        withContext(Dispatchers.Main) {
-                            onNavigateToHub()
-                        }
-                    } else {
-                        userRepository.onCreateUser(user)
-                        withContext(Dispatchers.Main) {
-                            onNavigateToHub()
+                    val updatedPath = createAccountUiState.path.substringAfterLast("/") + ".png"
+                    viewModelScope.launch(Dispatchers.IO) {
+                        try {
+                            if (createAccountUiState.byteArray != null) {
+                                userRepository.onCreateUserWithIcon(
+                                    user = user,
+                                    path = updatedPath,
+                                    byteArray = createAccountUiState.byteArray!!,
+                                )
+                                withContext(Dispatchers.Main) {
+                                    action.onNavigateToHub()
+                                }
+                            } else {
+                                userRepository.onCreateUser(user)
+                                withContext(Dispatchers.Main) {
+                                    action.onNavigateToHub()
+                                }
+                            }
+                        } catch (e: Exception) {
+                            Log.e(tag, "failed onCreateUser $e")
                         }
                     }
-                } catch (e: Exception) {
-                    Log.e(tag, "failed onCreateUser $e")
+                }
+
+                is CreateAccountAction.ChangeBirthday -> {
+                    onBirthdayChange(action.birthday)
+                }
+
+                is CreateAccountAction.ChangeName -> {
+                    createAccountUiState = createAccountUiState.copy(name = action.name)
+                }
+
+                is CreateAccountAction.ChangeUserID -> {
+                    createAccountUiState = createAccountUiState.copy(userID = action.userID)
+                }
+
+                is CreateAccountAction.SetDate -> {
+                    val instant = Instant.fromEpochMilliseconds(action.millis!!)
+                    val localDateTime = instant.toLocalDateTime(TimeZone.currentSystemDefault())
+                    val year = localDateTime.year
+                    val month = localDateTime.monthNumber
+                    val day = localDateTime.dayOfMonth
+
+                    onBirthdayChange(LocalDate.of(year, month, day))
+                }
+
+                is CreateAccountAction.SetUri -> {
+                    createAccountUiState = createAccountUiState.copy(uri = action.uri)
+                }
+
+                is CreateAccountAction.SetPicture -> {
+                    createAccountUiState = createAccountUiState.copy(path = action.path, byteArray = action.byteArray)
                 }
             }
         }
 
-        private fun onDatePickerOpen() {
-            createAccountUiState = createAccountUiState.copy(isShow = true)
-        }
-
-        private fun onDatePickerClose() {
-            createAccountUiState = createAccountUiState.copy(isShow = false)
-        }
-
         private fun onBirthdayChange(newBirthday: LocalDate) {
             createAccountUiState = createAccountUiState.copy(birthday = newBirthday)
-        }
-
-        private fun onNameChange(newName: String) {
-            createAccountUiState = createAccountUiState.copy(name = newName)
         }
     }

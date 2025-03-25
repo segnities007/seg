@@ -162,7 +162,7 @@ private fun PostPreview() {
                 hubAction = hubAction,
                 postCardUiAction =
                     PostCardUiAction(
-                        onDeletePost = {_, _, _, _, _ -> },
+                        onDeletePost = { _, _, _, _, _ -> },
                         onClickIcon = {},
                         onClickPostCard = {},
                         onIncrementViewCount = {},

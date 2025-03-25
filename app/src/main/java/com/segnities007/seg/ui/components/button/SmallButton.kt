@@ -14,7 +14,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.sp
 import com.segnities007.seg.R
-import com.segnities007.seg.ui.components.indicator.CircleIndicator
 
 @Composable
 fun SmallButton(
@@ -26,17 +25,17 @@ fun SmallButton(
     elevation: Dp = dimensionResource(R.dimen.elevation_small),
     buttonSize: Dp = dimensionResource(R.dimen.button_height_small_size),
 ) {
-
     ElevatedButton(
-        modifier = modifier
-            .height(buttonSize)
-            .clickable(!isLoading){  },
+        modifier =
+            modifier
+                .height(buttonSize)
+                .clickable(!isLoading) { },
         onClick = onClick,
         elevation = ButtonDefaults.elevatedButtonElevation(elevation),
     ) {
-        if(isLoading){
-            CircularProgressIndicator(color = MaterialTheme.colorScheme.secondaryContainer,)
-        }else{
+        if (isLoading) {
+            CircularProgressIndicator(color = MaterialTheme.colorScheme.secondaryContainer)
+        } else {
             Text(
                 text = stringResource(textID),
                 fontSize = fontSize.sp,

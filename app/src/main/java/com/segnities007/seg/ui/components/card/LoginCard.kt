@@ -32,7 +32,7 @@ fun LoginCard(
     padding: Dp,
     textIDOfEnterLabel: Int,
     loginState: LoginState,
-    loginAction: LoginAction,
+    loginAction: (action: LoginAction) -> Unit,
     onClickSignButton: () -> Unit,
 ) {
     Box(
@@ -48,12 +48,16 @@ fun LoginCard(
                 InputForm(
                     text = loginState.email,
                     label = stringResource(R.string.email),
-                ) { loginAction.onEmailChange(it) }
+                ) {
+                    loginAction(LoginAction.ChangeEmail(it))
+                }
                 Spacer(Modifier.padding(padding))
                 InputForm(
                     text = loginState.password,
                     label = stringResource(R.string.password),
-                ) { loginAction.onPasswordChange(it) }
+                ) {
+                    loginAction(LoginAction.ChangePassword(it))
+                }
                 Spacer(Modifier.padding(padding))
                 Row {
                     BasicButton(

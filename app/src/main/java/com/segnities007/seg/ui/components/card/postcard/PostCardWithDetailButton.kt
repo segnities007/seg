@@ -104,10 +104,10 @@ fun PostCardScope.BottomSheet(
     ) {
         PanelButton(
             modifier =
-            Modifier
-                .padding(vertical = commonPadding)
-                .fillMaxWidth()
-                .padding(vertical = commonPadding),
+                Modifier
+                    .padding(vertical = commonPadding)
+                    .fillMaxWidth()
+                    .padding(vertical = commonPadding),
             iconID = R.drawable.baseline_delete_24,
             textID = R.string.delete,
             onClick = {
@@ -124,9 +124,9 @@ fun PostCardScope.BottomSheet(
         Spacer(Modifier.padding(commonPadding))
         SmallButton(
             modifier =
-            Modifier
-                .fillMaxWidth()
-                .padding(vertical = commonPadding),
+                Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = commonPadding),
             textID = R.string.cancel,
             onClick = {
                 onClickDetailButton()

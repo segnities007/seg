@@ -109,7 +109,7 @@ class AccountViewModel
             onGetMyself: () -> Unit,
         ) {
             viewModelScope.launch(Dispatchers.IO) {
-                if(isFollow) userRepository.onUnFollowUser(myself, other) else userRepository.onFollowUser(myself, other)
+                if (isFollow) userRepository.onUnFollowUser(myself, other) else userRepository.onFollowUser(myself, other)
                 onGetMyself()
                 onToggleIsLoading()
             }

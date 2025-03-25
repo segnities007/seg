@@ -17,7 +17,7 @@ fun SignUp(
     padding: Dp = dimensionResource(R.dimen.padding_normal),
     onNavigateToConfirmEmail: (Navigation) -> Unit,
     loginState: LoginState,
-    loginAction: LoginAction,
+    loginAction: (action: LoginAction) -> Unit,
 ) {
     LoginCard(
         modifier = modifier,
@@ -26,11 +26,11 @@ fun SignUp(
         loginState = loginState,
         loginAction = loginAction,
         onClickSignButton = {
-            loginAction.onSignUpWithEmailPassword {
-                onNavigateToConfirmEmail(
-                    NavigationLoginRoute.ConfirmEmail,
-                )
-            }
+            loginAction(
+                LoginAction.SignUpWithEmailPassword(
+                    onNavigate = { onNavigateToConfirmEmail(NavigationLoginRoute.ConfirmEmail) },
+                ),
+            )
         },
     )
 }

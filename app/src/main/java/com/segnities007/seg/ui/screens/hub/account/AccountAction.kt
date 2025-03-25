@@ -17,6 +17,7 @@ data class AccountAction(
         myself: User,
         other: User,
         onToggleIsLoading: () -> Unit,
-        onGetMyself: () -> Unit) -> Unit,
+        onGetMyself: () -> Unit,
+    ) -> Unit,
     val onProcessOfEngagementAction: (newPost: Post) -> Unit,
 )

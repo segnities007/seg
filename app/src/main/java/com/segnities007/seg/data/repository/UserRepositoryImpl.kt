@@ -22,8 +22,8 @@ class UserRepositoryImpl
         private val tableName = "users"
         private val userColumn =
             (
-                "name," + "user_id," + "birthday," + "is_prime," + "icon_url,"
-                        + "follow_user_id_list," +  "follower_user_id_list," + "create_at," + "post_id_list"
+                "name," + "user_id," + "birthday," + "is_prime," + "icon_url," +
+                    "follow_user_id_list," + "follower_user_id_list," + "create_at," + "post_id_list"
             ).trimIndent()
 
         override fun onConfirmEmail(): Boolean {
@@ -210,7 +210,6 @@ class UserRepositoryImpl
                 }) {
                     filter { User::userID eq newOther.userID }
                 }
-
             } catch (e: Exception) {
                 Log.e(tag, "onFailed followUser $e")
             }
@@ -236,10 +235,8 @@ class UserRepositoryImpl
                 }) {
                     filter { User::userID eq newOther.userID }
                 }
-
             } catch (e: Exception) {
                 Log.e(tag, "failed onUnFollowUser $e")
             }
         }
-
     }

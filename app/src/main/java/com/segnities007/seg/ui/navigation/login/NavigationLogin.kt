@@ -12,6 +12,7 @@ import androidx.navigation.compose.rememberNavController
 import com.segnities007.seg.domain.presentation.Navigation
 import com.segnities007.seg.ui.navigation.NavigationRoute
 import com.segnities007.seg.ui.screens.login.Login
+import com.segnities007.seg.ui.screens.login.LoginAction
 import com.segnities007.seg.ui.screens.login.LoginViewModel
 import com.segnities007.seg.ui.screens.login.sign_in.SignIn
 import com.segnities007.seg.ui.screens.login.sign_up.SignUp
@@ -37,7 +38,7 @@ fun NavigationLogin(
         topState = loginViewModel.topState,
         onNavigate = { route: Navigation ->
             loginNavHostController.navigate(route)
-            loginViewModel.onGetLoginAction().onChangeCurrentRouteName(route.name)
+            loginViewModel.onLoginAction(LoginAction.ChangeCurrentRouteName(route.name))
         },
     ) { modifier: Modifier ->
         NavHost(
@@ -48,7 +49,7 @@ fun NavigationLogin(
                 SignIn(
                     modifier = modifier,
                     loginState = loginViewModel.loginUiState,
-                    loginAction = loginViewModel.onGetLoginAction(),
+                    loginAction = loginViewModel::onLoginAction,
                     onNavigate = { navHostController.navigate(NavigationRoute.Hub) },
                 )
             }
@@ -56,8 +57,8 @@ fun NavigationLogin(
                 SignUp(
                     modifier = modifier,
                     loginState = loginViewModel.loginUiState,
-                    loginAction = loginViewModel.onGetLoginAction(),
-                    onNavigateToConfirmEmail = { it ->
+                    loginAction = loginViewModel::onLoginAction,
+                    onNavigateToConfirmEmail = {
                         loginNavHostController.navigate(
                             NavigationLoginRoute.CreateAccount,
                         )

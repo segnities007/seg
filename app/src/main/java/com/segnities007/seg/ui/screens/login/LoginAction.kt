@@ -1,11 +1,27 @@
 package com.segnities007.seg.ui.screens.login
 
-data class LoginAction(
-    val onChangeIsFailedSignIn: () -> Unit,
-    val onResetIsFailedSignIn: () -> Unit,
-    val onChangeCurrentRouteName: (newCurrentRouteName: String) -> Unit,
-    val onPasswordChange: (password: String) -> Unit,
-    val onEmailChange: (email: String) -> Unit,
-    val onSignUpWithEmailPassword: (onNavigate: () -> Unit) -> Unit,
-    val onSignInWithEmailPassword: (onNavigate: () -> Unit) -> Unit,
-)
+sealed class LoginAction {
+    data object ChangeIsFailedSignIn : LoginAction()
+
+    data object ResetIsFailedSignIn : LoginAction()
+
+    data class ChangeCurrentRouteName(
+        val newCurrentRouteName: String,
+    ) : LoginAction()
+
+    data class ChangePassword(
+        val password: String,
+    ) : LoginAction()
+
+    data class ChangeEmail(
+        val email: String,
+    ) : LoginAction()
+
+    data class SignUpWithEmailPassword(
+        val onNavigate: () -> Unit,
+    ) : LoginAction()
+
+    data class SignInWithEmailPassword(
+        val onNavigate: () -> Unit,
+    ) : LoginAction()
+}

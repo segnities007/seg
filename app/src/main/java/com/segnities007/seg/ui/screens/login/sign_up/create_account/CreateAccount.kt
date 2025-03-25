@@ -48,17 +48,16 @@ fun CreateAccount(
         modifier = modifier,
         onNavigateToHub = onNavigateToHub,
         createAccountState = createAccountViewModel.createAccountUiState,
-        createAccountAction = createAccountViewModel.onGetCreateAccountUiAction(),
+        createAccountAction = createAccountViewModel::onCreateAccountAction,
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CreateAccountUi(
     modifier: Modifier = Modifier,
     onNavigateToHub: () -> Unit,
     createAccountState: CreateAccountState,
-    createAccountAction: CreateAccountAction,
+    createAccountAction: (CreateAccountAction) -> Unit,
     commonPadding: Dp = dimensionResource(R.dimen.padding_normal),
 ) {
     val pagerState =
@@ -66,9 +65,8 @@ private fun CreateAccountUi(
             3
         })
     DatePickerDialog(
-        createAccountState.isShow,
-        onDateSelected = createAccountAction.onDateSelect,
-        onDatePickerDismiss = createAccountAction.onDatePickerClose,
+        isShow = createAccountState.isShow,
+        createAccountAction = createAccountAction,
     )
 
     HorizontalPager(
@@ -111,7 +109,7 @@ private fun CreateAccountUi(
 @Composable
 private fun FirstPage(
     createAccountState: CreateAccountState,
-    createAccountAction: CreateAccountAction,
+    createAccountAction: (CreateAccountAction) -> Unit,
     commonPadding: Dp,
 ) {
     Column(
@@ -121,21 +119,25 @@ private fun FirstPage(
         InputForm(
             text = createAccountState.name,
             label = stringResource(id = R.string.name),
-            onValueChange = createAccountAction.onNameChange,
+            onValueChange = { text: String ->
+                createAccountAction(CreateAccountAction.ChangeName(text))
+            },
         )
         Spacer(modifier = Modifier.padding(commonPadding))
 
         InputForm(
             text = createAccountState.userID,
             label = stringResource(id = R.string.user_id),
-            onValueChange = createAccountAction.onChangeUserID,
+            onValueChange = { text: String ->
+                createAccountAction(CreateAccountAction.ChangeUserID(text))
+            },
         )
     }
 }
 
 @Composable
 private fun SecondPage(
-    createAccountAction: CreateAccountAction,
+    createAccountAction: (CreateAccountAction) -> Unit,
     commonPadding: Dp,
 ) {
     Column(
@@ -144,25 +146,29 @@ private fun SecondPage(
     ) {
         ImagePickerButton(createAccountAction = createAccountAction)
         Spacer(modifier = Modifier.padding(commonPadding))
-        SmallButton(textID = R.string.select_birthday, onClick = createAccountAction.onDatePickerOpen)
+        SmallButton(textID = R.string.select_birthday, onClick = {
+            createAccountAction(CreateAccountAction.OpenDatePicker)
+        })
     }
 }
 
 @Composable
 private fun ThirdPage(
-    createAccountAction: CreateAccountAction,
+    createAccountAction: (CreateAccountAction) -> Unit,
     onNavigateToHub: () -> Unit,
 ) {
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        SmallButton(textID = R.string.enter, onClick = { createAccountAction.onCreateUser(onNavigateToHub) })
+        SmallButton(textID = R.string.enter, onClick = {
+            createAccountAction(CreateAccountAction.CreateUser(onNavigateToHub))
+        })
     }
 }
 
 @Composable
-private fun ImagePickerButton(createAccountAction: CreateAccountAction) {
+private fun ImagePickerButton(createAccountAction: (CreateAccountAction) -> Unit) {
     val context = LocalContext.current
     val tag = "PhotoPicker"
 
@@ -172,8 +178,8 @@ private fun ImagePickerButton(createAccountAction: CreateAccountAction) {
                 try {
                     context.contentResolver.openInputStream(uri)?.use { inputStream ->
                         val byteArray: ByteArray = inputStream.readBytes()
-                        createAccountAction.onSetPicture(uri.path.toString(), byteArray)
-                        createAccountAction.onSetUri(uri)
+                        createAccountAction(CreateAccountAction.SetPicture(uri.path.toString(), byteArray))
+                        createAccountAction(CreateAccountAction.SetUri(uri))
                     }
                 } catch (e: Exception) {
                     Log.e(tag, " $e")
@@ -193,26 +199,26 @@ private fun ImagePickerButton(createAccountAction: CreateAccountAction) {
 @Composable
 private fun DatePickerDialog(
     isShow: Boolean,
-    datePickerState: DatePickerState = rememberDatePickerState(),
-    onDateSelected: (Long?) -> Unit,
-    onDatePickerDismiss: () -> Unit,
+    createAccountAction: (CreateAccountAction) -> Unit,
 ) {
+    val datePickerState: DatePickerState = rememberDatePickerState()
+
     if (isShow) {
         DatePickerDialog(
             modifier = Modifier.fillMaxSize(),
-            onDismissRequest = onDatePickerDismiss,
+            onDismissRequest = { createAccountAction(CreateAccountAction.CloseDatePicker) },
             confirmButton = {
                 TextButton(
                     onClick = {
-                        onDateSelected(datePickerState.selectedDateMillis)
-                        onDatePickerDismiss()
+                        createAccountAction(CreateAccountAction.SetDate(datePickerState.selectedDateMillis))
+                        createAccountAction(CreateAccountAction.CloseDatePicker)
                     },
                 ) {
                     Text(text = stringResource(R.string.ok))
                 }
             },
             dismissButton = {
-                TextButton(onClick = onDatePickerDismiss) {
+                TextButton(onClick = { createAccountAction(CreateAccountAction.CloseDatePicker) }) {
                     Text(text = stringResource(R.string.cancel))
                 }
             },
@@ -257,17 +263,6 @@ private fun CreateAccountPreview() {
         modifier = Modifier,
         onNavigateToHub = {},
         createAccountState = CreateAccountState(),
-        createAccountAction =
-            CreateAccountAction(
-                onDatePickerOpen = {},
-                onDatePickerClose = {},
-                onDateSelect = {},
-                onNameChange = {},
-                onChangeUserID = {},
-                onBirthdayChange = {},
-                onCreateUser = {},
-                onSetPicture = { _, _ -> },
-                onSetUri = {},
-            ),
+        createAccountAction = {},
     )
 }

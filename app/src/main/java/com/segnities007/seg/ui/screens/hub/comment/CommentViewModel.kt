@@ -38,8 +38,6 @@ class CommentViewModel
             }
         }
 
-
-
         private fun onUpdatePosts(updatedPost: Post) {
             val newPosts =
                 commentState.comments.map { post ->
