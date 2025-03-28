@@ -16,20 +16,21 @@ import com.segnities007.seg.domain.presentation.Navigation
 import com.segnities007.seg.ui.components.button.SmallButton
 import com.segnities007.seg.ui.navigation.NavigationRoute
 import com.segnities007.seg.ui.navigation.hub.setting.NavigationSettingRoute
-import com.segnities007.seg.ui.screens.hub.HubUiAction
-import com.segnities007.seg.ui.screens.hub.setting.SettingUiAction
+import com.segnities007.seg.ui.screens.hub.HubAction
+import com.segnities007.seg.ui.screens.hub.setting.SettingAction
 
 @Composable
 fun Preference(
     modifier: Modifier = Modifier,
-    settingUiAction: SettingUiAction,
-    hubUiAction: HubUiAction,
-    commonPadding: Dp = dimensionResource(R.dimen.padding_normal),
+    onHubAction: (HubAction) -> Unit,
+    onSettingAction: (SettingAction) -> Unit,
     onSettingNavigate: (Navigation) -> Unit,
     onTopNavigate: (Navigation) -> Unit,
 ) {
+    val commonPadding: Dp = dimensionResource(R.dimen.padding_normal)
+
     LaunchedEffect(Unit) {
-        hubUiAction.onResetIsHideTopBar()
+        onHubAction(HubAction.ResetIsHideTopBar)
     }
 
     Column(
@@ -42,7 +43,7 @@ fun Preference(
         Spacer(modifier = Modifier.padding(commonPadding))
         ModifyUserInfoButton(onSettingNavigate = onSettingNavigate)
         Spacer(modifier = Modifier.padding(commonPadding))
-        LogoutButton(settingUiAction = settingUiAction, onTopNavigate = onTopNavigate)
+        LogoutButton(onSettingAction = onSettingAction, onTopNavigate = onTopNavigate)
     }
 }
 
@@ -70,14 +71,14 @@ private fun ModifyUserInfoButton(onSettingNavigate: (Navigation) -> Unit) {
 
 @Composable
 private fun LogoutButton(
-    settingUiAction: SettingUiAction,
+    onSettingAction: (SettingAction) -> Unit,
     onTopNavigate: (Navigation) -> Unit,
 ) {
     SmallButton(
         modifier = Modifier.fillMaxWidth(),
         textID = R.string.logout,
         onClick = {
-            settingUiAction.onLogout()
+            onSettingAction(SettingAction.Logout)
             onTopNavigate(NavigationRoute.Login)
         },
     )

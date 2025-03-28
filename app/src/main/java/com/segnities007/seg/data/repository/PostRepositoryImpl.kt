@@ -160,23 +160,23 @@ class PostRepositoryImpl
             }
         }
 
-    override suspend fun onGetComment(commentID: Int): Post {
-        try {
-            val result =
-                postgrest
-                    .from(posts)
-                    .select {
-                        filter {
-                            Post::id eq commentID
-                        }
-                    }.decodeList<Post>()
+        override suspend fun onGetComment(commentID: Int): Post {
+            try {
+                val result =
+                    postgrest
+                        .from(posts)
+                        .select {
+                            filter {
+                                Post::id eq commentID
+                            }
+                        }.decodeList<Post>()
 
-            return if (result.isNotEmpty()) result.first() else Post()
-        } catch (e: Exception) {
-            Log.e(tag, "failed onGetComment $e")
-            throw e
+                return if (result.isNotEmpty()) result.first() else Post()
+            } catch (e: Exception) {
+                Log.e(tag, "failed onGetComment $e")
+                throw e
+            }
         }
-    }
 
         override suspend fun onGetPosts(postIDs: List<Int>): List<Post> {
             try {
@@ -192,28 +192,28 @@ class PostRepositoryImpl
             }
         }
 
-    override suspend fun onGetComments(comment: Post): List<Post> {
-        try {
-            val list: MutableList<Post> = mutableListOf()
-            for (id in comment.comments) {
-                list.add(onGetPost(id))
-            }
+        override suspend fun onGetComments(comment: Post): List<Post> {
+            try {
+                val list: MutableList<Post> = mutableListOf()
+                for (id in comment.comments) {
+                    list.add(onGetPost(id))
+                }
 
-            //Removing comment from post's comments if comment was deleted.
-            if(list.any { it.id == 0 }){
-                list.removeIf{ it.id == 0 }
-                val commentIDs = list.map { it.id }
-                val updatedComment = comment.copy(comments = commentIDs.toList())
-                onUpdatePost(updatedComment)
+                // Removing comment from post's comments if comment was deleted.
+                if (list.any { it.id == 0 }) {
+                    list.removeIf { it.id == 0 }
+                    val commentIDs = list.map { it.id }
+                    val updatedComment = comment.copy(comments = commentIDs.toList())
+                    onUpdatePost(updatedComment)
+                    return list.toList()
+                }
+
                 return list.toList()
+            } catch (e: Exception) {
+                Log.e(tag, "failed onGetComments $e")
+                throw e
             }
-
-            return list.toList()
-        } catch (e: Exception) {
-            Log.e(tag, "failed onGetComments $e")
-            throw e
         }
-    }
 
         override suspend fun onGetNewPost(): Post {
             try {

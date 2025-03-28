@@ -12,30 +12,30 @@ import androidx.compose.ui.unit.dp
 import com.segnities007.seg.R
 import com.segnities007.seg.data.model.bottom_bar.BottomBarLoginItem
 import com.segnities007.seg.domain.presentation.Navigation
-import com.segnities007.seg.domain.presentation.TopAction
-import com.segnities007.seg.domain.presentation.TopState
 import com.segnities007.seg.ui.components.bar.bottom_bar.BottomBar
 import com.segnities007.seg.ui.components.bar.top_bar.TopBar
 import com.segnities007.seg.ui.components.navigation_drawer.NavigationDrawer
+import com.segnities007.seg.ui.navigation.TopAction
+import com.segnities007.seg.ui.navigation.TopState
 import com.segnities007.seg.ui.navigation.login.NavigationLoginRoute
 
 @Composable
 fun Login(
-    topAction: TopAction,
     topState: TopState,
-    onNavigate: (Navigation) -> Unit,
     currentRouteName: String,
+    onTopAction: (TopAction) -> Unit,
+    onNavigate: (Navigation) -> Unit,
     content: @Composable (Modifier) -> Unit,
 ) {
     NavigationDrawer(
         items = BottomBarLoginItem(),
         drawerState = topState.drawerState,
         onNavigate = onNavigate,
-        onDrawerClose = topAction.closeDrawer,
+        onDrawerClose = { onTopAction(TopAction.CloseDrawer) },
     ) {
         LoginUi(
-            topAction = topAction,
             currentRouteName = currentRouteName,
+            onTopAction = onTopAction,
             onNavigate = onNavigate,
             content = content,
         )
@@ -45,8 +45,8 @@ fun Login(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun LoginUi(
-    topAction: TopAction,
     currentRouteName: String,
+    onTopAction: (TopAction) -> Unit,
     onNavigate: (Navigation) -> Unit,
     content: @Composable (Modifier) -> Unit,
 ) {
@@ -55,7 +55,7 @@ private fun LoginUi(
             TopBar(
                 titleContent = { Text(text = stringResource(R.string.login_screen_title)) },
                 routeName = currentRouteName,
-                onDrawerOpen = topAction.openDrawer,
+                onDrawerOpen = { onTopAction(TopAction.OpenDrawer) },
             )
         },
         bottomBar = {
@@ -66,12 +66,14 @@ private fun LoginUi(
                         currentRouteName = currentRouteName,
                         onNavigate = onNavigate,
                     )
+
                 NavigationLoginRoute.SignUp.name ->
                     BottomBar(
                         items = BottomBarLoginItem(),
                         currentRouteName = currentRouteName,
                         onNavigate = onNavigate,
                     )
+
                 else -> Spacer(modifier = Modifier.padding(0.dp))
             }
         },

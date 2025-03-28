@@ -19,14 +19,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.segnities007.seg.R
 import com.segnities007.seg.data.model.User
 import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
-import com.segnities007.seg.ui.screens.hub.HubUiAction
+import com.segnities007.seg.ui.screens.hub.HubAction
 
 @Composable
 fun StatusBarWithFollows(
     modifier: Modifier = Modifier,
     user: User,
     onHubNavigate: (NavigationHubRoute) -> Unit,
-    hubUiAction: HubUiAction,
+    onHubAction: (HubAction) -> Unit,
 ) {
     Column(
         modifier = modifier,
@@ -36,7 +36,7 @@ fun StatusBarWithFollows(
             user = user,
         ) {
             Column {
-                AboutFollow(hubUiAction = hubUiAction, onHubNavigate = onHubNavigate)
+                AboutFollow(onHubAction = onHubAction, onHubNavigate = onHubNavigate)
             }
         }
         Bottom()
@@ -45,7 +45,7 @@ fun StatusBarWithFollows(
 
 @Composable
 private fun StatusBarScope.AboutFollow(
-    hubUiAction: HubUiAction,
+    onHubAction: (HubAction) -> Unit,
     onHubNavigate: (NavigationHubRoute) -> Unit,
 ) {
     val fontColor: Color = MaterialTheme.colorScheme.primary
@@ -61,7 +61,7 @@ private fun StatusBarScope.AboutFollow(
                 Modifier
                     .clip(RoundedCornerShape(commonPadding))
                     .clickable {
-                        hubUiAction.onSetAccounts(user.follows)
+                        onHubAction(HubAction.SetAccounts(user.follows))
                         onHubNavigate(NavigationHubRoute.Accounts)
                     }.padding(commonPadding),
         ) {
@@ -72,7 +72,7 @@ private fun StatusBarScope.AboutFollow(
                 Modifier
                     .clip(RoundedCornerShape(commonPadding))
                     .clickable {
-                        hubUiAction.onSetAccounts(user.followers)
+                        onHubAction(HubAction.SetAccounts(user.followers))
                         onHubNavigate(NavigationHubRoute.Accounts)
                     }.padding(commonPadding),
         ) {
@@ -88,20 +88,6 @@ private fun StatusBarWithFollowsPreview() {
         modifier = Modifier,
         user = User(),
         onHubNavigate = {},
-        hubUiAction =
-            HubUiAction(
-                onUpdateSelf = {},
-                onChangeIsHideTopBar = {},
-                onResetIsHideTopBar = {},
-                onGetUser = {},
-                onSetComment = {},
-                onSetUserID = {},
-                onSetAccounts = {},
-                onAddPostIDToMyLikes = {},
-                onRemovePostIDFromMyLikes = {},
-                onAddPostIDToMyReposts = {},
-                onRemovePostIDFromMyReposts = {},
-                onChangeCurrentRouteName = {},
-            ),
+        onHubAction = {}
     )
 }

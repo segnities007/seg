@@ -8,14 +8,14 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import com.segnities007.seg.data.model.User
 import com.segnities007.seg.ui.components.tab.Tab
-import com.segnities007.seg.ui.components.tab.TabUiAction
+import com.segnities007.seg.ui.components.tab.TabAction
 import com.segnities007.seg.ui.components.tab.TabUiState
 
 @Composable
 fun StatusBarWithTab(
     user: User,
     tabUiState: TabUiState,
-    tabUiAction: TabUiAction,
+    onTabAction: (TabAction) -> Unit,
 ) {
     LaunchedEffect(Unit) {
         val labels =
@@ -24,7 +24,7 @@ fun StatusBarWithTab(
                 "Like",
                 "Repost",
             )
-        tabUiAction.onSetLabels(labels)
+        onTabAction(TabAction.SetLabels(labels))
     }
 
     StatusBarUi(
@@ -34,7 +34,7 @@ fun StatusBarWithTab(
         Tab(
             modifier = Modifier.background(color = MaterialTheme.colorScheme.primaryContainer),
             tabUiState = tabUiState,
-            tabUiAction = tabUiAction,
+            onTabAction = onTabAction,
         )
     }
 }

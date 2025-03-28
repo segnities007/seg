@@ -1,45 +1,17 @@
 package com.segnities007.seg.ui.components.card.postcard
 
-import androidx.compose.runtime.Immutable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.segnities007.seg.data.model.Post
 import com.segnities007.seg.domain.repository.PostRepository
 import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
-import com.segnities007.seg.ui.screens.hub.HubUiAction
-import com.segnities007.seg.ui.screens.hub.HubUiState
-import com.segnities007.seg.ui.screens.hub.home.HomeUiAction
-import com.segnities007.seg.ui.screens.hub.setting.my_posts.MyPostsUiAction
+import com.segnities007.seg.ui.screens.hub.HubAction
+import com.segnities007.seg.ui.screens.hub.home.HomeAction
+import com.segnities007.seg.ui.screens.hub.setting.my_posts.MyPostsAction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
-@Immutable
-data class PostCardUiAction(
-    val onDeletePost: (
-        post: Post,
-        myPostUiAction: MyPostsUiAction,
-        homeUiAction: HomeUiAction,
-        hubUiState: HubUiState,
-        hubUiAction: HubUiAction,
-    ) -> Unit,
-    val onClickIcon: (onHubNavigate: (NavigationHubRoute) -> Unit) -> Unit,
-    val onClickPostCard: (onHubNavigate: (NavigationHubRoute) -> Unit) -> Unit,
-    val onIncrementViewCount: (post: Post) -> Unit,
-    val onLike: (
-        post: Post,
-        hubUiState: HubUiState,
-        hubUiAction: HubUiAction,
-        onProcessOfEngagementAction: (newPost: Post) -> Unit,
-    ) -> Unit,
-    val onRepost: (
-        post: Post,
-        hubUiState: HubUiState,
-        hubUiAction: HubUiAction,
-        onProcessOfEngagementAction: (newPost: Post) -> Unit,
-    ) -> Unit,
-)
 
 @HiltViewModel
 class PostCardViewModel
@@ -47,96 +19,82 @@ class PostCardViewModel
     constructor(
         private val postRepository: PostRepository,
     ) : ViewModel() {
-        fun onGetPostCardUiAction(): PostCardUiAction =
-            PostCardUiAction(
-                onDeletePost = this::onDeletePost,
-                onClickIcon = this::onClickIcon,
-                onClickPostCard = this::onClickPostCard,
-                onIncrementViewCount = this::onIncrementViewCount,
-                onLike = this::onLike,
-                onRepost = this::onRepost,
-            )
-
-        private fun onDeletePost(
-            post: Post,
-            myPostsUiAction: MyPostsUiAction,
-            homeUiAction: HomeUiAction,
-            hubUiState: HubUiState,
-            hubUiAction: HubUiAction,
-        ) {
-            val newPostsOfSelf = hubUiState.user.posts.minus(post.id)
-            myPostsUiAction.onRemovePostFromPosts(post)
-            val newSelf = hubUiState.user.copy(posts = newPostsOfSelf)
-            hubUiAction.onUpdateSelf(newSelf)
-            viewModelScope.launch(Dispatchers.IO) {
-                postRepository.onDeletePost(post)
-                homeUiAction.onGetNewPosts()
-            }
-        }
-
-        private fun onClickIcon(onHubNavigate: (NavigationHubRoute) -> Unit) {
-            onHubNavigate(NavigationHubRoute.Account)
-        }
-
-        private fun onClickPostCard(onHubNavigate: (NavigationHubRoute) -> Unit) {
-            onHubNavigate(NavigationHubRoute.Comment)
-        }
-
-        private fun onIncrementViewCount(post: Post) {
-            viewModelScope.launch(Dispatchers.IO) {
-                postRepository.onIncrementView(post)
-            }
-        }
-
-        private fun onLike(
-            post: Post,
-            hubUiState: HubUiState,
-            hubUiAction: HubUiAction,
-            onProcessOfEngagementAction: (newPost: Post) -> Unit, // 起動した際に行いたい処理
-        ) {
-            val newPost: Post
-
-            if (hubUiState.user.likes.contains(post.id)) {
-                newPost = post.copy(likeCount = post.likeCount - 1)
-                viewModelScope.launch(Dispatchers.IO) {
-                    postRepository.onUnLike(post = newPost, user = hubUiState.user)
+        fun onPostCardAction(action: PostCardAction) {
+            when (action) {
+                is PostCardAction.ClickPostCard -> {
+                    action.onHubNavigate(NavigationHubRoute.Comment)
                 }
-                hubUiAction.onRemovePostIDFromMyLikes(post.id)
-            } else {
-                newPost = post.copy(likeCount = post.likeCount + 1)
-                viewModelScope.launch(Dispatchers.IO) {
-                    postRepository.onLike(post = newPost, user = hubUiState.user)
-                }
-                hubUiAction.onAddPostIDToMyLikes(post.id)
-            }
 
-            onProcessOfEngagementAction(newPost)
-        }
-
-        private fun onRepost(
-            post: Post,
-            hubUiState: HubUiState,
-            hubUiAction: HubUiAction,
-            onProcessOfEngagementAction: (newPost: Post) -> Unit, // 起動した際に行いたい処理
-        ) {
-            val newPost: Post
-            if (hubUiState.user.reposts.contains(post.id)) {
-                newPost = post.copy(repostCount = post.repostCount - 1)
-                viewModelScope.launch(Dispatchers.IO) {
-                    postRepository.onUnRepost(post = newPost, user = hubUiState.user)
+                is PostCardAction.ClickAvatarIcon -> {
+                    action.onHubNavigate(NavigationHubRoute.Account)
                 }
-            } else {
-                newPost = post.copy(repostCount = post.repostCount + 1)
-                viewModelScope.launch(Dispatchers.IO) {
-                    postRepository.onRepost(post = newPost, user = hubUiState.user)
+
+                is PostCardAction.ClickLikeIcon -> {
+                    val newPost: Post
+
+                    if (action.hubState.user.likes
+                            .contains(action.post.id)
+                    ) {
+                        newPost = action.post.copy(likeCount = action.post.likeCount - 1)
+                        viewModelScope.launch(Dispatchers.IO) {
+                            postRepository.onUnLike(post = newPost, user = action.hubState.user)
+                        }
+                        action.onHubAction(HubAction.RemovePostIDFromMyLikes(action.post.id))
+                    } else {
+                        newPost = action.post.copy(likeCount = action.post.likeCount + 1)
+                        viewModelScope.launch(Dispatchers.IO) {
+                            postRepository.onLike(post = newPost, user = action.hubState.user)
+                        }
+                        action.onHubAction(HubAction.AddPostIDToMyLikes(action.post.id))
+                    }
+
+                    action.onProcessOfEngagementAction(newPost)
+                }
+
+                is PostCardAction.ClickRepostIcon -> {
+                    val newPost: Post
+                    val hubState = action.hubState
+                    val post = action.post
+
+                    if (hubState.user.reposts.contains(post.id)) {
+                        newPost = post.copy(repostCount = post.repostCount - 1)
+                        viewModelScope.launch(Dispatchers.IO) {
+                            postRepository.onUnRepost(post = newPost, user = hubState.user)
+                        }
+                    } else {
+                        newPost = post.copy(repostCount = post.repostCount + 1)
+                        viewModelScope.launch(Dispatchers.IO) {
+                            postRepository.onRepost(post = newPost, user = hubState.user)
+                        }
+                    }
+
+                    if (hubState.user.reposts.contains(post.id)) {
+                        action.onHubAction(HubAction.RemovePostIDFromReposts(post.id))
+                    } else {
+                        action.onHubAction(HubAction.AddPostIDFromReposts(post.id))
+                    }
+                    action.onProcessOfEngagementAction(newPost)
+                }
+
+                is PostCardAction.DeletePost -> {
+                    val hubState = action.hubState
+                    val post = action.post
+
+                    val newPostsOfSelf = hubState.user.posts.minus(post.id)
+                    action.onMyPostsAction(MyPostsAction.RemovePostFromPosts(post))
+                    val newSelf = hubState.user.copy(posts = newPostsOfSelf)
+                    action.onHubAction(HubAction.SetSelf(newSelf))
+                    viewModelScope.launch(Dispatchers.IO) {
+                        postRepository.onDeletePost(post)
+                        action.onHomeAction(HomeAction.GetNewPosts)
+                    }
+                }
+
+                is PostCardAction.IncrementViewCount -> {
+                    viewModelScope.launch(Dispatchers.IO) {
+                        postRepository.onIncrementView(action.post)
+                    }
                 }
             }
-
-            if (hubUiState.user.reposts.contains(post.id)) {
-                hubUiAction.onRemovePostIDFromMyReposts(post.id)
-            } else {
-                hubUiAction.onAddPostIDToMyReposts(post.id)
-            }
-            onProcessOfEngagementAction(newPost)
         }
     }

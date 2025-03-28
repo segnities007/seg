@@ -7,34 +7,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.segnities007.seg.data.model.User
 import com.segnities007.seg.domain.repository.PostRepository
-import com.segnities007.seg.ui.screens.hub.HubUiAction
-import com.segnities007.seg.ui.screens.hub.HubUiState
+import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
+import com.segnities007.seg.ui.screens.hub.HubAction
+import com.segnities007.seg.ui.screens.hub.HubState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
-data class PostUiState(
-    val inputText: String = "",
-    val isLoading: Boolean = false,
-)
-
-data class PostUiAction(
-    val onUpdateIsLoading: (isLoading: Boolean) -> Unit,
-    val onUpdateInputText: (newInputText: String) -> Unit,
-    val onCreatePost: (
-        user: User,
-        onUpdateIsLoading: (isLoading: Boolean) -> Unit,
-        onUpdateSelf: () -> Unit,
-        onNavigate: () -> Unit,
-    ) -> Unit,
-    val onCreateComment: (
-        hubUiState: HubUiState,
-        hubUiAction: HubUiAction,
-        onUpdateIsLoading: (isLoading: Boolean) -> Unit,
-        onNavigate: () -> Unit,
-    ) -> Unit,
-)
 
 @HiltViewModel
 class PostViewModel
@@ -42,69 +21,55 @@ class PostViewModel
     constructor(
         private val postRepository: PostRepository,
     ) : ViewModel() {
-        var postUiState by mutableStateOf(PostUiState())
+        var postState by mutableStateOf(PostState())
             private set
 
-        fun onGetPostUiAction(): PostUiAction =
-            PostUiAction(
-                onUpdateInputText = this::onUpdateInputText,
-                onCreatePost = this::onCreatePost,
-                onCreateComment = this::onCreateComment,
-                onUpdateIsLoading = this::onUpdateIsLoading,
-            )
-
+        fun onPostAction(action: PostAction){
+            when(action){
+                is PostAction.CreatePost -> {
+                    val description = postState.inputText
+                    onUpdateIsLoading(true)
+                    viewModelScope.launch(Dispatchers.IO) {
+                        val result = postRepository.onCreatePost(description = description, user = action.user)
+                        if (result) {
+                            action.onUpdateSelf()
+                            viewModelScope.launch(Dispatchers.Main) {
+                                action.onNavigate(NavigationHubRoute.Home)
+                            }
+                        }
+                        onUpdateIsLoading(false)
+                    }
+                }
+                is PostAction.UpdateInputText -> {
+                    postState = postState.copy(inputText = action.newInputText)
+                }
+                is PostAction.UpdateIsLoading -> {
+                    onUpdateIsLoading(action.isLoading)
+                }
+                is PostAction.CreateComment -> {
+                    val description = postState.inputText
+                    onUpdateIsLoading(true)
+                    viewModelScope.launch(Dispatchers.IO) {
+                        val result =
+                            postRepository.onCreateComment(
+                                description = description,
+                                self = action.hubState.user,
+                                commentedPost = action.hubState.comment
+                            )
+                        if (result) {
+                            action.onHubAction(HubAction.GetUser)
+                            val updatedCommentedPost = postRepository.onGetPost(action.hubState.comment.id)
+                            action.onHubAction(HubAction.SetComment(updatedCommentedPost))
+                            viewModelScope.launch(Dispatchers.Main) {
+                                action.onNavigate(NavigationHubRoute.Home)
+                            }
+                        }
+                        onUpdateIsLoading(false)
+                    }
+                }
+            }
+        }
         private fun onUpdateIsLoading(isLoading: Boolean) {
-            postUiState = postUiState.copy(isLoading = isLoading)
-        }
-
-        private fun onCreatePost(
-            user: User,
-            onUpdateIsLoading: (isLoading: Boolean) -> Unit,
-            onUpdateSelf: () -> Unit,
-            onNavigate: () -> Unit,
-        ) {
-            val description = postUiState.inputText
-            onUpdateIsLoading(true)
-            viewModelScope.launch(Dispatchers.IO) {
-                val result = postRepository.onCreatePost(description = description, user = user)
-                if (result) {
-                    onUpdateSelf()
-                    viewModelScope.launch(Dispatchers.Main) {
-                        onNavigate()
-                    }
-                }
-                onUpdateIsLoading(false)
-            }
-        }
-
-        private fun onCreateComment(
-            hubUiState: HubUiState,
-            hubUiAction: HubUiAction,
-            onUpdateIsLoading: (isLoading: Boolean) -> Unit,
-            onNavigate: () -> Unit,
-        ) {
-            val description = postUiState.inputText
-            onUpdateIsLoading(true)
-            viewModelScope.launch(Dispatchers.IO) {
-                val result =
-                    postRepository.onCreateComment(
-                        description = description,
-                        self = hubUiState.user,
-                        commentedPost = hubUiState.comment,
-                    )
-                if (result) {
-                    hubUiAction.onGetUser()
-                    val updatedCommentedPost = postRepository.onGetPost(hubUiState.comment.id)
-                    hubUiAction.onSetComment(updatedCommentedPost)
-                    viewModelScope.launch(Dispatchers.Main) {
-                        onNavigate()
-                    }
-                }
-                onUpdateIsLoading(false)
-            }
-        }
-
-        private fun onUpdateInputText(newInputText: String) {
-            postUiState = postUiState.copy(inputText = newInputText)
+            postState = postState.copy(isLoading = isLoading)
         }
     }

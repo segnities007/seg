@@ -13,32 +13,33 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import com.segnities007.seg.R
 import com.segnities007.seg.domain.presentation.Navigation
+import com.segnities007.seg.ui.components.bar.top_search_bar.TopSearchBarState
 import com.segnities007.seg.ui.components.card.AvatarCard
 import com.segnities007.seg.ui.components.card.postcard.PostCard
-import com.segnities007.seg.ui.components.card.postcard.PostCardUiAction
+import com.segnities007.seg.ui.components.card.postcard.PostCardAction
 import com.segnities007.seg.ui.components.indicator.LoadingUI
 import com.segnities007.seg.ui.components.tab.TabUiState
 import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
-import com.segnities007.seg.ui.screens.hub.HubUiAction
-import com.segnities007.seg.ui.screens.hub.HubUiState
-import com.segnities007.seg.ui.screens.hub.account.AccountUiAction
+import com.segnities007.seg.ui.screens.hub.HubAction
+import com.segnities007.seg.ui.screens.hub.HubState
+import com.segnities007.seg.ui.screens.hub.account.AccountAction
 
 @Composable
 fun Search(
     modifier: Modifier = Modifier,
-    hubUiState: HubUiState,
-    hubUiAction: HubUiAction,
-    postCardUiAction: PostCardUiAction,
+    hubState: HubState,
     tabUiState: TabUiState,
-    topSearchBarUiState: TopSearchBarUiState,
-    accountUiAction: AccountUiAction,
-    searchUiState: SearchUiState,
-    searchUiAction: SearchUiAction,
+    topSearchBarState: TopSearchBarState,
+    searchState: SearchState,
+    onHubAction: (HubAction) -> Unit,
+    onSearchAction: (SearchAction) -> Unit,
+    onAccountAction: (AccountAction) -> Unit,
+    onPostCardAction: (PostCardAction) -> Unit,
     onHubNavigate: (Navigation) -> Unit,
 ) {
     DisposableEffect(Unit) {
         onDispose {
-            searchUiAction.onResetListsOfSearchUiState()
+            onSearchAction(SearchAction.ResetSearchState)
         }
     }
 
@@ -46,34 +47,36 @@ fun Search(
         0 ->
             MostViewPosts(
                 modifier = modifier,
-                hubUiState = hubUiState,
-                hubUiAction = hubUiAction,
-                postCardUiAction = postCardUiAction,
-                topSearchBarUiState = topSearchBarUiState,
-                searchUiState = searchUiState,
-                searchUiAction = searchUiAction,
+                hubState = hubState,
+                topSearchBarState = topSearchBarState,
+                searchState = searchState,
                 onHubNavigate = onHubNavigate,
+                onHubAction = onHubAction,
+                onSearchAction = onSearchAction,
+                onPostCardAction = onPostCardAction,
             )
+
         1 ->
             LatestPosts(
                 modifier = modifier,
-                hubUiState = hubUiState,
-                hubUiAction = hubUiAction,
-                postCardUiAction = postCardUiAction,
-                topSearchBarUiState = topSearchBarUiState,
-                searchUiState = searchUiState,
-                searchUiAction = searchUiAction,
+                hubState = hubState,
+                topSearchBarState = topSearchBarState,
+                searchState = searchState,
                 onHubNavigate = onHubNavigate,
+                onHubAction = onHubAction,
+                onSearchAction = onSearchAction,
+                onPostCardAction = onPostCardAction,
             )
+
         2 ->
             Users(
                 modifier = modifier,
-                hubUiAction = hubUiAction,
-                topSearchBarUiState = topSearchBarUiState,
-                accountUiAction = accountUiAction,
-                searchUiState = searchUiState,
-                searchUiAction = searchUiAction,
+                topSearchBarState = topSearchBarState,
+                searchState = searchState,
                 onHubNavigate = onHubNavigate,
+                onHubAction = onHubAction,
+                onSearchAction = onSearchAction,
+                onAccountAction = onAccountAction,
             )
     }
 }
@@ -81,12 +84,12 @@ fun Search(
 @Composable
 private fun MostViewPosts(
     modifier: Modifier = Modifier,
-    hubUiState: HubUiState,
-    hubUiAction: HubUiAction,
-    postCardUiAction: PostCardUiAction,
-    topSearchBarUiState: TopSearchBarUiState,
-    searchUiState: SearchUiState,
-    searchUiAction: SearchUiAction,
+    hubState: HubState,
+    topSearchBarState: TopSearchBarState,
+    searchState: SearchState,
+    onHubAction: (HubAction) -> Unit,
+    onSearchAction: (SearchAction) -> Unit,
+    onPostCardAction: (PostCardAction) -> Unit,
     onHubNavigate: (Navigation) -> Unit,
 ) {
     LazyColumn(
@@ -102,32 +105,39 @@ private fun MostViewPosts(
         verticalArrangement = Arrangement.Top,
     ) {
         items(
-            searchUiState.postsSortedByViewCount.size,
+            searchState.postsSortedByViewCount.size,
             key = { index: Int ->
-                searchUiState.postsSortedByViewCount[index].id
+                searchState.postsSortedByViewCount[index].id
             },
         ) { i ->
             PostCard(
-                post = searchUiState.postsSortedByViewCount[i],
-                hubUiState = hubUiState,
+                post = searchState.postsSortedByViewCount[i],
+                hubState = hubState,
                 onHubNavigate = onHubNavigate,
-                hubUiAction = hubUiAction,
                 isIncrementView = false,
-                postCardUiAction = postCardUiAction,
-                onProcessOfEngagementAction = searchUiAction.onProcessOfEngagementAction,
+                onProcessOfEngagementAction = { newPost ->
+                    (
+                        SearchAction.ProcessOfEngagementAction(
+                            newPost,
+                        )
+                    )
+                },
+                onHubAction = onHubAction,
+                onPostCardAction = onPostCardAction,
             )
             Spacer(Modifier.padding(dimensionResource(R.dimen.padding_smallest)))
         }
-        // action for fetching before post
         item {
-            if (searchUiState.postsSortedByViewCount.isNotEmpty() && topSearchBarUiState.isCompletedLoadingPostsSortedByViewCount) {
+            if (searchState.postsSortedByViewCount.isNotEmpty() && topSearchBarState.isCompletedLoadingPostsSortedByViewCount) {
                 Column {
                     Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_smaller)))
                     LoadingUI(
                         onLoading = {
-                            searchUiAction.onGetBeforePostsByKeywordSortedByViewCount(
-                                topSearchBarUiState.keyword,
-                                searchUiState.postsSortedByViewCount.last().viewCount,
+                            onSearchAction(
+                                SearchAction.GetBeforePostsByKeywordSortedByViewCount(
+                                    keyword = topSearchBarState.keyword,
+                                    viewCount = searchState.postsSortedByViewCount.last().viewCount,
+                                ),
                             )
                         },
                     )
@@ -140,12 +150,12 @@ private fun MostViewPosts(
 @Composable
 private fun LatestPosts(
     modifier: Modifier = Modifier,
-    hubUiState: HubUiState,
-    hubUiAction: HubUiAction,
-    postCardUiAction: PostCardUiAction,
-    topSearchBarUiState: TopSearchBarUiState,
-    searchUiState: SearchUiState,
-    searchUiAction: SearchUiAction,
+    hubState: HubState,
+    topSearchBarState: TopSearchBarState,
+    searchState: SearchState,
+    onHubAction: (HubAction) -> Unit,
+    onSearchAction: (SearchAction) -> Unit,
+    onPostCardAction: (PostCardAction) -> Unit,
     onHubNavigate: (Navigation) -> Unit,
 ) {
     LazyColumn(
@@ -161,32 +171,39 @@ private fun LatestPosts(
         verticalArrangement = Arrangement.Top,
     ) {
         items(
-            searchUiState.posts.size,
+            searchState.posts.size,
             key = { index: Int ->
-                searchUiState.posts[index].id
+                searchState.posts[index].id
             },
         ) { i ->
             PostCard(
-                post = searchUiState.posts[i],
-                hubUiState = hubUiState,
+                post = searchState.posts[i],
+                hubState = hubState,
                 onHubNavigate = onHubNavigate,
-                hubUiAction = hubUiAction,
                 isIncrementView = false,
-                postCardUiAction = postCardUiAction,
-                onProcessOfEngagementAction = searchUiAction.onProcessOfEngagementAction,
+                onHubAction = onHubAction,
+                onPostCardAction = onPostCardAction,
+                onProcessOfEngagementAction = { newPost ->
+                    onSearchAction(
+                        SearchAction.ProcessOfEngagementAction(
+                            newPost,
+                        ),
+                    )
+                },
             )
             Spacer(Modifier.padding(dimensionResource(R.dimen.padding_smallest)))
         }
-        // action for fetching before post
         item {
-            if (searchUiState.posts.isNotEmpty() && topSearchBarUiState.isCompletedLoadingPosts) {
+            if (searchState.posts.isNotEmpty() && topSearchBarState.isCompletedLoadingPosts) {
                 Column {
                     Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_smaller)))
                     LoadingUI(
                         onLoading = {
-                            searchUiAction.onGetBeforePostsByKeyword(
-                                topSearchBarUiState.keyword,
-                                searchUiState.posts.last().createAt,
+                            onSearchAction(
+                                SearchAction.GetBeforePostsByKeyword(
+                                    keyword = topSearchBarState.keyword,
+                                    afterPostCreatedAt = searchState.posts.last().createAt,
+                                ),
                             )
                         },
                     )
@@ -199,11 +216,11 @@ private fun LatestPosts(
 @Composable
 private fun Users(
     modifier: Modifier = Modifier,
-    hubUiAction: HubUiAction,
-    topSearchBarUiState: TopSearchBarUiState,
-    accountUiAction: AccountUiAction,
-    searchUiState: SearchUiState,
-    searchUiAction: SearchUiAction,
+    topSearchBarState: TopSearchBarState,
+    searchState: SearchState,
+    onHubAction: (HubAction) -> Unit,
+    onSearchAction: (SearchAction) -> Unit,
+    onAccountAction: (AccountAction) -> Unit,
     onHubNavigate: (Navigation) -> Unit,
 ) {
     LazyColumn(
@@ -212,31 +229,32 @@ private fun Users(
         verticalArrangement = Arrangement.Top,
     ) {
         items(
-            searchUiState.users.size,
+            searchState.users.size,
             key = { index: Int ->
-                searchUiState.users[index].id
+                searchState.users[index].id
             },
         ) { i ->
             AvatarCard(
                 onCardClick = {
-                    accountUiAction.onGetUserPosts(searchUiState.users[i].userID)
-                    hubUiAction.onSetUserID(searchUiState.users[i].userID)
-                    hubUiAction.onChangeCurrentRouteName(NavigationHubRoute.Account.name)
+                    onAccountAction(AccountAction.GetUserPosts(searchState.users[i].userID))
+                    onHubAction(HubAction.SetUserID(searchState.users[i].userID))
+                    onHubAction(HubAction.ChangeCurrentRouteName(NavigationHubRoute.Account.name))
                     onHubNavigate(NavigationHubRoute.Account)
                 },
-                user = searchUiState.users[i],
+                user = searchState.users[i],
             )
         }
-        // action for fetching before post
         item {
-            if (searchUiState.users.isNotEmpty() && topSearchBarUiState.isCompletedLoadingUsers) {
+            if (searchState.users.isNotEmpty() && topSearchBarState.isCompletedLoadingUsers) {
                 Column {
                     Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_smaller)))
                     LoadingUI(
                         onLoading = {
-                            searchUiAction.onGetBeforeUsersByKeyword(
-                                topSearchBarUiState.keyword,
-                                searchUiState.users.last().createAt,
+                            onSearchAction(
+                                SearchAction.GetBeforeUsersByKeyword(
+                                    keyword = topSearchBarState.keyword,
+                                    afterPostCreatedAt = searchState.users.last().createAt,
+                                ),
                             )
                         },
                     )

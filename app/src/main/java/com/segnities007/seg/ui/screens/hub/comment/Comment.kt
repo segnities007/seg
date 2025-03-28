@@ -13,30 +13,31 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.segnities007.seg.R
 import com.segnities007.seg.domain.presentation.Navigation
 import com.segnities007.seg.ui.components.card.postcard.PostCard
-import com.segnities007.seg.ui.components.card.postcard.PostCardUiAction
-import com.segnities007.seg.ui.screens.hub.HubUiAction
-import com.segnities007.seg.ui.screens.hub.HubUiState
+import com.segnities007.seg.ui.components.card.postcard.PostCardAction
+import com.segnities007.seg.ui.screens.hub.HubAction
+import com.segnities007.seg.ui.screens.hub.HubState
 
 @Composable
 fun Comment(
     modifier: Modifier = Modifier,
-    hubUiState: HubUiState,
-    hubUiAction: HubUiAction,
-    commentViewModel: CommentViewModel = hiltViewModel(),
-    postCardUiAction: PostCardUiAction,
+    hubState: HubState,
+    onHubAction: (HubAction) -> Unit,
+    onPostCardAction: (PostCardAction) -> Unit,
     onHubNavigate: (Navigation) -> Unit,
 ) {
+    val commentViewModel: CommentViewModel = hiltViewModel()
+
     LaunchedEffect(Unit) {
-        commentViewModel.onGetCommentUiAction().onGetComments(hubUiState.comment)
+        commentViewModel.onCommentAction(CommentAction.GetComments(hubState.comment))
     }
 
     CommentUi(
         modifier = modifier,
-        hubUiState = hubUiState,
-        hubUiAction = hubUiAction,
-        commentUiState = commentViewModel.commentUiState,
-        commentUiAction = commentViewModel.onGetCommentUiAction(),
-        postCardUiAction = postCardUiAction,
+        hubState = hubState,
+        commentState = commentViewModel.commentState,
+        onHubAction = onHubAction,
+        onCommentAction = commentViewModel::onCommentAction,
+        onPostCardAction = onPostCardAction,
         onHubNavigate = onHubNavigate,
     )
 }
@@ -44,11 +45,11 @@ fun Comment(
 @Composable
 private fun CommentUi(
     modifier: Modifier = Modifier,
-    hubUiState: HubUiState,
-    hubUiAction: HubUiAction,
-    commentUiState: CommentUiState,
-    postCardUiAction: PostCardUiAction,
-    commentUiAction: CommentUiAction,
+    hubState: HubState,
+    commentState: CommentState,
+    onHubAction: (HubAction) -> Unit,
+    onCommentAction: (CommentAction) -> Unit,
+    onPostCardAction: (PostCardAction) -> Unit,
     onHubNavigate: (Navigation) -> Unit,
 ) {
     LazyColumn(
@@ -64,26 +65,32 @@ private fun CommentUi(
     ) {
         item {
             PostCard(
-                post = hubUiState.comment,
-                hubUiState = hubUiState,
-                hubUiAction = hubUiAction,
-                postCardUiAction = postCardUiAction,
+                post = hubState.comment,
+                hubState = hubState,
                 onHubNavigate = onHubNavigate,
-                onProcessOfEngagementAction = commentUiAction.onProcessOfEngagementAction,
+                onPostCardAction = onPostCardAction,
+                onProcessOfEngagementAction = {
+                    onCommentAction(
+                        CommentAction.ProcessOfEngagementAction(
+                            it
+                        )
+                    )
+                },
+                onHubAction = onHubAction,
             )
             Spacer(Modifier.padding(dimensionResource(R.dimen.padding_normal)))
         }
         items(
-            commentUiState.comments.size,
-            key = { index: Int -> commentUiState.comments[index].id },
+            commentState.comments.size,
+            key = { index: Int -> commentState.comments[index].id },
         ) {
             PostCard(
-                post = commentUiState.comments[it],
-                hubUiState = hubUiState,
-                hubUiAction = hubUiAction,
-                postCardUiAction = postCardUiAction,
+                post = commentState.comments[it],
+                hubState = hubState,
                 onHubNavigate = onHubNavigate,
-                onProcessOfEngagementAction = commentUiAction.onProcessOfEngagementAction,
+                onHubAction = onHubAction,
+                onPostCardAction = onPostCardAction,
+                onProcessOfEngagementAction = {newPost -> onCommentAction(CommentAction.ProcessOfEngagementAction(newPost))},
             )
             Spacer(Modifier.padding(dimensionResource(R.dimen.padding_smaller)))
         }

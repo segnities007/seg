@@ -8,12 +8,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.segnities007.seg.domain.presentation.Navigation
-import com.segnities007.seg.ui.components.card.postcard.PostCardUiAction
-import com.segnities007.seg.ui.components.tab.TabUiAction
+import com.segnities007.seg.ui.components.card.postcard.PostCardAction
+import com.segnities007.seg.ui.components.tab.TabAction
 import com.segnities007.seg.ui.components.tab.TabUiState
-import com.segnities007.seg.ui.screens.hub.HubUiAction
-import com.segnities007.seg.ui.screens.hub.HubUiState
-import com.segnities007.seg.ui.screens.hub.home.HomeUiAction
+import com.segnities007.seg.ui.screens.hub.HubAction
+import com.segnities007.seg.ui.screens.hub.HubState
+import com.segnities007.seg.ui.screens.hub.home.HomeAction
 import com.segnities007.seg.ui.screens.hub.setting.Setting
 import com.segnities007.seg.ui.screens.hub.setting.SettingViewModel
 import com.segnities007.seg.ui.screens.hub.setting.my_posts.MyPosts
@@ -23,48 +23,56 @@ import com.segnities007.seg.ui.screens.hub.setting.userinfo.UserInfo
 @Composable
 fun NavigationSetting(
     modifier: Modifier = Modifier,
-    settingNavHostController: NavHostController = rememberNavController(),
-    settingViewModel: SettingViewModel = hiltViewModel(),
-    postCardUiAction: PostCardUiAction,
     tabUiState: TabUiState,
-    tabUiAction: TabUiAction,
-    homeUiAction: HomeUiAction,
-    hubUiState: HubUiState,
-    hubUiAction: HubUiAction,
+    hubState: HubState,
+    onHubAction: (HubAction) -> Unit,
+    onHomeAction: (HomeAction) -> Unit,
+    onTabAction: (TabAction) -> Unit,
+    onPostCardAction: (PostCardAction) -> Unit,
     onTopNavigate: (Navigation) -> Unit,
     onHubNavigate: (Navigation) -> Unit,
 ) {
+    val settingNavHostController: NavHostController = rememberNavController()
+    val settingViewModel: SettingViewModel = hiltViewModel()
+
     Setting(
         modifier = modifier,
-        hubUiAction = hubUiAction,
+        onHubAction = onHubAction,
     ) {
-        NavHost(navController = settingNavHostController, startDestination = NavigationSettingRoute.Preference) {
+        NavHost(
+            navController = settingNavHostController,
+            startDestination = NavigationSettingRoute.Preference,
+        ) {
             composable<NavigationSettingRoute.Preference> {
                 Preference(
-                    settingUiAction = settingViewModel.getSettingUiAction(),
-                    hubUiAction = hubUiAction,
                     onTopNavigate = onTopNavigate, // logout
-                    onSettingNavigate = { route: Navigation -> settingNavHostController.navigate(route) },
+                    onSettingNavigate = { route: Navigation ->
+                        settingNavHostController.navigate(
+                            route,
+                        )
+                    },
+                    onHubAction = onHubAction,
+                    onSettingAction = settingViewModel::onSettingAction,
                 )
             }
             composable<NavigationSettingRoute.UserInfo> {
                 UserInfo(
-                    hubUiState = hubUiState,
-                    hubUiAction = hubUiAction,
-                    settingUiState = settingViewModel.settingUiState,
-                    settingUiAction = settingViewModel.getSettingUiAction(),
+                    hubState = hubState,
+                    settingState = settingViewModel.settingState,
                     onNavigate = { route: Navigation -> settingNavHostController.navigate(route) },
+                    onHubAction = onHubAction,
+                    onSettingAction = settingViewModel::onSettingAction,
                 )
             }
             composable<NavigationSettingRoute.Posts> {
                 MyPosts(
-                    homeUiAction = homeUiAction,
-                    hubUiState = hubUiState,
-                    hubUiAction = hubUiAction,
+                    hubState = hubState,
                     tabUiState = tabUiState,
-                    tabUiAction = tabUiAction,
-                    postCardUiAction = postCardUiAction,
                     onHubNavigate = onHubNavigate,
+                    onTabAction = onTabAction,
+                    onHubAction = onHubAction,
+                    onHomeAction = onHomeAction,
+                    onPostCardAction = onPostCardAction,
                 )
             }
         }

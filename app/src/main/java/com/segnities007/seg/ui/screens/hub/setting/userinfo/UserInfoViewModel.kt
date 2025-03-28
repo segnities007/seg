@@ -4,26 +4,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.segnities007.seg.data.model.User
+import androidx.lifecycle.viewModelScope
 import com.segnities007.seg.data.repository.UserRepositoryImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import javax.inject.Inject
-
-data class UserInfoUiState(
-    val name: String = "",
-    val userID: String = "",
-    val description: String = "",
-)
-
-data class UserInfoUiAction(
-    val onUserUpdate: suspend (user: User) -> Unit,
-    val onDescriptionChange: (newDescription: String) -> Unit,
-    val onNameChange: (newName: String) -> Unit,
-    val onUserIDChange: (newUserID: String) -> Unit,
-)
 
 @HiltViewModel
 class UserInfoViewModel
@@ -31,38 +18,34 @@ class UserInfoViewModel
     constructor(
         private val userRepositoryImpl: UserRepositoryImpl,
     ) : ViewModel() {
-        var userInfoUiState by mutableStateOf(UserInfoUiState())
+        var userInfoState by mutableStateOf(UserInfoState())
 
-        fun getUserInfoUiAction(): UserInfoUiAction =
-            UserInfoUiAction(
-                onUserUpdate = this::onUserUpdate,
-                onUserIDChange = this::onUserIDChange,
-                onNameChange = this::onNameChange,
-                onDescriptionChange = this::onDescriptionChange,
-            )
+        fun onUserInfoAction(action: UserInfoAction) {
+            when (action) {
+                is UserInfoAction.ChangeDescription -> {
+                    userInfoState = userInfoState.copy(description = action.newDescription)
+                }
 
-        private fun onNameChange(newName: String) {
-            userInfoUiState = userInfoUiState.copy(name = newName)
-        }
+                is UserInfoAction.ChangeName -> {
+                    userInfoState = userInfoState.copy(name = action.newName)
+                }
 
-        private fun onUserIDChange(newUserID: String) {
-            userInfoUiState = userInfoUiState.copy(userID = newUserID)
-        }
+                is UserInfoAction.ChangeUserID -> {
+                    userInfoState = userInfoState.copy(userID = action.newUserID)
+                }
 
-        private fun onDescriptionChange(newDescription: String) {
-            userInfoUiState = userInfoUiState.copy(description = newDescription)
-        }
-
-        private suspend fun onUserUpdate(user: User) {
-            withContext(Dispatchers.IO) {
-                val newUser =
-                    user.copy(
-                        name = userInfoUiState.name,
-                        description = userInfoUiState.description,
-                        userID = userInfoUiState.userID,
-                        updateAt = LocalDateTime.now(),
-                    )
-                userRepositoryImpl.onUpdateUser(newUser)
+                is UserInfoAction.UpdateUser -> {
+                    viewModelScope.launch(Dispatchers.IO) {
+                        val newUser =
+                            action.user.copy(
+                                name = userInfoState.name,
+                                description = userInfoState.description,
+                                userID = userInfoState.userID,
+                                updateAt = LocalDateTime.now(),
+                            )
+                        userRepositoryImpl.onUpdateUser(newUser)
+                    }
+                }
             }
         }
     }

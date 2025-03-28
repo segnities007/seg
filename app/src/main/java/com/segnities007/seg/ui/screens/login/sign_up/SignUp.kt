@@ -8,29 +8,29 @@ import com.segnities007.seg.R
 import com.segnities007.seg.domain.presentation.Navigation
 import com.segnities007.seg.ui.components.card.LoginCard
 import com.segnities007.seg.ui.navigation.login.NavigationLoginRoute
-import com.segnities007.seg.ui.screens.login.LoginUiAction
-import com.segnities007.seg.ui.screens.login.LoginUiState
+import com.segnities007.seg.ui.screens.login.LoginAction
+import com.segnities007.seg.ui.screens.login.LoginState
 
 @Composable
 fun SignUp(
     modifier: Modifier,
     padding: Dp = dimensionResource(R.dimen.padding_normal),
     onNavigateToConfirmEmail: (Navigation) -> Unit,
-    loginUiState: LoginUiState,
-    loginUiAction: LoginUiAction,
+    loginState: LoginState,
+    loginAction: (action: LoginAction) -> Unit,
 ) {
     LoginCard(
         modifier = modifier,
         textIDOfEnterLabel = R.string.sign_up,
         padding = padding,
-        loginUiState = loginUiState,
-        loginUiAction = loginUiAction,
+        loginState = loginState,
+        loginAction = loginAction,
         onClickSignButton = {
-            loginUiAction.onSignUpWithEmailPassword {
-                onNavigateToConfirmEmail(
-                    NavigationLoginRoute.ConfirmEmail,
-                )
-            }
+            loginAction(
+                LoginAction.SignUpWithEmailPassword(
+                    onNavigate = { onNavigateToConfirmEmail(NavigationLoginRoute.ConfirmEmail) },
+                ),
+            )
         },
     )
 }

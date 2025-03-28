@@ -11,7 +11,9 @@ import com.segnities007.seg.ui.navigation.login.NavigationLogin
 import com.segnities007.seg.ui.screens.splash.Splash
 
 @Composable
-fun TopNavigation(topNavController: NavHostController = rememberNavController()) {
+fun TopNavigation() {
+    val topNavController: NavHostController = rememberNavController()
+
     NavHost(
         navController = topNavController,
         startDestination = NavigationRoute.Splash,

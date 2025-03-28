@@ -18,40 +18,40 @@ import com.segnities007.seg.R
 import com.segnities007.seg.domain.presentation.Navigation
 import com.segnities007.seg.ui.components.button.SmallButton
 import com.segnities007.seg.ui.components.card.postcard.PostCard
-import com.segnities007.seg.ui.components.card.postcard.PostCardUiAction
+import com.segnities007.seg.ui.components.card.postcard.PostCardAction
 import com.segnities007.seg.ui.components.indicator.LoadingUI
-import com.segnities007.seg.ui.screens.hub.HubUiAction
-import com.segnities007.seg.ui.screens.hub.HubUiState
+import com.segnities007.seg.ui.screens.hub.HubAction
+import com.segnities007.seg.ui.screens.hub.HubState
 
 @Composable
 fun Account(
     modifier: Modifier = Modifier,
-    hubUiState: HubUiState,
-    hubUiAction: HubUiAction,
+    hubState: HubState,
     accountUiFlagState: AccountUiFlagState,
-    accountUiState: AccountUiState,
-    accountUiAction: AccountUiAction,
-    postCardUiAction: PostCardUiAction,
+    accountState: AccountState,
+    onHubAction: (HubAction) -> Unit,
+    onAccountAction: (AccountAction) -> Unit,
+    onPostCardAction: (PostCardAction) -> Unit,
     onHubNavigate: (Navigation) -> Unit,
 ) {
     LaunchedEffect(Unit) {
-        accountUiAction.onInitAccountUiState(hubUiState.userID)
+        onAccountAction(AccountAction.InitAccountState(hubState.userID))
     }
 
     DisposableEffect(Unit) {
         onDispose {
-            accountUiAction.onReset()
+            onAccountAction(AccountAction.ResetState)
         }
     }
 
     AccountUi(
         modifier = modifier,
-        hubUiState = hubUiState,
-        hubUiAction = hubUiAction,
+        hubState = hubState,
+        onHubAction = onHubAction,
         accountUiFlagState = accountUiFlagState,
-        accountUiState = accountUiState,
-        accountUiAction = accountUiAction,
-        postCardUiAction = postCardUiAction,
+        accountState = accountState,
+        onAccountAction = onAccountAction,
+        onPostCardAction = onPostCardAction,
         onHubNavigate = onHubNavigate,
     )
 }
@@ -59,12 +59,12 @@ fun Account(
 @Composable
 private fun AccountUi(
     modifier: Modifier = Modifier,
-    hubUiState: HubUiState,
-    hubUiAction: HubUiAction,
+    hubState: HubState,
     accountUiFlagState: AccountUiFlagState,
-    accountUiState: AccountUiState,
-    accountUiAction: AccountUiAction,
-    postCardUiAction: PostCardUiAction,
+    accountState: AccountState,
+    onHubAction: (HubAction) -> Unit,
+    onAccountAction: (AccountAction) -> Unit,
+    onPostCardAction: (PostCardAction) -> Unit,
     onHubNavigate: (Navigation) -> Unit,
 ) {
     LazyColumn(
@@ -79,28 +79,30 @@ private fun AccountUi(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
     ) {
-        if (hubUiState.user.userID != accountUiState.user.userID) {
+        if (hubState.user.userID != accountState.user.userID) {
             item {
                 FollowButtons(
-                    hubUiState = hubUiState,
-                    hubUiAction = hubUiAction,
+                    hubState = hubState,
                     accountUiFlagState = accountUiFlagState,
-                    accountUiState = accountUiState,
-                    accountUiAction = accountUiAction,
+                    accountState = accountState,
+                    onHubAction = onHubAction,
+                    onAccountAction = onAccountAction,
                 )
             }
         }
         items(
-            accountUiState.posts.size,
-            key = { index: Int -> accountUiState.posts[index].id },
+            accountState.posts.size,
+            key = { index: Int -> accountState.posts[index].id },
         ) { i ->
             PostCard(
-                post = accountUiState.posts[i],
-                hubUiState = hubUiState,
+                post = accountState.posts[i],
+                hubState = hubState,
                 onHubNavigate = onHubNavigate,
-                hubUiAction = hubUiAction,
-                postCardUiAction = postCardUiAction,
-                onProcessOfEngagementAction = accountUiAction.onProcessOfEngagementAction,
+                onHubAction = onHubAction,
+                onProcessOfEngagementAction = {
+                    onAccountAction(AccountAction.ProcessOfEngagementAction(it))
+                },
+                onPostCardAction = onPostCardAction,
             )
             Spacer(Modifier.padding(dimensionResource(R.dimen.padding_smallest)))
         }
@@ -111,7 +113,7 @@ private fun AccountUi(
                     Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_smaller)))
                     LoadingUI(
                         onLoading = {
-                            accountUiAction.onGetPosts()
+                            onAccountAction(AccountAction.GetPosts)
                         },
                     )
                 }
@@ -123,11 +125,11 @@ private fun AccountUi(
 @Composable
 private fun FollowButtons(
     modifier: Modifier = Modifier,
-    hubUiState: HubUiState,
-    hubUiAction: HubUiAction,
+    hubState: HubState,
     accountUiFlagState: AccountUiFlagState,
-    accountUiState: AccountUiState,
-    accountUiAction: AccountUiAction,
+    accountState: AccountState,
+    onHubAction: (HubAction) -> Unit,
+    onAccountAction: (AccountAction) -> Unit,
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
@@ -138,16 +140,15 @@ private fun FollowButtons(
             modifier = Modifier.weight(1f),
             isLoading = accountUiFlagState.isLoading,
             textID =
-                if (hubUiState.user.follows.contains(accountUiState.user.userID)) R.string.followed else R.string.follow,
+                if (hubState.user.follows.contains(accountState.user.userID)) R.string.followed else R.string.follow,
             onClick = {
-                accountUiAction.onToggleIsLoading()
-                accountUiAction.onFollow(
-                    hubUiState.user.follows.contains(accountUiState.user.userID),
-                    hubUiState.user,
-                    accountUiState.user,
-                    hubUiAction.onGetUser,
-                    accountUiAction.onToggleIsLoading,
-                )
+                onAccountAction(AccountAction.ToggleIsLoading)
+                onAccountAction(AccountAction.ClickFollowButton(
+                    hubState.user.follows.contains(accountState.user.userID),
+                    hubState.user,
+                    accountState.user,
+                    {onHubAction(HubAction.GetUser)},
+                ))
             },
         )
         Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_normal)))

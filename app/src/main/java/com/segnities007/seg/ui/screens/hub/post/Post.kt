@@ -24,29 +24,30 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.segnities007.seg.R
 import com.segnities007.seg.domain.presentation.Navigation
 import com.segnities007.seg.ui.components.button.SmallButton
+import com.segnities007.seg.ui.components.card.postcard.PostCardAction
 import com.segnities007.seg.ui.components.indicator.CircleIndicator
 import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
-import com.segnities007.seg.ui.screens.hub.HubUiAction
-import com.segnities007.seg.ui.screens.hub.HubUiState
-import com.segnities007.seg.ui.screens.hub.home.HomeUiAction
+import com.segnities007.seg.ui.screens.hub.HubAction
+import com.segnities007.seg.ui.screens.hub.HubState
+import com.segnities007.seg.ui.screens.hub.home.HomeAction
 
 @Composable
 fun Post(
     modifier: Modifier = Modifier,
-    homeUiAction: HomeUiAction,
-    hubUiState: HubUiState,
-    hubUiAction: HubUiAction,
+    hubState: HubState,
+    onHubAction: (HubAction) -> Unit,
+    onHomeAction: (HomeAction) -> Unit,
     onHubNavigate: (Navigation) -> Unit, // go to home
 ) {
     val postViewModel: PostViewModel = hiltViewModel()
 
     PostUi(
         modifier = modifier,
-        homeUiAction = homeUiAction,
-        hubUiState = hubUiState,
-        hubUiAction = hubUiAction,
-        postUiState = postViewModel.postUiState,
-        postUiAction = postViewModel.onGetPostUiAction(),
+        hubState = hubState,
+        postState = postViewModel.postState,
+        onHubAction = onHubAction,
+        onHomeAction = onHomeAction,
+        onPostAction = postViewModel::onPostAction,
         onHubNavigate = onHubNavigate,
     ) {
         Column {
@@ -62,21 +63,21 @@ fun Post(
 @Composable
 fun PostUi(
     modifier: Modifier = Modifier,
-    homeUiAction: HomeUiAction,
-    hubUiState: HubUiState,
-    hubUiAction: HubUiAction,
-    postUiState: PostUiState,
-    postUiAction: PostUiAction,
+    hubState: HubState,
+    postState: PostState,
+    onHubAction: (HubAction) -> Unit,
+    onHomeAction: (HomeAction) -> Unit,
+    onPostAction: (PostAction) -> Unit,
     onHubNavigate: (Navigation) -> Unit,
     content: @Composable PostScope.() -> Unit,
 ) {
     val scope =
         DefaultPostScope(
-            homeUiAction = homeUiAction,
-            hubUiState = hubUiState,
-            hubUiAction = hubUiAction,
-            postUiState = postUiState,
-            postUiAction = postUiAction,
+            hubState = hubState,
+            postState = postState,
+            onHubAction = onHubAction,
+            onHomeAction = onHomeAction,
+            onPostAction = onPostAction,
             onHubNavigate = onHubNavigate,
         )
 
@@ -92,7 +93,7 @@ fun PostUi(
         scope.content()
     }
 
-    CircleIndicator(isLoading = postUiState.isLoading)
+    CircleIndicator(isLoading = postState.isLoading)
 }
 
 @Composable
@@ -102,8 +103,8 @@ fun PostScope.InputField(
 ) {
     TextField(
         modifier = modifier.fillMaxSize(),
-        value = postUiState.inputText,
-        onValueChange = { postUiAction.onUpdateInputText(it) },
+        value = postState.inputText,
+        onValueChange = { onPostAction(PostAction.UpdateInputText(it)) },
         label = label,
         textStyle = TextStyle.Default.copy(fontSize = 24.sp),
         shape = RoundedCornerShape(dimensionResource(R.dimen.rounded_corner_shape)),
@@ -128,20 +129,17 @@ fun PostScope.TopToolBar(modifier: Modifier = Modifier) {
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        SmallButton(textID = R.string.clear, onClick = { postUiAction.onUpdateInputText("") })
+        SmallButton(textID = R.string.clear, onClick = { onPostAction(PostAction.UpdateInputText("")) })
         Spacer(modifier = Modifier.weight(1f))
         SmallButton(
             textID = R.string.post,
             onClick = {
-                postUiAction.onCreatePost(
-                    hubUiState.user,
-                    postUiAction.onUpdateIsLoading,
-                    hubUiAction.onGetUser,
-                ) {
-                    postUiAction.onUpdateInputText("")
-                    homeUiAction.onGetNewPosts()
-                    onHubNavigate(NavigationHubRoute.Home)
-                }
+                onPostAction(PostAction.CreatePost(
+                    user = hubState.user,
+                    onUpdateIsLoading = {onPostAction(PostAction.UpdateIsLoading(it))},
+                    onUpdateSelf = {onHubAction(HubAction.GetUser)},
+                    onNavigate = onHubNavigate
+                ))
             },
         )
     }
@@ -152,38 +150,12 @@ fun PostScope.TopToolBar(modifier: Modifier = Modifier) {
 private fun PostPreview() {
     PostUi(
         modifier = Modifier,
-        homeUiAction =
-            HomeUiAction(
-                onGetNewPosts = {},
-                onGetBeforeNewPosts = {},
-                onChangeHasNoMorePost = {},
-                onProcessOfEngagementAction = {},
-            ),
-        hubUiState = HubUiState(),
-        hubUiAction =
-            HubUiAction(
-                onUpdateSelf = {},
-                onChangeIsHideTopBar = {},
-                onResetIsHideTopBar = {},
-                onGetUser = {},
-                onSetComment = {},
-                onSetUserID = {},
-                onSetAccounts = {},
-                onAddPostIDToMyLikes = {},
-                onRemovePostIDFromMyLikes = {},
-                onAddPostIDToMyReposts = {},
-                onRemovePostIDFromMyReposts = {},
-                onChangeCurrentRouteName = {},
-            ),
-        postUiState = PostUiState(),
-        postUiAction =
-            PostUiAction(
-                onUpdateIsLoading = {},
-                onUpdateInputText = {},
-                onCreatePost = { a, b, c, d -> },
-                onCreateComment = { _, _, _, _ -> },
-            ),
+        hubState = HubState(),
         onHubNavigate = {},
+        postState = PostState(),
+        onHubAction = {},
+        onHomeAction = {},
+        onPostAction = {},
     ) {
         Column {
             TopToolBar()

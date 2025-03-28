@@ -8,24 +8,24 @@ import androidx.compose.ui.res.dimensionResource
 import com.segnities007.seg.R
 import com.segnities007.seg.data.model.Post
 import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
-import com.segnities007.seg.ui.screens.hub.HubUiAction
-import com.segnities007.seg.ui.screens.hub.HubUiState
+import com.segnities007.seg.ui.screens.hub.HubAction
+import com.segnities007.seg.ui.screens.hub.HubState
 
 @Composable
 fun PostSimpleCard(
     post: Post,
-    hubUiState: HubUiState,
-    hubUiAction: HubUiAction,
-    postCardUiAction: PostCardUiAction,
+    hubState: HubState,
     isIncrementView: Boolean = true,
+    onHubAction: (HubAction) -> Unit,
+    onPostCardAction: (PostCardAction) -> Unit,
     onHubNavigate: (NavigationHubRoute) -> Unit,
 ) {
     PostCardUi(
         post = post,
-        hubUiState = hubUiState,
-        hubUiAction = hubUiAction,
-        postCardUiAction = postCardUiAction,
+        hubState = hubState,
         isIncrementView = isIncrementView,
+        onHubAction = onHubAction,
+        onPostCardAction = onPostCardAction,
         onHubNavigate = onHubNavigate,
     ) {
         CardContents {
