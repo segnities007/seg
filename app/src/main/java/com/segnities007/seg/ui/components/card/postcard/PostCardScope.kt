@@ -10,7 +10,7 @@ import com.segnities007.seg.ui.screens.hub.HubState
 interface PostCardScope {
     val post: Post
     val hubState: HubState
-    val hubAction: HubAction
-    val postCardUiAction: PostCardUiAction
+    val onHubAction: (HubAction) -> Unit
+    val onPostCardAction: (PostCardAction) -> Unit
     val onHubNavigate: (NavigationHubRoute) -> Unit
 }

@@ -41,18 +41,18 @@ import com.segnities007.seg.ui.screens.hub.HubState
 fun PostCard(
     post: Post,
     hubState: HubState,
-    hubAction: HubAction,
-    postCardUiAction: PostCardUiAction,
     isIncrementView: Boolean = true,
+    onHubAction: (HubAction) -> Unit,
+    onPostCardAction: (PostCardAction) -> Unit,
     onHubNavigate: (NavigationHubRoute) -> Unit,
     onProcessOfEngagementAction: (newPost: Post) -> Unit,
 ) {
     PostCardUi(
         post = post,
         hubState = hubState,
-        hubAction = hubAction,
-        postCardUiAction = postCardUiAction,
+        onHubAction = onHubAction,
         isIncrementView = isIncrementView,
+        onPostCardAction = onPostCardAction,
         onHubNavigate = onHubNavigate,
     ) {
         CardContents {
@@ -69,9 +69,9 @@ fun PostCard(
 fun PostCardUi(
     post: Post,
     hubState: HubState,
-    hubAction: HubAction,
-    postCardUiAction: PostCardUiAction,
     isIncrementView: Boolean = true,
+    onHubAction: (HubAction) -> Unit,
+    onPostCardAction: (PostCardAction) -> Unit,
     onHubNavigate: (NavigationHubRoute) -> Unit,
     content: @Composable PostCardScope.() -> Unit,
 ) {
@@ -79,13 +79,13 @@ fun PostCardUi(
         DefaultPostCardScope(
             post = post,
             hubState = hubState,
-            hubAction = hubAction,
-            postCardUiAction = postCardUiAction,
+            onHubAction = onHubAction,
+            onPostCardAction = onPostCardAction,
             onHubNavigate = onHubNavigate,
         )
 
     LaunchedEffect(Unit) {
-        if (isIncrementView) postCardUiAction.onIncrementViewCount(post)
+        if (isIncrementView) onPostCardAction(PostCardAction.IncrementViewCount(post))
     }
 
     ElevatedCard(
@@ -102,8 +102,8 @@ fun PostCardScope.CardContents(content: @Composable () -> Unit) {
             Modifier
                 .padding(dimensionResource(R.dimen.padding_sn))
                 .clickable {
-                    hubAction.onSetComment(post)
-                    postCardUiAction.onClickPostCard(onHubNavigate)
+                    onHubAction(HubAction.SetComment(post))
+                    onPostCardAction(PostCardAction.ClickPostCard(onHubNavigate))
                 }.fillMaxWidth(),
     ) {
         AsyncImage(
@@ -112,8 +112,8 @@ fun PostCardScope.CardContents(content: @Composable () -> Unit) {
                     .size(dimensionResource(R.dimen.icon_sn))
                     .clip(CircleShape)
                     .clickable {
-                        hubAction.onSetUserID(post.userID) // for viewing other user
-                        hubAction.onChangeCurrentRouteName(NavigationHubRoute.Account.name)
+                        onHubAction(HubAction.SetUserID(post.userID))
+                        onHubAction(HubAction.ChangeCurrentRouteName(NavigationHubRoute.Account.name))
                         onHubNavigate(NavigationHubRoute.Account)
                     },
             model = post.iconURL,
@@ -186,12 +186,7 @@ fun PostCardScope.ActionIcons(onProcessOfEngagementAction: (newPost: Post) -> Un
                 },
             count = counts[0],
             onClick = {
-                postCardUiAction.onLike(
-                    post,
-                    hubState,
-                    hubAction,
-                    onProcessOfEngagementAction,
-                )
+                onPostCardAction(PostCardAction.ClickLikeIcon(post, hubState, onHubAction, onProcessOfEngagementAction))
             },
         )
         Spacer(Modifier.weight(1f))
@@ -205,12 +200,9 @@ fun PostCardScope.ActionIcons(onProcessOfEngagementAction: (newPost: Post) -> Un
                     EngagementIconState.unPushIcons[1]
                 },
             onClick = {
-                postCardUiAction.onRepost(
-                    post,
-                    hubState,
-                    hubAction,
-                    onProcessOfEngagementAction,
-                )
+                onPostCardAction(PostCardAction.ClickRepostIcon(
+                    post, hubState, onHubAction, onProcessOfEngagementAction
+                ))
             },
         )
         Spacer(Modifier.weight(1f))
@@ -287,30 +279,8 @@ private fun PostCardPreview() {
     PostCard(
         post = Post(),
         hubState = HubState(),
-        hubAction =
-            HubAction(
-                onUpdateSelf = {},
-                onChangeIsHideTopBar = {},
-                onResetIsHideTopBar = {},
-                onGetUser = {},
-                onSetComment = {},
-                onSetUserID = {},
-                onSetAccounts = {},
-                onAddPostIDToMyLikes = {},
-                onRemovePostIDFromMyLikes = {},
-                onAddPostIDToMyReposts = {},
-                onRemovePostIDFromMyReposts = {},
-                onChangeCurrentRouteName = {},
-            ),
-        postCardUiAction =
-            PostCardUiAction(
-                onDeletePost = { _, _, _, _, _ -> },
-                onClickIcon = {},
-                onClickPostCard = {},
-                onIncrementViewCount = {},
-                onLike = { _, _, _, _ -> },
-                onRepost = { _, _, _, _ -> },
-            ),
+        onHubAction = {},
+        onPostCardAction = {},
         isIncrementView = false,
         onHubNavigate = {},
     ) { }

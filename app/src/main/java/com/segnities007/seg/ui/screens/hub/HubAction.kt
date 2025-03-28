@@ -3,17 +3,17 @@ package com.segnities007.seg.ui.screens.hub
 import com.segnities007.seg.data.model.Post
 import com.segnities007.seg.data.model.User
 
-data class HubAction(
-    val onUpdateSelf: (newSelf: User) -> Unit,
-    val onChangeIsHideTopBar: () -> Unit,
-    val onResetIsHideTopBar: () -> Unit,
-    val onGetUser: () -> Unit,
-    val onSetComment: (comment: Post) -> Unit,
-    val onSetUserID: (userID: String) -> Unit,
-    val onSetAccounts: (accounts: List<String>) -> Unit,
-    val onAddPostIDToMyLikes: (postID: Int) -> Unit,
-    val onRemovePostIDFromMyLikes: (postID: Int) -> Unit,
-    val onAddPostIDToMyReposts: (postID: Int) -> Unit,
-    val onRemovePostIDFromMyReposts: (postID: Int) -> Unit,
-    val onChangeCurrentRouteName: (newRouteName: String) -> Unit,
-)
+sealed class HubAction{
+    data object ChangeIsHideTopBar: HubAction()
+    data object ResetIsHideTopBar: HubAction()
+    data object GetUser: HubAction()
+    data class SetSelf(val newSelf: User): HubAction()
+    data class SetComment(val comment: Post): HubAction()
+    data class SetUserID(val userID: String): HubAction()
+    data class SetAccounts(val accounts: List<String>): HubAction()
+    data class AddPostIDToMyLikes(val postID: Int): HubAction()
+    data class RemovePostIDFromMyLikes(val postID: Int): HubAction()
+    data class AddPostIDFromReposts(val postID: Int): HubAction()
+    data class RemovePostIDFromReposts(val postID: Int): HubAction()
+    data class ChangeCurrentRouteName(val currentRouteName: String): HubAction()
+}

@@ -32,11 +32,11 @@ import com.segnities007.seg.ui.screens.hub.setting.my_posts.MyPostsAction
 @Composable
 fun PostCardWithDetailButton(
     post: Post,
-    homeAction: HomeAction,
     hubState: HubState,
-    hubAction: HubAction,
-    myPostsAction: MyPostsAction,
-    postCardUiAction: PostCardUiAction,
+    onMyPostsAction: (MyPostsAction) -> Unit,
+    onPostCardAction: (PostCardAction) -> Unit,
+    onHubAction: (HubAction) -> Unit,
+    onHomeAction: (HomeAction) -> Unit,
     onHubNavigate: (NavigationHubRoute) -> Unit,
     onProcessOfEngagementAction: (newPost: Post) -> Unit,
 ) {
@@ -46,17 +46,17 @@ fun PostCardWithDetailButton(
     PostCardUi(
         post = post,
         hubState = hubState,
-        hubAction = hubAction,
-        postCardUiAction = postCardUiAction,
+        onHubAction = onHubAction,
+        onPostCardAction = onPostCardAction,
         onHubNavigate = onHubNavigate,
     ) {
         if (isShowBottomSheet) {
             BottomSheet(
-                homeAction = homeAction,
                 onClickDetailButton = toggleIsShowBottomSheet,
-                myPostUiAction = myPostsAction,
+                onHomeAction = onHomeAction,
+                onHubAction = onHubAction,
                 hubState = hubState,
-                hubAction = hubAction,
+                onMyPostsAction = onMyPostsAction,
             )
         }
 
@@ -68,7 +68,10 @@ fun PostCardWithDetailButton(
                     ActionIcons(onProcessOfEngagementAction = onProcessOfEngagementAction)
                 }
             }
-            DetailButton(modifier = Modifier.align(Alignment.TopEnd), onClick = toggleIsShowBottomSheet)
+            DetailButton(
+                modifier = Modifier.align(Alignment.TopEnd),
+                onClick = toggleIsShowBottomSheet,
+            )
         }
     }
 }
@@ -89,10 +92,10 @@ private fun DetailButton(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PostCardScope.BottomSheet(
-    homeAction: HomeAction,
     hubState: HubState,
-    hubAction: HubAction,
-    myPostUiAction: MyPostsAction,
+    onMyPostsAction: (MyPostsAction) -> Unit,
+    onHubAction: (HubAction) -> Unit,
+    onHomeAction: (HomeAction) -> Unit,
     onClickDetailButton: () -> Unit,
     commonPadding: Dp = dimensionResource(R.dimen.padding_sn),
 ) {
@@ -111,12 +114,14 @@ fun PostCardScope.BottomSheet(
             iconID = R.drawable.baseline_delete_24,
             textID = R.string.delete,
             onClick = {
-                postCardUiAction.onDeletePost(
-                    post,
-                    myPostUiAction,
-                    homeAction,
-                    hubState,
-                    hubAction,
+                onPostCardAction(
+                    PostCardAction.DeletePost(
+                        post,
+                        onMyPostsAction,
+                        onHomeAction,
+                        hubState,
+                        onHubAction,
+                    ),
                 )
                 onClickDetailButton()
             },

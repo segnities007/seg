@@ -1,16 +1,39 @@
 package com.segnities007.seg.ui.screens.hub.trend
 
+import androidx.compose.runtime.Immutable
 import com.segnities007.seg.data.model.Post
 
-data class TrendAction(
-    val onGetTrendPostOfToday: (limit: Long) -> Unit,
-    val onGetTrendPostOfWeek: (limit: Long) -> Unit,
-    val onGetTrendPostOfMonth: (limit: Long) -> Unit,
-    val onGetTrendPostOfYear: (limit: Long) -> Unit,
-    val onReadMoreAboutTrendOfToday: () -> Unit,
-    val onReadMoreAboutTrendOfWeek: () -> Unit,
-    val onReadMoreAboutTrendOfMonth: () -> Unit,
-    val onReadMoreAboutTrendOfYear: () -> Unit,
-    val onResetReadMore: () -> Unit,
-    val onProcessOfEngagementAction: (newPost: Post) -> Unit,
-)
+@Immutable
+sealed class TrendAction {
+    data object GetAdditionalTrendPostOfToday : TrendAction()
+
+    data object GetAdditionalTrendPostOfWeek : TrendAction()
+
+    data object GetAdditionalTrendPostOfMonth : TrendAction()
+
+    data object GetAdditionalTrendPostOfYear : TrendAction()
+
+    data class GetTrendPostOfToday(
+        val limit: Long,
+    ) : TrendAction()
+
+    data class GetTrendPostOfWeek(
+        val limit: Long,
+    ) : TrendAction()
+
+    data class GetTrendPostOfMonth(
+        val limit: Long,
+    ) : TrendAction()
+
+    data class GetTrendPostOfYear(
+        val limit: Long,
+    ) : TrendAction()
+
+    data class ProcessOfEngagement(
+        val newPost: Post,
+    ) : TrendAction()
+
+    data object Init : TrendAction()
+
+    data object Dispose : TrendAction()
+}

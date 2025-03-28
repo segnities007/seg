@@ -1,4 +1,4 @@
-package com.segnities007.seg.ui.components.bar.top_bar
+package com.segnities007.seg.ui.components.bar.top_search_bar
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -15,22 +15,21 @@ import androidx.compose.ui.unit.Dp
 import com.segnities007.seg.R
 import com.segnities007.seg.ui.components.bar.SearchInputForm
 import com.segnities007.seg.ui.components.tab.Tab
-import com.segnities007.seg.ui.components.tab.TabUiAction
+import com.segnities007.seg.ui.components.tab.TabAction
 import com.segnities007.seg.ui.components.tab.TabUiState
 import com.segnities007.seg.ui.screens.hub.search.SearchAction
-import com.segnities007.seg.ui.screens.hub.search.TopSearchBarUiAction
-import com.segnities007.seg.ui.screens.hub.search.TopSearchBarUiState
 
 @Composable
 fun TopSearchBar(
     modifier: Modifier = Modifier,
-    searchUiAction: SearchAction,
     tabUiState: TabUiState,
-    tabUiAction: TabUiAction,
-    topSearchBarUiState: TopSearchBarUiState,
-    topSearchBarUiAction: TopSearchBarUiAction,
-    commonPadding: Dp = dimensionResource(R.dimen.padding_sn),
+    topSearchBarState: TopSearchBarState,
+    onTabAction: (TabAction) -> Unit,
+    onSearchAction: (SearchAction) -> Unit,
+    onTopSearchBarAction: (TopSearchBarAction) -> Unit,
 ) {
+    val commonPadding: Dp = dimensionResource(R.dimen.padding_sn)
+
     LaunchedEffect(Unit) {
         val labels =
             listOf(
@@ -38,7 +37,7 @@ fun TopSearchBar(
                 "Latest",
                 "Users",
             )
-        tabUiAction.onSetLabels(labels)
+        onTabAction(TabAction.SetLabels(labels))
     }
 
     Column(
@@ -47,15 +46,15 @@ fun TopSearchBar(
         verticalArrangement = Arrangement.Top,
     ) {
         SearchInputForm(
-            searchUiAction = searchUiAction,
-            topSearchBarUiState = topSearchBarUiState,
-            topSearchBarUiAction = topSearchBarUiAction,
+            topSearchBarState = topSearchBarState,
+            onSearchAction = onSearchAction,
+            onTopSearchBarAction = onTopSearchBarAction,
         )
         Spacer(Modifier.padding(commonPadding))
         Tab(
             modifier = modifier.background(color = MaterialTheme.colorScheme.primaryContainer),
             tabUiState = tabUiState,
-            tabUiAction = tabUiAction,
+            onTabAction = onTabAction,
         )
     }
 }

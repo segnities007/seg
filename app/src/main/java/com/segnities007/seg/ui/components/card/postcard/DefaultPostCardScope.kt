@@ -8,7 +8,7 @@ import com.segnities007.seg.ui.screens.hub.HubState
 data class DefaultPostCardScope(
     override val post: Post,
     override val hubState: HubState,
-    override val hubAction: HubAction,
-    override val postCardUiAction: PostCardUiAction,
+    override val onHubAction: (HubAction) -> Unit,
+    override val onPostCardAction: (PostCardAction) -> Unit,
     override val onHubNavigate: (NavigationHubRoute) -> Unit,
 ) : PostCardScope

@@ -15,17 +15,17 @@ import com.segnities007.seg.ui.screens.hub.HubState
 fun PostSimpleCard(
     post: Post,
     hubState: HubState,
-    hubAction: HubAction,
-    postCardUiAction: PostCardUiAction,
     isIncrementView: Boolean = true,
+    onHubAction: (HubAction) -> Unit,
+    onPostCardAction: (PostCardAction) -> Unit,
     onHubNavigate: (NavigationHubRoute) -> Unit,
 ) {
     PostCardUi(
         post = post,
         hubState = hubState,
-        hubAction = hubAction,
-        postCardUiAction = postCardUiAction,
         isIncrementView = isIncrementView,
+        onHubAction = onHubAction,
+        onPostCardAction = onPostCardAction,
         onHubNavigate = onHubNavigate,
     ) {
         CardContents {

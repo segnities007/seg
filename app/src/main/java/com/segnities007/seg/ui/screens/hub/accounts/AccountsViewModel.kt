@@ -20,28 +20,23 @@ class AccountsViewModel
         var accountsState by mutableStateOf(AccountsState())
             private set
 
-        fun onGetAccountsUiAction(): AccountsAction =
-            AccountsAction(
-                onGetUsers = this::onGetUsers,
-                onGetUser = this::onGetUser,
-                onChangeIsNotCompletedOfAccounts = this::onChangeIsNotCompletedOfAccounts,
-            )
-
-        private fun onGetUser(userID: String) {
-            viewModelScope.launch(Dispatchers.IO) {
-                val user = userRepository.onGetOtherUser(userID)
-                accountsState = accountsState.copy(user = user)
+        fun onAccountsAction(action: AccountsAction){
+            when(action){
+                AccountsAction.ChangeIsNotCompletedOfAccounts -> {
+                    accountsState = accountsState.copy(isNotCompleted = !accountsState.isNotCompleted)
+                }
+                is AccountsAction.GetUser -> {
+                    viewModelScope.launch(Dispatchers.IO) {
+                        val user = userRepository.onGetOtherUser(action.userID)
+                        accountsState = accountsState.copy(user = user)
+                    }
+                }
+                is AccountsAction.GetUsers -> {
+                    viewModelScope.launch(Dispatchers.IO) {
+                        val users = userRepository.onGetUsers(action.userIDs)
+                        accountsState = accountsState.copy(users = users)
+                    }
+                }
             }
-        }
-
-        private fun onGetUsers(userIDs: List<String>) {
-            viewModelScope.launch(Dispatchers.IO) {
-                val users = userRepository.onGetUsers(userIDs)
-                accountsState = accountsState.copy(users = users)
-            }
-        }
-
-        private fun onChangeIsNotCompletedOfAccounts() {
-            accountsState = accountsState.copy(isNotCompleted = !accountsState.isNotCompleted)
         }
     }

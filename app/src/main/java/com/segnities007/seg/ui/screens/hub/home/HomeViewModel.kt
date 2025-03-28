@@ -21,43 +21,36 @@ class HomeViewModel
         var homeState by mutableStateOf(HomeState())
             private set
 
-        fun onGetHomeUiAction(): HomeAction =
-            HomeAction(
-                onGetNewPosts = this::onGetNewPosts,
-                onChangeHasNoMorePost = this::onChangeHasNoMorePost,
-                onGetBeforeNewPosts = this::onGetBeforeNewPosts,
-                onProcessOfEngagementAction = this::onProcessOfEngagementAction,
-            )
+        fun onHomeAction(action: HomeAction){
+            when(action){
+                HomeAction.ChangeHasNoMorePost -> {
+                    onChangeHasNoMorePost()
+                }
+                is HomeAction.GetBeforeNewPosts -> {
+                    viewModelScope.launch(Dispatchers.IO) {
+                        val posts = postRepository.onGetBeforePosts(action.updatedAt)
+                        if (posts.isEmpty()) onChangeHasNoMorePost()
+                        homeState = homeState.copy(posts = homeState.posts.plus(posts))
+                    }
+                }
+                HomeAction.GetNewPosts -> {
+                    viewModelScope.launch(Dispatchers.IO) {
+                        val posts = postRepository.onGetNewPosts()
+                        homeState = homeState.copy(posts = posts)
+                    }
+                }
+                is HomeAction.ProcessOfEngagement -> {
+                    val newPosts =
+                        homeState.posts.map { post ->
+                            if (action.newPost.id == post.id) action.newPost else post
+                        }
 
-        private fun onProcessOfEngagementAction(newPost: Post) {
-            onUpdatePosts(newPost)
-        }
-
-        private fun onGetNewPosts() {
-            viewModelScope.launch(Dispatchers.IO) {
-                val posts = postRepository.onGetNewPosts()
-                homeState = homeState.copy(posts = posts)
-            }
-        }
-
-        private fun onGetBeforeNewPosts(updatedAt: java.time.LocalDateTime) {
-            viewModelScope.launch(Dispatchers.IO) {
-                val posts = postRepository.onGetBeforePosts(updatedAt)
-                if (posts.isEmpty()) onChangeHasNoMorePost()
-                homeState = homeState.copy(posts = homeState.posts.plus(posts))
+                    homeState = homeState.copy(posts = newPosts)
+                }
             }
         }
 
         private fun onChangeHasNoMorePost() {
             homeState = homeState.copy(hasNoMorePost = !homeState.hasNoMorePost)
-        }
-
-        private fun onUpdatePosts(newPost: Post) {
-            val newPosts =
-                homeState.posts.map { post ->
-                    if (newPost.id == post.id) newPost else post
-                }
-
-            homeState = homeState.copy(posts = newPosts)
         }
     }

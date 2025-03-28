@@ -13,7 +13,7 @@ import androidx.compose.ui.res.dimensionResource
 import com.segnities007.seg.R
 import com.segnities007.seg.domain.presentation.Navigation
 import com.segnities007.seg.ui.components.card.postcard.PostCard
-import com.segnities007.seg.ui.components.card.postcard.PostCardUiAction
+import com.segnities007.seg.ui.components.card.postcard.PostCardAction
 import com.segnities007.seg.ui.components.indicator.LoadingUI
 import com.segnities007.seg.ui.screens.hub.HubAction
 import com.segnities007.seg.ui.screens.hub.HubState
@@ -22,19 +22,19 @@ import com.segnities007.seg.ui.screens.hub.HubState
 fun Home(
     modifier: Modifier,
     hubState: HubState,
-    hubAction: HubAction,
     homeState: HomeState,
-    homeAction: HomeAction,
-    postCardUiAction: PostCardUiAction,
+    onHubAction: (HubAction) -> Unit,
+    onHomeAction: (HomeAction) -> Unit,
+    onPostCardAction: (PostCardAction) -> Unit,
     onHubNavigate: (Navigation) -> Unit,
 ) {
     HomeUi(
         modifier = modifier,
         hubState = hubState,
-        hubAction = hubAction,
         homeState = homeState,
-        homeAction = homeAction,
-        postCardUiAction = postCardUiAction,
+        onHubAction = onHubAction,
+        onHomeAction = onHomeAction,
+        onPostCardAction = onPostCardAction,
         onHubNavigate = onHubNavigate,
     )
 }
@@ -43,10 +43,10 @@ fun Home(
 private fun HomeUi(
     modifier: Modifier,
     hubState: HubState,
-    hubAction: HubAction,
     homeState: HomeState,
-    homeAction: HomeAction,
-    postCardUiAction: PostCardUiAction,
+    onHubAction: (HubAction) -> Unit,
+    onHomeAction: (HomeAction) -> Unit,
+    onPostCardAction: (PostCardAction) -> Unit,
     onHubNavigate: (Navigation) -> Unit,
 ) {
     LazyColumn(
@@ -68,11 +68,11 @@ private fun HomeUi(
             PostCard(
                 post = homeState.posts[i],
                 hubState = hubState,
-                onHubNavigate = onHubNavigate,
-                hubAction = hubAction,
-                postCardUiAction = postCardUiAction,
                 isIncrementView = true,
-                onProcessOfEngagementAction = homeAction.onProcessOfEngagementAction,
+                onHubNavigate = onHubNavigate,
+                onHubAction = onHubAction,
+                onPostCardAction = onPostCardAction,
+                onProcessOfEngagementAction = {newPost -> onHomeAction(HomeAction.ProcessOfEngagement(newPost))},
             )
             Spacer(Modifier.padding(dimensionResource(R.dimen.padding_smallest)))
         }
@@ -84,7 +84,7 @@ private fun HomeUi(
                     LoadingUI(
                         onLoading = {
                             if (homeState.posts.isNotEmpty()) {
-                                homeAction.onGetBeforeNewPosts(homeState.posts.last().updateAt)
+                                onHomeAction(HomeAction.GetBeforeNewPosts(homeState.posts.last().updateAt))
                             }
                         },
                     )

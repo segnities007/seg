@@ -23,35 +23,31 @@ class SettingViewModel
         var settingState by mutableStateOf(SettingState())
             private set
 
-        fun getSettingUiAction(): SettingAction =
-            SettingAction(
-                onLogout = this::onLogout,
-                onDatePickerClose = this::onDatePickerClose,
-                onDatePickerOpen = this::onDatePickerOpen,
-                onDateSelect = this::onDateSelect,
-            )
+        fun onSettingAction(action: SettingAction) {
+            when (action) {
+                SettingAction.CloseDatePicker -> {
+                    settingState = settingState.copy(isDatePickerDialogShow = false)
+                }
 
-        private fun onDatePickerClose() {
-            settingState = settingState.copy(isDatePickerDialogShow = false)
-        }
+                SettingAction.Logout -> {
+                    viewModelScope.launch(Dispatchers.IO) {
+                        authRepositoryImpl.logout()
+                    }
+                }
 
-        private fun onDatePickerOpen() {
-            settingState = settingState.copy(isDatePickerDialogShow = true)
-        }
+                SettingAction.OpenDatePicker -> {
+                    settingState = settingState.copy(isDatePickerDialogShow = true)
+                }
 
-        private fun onLogout() {
-            viewModelScope.launch(Dispatchers.IO) {
-                authRepositoryImpl.logout()
+                is SettingAction.SelectDate -> {
+                    val instant = Instant.fromEpochMilliseconds(action.millis!!)
+                    val localDateTime = instant.toLocalDateTime(TimeZone.currentSystemDefault())
+                    val year = localDateTime.year
+                    val month = localDateTime.monthNumber
+                    val day = localDateTime.dayOfMonth
+
+                    // TODO
+                }
             }
-        }
-
-        private fun onDateSelect(millis: Long?) {
-            val instant = Instant.fromEpochMilliseconds(millis!!)
-            val localDateTime = instant.toLocalDateTime(TimeZone.currentSystemDefault())
-            val year = localDateTime.year
-            val month = localDateTime.monthNumber
-            val day = localDateTime.dayOfMonth
-
-            // TODO
         }
     }

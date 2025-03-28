@@ -5,13 +5,28 @@ import com.segnities007.seg.data.model.Post
 import com.segnities007.seg.data.model.User
 
 @Immutable
-data class MyPostsAction(
-    val onInit: () -> Unit,
-    val onUpdateSelectedTabIndex: (index: Int) -> Unit,
-    val onSetSelf: (self: User) -> Unit,
-    val onGetPosts: () -> Unit,
-    val onRemovePostFromPosts: (post: Post) -> Unit,
-    val onGetLikedPosts: () -> Unit,
-    val onGetRepostedPosts: () -> Unit,
-    val onProcessOfEngagementAction: (newPost: Post) -> Unit,
-)
+sealed class MyPostsAction {
+    data object Init : MyPostsAction()
+
+    data object GetPosts : MyPostsAction()
+
+    data object GetLikedPosts : MyPostsAction()
+
+    data object GetRepostedPosts : MyPostsAction()
+
+    data class UpdateSelectedTabIndex(
+        val index: Int,
+    ) : MyPostsAction()
+
+    data class SetSelf(
+        val self: User,
+    ) : MyPostsAction()
+
+    data class RemovePostFromPosts(
+        val post: Post,
+    ) : MyPostsAction()
+
+    data class ProcessOfEngagement(
+        val newPost: Post,
+    ) : MyPostsAction()
+}

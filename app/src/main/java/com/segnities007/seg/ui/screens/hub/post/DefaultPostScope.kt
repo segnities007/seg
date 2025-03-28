@@ -6,10 +6,10 @@ import com.segnities007.seg.ui.screens.hub.HubState
 import com.segnities007.seg.ui.screens.hub.home.HomeAction
 
 data class DefaultPostScope(
-    override val homeAction: HomeAction,
     override val hubState: HubState,
-    override val hubAction: HubAction,
     override val postState: PostState,
-    override val postAction: PostAction,
+    override val onHubAction: (HubAction) -> Unit,
+    override val onHomeAction: (HomeAction) -> Unit,
+    override val onPostAction: (PostAction) -> Unit,
     override val onHubNavigate: (Navigation) -> Unit,
 ) : PostScope

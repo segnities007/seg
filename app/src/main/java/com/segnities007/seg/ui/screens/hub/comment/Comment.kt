@@ -13,7 +13,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.segnities007.seg.R
 import com.segnities007.seg.domain.presentation.Navigation
 import com.segnities007.seg.ui.components.card.postcard.PostCard
-import com.segnities007.seg.ui.components.card.postcard.PostCardUiAction
+import com.segnities007.seg.ui.components.card.postcard.PostCardAction
 import com.segnities007.seg.ui.screens.hub.HubAction
 import com.segnities007.seg.ui.screens.hub.HubState
 
@@ -21,22 +21,23 @@ import com.segnities007.seg.ui.screens.hub.HubState
 fun Comment(
     modifier: Modifier = Modifier,
     hubState: HubState,
-    hubAction: HubAction,
-    commentViewModel: CommentViewModel = hiltViewModel(),
-    postCardUiAction: PostCardUiAction,
+    onHubAction: (HubAction) -> Unit,
+    onPostCardAction: (PostCardAction) -> Unit,
     onHubNavigate: (Navigation) -> Unit,
 ) {
+    val commentViewModel: CommentViewModel = hiltViewModel()
+
     LaunchedEffect(Unit) {
-        commentViewModel.onGetCommentUiAction().onGetComments(hubState.comment)
+        commentViewModel.onCommentAction(CommentAction.GetComments(hubState.comment))
     }
 
     CommentUi(
         modifier = modifier,
         hubState = hubState,
-        hubAction = hubAction,
         commentState = commentViewModel.commentState,
-        commentAction = commentViewModel.onGetCommentUiAction(),
-        postCardUiAction = postCardUiAction,
+        onHubAction = onHubAction,
+        onCommentAction = commentViewModel::onCommentAction,
+        onPostCardAction = onPostCardAction,
         onHubNavigate = onHubNavigate,
     )
 }
@@ -45,10 +46,10 @@ fun Comment(
 private fun CommentUi(
     modifier: Modifier = Modifier,
     hubState: HubState,
-    hubAction: HubAction,
     commentState: CommentState,
-    postCardUiAction: PostCardUiAction,
-    commentAction: CommentAction,
+    onHubAction: (HubAction) -> Unit,
+    onCommentAction: (CommentAction) -> Unit,
+    onPostCardAction: (PostCardAction) -> Unit,
     onHubNavigate: (Navigation) -> Unit,
 ) {
     LazyColumn(
@@ -66,10 +67,16 @@ private fun CommentUi(
             PostCard(
                 post = hubState.comment,
                 hubState = hubState,
-                hubAction = hubAction,
-                postCardUiAction = postCardUiAction,
                 onHubNavigate = onHubNavigate,
-                onProcessOfEngagementAction = commentAction.onProcessOfEngagementAction,
+                onPostCardAction = onPostCardAction,
+                onProcessOfEngagementAction = {
+                    onCommentAction(
+                        CommentAction.ProcessOfEngagementAction(
+                            it
+                        )
+                    )
+                },
+                onHubAction = onHubAction,
             )
             Spacer(Modifier.padding(dimensionResource(R.dimen.padding_normal)))
         }
@@ -80,10 +87,10 @@ private fun CommentUi(
             PostCard(
                 post = commentState.comments[it],
                 hubState = hubState,
-                hubAction = hubAction,
-                postCardUiAction = postCardUiAction,
                 onHubNavigate = onHubNavigate,
-                onProcessOfEngagementAction = commentAction.onProcessOfEngagementAction,
+                onHubAction = onHubAction,
+                onPostCardAction = onPostCardAction,
+                onProcessOfEngagementAction = {newPost -> onCommentAction(CommentAction.ProcessOfEngagementAction(newPost))},
             )
             Spacer(Modifier.padding(dimensionResource(R.dimen.padding_smaller)))
         }

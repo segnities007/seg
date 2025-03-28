@@ -26,7 +26,7 @@ fun StatusBarWithFollows(
     modifier: Modifier = Modifier,
     user: User,
     onHubNavigate: (NavigationHubRoute) -> Unit,
-    hubAction: HubAction,
+    onHubAction: (HubAction) -> Unit,
 ) {
     Column(
         modifier = modifier,
@@ -36,7 +36,7 @@ fun StatusBarWithFollows(
             user = user,
         ) {
             Column {
-                AboutFollow(hubAction = hubAction, onHubNavigate = onHubNavigate)
+                AboutFollow(onHubAction = onHubAction, onHubNavigate = onHubNavigate)
             }
         }
         Bottom()
@@ -45,7 +45,7 @@ fun StatusBarWithFollows(
 
 @Composable
 private fun StatusBarScope.AboutFollow(
-    hubAction: HubAction,
+    onHubAction: (HubAction) -> Unit,
     onHubNavigate: (NavigationHubRoute) -> Unit,
 ) {
     val fontColor: Color = MaterialTheme.colorScheme.primary
@@ -61,7 +61,7 @@ private fun StatusBarScope.AboutFollow(
                 Modifier
                     .clip(RoundedCornerShape(commonPadding))
                     .clickable {
-                        hubAction.onSetAccounts(user.follows)
+                        onHubAction(HubAction.SetAccounts(user.follows))
                         onHubNavigate(NavigationHubRoute.Accounts)
                     }.padding(commonPadding),
         ) {
@@ -72,7 +72,7 @@ private fun StatusBarScope.AboutFollow(
                 Modifier
                     .clip(RoundedCornerShape(commonPadding))
                     .clickable {
-                        hubAction.onSetAccounts(user.followers)
+                        onHubAction(HubAction.SetAccounts(user.followers))
                         onHubNavigate(NavigationHubRoute.Accounts)
                     }.padding(commonPadding),
         ) {
@@ -88,20 +88,6 @@ private fun StatusBarWithFollowsPreview() {
         modifier = Modifier,
         user = User(),
         onHubNavigate = {},
-        hubAction =
-            HubAction(
-                onUpdateSelf = {},
-                onChangeIsHideTopBar = {},
-                onResetIsHideTopBar = {},
-                onGetUser = {},
-                onSetComment = {},
-                onSetUserID = {},
-                onSetAccounts = {},
-                onAddPostIDToMyLikes = {},
-                onRemovePostIDFromMyLikes = {},
-                onAddPostIDToMyReposts = {},
-                onRemovePostIDFromMyReposts = {},
-                onChangeCurrentRouteName = {},
-            ),
+        onHubAction = {}
     )
 }

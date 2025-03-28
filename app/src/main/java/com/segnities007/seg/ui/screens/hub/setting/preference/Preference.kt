@@ -22,14 +22,15 @@ import com.segnities007.seg.ui.screens.hub.setting.SettingAction
 @Composable
 fun Preference(
     modifier: Modifier = Modifier,
-    settingAction: SettingAction,
-    hubAction: HubAction,
-    commonPadding: Dp = dimensionResource(R.dimen.padding_normal),
+    onHubAction: (HubAction) -> Unit,
+    onSettingAction: (SettingAction) -> Unit,
     onSettingNavigate: (Navigation) -> Unit,
     onTopNavigate: (Navigation) -> Unit,
 ) {
+    val commonPadding: Dp = dimensionResource(R.dimen.padding_normal)
+
     LaunchedEffect(Unit) {
-        hubAction.onResetIsHideTopBar()
+        onHubAction(HubAction.ResetIsHideTopBar)
     }
 
     Column(
@@ -42,7 +43,7 @@ fun Preference(
         Spacer(modifier = Modifier.padding(commonPadding))
         ModifyUserInfoButton(onSettingNavigate = onSettingNavigate)
         Spacer(modifier = Modifier.padding(commonPadding))
-        LogoutButton(settingAction = settingAction, onTopNavigate = onTopNavigate)
+        LogoutButton(onSettingAction = onSettingAction, onTopNavigate = onTopNavigate)
     }
 }
 
@@ -70,14 +71,14 @@ private fun ModifyUserInfoButton(onSettingNavigate: (Navigation) -> Unit) {
 
 @Composable
 private fun LogoutButton(
-    settingAction: SettingAction,
+    onSettingAction: (SettingAction) -> Unit,
     onTopNavigate: (Navigation) -> Unit,
 ) {
     SmallButton(
         modifier = Modifier.fillMaxWidth(),
         textID = R.string.logout,
         onClick = {
-            settingAction.onLogout()
+            onSettingAction(SettingAction.Logout)
             onTopNavigate(NavigationRoute.Login)
         },
     )

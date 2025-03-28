@@ -1,7 +1,10 @@
 package com.segnities007.seg.ui.screens.hub.accounts
 
-data class AccountsAction(
-    val onGetUser: (userID: String) -> Unit,
-    val onGetUsers: (userIDs: List<String>) -> Unit,
-    val onChangeIsNotCompletedOfAccounts: () -> Unit,
-)
+import androidx.compose.runtime.Immutable
+
+@Immutable
+sealed class AccountsAction{
+    data object ChangeIsNotCompletedOfAccounts: AccountsAction()
+    data class GetUser(val userID: String): AccountsAction()
+    data class GetUsers(val userIDs: List<String>): AccountsAction()
+}

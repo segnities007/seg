@@ -22,38 +22,38 @@ import com.segnities007.seg.data.model.Post
 import com.segnities007.seg.domain.presentation.Navigation
 import com.segnities007.seg.ui.components.button.SmallButton
 import com.segnities007.seg.ui.components.card.postcard.PostCard
-import com.segnities007.seg.ui.components.card.postcard.PostCardUiAction
+import com.segnities007.seg.ui.components.card.postcard.PostCardAction
 import com.segnities007.seg.ui.components.card.postcard.PostSimpleCard
 import com.segnities007.seg.ui.screens.hub.HubAction
 import com.segnities007.seg.ui.screens.hub.HubState
+import com.segnities007.seg.ui.screens.hub.comment.CommentAction
 import com.segnities007.seg.ui.screens.hub.comment.CommentViewModel
 import com.segnities007.seg.ui.screens.hub.home.HomeAction
 
 @Composable
 fun PostForComment(
     modifier: Modifier = Modifier,
-    homeAction: HomeAction,
     hubState: HubState,
-    hubAction: HubAction,
-    postCardUiAction: PostCardUiAction,
+    onHubAction: (HubAction) -> Unit,
+    onHomeAction: (HomeAction) -> Unit,
+    onPostCardAction: (PostCardAction) -> Unit,
     onBackHubNavigate: () -> Unit,
-    onHubNavigate: (Navigation) -> Unit, // go to home
+    onHubNavigate: (Navigation) -> Unit,
 ) {
     val commentViewModel: CommentViewModel = hiltViewModel()
     val postViewModel: PostViewModel = hiltViewModel()
 
     LaunchedEffect(Unit) {
-        val commentUiAction = commentViewModel.onGetCommentUiAction()
-        commentUiAction.onGetComments(hubState.comment)
+        commentViewModel.onCommentAction(CommentAction.GetComments(hubState.comment))
     }
 
     PostUi(
         modifier = modifier,
-        homeAction = homeAction,
         hubState = hubState,
-        hubAction = hubAction,
         postState = postViewModel.postState,
-        postAction = postViewModel.onGetPostUiAction(),
+        onHubAction = onHubAction,
+        onHomeAction = onHomeAction,
+        onPostAction = postViewModel::onPostAction,
         onHubNavigate = onHubNavigate,
     ) {
         Column {
@@ -61,11 +61,11 @@ fun PostForComment(
                 PostCard(
                     post = hubState.comment,
                     hubState = hubState,
-                    hubAction = hubAction,
-                    postCardUiAction = postCardUiAction,
                     isIncrementView = false,
+                    onPostCardAction = onPostCardAction,
+                    onHubAction = onHubAction,
                     onHubNavigate = onHubNavigate,
-                    onProcessOfEngagementAction = commentViewModel.onGetCommentUiAction().onProcessOfEngagementAction,
+                    onProcessOfEngagementAction = {commentViewModel.onCommentAction(CommentAction.ProcessOfEngagementAction(it))}
                 )
                 Spacer( // Prevent to click PostCard
                     modifier =
@@ -103,15 +103,12 @@ fun PostScope.TopToolBarForCommentForComment(
         SmallButton(
             textID = R.string.post,
             onClick = {
-                postAction.onCreateComment(
-                    hubState,
-                    hubAction,
-                    postAction.onUpdateIsLoading,
-                ) {
-                    postAction.onUpdateInputText("")
-                    homeAction.onGetNewPosts()
-                    onBackHubNavigate()
-                }
+                onPostAction(PostAction.CreateComment(
+                    hubState = hubState,
+                    onHubAction = onHubAction,
+                    onUpdateIsLoading = {onPostAction(PostAction.UpdateIsLoading(it))},
+                    onNavigate = onHubNavigate
+                ))
             },
         )
     }
@@ -122,54 +119,20 @@ fun PostScope.TopToolBarForCommentForComment(
 private fun PostPreview() {
     PostUi(
         modifier = Modifier,
-        homeAction =
-            HomeAction(
-                onGetNewPosts = {},
-                onGetBeforeNewPosts = {},
-                onChangeHasNoMorePost = {},
-                onProcessOfEngagementAction = {},
-            ),
         hubState = HubState(),
-        hubAction =
-            HubAction(
-                onUpdateSelf = {},
-                onChangeIsHideTopBar = {},
-                onResetIsHideTopBar = {},
-                onGetUser = {},
-                onSetComment = {},
-                onSetUserID = {},
-                onSetAccounts = {},
-                onAddPostIDToMyLikes = {},
-                onRemovePostIDFromMyLikes = {},
-                onAddPostIDToMyReposts = {},
-                onRemovePostIDFromMyReposts = {},
-                onChangeCurrentRouteName = {},
-            ),
         postState = PostState(),
-        postAction =
-            PostAction(
-                onUpdateIsLoading = {},
-                onUpdateInputText = {},
-                onCreatePost = { a, b, c, d -> },
-                onCreateComment = { _, _, _, _ -> },
-            ),
+        onHubAction = {},
+        onHomeAction = {},
+        onPostAction = {},
         onHubNavigate = {},
     ) {
         Column {
             PostSimpleCard(
                 post = Post(),
                 hubState = hubState,
-                hubAction = hubAction,
-                postCardUiAction =
-                    PostCardUiAction(
-                        onDeletePost = { _, _, _, _, _ -> },
-                        onClickIcon = {},
-                        onClickPostCard = {},
-                        onIncrementViewCount = {},
-                        onLike = { _, _, _, _ -> },
-                        onRepost = { _, _, _, _ -> },
-                    ),
                 onHubNavigate = {},
+                onHubAction = {},
+                onPostCardAction = {},
             )
             TopToolBarForCommentForComment {}
             InputField(

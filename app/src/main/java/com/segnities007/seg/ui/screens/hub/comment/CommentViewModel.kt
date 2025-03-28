@@ -21,28 +21,21 @@ class CommentViewModel
         var commentState by mutableStateOf(CommentState())
             private set
 
-        fun onGetCommentUiAction(): CommentAction =
-            CommentAction(
-                onGetComments = this::onGetComments,
-                onProcessOfEngagementAction = this::onProcessOfEngagementAction,
-            )
-
-        private fun onProcessOfEngagementAction(updatedPost: Post) {
-            onUpdatePosts(updatedPost)
-        }
-
-        private fun onGetComments(comment: Post) {
-            viewModelScope.launch(Dispatchers.IO) {
-                val comments = postRepository.onGetComments(comment)
-                commentState = commentState.copy(comments = comments)
-            }
-        }
-
-        private fun onUpdatePosts(updatedPost: Post) {
-            val newPosts =
-                commentState.comments.map { post ->
-                    if (updatedPost.id == post.id) updatedPost else post
+        fun onCommentAction(action: CommentAction){
+            when(action){
+                is CommentAction.GetComments -> {
+                    viewModelScope.launch(Dispatchers.IO) {
+                        val comments = postRepository.onGetComments(action.comment)
+                        commentState = commentState.copy(comments = comments)
+                    }
                 }
-            commentState = commentState.copy(comments = newPosts)
+                is CommentAction.ProcessOfEngagementAction -> {
+                    val newPosts =
+                        commentState.comments.map { post ->
+                            if (action.updatedPost.id == post.id) action.updatedPost else post
+                        }
+                    commentState = commentState.copy(comments = newPosts)
+                }
+            }
         }
     }

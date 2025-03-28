@@ -1,23 +1,23 @@
 package com.segnities007.seg.ui.screens.hub.account
 
+import androidx.compose.runtime.Immutable
 import com.segnities007.seg.data.model.Post
 import com.segnities007.seg.data.model.User
 
-data class AccountAction(
-    val onReset: () -> Unit,
-    val onInitAccountUiState: (userID: String) -> Unit,
-    val onGetOtherUser: (userID: String) -> Unit,
-    val onSetOtherUser: (user: User) -> Unit,
-    val onGetUserPosts: (userID: String) -> Unit,
-    val onToggleIsLoading: () -> Unit,
-    val onToggleIsCompletedFetchPosts: () -> Unit,
-    val onGetPosts: () -> Unit,
-    val onFollow: (
-        isFollow: Boolean,
-        myself: User,
-        other: User,
-        onToggleIsLoading: () -> Unit,
-        onGetMyself: () -> Unit,
-    ) -> Unit,
-    val onProcessOfEngagementAction: (newPost: Post) -> Unit,
-)
+@Immutable
+sealed class AccountAction{
+    data object ResetState: AccountAction()
+    data object GetPosts: AccountAction()
+    data object ToggleIsLoading: AccountAction()
+    data class InitAccountState(val userID: String): AccountAction()
+    data class GetOtherUser(val userID: String): AccountAction()
+    data class SetOtherUser(val user: User): AccountAction()
+    data class GetUserPosts(val userID: String): AccountAction()
+    data class ClickFollowButton(
+        val isFollow: Boolean,
+        val self: User,
+        val other: User,
+        val getSelf: () -> Unit,
+    ): AccountAction()
+    data class ProcessOfEngagementAction(val newPost: Post): AccountAction()
+}

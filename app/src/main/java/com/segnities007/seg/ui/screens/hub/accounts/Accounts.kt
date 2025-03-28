@@ -18,23 +18,23 @@ import com.segnities007.seg.ui.screens.hub.account.AccountAction
 @Composable
 fun Accounts(
     modifier: Modifier = Modifier,
-    accountsViewModel: AccountsViewModel = hiltViewModel(),
-    accountAction: AccountAction,
     hubState: HubState,
-    hubAction: HubAction,
+    onAccountAction: (AccountAction) -> Unit,
+    onHubAction: (HubAction) -> Unit,
     onHubNavigate: (Navigation) -> Unit,
 ) {
+    val accountsViewModel: AccountsViewModel = hiltViewModel()
+
     LaunchedEffect(Unit) {
-        val action = accountsViewModel.onGetAccountsUiAction()
-        action.onGetUser(hubState.userID)
-        action.onGetUsers(hubState.accounts)
+        accountsViewModel.onAccountsAction(AccountsAction.GetUser(hubState.userID))
+        accountsViewModel.onAccountsAction(AccountsAction.GetUsers(hubState.accounts))
     }
 
     AccountsUi(
         modifier = modifier,
-        accountAction = accountAction,
         accountsState = accountsViewModel.accountsState,
-        hubAction = hubAction,
+        onHubAction = onHubAction,
+        onAccountAction = onAccountAction,
         onHubNavigate = onHubNavigate,
     )
 }
@@ -42,10 +42,10 @@ fun Accounts(
 @Composable
 private fun AccountsUi(
     modifier: Modifier = Modifier,
-    accountAction: AccountAction,
     accountsState: AccountsState,
-    hubAction: HubAction,
+    onHubAction: (HubAction) -> Unit,
     onHubNavigate: (Navigation) -> Unit,
+    onAccountAction: (AccountAction) -> Unit,
 ) {
     LazyColumn(
         modifier = modifier.fillMaxSize(),
@@ -59,9 +59,9 @@ private fun AccountsUi(
             AvatarCard(
                 user = accountsState.users[it],
                 onCardClick = {
-                    accountAction.onGetUserPosts(accountsState.users[it].userID)
-                    hubAction.onSetUserID(accountsState.users[it].userID)
-                    hubAction.onChangeCurrentRouteName(NavigationHubRoute.Account.name)
+                    onAccountAction(AccountAction.GetUserPosts(accountsState.users[it].userID))
+                    onHubAction(HubAction.SetUserID(accountsState.users[it].userID))
+                    onHubAction(HubAction.ChangeCurrentRouteName(NavigationHubRoute.Account.name))
                     onHubNavigate(NavigationHubRoute.Account)
                 },
             )

@@ -4,9 +4,10 @@ import androidx.compose.runtime.Immutable
 import com.segnities007.seg.data.model.Post
 
 @Immutable
-data class HomeAction(
-    val onGetNewPosts: () -> Unit,
-    val onGetBeforeNewPosts: (updatedAt: java.time.LocalDateTime) -> Unit,
-    val onChangeHasNoMorePost: () -> Unit,
-    val onProcessOfEngagementAction: (newPost: Post) -> Unit,
-)
+sealed class HomeAction{
+    data object GetNewPosts: HomeAction()
+    data object ChangeHasNoMorePost: HomeAction()
+    data class GetBeforeNewPosts(val updatedAt: java.time.LocalDateTime): HomeAction()
+    data class ProcessOfEngagement(val newPost: Post): HomeAction()
+}
+

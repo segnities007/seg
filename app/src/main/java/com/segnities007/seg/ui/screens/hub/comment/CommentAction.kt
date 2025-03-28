@@ -4,7 +4,7 @@ import androidx.compose.runtime.Immutable
 import com.segnities007.seg.data.model.Post
 
 @Immutable
-data class CommentAction(
-    val onGetComments: (comment: Post) -> Unit,
-    val onProcessOfEngagementAction: (updatedPost: Post) -> Unit,
-)
+sealed class CommentAction{
+    data class GetComments(val comment: Post): CommentAction()
+    data class ProcessOfEngagementAction(val updatedPost: Post): CommentAction()
+}

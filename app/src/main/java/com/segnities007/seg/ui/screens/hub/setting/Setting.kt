@@ -13,11 +13,11 @@ import com.segnities007.seg.ui.screens.hub.HubAction
 @Composable
 fun Setting(
     modifier: Modifier = Modifier,
-    hubAction: HubAction,
+    onHubAction: (HubAction) -> Unit,
     content: @Composable () -> Unit,
 ) {
     LaunchedEffect(Unit) {
-        hubAction.onGetUser()
+        onHubAction(HubAction.GetUser)
     }
 
     Box(

@@ -1,22 +1,17 @@
 package com.segnities007.seg.ui.screens.hub.trend
 
-import com.segnities007.seg.R
 import com.segnities007.seg.data.model.Post
 
-data class TrendState(
-    val trendOfToday: List<Post> = listOf(),
-    val trendOfWeek: List<Post> = listOf(),
-    val trendOfMonth: List<Post> = listOf(),
-    val trendOfYear: List<Post> = listOf(),
-    val isReadMoreAboutTrendOfToday: Boolean = false,
-    val isReadMoreAboutTrendOfWeek: Boolean = false,
-    val isReadMoreAboutTrendOfMonth: Boolean = false,
-    val isReadMoreAboutTrendOfYear: Boolean = false,
-    val textIDs: List<Int> =
-        listOf(
-            R.string.todays_most_view_post,
-            R.string.weeks_most_view_post,
-            R.string.months_most_view_post,
-            R.string.years_most_view_post,
-        ),
+data class TrendListState(
+    val trendPostsOfToday: List<Post> = listOf(),
+    val trendPostsOfWeek: List<Post> = listOf(),
+    val trendPostsOfMonth: List<Post> = listOf(),
+    val trendPostsOfYear: List<Post> = listOf(),
+)
+
+data class TrendFlagState(
+    val isGetMoreAboutTrendOfToday: Boolean = false,
+    val isGetMoreAboutTrendOfWeek: Boolean = false,
+    val isGetMoreAboutTrendOfMonth: Boolean = false,
+    val isGetMoreAboutTrendOfYear: Boolean = false,
 )

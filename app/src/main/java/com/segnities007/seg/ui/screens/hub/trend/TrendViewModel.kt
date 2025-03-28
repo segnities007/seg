@@ -5,8 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.segnities007.seg.data.model.Post
-import com.segnities007.seg.domain.presentation.TopLayerViewModel
 import com.segnities007.seg.domain.repository.PostRepository
+import com.segnities007.seg.ui.navigation.TopLayerViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -18,108 +18,118 @@ class TrendViewModel
     constructor(
         private val postRepository: PostRepository,
     ) : TopLayerViewModel() {
-        var trendState by mutableStateOf(TrendState())
+        var trendListState by mutableStateOf(TrendListState())
             private set
 
-        fun onGetTrendUiAction(): TrendAction =
-            TrendAction(
-                onReadMoreAboutTrendOfToday = this::onReadMoreAboutTrendOfToday,
-                onReadMoreAboutTrendOfWeek = this::onReadMoreAboutTrendOfWeek,
-                onReadMoreAboutTrendOfMonth = this::onReadMoreAboutTrendOfMonth,
-                onReadMoreAboutTrendOfYear = this::onReadMoreAboutTrendOfYear,
-                onGetTrendPostOfToday = this::onGetTrendPostOfToday,
-                onGetTrendPostOfWeek = this::onGetTrendPostOfWeek,
-                onGetTrendPostOfMonth = this::onGetTrendPostOfMonth,
-                onGetTrendPostOfYear = this::onGetTrendPostOfYear,
-                onResetReadMore = this::onResetReadMore,
-                onProcessOfEngagementAction = this::onProcessOfEngagementAction,
-            )
+        var trendFlagState by mutableStateOf(TrendFlagState())
+            private set
 
-        private fun onProcessOfEngagementAction(newTrend: Post) {
-            onUpdateTrends(newTrend)
-        }
+        fun onTrendAction(action: TrendAction) {
+            when (action) {
+                TrendAction.GetAdditionalTrendPostOfMonth -> {
+                    trendFlagState =
+                        trendFlagState.copy(isGetMoreAboutTrendOfToday = !trendFlagState.isGetMoreAboutTrendOfToday)
+                }
 
-        private fun onResetReadMore() {
-            trendState =
-                trendState.copy(
-                    isReadMoreAboutTrendOfToday = false,
-                    isReadMoreAboutTrendOfWeek = false,
-                    isReadMoreAboutTrendOfMonth = false,
-                    isReadMoreAboutTrendOfYear = false,
-                )
-        }
+                TrendAction.GetAdditionalTrendPostOfToday -> {
+                    trendFlagState =
+                        trendFlagState.copy(isGetMoreAboutTrendOfWeek = !trendFlagState.isGetMoreAboutTrendOfWeek)
+                }
 
-        private fun onReadMoreAboutTrendOfToday() {
-            trendState = trendState.copy(isReadMoreAboutTrendOfToday = !trendState.isReadMoreAboutTrendOfToday)
-        }
+                TrendAction.GetAdditionalTrendPostOfWeek -> {
+                    trendFlagState =
+                        trendFlagState.copy(isGetMoreAboutTrendOfMonth = !trendFlagState.isGetMoreAboutTrendOfMonth)
+                }
 
-        private fun onReadMoreAboutTrendOfWeek() {
-            trendState = trendState.copy(isReadMoreAboutTrendOfWeek = !trendState.isReadMoreAboutTrendOfWeek)
-        }
+                TrendAction.GetAdditionalTrendPostOfYear -> {
+                    trendFlagState =
+                        trendFlagState.copy(isGetMoreAboutTrendOfYear = !trendFlagState.isGetMoreAboutTrendOfYear)
+                }
 
-        private fun onReadMoreAboutTrendOfMonth() {
-            trendState = trendState.copy(isReadMoreAboutTrendOfMonth = !trendState.isReadMoreAboutTrendOfMonth)
-        }
+                is TrendAction.GetTrendPostOfMonth -> {
+                    viewModelScope.launch(Dispatchers.IO) {
+                        val trendPostsOfMonth =
+                            postRepository.onGetTrendPostOfMonth(limit = action.limit)
+                        trendListState = trendListState.copy(trendPostsOfMonth = trendPostsOfMonth)
+                    }
+                }
 
-        private fun onReadMoreAboutTrendOfYear() {
-            trendState = trendState.copy(isReadMoreAboutTrendOfYear = !trendState.isReadMoreAboutTrendOfYear)
-        }
+                is TrendAction.GetTrendPostOfToday -> {
+                    viewModelScope.launch(Dispatchers.IO) {
+                        val trendPostsOfToday =
+                            postRepository.onGetTrendPostOfToday(limit = action.limit)
+                        trendListState = trendListState.copy(trendPostsOfToday = trendPostsOfToday)
+                    }
+                }
 
-        private fun onGetTrendPostOfToday(limit: Long) {
-            viewModelScope.launch(Dispatchers.IO) {
-                val trendOfToday = postRepository.onGetTrendPostOfToday(limit = limit)
-                trendState = trendState.copy(trendOfToday = trendOfToday)
+                is TrendAction.GetTrendPostOfWeek -> {
+                    viewModelScope.launch(Dispatchers.IO) {
+                        val trendPostsOfWeek = postRepository.onGetTrendPostOfWeek(limit = action.limit)
+                        trendListState = trendListState.copy(trendPostsOfWeek = trendPostsOfWeek)
+                    }
+                }
+
+                is TrendAction.GetTrendPostOfYear -> {
+                    viewModelScope.launch(Dispatchers.IO) {
+                        val trendPostsOfYear = postRepository.onGetTrendPostOfYear(limit = action.limit)
+                        trendListState = trendListState.copy(trendPostsOfYear = trendPostsOfYear)
+                    }
+                }
+
+                is TrendAction.ProcessOfEngagement -> {
+                    onUpdateTrendLists(action.newPost)
+                }
+
+                TrendAction.Dispose -> {
+                    trendFlagState = TrendFlagState()
+                }
+
+                TrendAction.Init -> {
+                    val limit = 3L
+                    viewModelScope.launch(Dispatchers.IO) {
+                        val trendPostOfToday = postRepository.onGetTrendPostOfToday(limit = limit)
+                        val trendPostOfWeek = postRepository.onGetTrendPostOfWeek(limit = limit)
+                        val trendPostOfMonth = postRepository.onGetTrendPostOfMonth(limit = limit)
+                        val trendPostOfYear = postRepository.onGetTrendPostOfYear(limit = limit)
+                        trendListState =
+                            trendListState.copy(
+                                trendPostsOfToday = trendPostOfToday,
+                                trendPostsOfWeek = trendPostOfWeek,
+                                trendPostsOfMonth = trendPostOfMonth,
+                                trendPostsOfYear = trendPostOfYear,
+                            )
+                    }
+                }
             }
         }
 
-        private fun onGetTrendPostOfWeek(limit: Long) {
-            viewModelScope.launch(Dispatchers.IO) {
-                val trendOfWeek = postRepository.onGetTrendPostOfWeek(limit = limit)
-                trendState = trendState.copy(trendOfWeek = trendOfWeek)
-            }
-        }
-
-        private fun onGetTrendPostOfMonth(limit: Long) {
-            viewModelScope.launch(Dispatchers.IO) {
-                val trendOfMonth = postRepository.onGetTrendPostOfMonth(limit = limit)
-                trendState = trendState.copy(trendOfMonth = trendOfMonth)
-            }
-        }
-
-        private fun onGetTrendPostOfYear(limit: Long) {
-            viewModelScope.launch(Dispatchers.IO) {
-                val trendOfYear = postRepository.onGetTrendPostOfYear(limit = limit)
-                trendState = trendState.copy(trendOfYear = trendOfYear)
-            }
-        }
-
-        private fun onUpdateTrends(newTrend: Post) {
-            var trends =
-                trendState.trendOfToday.map { trend ->
+        private fun onUpdateTrendLists(newTrend: Post) {
+            var trendLists =
+                trendListState.trendPostsOfToday.map { trend ->
                     if (newTrend.id == trend.id) newTrend else trend
                 }
 
-            trendState = trendState.copy(trendOfToday = trends)
+            trendListState = trendListState.copy(trendPostsOfToday = trendLists)
 
-            trends =
-                trendState.trendOfWeek.map { trend ->
+            trendLists =
+                trendListState.trendPostsOfWeek.map { trend ->
                     if (newTrend.id == trend.id) newTrend else trend
                 }
 
-            trendState = trendState.copy(trendOfWeek = trends)
+            trendListState = trendListState.copy(trendPostsOfWeek = trendLists)
 
-            trends =
-                trendState.trendOfMonth.map { trend ->
+            trendLists =
+                trendListState.trendPostsOfMonth.map { trend ->
                     if (newTrend.id == trend.id) newTrend else trend
                 }
 
-            trendState = trendState.copy(trendOfMonth = trends)
+            trendListState = trendListState.copy(trendPostsOfMonth = trendLists)
 
-            trends =
-                trendState.trendOfYear.map { trend ->
+            trendLists =
+                trendListState.trendPostsOfYear.map { trend ->
                     if (newTrend.id == trend.id) newTrend else trend
                 }
 
-            trendState = trendState.copy(trendOfYear = trends)
+            trendListState = trendListState.copy(trendPostsOfYear = trendLists)
         }
     }

@@ -5,8 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.segnities007.seg.data.model.Post
-import com.segnities007.seg.data.model.User
 import com.segnities007.seg.domain.repository.PostRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -24,77 +22,143 @@ class MyPostsViewModel
         var myPostsState by mutableStateOf(MyPostsState())
             private set
 
-        fun onGetMyPostsUiAction(): MyPostsAction =
-            MyPostsAction(
-                onSetSelf = this::onSetSelf,
-                onUpdateSelectedTabIndex = this::onUpdateSelectedTabIndex,
-                onGetPosts = this::onGetPosts,
-                onGetLikedPosts = this::onGetLikedPosts,
-                onGetRepostedPosts = this::onGetRepostedPosts,
-                onProcessOfEngagementAction = this::onProcessOfEngagementAction,
-                onInit = this::onInit,
-                onRemovePostFromPosts = this::onRemovePostFromPosts,
-            )
-
-        private fun onRemovePostFromPosts(post: Post) {
-            myPostsState = myPostsState.copy(posts = myPostsState.posts.minus(post))
-        }
-
-        private fun onInit() {
-            if (myPostsState.self.likes.isEmpty()) {
-                onToggleHasNoMoreLikedPosts()
-            }
-            if (myPostsState.self.reposts.isEmpty()) {
-                onToggleHasNoMoreRepostedPosts()
-            }
-            if (myPostsState.self.posts.isEmpty()) {
-                onToggleHasNoMorePosts()
-            }
-        }
-
-        private fun onProcessOfEngagementAction(newPost: Post) {
-            val newPosts =
-                myPostsState.posts.map { post ->
-                    if (newPost.id == post.id) newPost else post
-                }
-
-            val newLikedPosts =
-                myPostsState.likedPosts.map { post ->
-                    if (newPost.id == post.id) newPost else post
-                }
-
-            val newRepostedPosts =
-                myPostsState.repostedPosts.map { post ->
-                    if (newPost.id == post.id) newPost else post
-                }
-
-            myPostsState = myPostsState.copy(posts = newPosts, likedPosts = newLikedPosts, repostedPosts = newRepostedPosts)
-        }
-
-        private fun onGetLikedPosts() {
-            viewModelScope.launch(Dispatchers.IO) {
-                if (myPostsState.likedPosts.isEmpty()) {
-                    // using reversing for sorted by descending order
-                    val posts =
-                        postRepository.onGetPosts(
-                            myPostsState.self.likes
-                                .reversed()
-                                .take(takeN),
-                        )
-                    if (posts.isEmpty()) {
-                        onToggleHasNoMoreLikedPosts()
-                    } else {
-                        val newPosts = posts.filter { post -> post.id != 0 }
-                        myPostsState = myPostsState.copy(likedPosts = myPostsState.likedPosts.plus(newPosts))
+        fun onMyPostsAction(action: MyPostsAction) {
+            when (action) {
+                MyPostsAction.GetLikedPosts -> {
+                    viewModelScope.launch(Dispatchers.IO) {
+                        if (myPostsState.likedPosts.isEmpty()) {
+                            // using reversing for sorted by descending order
+                            val posts =
+                                postRepository.onGetPosts(
+                                    myPostsState.self.likes
+                                        .reversed()
+                                        .take(takeN),
+                                )
+                            if (posts.isEmpty()) {
+                                onToggleHasNoMoreLikedPosts()
+                            } else {
+                                val newPosts = posts.filter { post -> post.id != 0 }
+                                myPostsState =
+                                    myPostsState.copy(likedPosts = myPostsState.likedPosts.plus(newPosts))
+                            }
+                        } else {
+                            // using reversing for sorted by descending order
+                            onGetBeforeLikedPosts(
+                                myPostsState.self.likes
+                                    .reversed()
+                                    .take(takeN),
+                                myPostsState.likedPosts.last().id,
+                            )
+                        }
                     }
-                } else {
-                    // using reversing for sorted by descending order
-                    onGetBeforeLikedPosts(
-                        myPostsState.self.likes
-                            .reversed()
-                            .take(takeN),
-                        myPostsState.likedPosts.last().id,
-                    )
+                }
+
+                MyPostsAction.GetPosts -> {
+                    viewModelScope.launch(Dispatchers.IO) {
+                        if (myPostsState.posts.isEmpty()) {
+                            // using reversing for sorted by descending order
+                            val posts =
+                                postRepository.onGetPosts(
+                                    myPostsState.self.posts
+                                        .reversed()
+                                        .take(takeN),
+                                )
+                            if (posts.isEmpty()) {
+                                onToggleHasNoMorePosts()
+                            } else {
+                                val newPosts = posts.filter { post -> post.id != 0 }
+                                myPostsState =
+                                    myPostsState.copy(posts = myPostsState.posts.plus(newPosts))
+                            }
+                        } else {
+                            // using reversing for sorted by descending order
+                            onGetBeforePosts(
+                                myPostsState.self.posts.reversed(),
+                                myPostsState.posts.last().id,
+                            )
+                        }
+                    }
+                }
+
+                MyPostsAction.GetRepostedPosts -> {
+                    viewModelScope.launch(Dispatchers.IO) {
+                        if (myPostsState.repostedPosts.isEmpty()) {
+                            // using reversing for sorted by descending order
+                            val posts =
+                                postRepository.onGetPosts(
+                                    myPostsState.self.reposts
+                                        .reversed()
+                                        .take(takeN),
+                                )
+                            if (posts.isEmpty()) {
+                                onToggleHasNoMoreRepostedPosts()
+                            } else {
+                                val newPosts = posts.filter { post -> post.id != 0 }
+                                myPostsState =
+                                    myPostsState.copy(
+                                        repostedPosts = myPostsState.repostedPosts.plus(newPosts),
+                                    )
+                            }
+                        } else {
+                            // using reversing for sorted by descending order
+                            onGetBeforeRepostedPosts(
+                                myPostsState.self.reposts
+                                    .reversed()
+                                    .take(takeN),
+                                myPostsState.repostedPosts.last().id,
+                            )
+                        }
+                    }
+                }
+
+                MyPostsAction.Init -> {
+                    if (myPostsState.self.likes.isEmpty()) {
+                        onToggleHasNoMoreLikedPosts()
+                    }
+                    if (myPostsState.self.reposts.isEmpty()) {
+                        onToggleHasNoMoreRepostedPosts()
+                    }
+                    if (myPostsState.self.posts.isEmpty()) {
+                        onToggleHasNoMorePosts()
+                    }
+                }
+
+                is MyPostsAction.ProcessOfEngagement -> {
+                    val newPost = action.newPost
+
+                    val newPosts =
+                        myPostsState.posts.map { post ->
+                            if (newPost.id == post.id) newPost else post
+                        }
+
+                    val newLikedPosts =
+                        myPostsState.likedPosts.map { post ->
+                            if (newPost.id == post.id) newPost else post
+                        }
+
+                    val newRepostedPosts =
+                        myPostsState.repostedPosts.map { post ->
+                            if (newPost.id == post.id) newPost else post
+                        }
+
+                    myPostsState =
+                        myPostsState.copy(
+                            posts = newPosts,
+                            likedPosts = newLikedPosts,
+                            repostedPosts = newRepostedPosts,
+                        )
+                }
+
+                is MyPostsAction.RemovePostFromPosts -> {
+                    myPostsState = myPostsState.copy(posts = myPostsState.posts.minus(action.post))
+                }
+
+                is MyPostsAction.SetSelf -> {
+                    myPostsState = myPostsState.copy(self = action.self)
+                }
+
+                is MyPostsAction.UpdateSelectedTabIndex -> {
+                    myPostsState = myPostsState.copy(selectedTabIndex = action.index)
                 }
             }
         }
@@ -112,35 +176,8 @@ class MyPostsViewModel
                     onToggleHasNoMoreLikedPosts()
                 } else {
                     val newPosts = posts.filter { post -> post.id != 0 }
-                    myPostsState = myPostsState.copy(likedPosts = myPostsState.likedPosts.plus(newPosts))
-                }
-            }
-        }
-
-        private fun onGetRepostedPosts() {
-            viewModelScope.launch(Dispatchers.IO) {
-                if (myPostsState.repostedPosts.isEmpty()) {
-                    // using reversing for sorted by descending order
-                    val posts =
-                        postRepository.onGetPosts(
-                            myPostsState.self.reposts
-                                .reversed()
-                                .take(takeN),
-                        )
-                    if (posts.isEmpty()) {
-                        onToggleHasNoMoreRepostedPosts()
-                    } else {
-                        val newPosts = posts.filter { post -> post.id != 0 }
-                        myPostsState = myPostsState.copy(repostedPosts = myPostsState.repostedPosts.plus(newPosts))
-                    }
-                } else {
-                    // using reversing for sorted by descending order
-                    onGetBeforeRepostedPosts(
-                        myPostsState.self.reposts
-                            .reversed()
-                            .take(takeN),
-                        myPostsState.repostedPosts.last().id,
-                    )
+                    myPostsState =
+                        myPostsState.copy(likedPosts = myPostsState.likedPosts.plus(newPosts))
                 }
             }
         }
@@ -158,36 +195,10 @@ class MyPostsViewModel
                     onToggleHasNoMoreRepostedPosts()
                 } else {
                     val newPosts = posts.filter { post -> post.id != 0 }
-                    myPostsState = myPostsState.copy(repostedPosts = myPostsState.repostedPosts.plus(newPosts))
+                    myPostsState =
+                        myPostsState.copy(repostedPosts = myPostsState.repostedPosts.plus(newPosts))
                 }
             }
-        }
-
-        private fun onGetPosts() {
-            viewModelScope.launch(Dispatchers.IO) {
-                if (myPostsState.posts.isEmpty()) {
-                    // using reversing for sorted by descending order
-                    val posts =
-                        postRepository.onGetPosts(
-                            myPostsState.self.posts
-                                .reversed()
-                                .take(takeN),
-                        )
-                    if (posts.isEmpty()) {
-                        onToggleHasNoMorePosts()
-                    } else {
-                        val newPosts = posts.filter { post -> post.id != 0 }
-                        myPostsState = myPostsState.copy(posts = myPostsState.posts.plus(newPosts))
-                    }
-                } else {
-                    // using reversing for sorted by descending order
-                    onGetBeforePosts(myPostsState.self.posts.reversed(), myPostsState.posts.last().id)
-                }
-            }
-        }
-
-        private fun onSetSelf(self: User) {
-            myPostsState = myPostsState.copy(self = self)
         }
 
         private fun onGetBeforePosts(
@@ -217,10 +228,7 @@ class MyPostsViewModel
         }
 
         private fun onToggleHasNoMoreRepostedPosts() {
-            myPostsState = myPostsState.copy(hasNoMoreRepostedPosts = !myPostsState.hasNoMoreRepostedPosts)
-        }
-
-        private fun onUpdateSelectedTabIndex(index: Int) {
-            myPostsState = myPostsState.copy(selectedTabIndex = index)
+            myPostsState =
+                myPostsState.copy(hasNoMoreRepostedPosts = !myPostsState.hasNoMoreRepostedPosts)
         }
     }

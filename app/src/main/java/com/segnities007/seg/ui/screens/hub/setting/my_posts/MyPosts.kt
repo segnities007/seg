@@ -14,12 +14,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.segnities007.seg.R
+import com.segnities007.seg.data.model.Post
 import com.segnities007.seg.domain.presentation.Navigation
 import com.segnities007.seg.ui.components.card.postcard.PostCard
-import com.segnities007.seg.ui.components.card.postcard.PostCardUiAction
+import com.segnities007.seg.ui.components.card.postcard.PostCardAction
 import com.segnities007.seg.ui.components.card.postcard.PostCardWithDetailButton
 import com.segnities007.seg.ui.components.indicator.LoadingUI
-import com.segnities007.seg.ui.components.tab.TabUiAction
+import com.segnities007.seg.ui.components.tab.TabAction
 import com.segnities007.seg.ui.components.tab.TabUiState
 import com.segnities007.seg.ui.screens.hub.HubAction
 import com.segnities007.seg.ui.screens.hub.HubState
@@ -27,93 +28,95 @@ import com.segnities007.seg.ui.screens.hub.home.HomeAction
 
 @Composable
 fun MyPosts(
-    homeAction: HomeAction,
     hubState: HubState,
-    hubAction: HubAction,
     tabUiState: TabUiState,
-    tabUiAction: TabUiAction,
-    myPostsViewModel: MyPostsViewModel = hiltViewModel(),
-    postCardUiAction: PostCardUiAction,
+    onTabAction: (TabAction) -> Unit,
+    onHubAction: (HubAction) -> Unit,
+    onHomeAction: (HomeAction) -> Unit,
+    onPostCardAction: (PostCardAction) -> Unit,
     onHubNavigate: (Navigation) -> Unit,
 ) {
+    val myPostsViewModel: MyPostsViewModel = hiltViewModel()
+
     LaunchedEffect(Unit) {
-        hubAction.onChangeIsHideTopBar()
-        val action = myPostsViewModel.onGetMyPostsUiAction()
-        action.onSetSelf(hubState.user)
-        action.onInit()
+        onHubAction(HubAction.ChangeIsHideTopBar)
+        myPostsViewModel.onMyPostsAction(MyPostsAction.SetSelf(hubState.user))
+        myPostsViewModel.onMyPostsAction(MyPostsAction.Init)
     }
 
     DisposableEffect(Unit) {
         onDispose {
-            tabUiAction.onUpdateIndex(0)
+            onTabAction(TabAction.UpdateIndex(0))
         }
     }
 
     Column {
         MyPostsUi(
-            homeAction = homeAction,
             hubState = hubState,
-            hubAction = hubAction,
             tabUiState = tabUiState,
             myPostsState = myPostsViewModel.myPostsState,
-            myPostsAction = myPostsViewModel.onGetMyPostsUiAction(),
-            postCardUiAction = postCardUiAction,
             onHubNavigate = onHubNavigate,
+            onHubAction = onHubAction,
+            onHomeAction = onHomeAction,
+            onMyPostsAction = myPostsViewModel::onMyPostsAction,
+            onPostCardAction = onPostCardAction,
         )
     }
 }
 
 @Composable
 private fun MyPostsUi(
-    homeAction: HomeAction,
     hubState: HubState,
-    hubAction: HubAction,
     myPostsState: MyPostsState,
-    myPostsAction: MyPostsAction,
     tabUiState: TabUiState,
-    postCardUiAction: PostCardUiAction,
+    onHubAction: (HubAction) -> Unit,
+    onHomeAction: (HomeAction) -> Unit,
+    onMyPostsAction: (MyPostsAction) -> Unit,
+    onPostCardAction: (PostCardAction) -> Unit,
     onHubNavigate: (Navigation) -> Unit,
 ) {
     when (tabUiState.index) {
         0 ->
             Posts(
-                homeAction = homeAction,
                 myPostsState = myPostsState,
-                myPostsAction = myPostsAction,
                 hubState = hubState,
-                hubAction = hubAction,
-                postCardUiAction = postCardUiAction,
                 onHubNavigate = onHubNavigate,
+                onHubAction = onHubAction,
+                onHomeAction = onHomeAction,
+                onMyPostsAction = onMyPostsAction,
+                onPostCardAction = onPostCardAction,
             )
+
         1 ->
             Likes(
                 myPostsState = myPostsState,
-                myPostsAction = myPostsAction,
                 hubState = hubState,
-                hubAction = hubAction,
-                postCardUiAction = postCardUiAction,
                 onHubNavigate = onHubNavigate,
+                onHubAction = onHubAction,
+                onMyPostsAction = onMyPostsAction,
+                onPostCardAction = onPostCardAction,
             )
+
         2 ->
             Reposts(
                 myPostsState = myPostsState,
-                myPostsAction = myPostsAction,
                 hubState = hubState,
-                hubAction = hubAction,
-                postCardUiAction = postCardUiAction,
                 onHubNavigate = onHubNavigate,
+                onHubAction = onHubAction,
+                onMyPostsAction = onMyPostsAction,
+                onPostCardAction = onPostCardAction,
             )
     }
 }
 
 @Composable
 private fun Posts(
-    homeAction: HomeAction,
     myPostsState: MyPostsState,
-    myPostsAction: MyPostsAction,
     hubState: HubState,
-    hubAction: HubAction,
-    postCardUiAction: PostCardUiAction,
+    onHubAction: (HubAction) -> Unit,
+    onHomeAction: (HomeAction) -> Unit,
+    onMyPostsAction: (MyPostsAction) -> Unit,
+    onPostCardAction: (PostCardAction) -> Unit,
     onHubNavigate: (Navigation) -> Unit,
 ) {
     LazyColumn(
@@ -135,13 +138,19 @@ private fun Posts(
             ) { i ->
                 PostCardWithDetailButton(
                     post = myPostsState.posts[i],
-                    homeAction = homeAction,
                     hubState = hubState,
-                    hubAction = hubAction,
-                    myPostsAction = myPostsAction,
-                    postCardUiAction = postCardUiAction,
                     onHubNavigate = onHubNavigate,
-                    onProcessOfEngagementAction = myPostsAction.onProcessOfEngagementAction,
+                    onProcessOfEngagementAction = { newPost: Post ->
+                        onMyPostsAction(
+                            MyPostsAction.ProcessOfEngagement(
+                                newPost,
+                            ),
+                        )
+                    },
+                    onPostCardAction = onPostCardAction,
+                    onHubAction = onHubAction,
+                    onHomeAction = onHomeAction,
+                    onMyPostsAction = onMyPostsAction,
                 )
                 Spacer(Modifier.padding(dimensionResource(R.dimen.padding_smallest)))
             }
@@ -150,7 +159,7 @@ private fun Posts(
             item {
                 Column {
                     Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_smaller)))
-                    LoadingUI(onLoading = { myPostsAction.onGetPosts() })
+                    LoadingUI(onLoading = { onMyPostsAction(MyPostsAction.GetPosts) })
                 }
             }
         }
@@ -159,11 +168,11 @@ private fun Posts(
 
 @Composable
 private fun Likes(
-    myPostsState: MyPostsState,
-    myPostsAction: MyPostsAction,
     hubState: HubState,
-    hubAction: HubAction,
-    postCardUiAction: PostCardUiAction,
+    myPostsState: MyPostsState,
+    onHubAction: (HubAction) -> Unit,
+    onMyPostsAction: (MyPostsAction) -> Unit,
+    onPostCardAction: (PostCardAction) -> Unit,
     onHubNavigate: (Navigation) -> Unit,
 ) {
     LazyColumn(
@@ -188,9 +197,15 @@ private fun Likes(
                     hubState = hubState,
                     isIncrementView = false,
                     onHubNavigate = onHubNavigate,
-                    hubAction = hubAction,
-                    postCardUiAction = postCardUiAction,
-                    onProcessOfEngagementAction = myPostsAction.onProcessOfEngagementAction,
+                    onProcessOfEngagementAction = { newPost ->
+                        onMyPostsAction(
+                            MyPostsAction.ProcessOfEngagement(
+                                newPost,
+                            ),
+                        )
+                    },
+                    onHubAction = onHubAction,
+                    onPostCardAction = onPostCardAction,
                 )
                 Spacer(Modifier.padding(dimensionResource(R.dimen.padding_smallest)))
             }
@@ -199,7 +214,7 @@ private fun Likes(
             item {
                 Column {
                     Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_smaller)))
-                    LoadingUI(onLoading = { myPostsAction.onGetLikedPosts() })
+                    LoadingUI(onLoading = { onMyPostsAction(MyPostsAction.GetLikedPosts) })
                 }
             }
         }
@@ -209,10 +224,10 @@ private fun Likes(
 @Composable
 private fun Reposts(
     myPostsState: MyPostsState,
-    myPostsAction: MyPostsAction,
     hubState: HubState,
-    hubAction: HubAction,
-    postCardUiAction: PostCardUiAction,
+    onHubAction: (HubAction) -> Unit,
+    onMyPostsAction: (MyPostsAction) -> Unit,
+    onPostCardAction: (PostCardAction) -> Unit,
     onHubNavigate: (Navigation) -> Unit,
 ) {
     LazyColumn(
@@ -237,9 +252,15 @@ private fun Reposts(
                     hubState = hubState,
                     isIncrementView = false,
                     onHubNavigate = onHubNavigate,
-                    hubAction = hubAction,
-                    postCardUiAction = postCardUiAction,
-                    onProcessOfEngagementAction = myPostsAction.onProcessOfEngagementAction,
+                    onHubAction = onHubAction,
+                    onPostCardAction = onPostCardAction,
+                    onProcessOfEngagementAction = { newPost ->
+                        onMyPostsAction(
+                            MyPostsAction.ProcessOfEngagement(
+                                newPost,
+                            ),
+                        )
+                    },
                 )
                 Spacer(Modifier.padding(dimensionResource(R.dimen.padding_smallest)))
             }
@@ -248,7 +269,7 @@ private fun Reposts(
             item {
                 Column {
                     Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_smaller)))
-                    LoadingUI(onLoading = { myPostsAction.onGetRepostedPosts() })
+                    LoadingUI(onLoading = { onMyPostsAction(MyPostsAction.GetRepostedPosts) })
                 }
             }
         }

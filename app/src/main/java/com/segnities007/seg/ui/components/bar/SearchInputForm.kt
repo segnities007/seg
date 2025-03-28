@@ -23,28 +23,28 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import com.segnities007.seg.R
+import com.segnities007.seg.ui.components.bar.top_search_bar.TopSearchBarAction
+import com.segnities007.seg.ui.components.bar.top_search_bar.TopSearchBarState
 import com.segnities007.seg.ui.screens.hub.search.SearchAction
-import com.segnities007.seg.ui.screens.hub.search.TopSearchBarUiAction
-import com.segnities007.seg.ui.screens.hub.search.TopSearchBarUiState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchInputForm(
     modifier: Modifier = Modifier,
-    searchUiAction: SearchAction,
-    topSearchBarUiState: TopSearchBarUiState,
-    topSearchBarUiAction: TopSearchBarUiAction,
-    focusManager: FocusManager = LocalFocusManager.current,
+    topSearchBarState: TopSearchBarState,
+    onSearchAction: (SearchAction) -> Unit,
+    onTopSearchBarAction: (TopSearchBarAction) -> Unit,
 ) {
+    val focusManager: FocusManager = LocalFocusManager.current
     val iconSize = dimensionResource(R.dimen.icon_smaller)
 
     val onQueryChange = { it: String ->
-        topSearchBarUiAction.onUpdateKeyword(it)
+        onTopSearchBarAction(TopSearchBarAction.UpdateKeyword(it))
     }
 
     val onSearch = { _: String ->
         focusManager.clearFocus()
-        searchUiAction.onEnter(topSearchBarUiState.keyword)
+        onSearchAction(SearchAction.Search(topSearchBarState.keyword))
     }
 
     SearchBar(
@@ -54,7 +54,7 @@ fun SearchInputForm(
         content = {},
         inputField = {
             SearchBarDefaults.InputField(
-                query = topSearchBarUiState.keyword,
+                query = topSearchBarState.keyword,
                 expanded = false,
                 onQueryChange = onQueryChange,
                 onSearch = onSearch,
@@ -62,12 +62,15 @@ fun SearchInputForm(
                 placeholder = { Text(stringResource(R.string.search)) },
                 leadingIcon = {
                     Icon(
-                        modifier = Modifier.padding(dimensionResource(R.dimen.padding_small)).size(iconSize),
+                        modifier =
+                            Modifier
+                                .padding(dimensionResource(R.dimen.padding_small))
+                                .size(iconSize),
                         imageVector = Icons.Default.Search,
                         contentDescription = null,
                     )
                 },
-                trailingIcon = { DeleteButton(iconSize, topSearchBarUiAction) },
+                trailingIcon = { DeleteButton(iconSize, onTopSearchBarAction) },
             )
         },
     )
@@ -76,12 +79,12 @@ fun SearchInputForm(
 @Composable
 private fun DeleteButton(
     iconSize: Dp,
-    topSearchBarUiAction: TopSearchBarUiAction,
+    onTopSearchBarAction: (TopSearchBarAction) -> Unit,
 ) {
     val buttonSize = dimensionResource(R.dimen.button_height_normal_size)
 
     val clickAction = {
-        topSearchBarUiAction.onUpdateKeyword("") // reset keyword
+        onTopSearchBarAction(TopSearchBarAction.UpdateKeyword(""))
     }
 
     Box(

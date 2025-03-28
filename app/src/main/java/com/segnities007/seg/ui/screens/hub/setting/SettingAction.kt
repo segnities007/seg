@@ -1,8 +1,16 @@
 package com.segnities007.seg.ui.screens.hub.setting
 
-data class SettingAction(
-    val onLogout: () -> Unit,
-    val onDatePickerClose: () -> Unit,
-    val onDatePickerOpen: () -> Unit,
-    val onDateSelect: (Long?) -> Unit,
-)
+import androidx.compose.runtime.Immutable
+
+@Immutable
+sealed class SettingAction {
+    data object Logout : SettingAction()
+
+    data object CloseDatePicker : SettingAction()
+
+    data object OpenDatePicker : SettingAction()
+
+    data class SelectDate(
+        val millis: Long?,
+    ) : SettingAction()
+}

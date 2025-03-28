@@ -19,11 +19,9 @@ import com.segnities007.seg.ui.screens.login.sign_up.SignUp
 import com.segnities007.seg.ui.screens.login.sign_up.create_account.CreateAccount
 
 @Composable
-fun NavigationLogin(
-    navHostController: NavHostController,
-    loginNavHostController: NavHostController = rememberNavController(),
-    loginViewModel: LoginViewModel = hiltViewModel(),
-) {
+fun NavigationLogin(navHostController: NavHostController) {
+    val loginNavHostController: NavHostController = rememberNavController()
+    val loginViewModel: LoginViewModel = hiltViewModel()
     val navBackStackEntry by loginNavHostController.currentBackStackEntryAsState()
     val currentRoute =
         navBackStackEntry
@@ -33,7 +31,7 @@ fun NavigationLogin(
             ?.substringAfterLast(".") // 最後のドット以降を取得
 
     Login(
-        topAction = loginViewModel.onGetTopAction(),
+        onTopAction = loginViewModel::onTopAction,
         currentRouteName = currentRoute.toString(),
         topState = loginViewModel.topState,
         onNavigate = { route: Navigation ->

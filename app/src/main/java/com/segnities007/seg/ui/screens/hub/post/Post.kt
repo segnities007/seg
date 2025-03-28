@@ -24,6 +24,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.segnities007.seg.R
 import com.segnities007.seg.domain.presentation.Navigation
 import com.segnities007.seg.ui.components.button.SmallButton
+import com.segnities007.seg.ui.components.card.postcard.PostCardAction
 import com.segnities007.seg.ui.components.indicator.CircleIndicator
 import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
 import com.segnities007.seg.ui.screens.hub.HubAction
@@ -33,20 +34,20 @@ import com.segnities007.seg.ui.screens.hub.home.HomeAction
 @Composable
 fun Post(
     modifier: Modifier = Modifier,
-    homeAction: HomeAction,
     hubState: HubState,
-    hubAction: HubAction,
+    onHubAction: (HubAction) -> Unit,
+    onHomeAction: (HomeAction) -> Unit,
     onHubNavigate: (Navigation) -> Unit, // go to home
 ) {
     val postViewModel: PostViewModel = hiltViewModel()
 
     PostUi(
         modifier = modifier,
-        homeAction = homeAction,
         hubState = hubState,
-        hubAction = hubAction,
         postState = postViewModel.postState,
-        postAction = postViewModel.onGetPostUiAction(),
+        onHubAction = onHubAction,
+        onHomeAction = onHomeAction,
+        onPostAction = postViewModel::onPostAction,
         onHubNavigate = onHubNavigate,
     ) {
         Column {
@@ -62,21 +63,21 @@ fun Post(
 @Composable
 fun PostUi(
     modifier: Modifier = Modifier,
-    homeAction: HomeAction,
     hubState: HubState,
-    hubAction: HubAction,
     postState: PostState,
-    postAction: PostAction,
+    onHubAction: (HubAction) -> Unit,
+    onHomeAction: (HomeAction) -> Unit,
+    onPostAction: (PostAction) -> Unit,
     onHubNavigate: (Navigation) -> Unit,
     content: @Composable PostScope.() -> Unit,
 ) {
     val scope =
         DefaultPostScope(
-            homeAction = homeAction,
             hubState = hubState,
-            hubAction = hubAction,
             postState = postState,
-            postAction = postAction,
+            onHubAction = onHubAction,
+            onHomeAction = onHomeAction,
+            onPostAction = onPostAction,
             onHubNavigate = onHubNavigate,
         )
 
@@ -103,7 +104,7 @@ fun PostScope.InputField(
     TextField(
         modifier = modifier.fillMaxSize(),
         value = postState.inputText,
-        onValueChange = { postAction.onUpdateInputText(it) },
+        onValueChange = { onPostAction(PostAction.UpdateInputText(it)) },
         label = label,
         textStyle = TextStyle.Default.copy(fontSize = 24.sp),
         shape = RoundedCornerShape(dimensionResource(R.dimen.rounded_corner_shape)),
@@ -128,20 +129,17 @@ fun PostScope.TopToolBar(modifier: Modifier = Modifier) {
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        SmallButton(textID = R.string.clear, onClick = { postAction.onUpdateInputText("") })
+        SmallButton(textID = R.string.clear, onClick = { onPostAction(PostAction.UpdateInputText("")) })
         Spacer(modifier = Modifier.weight(1f))
         SmallButton(
             textID = R.string.post,
             onClick = {
-                postAction.onCreatePost(
-                    hubState.user,
-                    postAction.onUpdateIsLoading,
-                    hubAction.onGetUser,
-                ) {
-                    postAction.onUpdateInputText("")
-                    homeAction.onGetNewPosts()
-                    onHubNavigate(NavigationHubRoute.Home)
-                }
+                onPostAction(PostAction.CreatePost(
+                    user = hubState.user,
+                    onUpdateIsLoading = {onPostAction(PostAction.UpdateIsLoading(it))},
+                    onUpdateSelf = {onHubAction(HubAction.GetUser)},
+                    onNavigate = onHubNavigate
+                ))
             },
         )
     }
@@ -152,38 +150,12 @@ fun PostScope.TopToolBar(modifier: Modifier = Modifier) {
 private fun PostPreview() {
     PostUi(
         modifier = Modifier,
-        homeAction =
-            HomeAction(
-                onGetNewPosts = {},
-                onGetBeforeNewPosts = {},
-                onChangeHasNoMorePost = {},
-                onProcessOfEngagementAction = {},
-            ),
         hubState = HubState(),
-        hubAction =
-            HubAction(
-                onUpdateSelf = {},
-                onChangeIsHideTopBar = {},
-                onResetIsHideTopBar = {},
-                onGetUser = {},
-                onSetComment = {},
-                onSetUserID = {},
-                onSetAccounts = {},
-                onAddPostIDToMyLikes = {},
-                onRemovePostIDFromMyLikes = {},
-                onAddPostIDToMyReposts = {},
-                onRemovePostIDFromMyReposts = {},
-                onChangeCurrentRouteName = {},
-            ),
-        postState = PostState(),
-        postAction =
-            PostAction(
-                onUpdateIsLoading = {},
-                onUpdateInputText = {},
-                onCreatePost = { a, b, c, d -> },
-                onCreateComment = { _, _, _, _ -> },
-            ),
         onHubNavigate = {},
+        postState = PostState(),
+        onHubAction = {},
+        onHomeAction = {},
+        onPostAction = {},
     ) {
         Column {
             TopToolBar()
