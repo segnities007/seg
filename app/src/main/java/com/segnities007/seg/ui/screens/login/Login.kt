@@ -42,7 +42,6 @@ fun Login(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun LoginUi(
     currentRouteName: String,
@@ -52,32 +51,55 @@ private fun LoginUi(
 ) {
     Scaffold(
         topBar = {
-            TopBar(
-                titleContent = { Text(text = stringResource(R.string.login_screen_title)) },
-                routeName = currentRouteName,
-                onDrawerOpen = { onTopAction(TopAction.OpenDrawer) },
+            LoginTopBar(
+                currentRouteName = currentRouteName,
+                onTopAction = onTopAction,
             )
         },
         bottomBar = {
-            when (currentRouteName) {
-                NavigationLoginRoute.SignIn.name ->
-                    BottomBar(
-                        items = BottomBarLoginItem(),
-                        currentRouteName = currentRouteName,
-                        onNavigate = onNavigate,
-                    )
-
-                NavigationLoginRoute.SignUp.name ->
-                    BottomBar(
-                        items = BottomBarLoginItem(),
-                        currentRouteName = currentRouteName,
-                        onNavigate = onNavigate,
-                    )
-
-                else -> Spacer(modifier = Modifier.padding(0.dp))
-            }
+            LoginBottomBar(
+                currentRouteName = currentRouteName,
+                onNavigate = onNavigate,
+            )
         },
     ) { innerPadding ->
         content(Modifier.padding(innerPadding))
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun LoginTopBar(
+    currentRouteName: String,
+    onTopAction: (TopAction) -> Unit,
+) {
+    TopBar(
+        titleContent = { Text(text = stringResource(R.string.login_screen_title)) },
+        routeName = currentRouteName,
+        onDrawerOpen = { onTopAction(TopAction.OpenDrawer) },
+    )
+}
+
+@Composable
+private fun LoginBottomBar(
+    currentRouteName: String,
+    onNavigate: (Navigation) -> Unit,
+) {
+    when (currentRouteName) {
+        NavigationLoginRoute.SignIn.name ->
+            BottomBar(
+                items = BottomBarLoginItem(),
+                currentRouteName = currentRouteName,
+                onNavigate = onNavigate,
+            )
+
+        NavigationLoginRoute.SignUp.name ->
+            BottomBar(
+                items = BottomBarLoginItem(),
+                currentRouteName = currentRouteName,
+                onNavigate = onNavigate,
+            )
+
+        else -> Spacer(modifier = Modifier.padding(0.dp))
     }
 }
