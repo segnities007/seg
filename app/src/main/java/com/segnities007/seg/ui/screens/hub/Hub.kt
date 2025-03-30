@@ -92,90 +92,20 @@ private fun HubUi(
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            when (currentRouteName) {
-                NavigationHubRoute.Home.name ->
-                    TopBar(
-                        titleContent = { Text(text = currentRouteName) },
-                        onDrawerOpen = { onTopAction(TopAction.OpenDrawer) },
-                        scrollBehavior = scrollBehavior,
-                        routeName = currentRouteName,
-                    )
-
-                NavigationHubRoute.Trend.name ->
-                    TopBar(
-                        titleContent = { Text(text = currentRouteName) },
-                        onDrawerOpen = { onTopAction(TopAction.OpenDrawer) },
-                        routeName = currentRouteName,
-                    )
-
-                NavigationHubRoute.Search.name ->
-                    TopSearchBar(
-                        tabUiState = tabUiState,
-                        topSearchBarState = topSearchBarState,
-                        onTabAction = onTabAction,
-                        onSearchAction = onSearchAction,
-                        onTopSearchBarAction = onTopSearchBarAction,
-                    )
-
-                NavigationHubRoute.Post.name ->
-                    TopBar(
-                        titleContent = { Text(text = currentRouteName) },
-                        onDrawerOpen = { onTopAction(TopAction.OpenDrawer) },
-                        routeName = currentRouteName,
-                    )
-
-                NavigationHubRoute.Notify.name ->
-                    TopBar(
-                        titleContent = { Text(text = currentRouteName) },
-                        onDrawerOpen = { onTopAction(TopAction.OpenDrawer) },
-                        routeName = currentRouteName,
-                    )
-
-                NavigationHubRoute.Account.name ->
-                    StatusBarWithFollows(
-                        user = accountState.user,
-                        onHubNavigate = onHubNavigate,
-                        onHubAction = onHubAction,
-                    )
-
-                NavigationHubRoute.Accounts.name ->
-                    TopBar(
-                        titleContent = { Text(text = currentRouteName) },
-                        onDrawerOpen = { onTopAction(TopAction.OpenDrawer) },
-                        routeName = currentRouteName,
-                    )
-
-                NavigationHubRoute.Setting.name ->
-                    if (!hubState.isHideTopBar) {
-                        StatusBarWithFollows(
-                            user = hubState.user,
-                            onHubNavigate = onHubNavigate,
-                            onHubAction = onHubAction,
-                        )
-                    } else {
-                        StatusBarWithTab(
-                            user = hubState.user,
-                            tabUiState = tabUiState,
-                            onTabAction = onTabAction,
-                        )
-                    }
-
-                NavigationHubRoute.Comment.name ->
-                    TopBar(
-                        titleContent = { Text(text = currentRouteName) },
-                        onDrawerOpen = { onTopAction(TopAction.OpenDrawer) },
-                        routeName = currentRouteName,
-                    )
-
-                NavigationHubRoute.PostForComment.name ->
-                    TopBar(
-                        titleContent = { Text(text = currentRouteName) },
-                        onDrawerOpen = { onTopAction(TopAction.OpenDrawer) },
-                        routeName = currentRouteName,
-                    )
-
-                else -> Spacer(modifier = Modifier.padding(0.dp))
-            }
+            HubTopBar(
+                currentRouteName = currentRouteName,
+                hubState = hubState,
+                accountState = accountState,
+                tabUiState = tabUiState,
+                topSearchBarState = topSearchBarState,
+                onHubNavigate = onHubNavigate,
+                onHubAction = onHubAction,
+                onTopAction = onTopAction,
+                onSearchAction = onSearchAction,
+                onTabAction = onTabAction,
+                onTopSearchBarAction = onTopSearchBarAction,
+                scrollBehavior = scrollBehavior,
+            )
         },
         bottomBar = {
             BottomBar(
@@ -185,29 +115,142 @@ private fun HubUi(
             )
         },
         floatingActionButton = {
-            when (currentRouteName) {
-                NavigationHubRoute.Trend.name ->
-                    FloatingButton(
-                        iconID = R.drawable.baseline_search_24,
-                        onClick = { onHubNavigate(NavigationHubRoute.Search) },
-                    )
-
-                NavigationHubRoute.Home.name ->
-                    FloatingButton(
-                        iconID = R.drawable.baseline_search_24,
-                        onClick = { onHubNavigate(NavigationHubRoute.Search) },
-                    )
-
-                NavigationHubRoute.Comment.name ->
-                    FloatingButton(
-                        iconID = R.drawable.baseline_create_24,
-                        onClick = { onHubNavigate(NavigationHubRoute.PostForComment) },
-                    )
-
-                else -> Spacer(modifier = Modifier.padding(0.dp))
-            }
+            HubFloatingActionButton(
+                currentRouteName = currentRouteName,
+                onHubNavigate = onHubNavigate,
+            )
         },
     ) { innerPadding ->
         content(Modifier.padding(innerPadding))
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun HubTopBar(
+    currentRouteName: String,
+    hubState: HubState,
+    accountState: AccountState,
+    tabUiState: TabUiState,
+    topSearchBarState: TopSearchBarState,
+    onHubNavigate: (Navigation) -> Unit,
+    onHubAction: (HubAction) -> Unit,
+    onTopAction: (TopAction) -> Unit,
+    onSearchAction: (SearchAction) -> Unit,
+    onTabAction: (TabAction) -> Unit,
+    onTopSearchBarAction: (TopSearchBarAction) -> Unit,
+    scrollBehavior: TopAppBarScrollBehavior,
+) {
+    when (currentRouteName) {
+        NavigationHubRoute.Home.name ->
+            TopBar(
+                titleContent = { Text(text = currentRouteName) },
+                onDrawerOpen = { onTopAction(TopAction.OpenDrawer) },
+                scrollBehavior = scrollBehavior,
+                routeName = currentRouteName,
+            )
+
+        NavigationHubRoute.Trend.name ->
+            TopBar(
+                titleContent = { Text(text = currentRouteName) },
+                onDrawerOpen = { onTopAction(TopAction.OpenDrawer) },
+                routeName = currentRouteName,
+            )
+
+        NavigationHubRoute.Search.name ->
+            TopSearchBar(
+                tabUiState = tabUiState,
+                topSearchBarState = topSearchBarState,
+                onTabAction = onTabAction,
+                onSearchAction = onSearchAction,
+                onTopSearchBarAction = onTopSearchBarAction,
+            )
+
+        NavigationHubRoute.Post.name ->
+            TopBar(
+                titleContent = { Text(text = currentRouteName) },
+                onDrawerOpen = { onTopAction(TopAction.OpenDrawer) },
+                routeName = currentRouteName,
+            )
+
+        NavigationHubRoute.Notify.name ->
+            TopBar(
+                titleContent = { Text(text = currentRouteName) },
+                onDrawerOpen = { onTopAction(TopAction.OpenDrawer) },
+                routeName = currentRouteName,
+            )
+
+        NavigationHubRoute.Account.name ->
+            StatusBarWithFollows(
+                user = accountState.user,
+                onHubNavigate = onHubNavigate,
+                onHubAction = onHubAction,
+            )
+
+        NavigationHubRoute.Accounts.name ->
+            TopBar(
+                titleContent = { Text(text = currentRouteName) },
+                onDrawerOpen = { onTopAction(TopAction.OpenDrawer) },
+                routeName = currentRouteName,
+            )
+
+        NavigationHubRoute.Setting.name ->
+            if (!hubState.isHideTopBar) {
+                StatusBarWithFollows(
+                    user = hubState.user,
+                    onHubNavigate = onHubNavigate,
+                    onHubAction = onHubAction,
+                )
+            } else {
+                StatusBarWithTab(
+                    user = hubState.user,
+                    tabUiState = tabUiState,
+                    onTabAction = onTabAction,
+                )
+            }
+
+        NavigationHubRoute.Comment.name ->
+            TopBar(
+                titleContent = { Text(text = currentRouteName) },
+                onDrawerOpen = { onTopAction(TopAction.OpenDrawer) },
+                routeName = currentRouteName,
+            )
+
+        NavigationHubRoute.PostForComment.name ->
+            TopBar(
+                titleContent = { Text(text = currentRouteName) },
+                onDrawerOpen = { onTopAction(TopAction.OpenDrawer) },
+                routeName = currentRouteName,
+            )
+
+        else -> Spacer(modifier = Modifier.padding(0.dp))
+    }
+}
+
+@Composable
+private fun HubFloatingActionButton(
+    currentRouteName: String,
+    onHubNavigate: (Navigation) -> Unit,
+) {
+    when (currentRouteName) {
+        NavigationHubRoute.Trend.name ->
+            FloatingButton(
+                iconID = R.drawable.baseline_search_24,
+                onClick = { onHubNavigate(NavigationHubRoute.Search) },
+            )
+
+        NavigationHubRoute.Home.name ->
+            FloatingButton(
+                iconID = R.drawable.baseline_search_24,
+                onClick = { onHubNavigate(NavigationHubRoute.Search) },
+            )
+
+        NavigationHubRoute.Comment.name ->
+            FloatingButton(
+                iconID = R.drawable.baseline_create_24,
+                onClick = { onHubNavigate(NavigationHubRoute.PostForComment) },
+            )
+
+        else -> Spacer(modifier = Modifier.padding(0.dp))
     }
 }
