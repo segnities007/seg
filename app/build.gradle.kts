@@ -55,8 +55,7 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.firebase.firestore.ktx)
     implementation(libs.transportation.consumer)
-    implementation(project(":domain"))
-    implementation(project(":core-di"))
+    implementation(project(":feature"))
     testImplementation(libs.junit)
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.junit.jupiter)
@@ -67,25 +66,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    implementation(libs.coil.compose)
-    implementation(libs.coil.network.okhttp)
-
-    implementation(libs.androidx.navigation.compose)
-    implementation(libs.ktor.client.core)
-    implementation(libs.ktor.client.cio)
-    implementation(libs.ktor.client.android)
-    implementation(libs.ktor.utils)
-    implementation(libs.postgrest.kt)
-    implementation(libs.storage.kt)
-    implementation(libs.auth.kt)
-
-    implementation(libs.androidx.hilt.navigation.fragment)
-
-    implementation(libs.kotlinx.serialization.json)
-
-    implementation(libs.androidx.credentials)
-    implementation(libs.googleid)
-
+    //hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
