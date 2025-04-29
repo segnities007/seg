@@ -10,8 +10,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.domain.presentation.Navigation
 import com.segnities007.seg.R
-import com.segnities007.seg.domain.presentation.Navigation
 import com.segnities007.seg.ui.components.card.postcard.PostCard
 import com.segnities007.seg.ui.components.card.postcard.PostCardAction
 import com.segnities007.seg.ui.screens.hub.HubAction
@@ -72,8 +72,8 @@ private fun CommentUi(
                 onProcessOfEngagementAction = {
                     onCommentAction(
                         CommentAction.ProcessOfEngagementAction(
-                            it
-                        )
+                            it,
+                        ),
                     )
                 },
                 onHubAction = onHubAction,
@@ -90,7 +90,13 @@ private fun CommentUi(
                 onHubNavigate = onHubNavigate,
                 onHubAction = onHubAction,
                 onPostCardAction = onPostCardAction,
-                onProcessOfEngagementAction = {newPost -> onCommentAction(CommentAction.ProcessOfEngagementAction(newPost))},
+                onProcessOfEngagementAction = { newPost ->
+                    onCommentAction(
+                        CommentAction.ProcessOfEngagementAction(
+                            newPost
+                        )
+                    )
+                },
             )
             Spacer(Modifier.padding(dimensionResource(R.dimen.padding_smaller)))
         }

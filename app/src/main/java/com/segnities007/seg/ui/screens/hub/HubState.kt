@@ -1,7 +1,7 @@
 package com.segnities007.seg.ui.screens.hub
 
-import com.segnities007.seg.data.model.Post
-import com.segnities007.seg.data.model.User
+import com.example.domain.model.Post
+import com.example.domain.model.User
 
 data class HubState(
     val user: User = User(), // myself

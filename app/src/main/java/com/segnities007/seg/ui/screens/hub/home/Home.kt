@@ -10,8 +10,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import com.example.domain.presentation.Navigation
 import com.segnities007.seg.R
-import com.segnities007.seg.domain.presentation.Navigation
 import com.segnities007.seg.ui.components.card.postcard.PostCard
 import com.segnities007.seg.ui.components.card.postcard.PostCardAction
 import com.segnities007.seg.ui.components.indicator.LoadingUI
@@ -72,7 +72,13 @@ private fun HomeUi(
                 onHubNavigate = onHubNavigate,
                 onHubAction = onHubAction,
                 onPostCardAction = onPostCardAction,
-                onProcessOfEngagementAction = {newPost -> onHomeAction(HomeAction.ProcessOfEngagement(newPost))},
+                onProcessOfEngagementAction = { newPost ->
+                    onHomeAction(
+                        HomeAction.ProcessOfEngagement(
+                            newPost
+                        )
+                    )
+                },
             )
             Spacer(Modifier.padding(dimensionResource(R.dimen.padding_smallest)))
         }

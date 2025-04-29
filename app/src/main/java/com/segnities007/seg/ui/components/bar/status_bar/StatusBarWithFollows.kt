@@ -16,9 +16,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.domain.model.User
+import com.example.domain.presentation.NavigationHubRoute
 import com.segnities007.seg.R
-import com.segnities007.seg.data.model.User
-import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
 import com.segnities007.seg.ui.screens.hub.HubAction
 
 @Composable
@@ -50,7 +50,8 @@ private fun StatusBarScope.AboutFollow(
 ) {
     val fontColor: Color = MaterialTheme.colorScheme.primary
     val followsText = stringResource(R.string.follows) + ": ${user.follows.count { it != "" }}"
-    val followersText = stringResource(R.string.followers) + ": ${user.followers.count { it != "" }}"
+    val followersText =
+        stringResource(R.string.followers) + ": ${user.followers.count { it != "" }}"
 
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -63,7 +64,8 @@ private fun StatusBarScope.AboutFollow(
                     .clickable {
                         onHubAction(HubAction.SetAccounts(user.follows))
                         onHubNavigate(NavigationHubRoute.Accounts)
-                    }.padding(commonPadding),
+                    }
+                    .padding(commonPadding),
         ) {
             Text(text = followsText, color = fontColor)
         }
@@ -74,7 +76,8 @@ private fun StatusBarScope.AboutFollow(
                     .clickable {
                         onHubAction(HubAction.SetAccounts(user.followers))
                         onHubNavigate(NavigationHubRoute.Accounts)
-                    }.padding(commonPadding),
+                    }
+                    .padding(commonPadding),
         ) {
             Text(text = followersText, color = fontColor)
         }
@@ -88,6 +91,6 @@ private fun StatusBarWithFollowsPreview() {
         modifier = Modifier,
         user = User(),
         onHubNavigate = {},
-        onHubAction = {}
+        onHubAction = {},
     )
 }

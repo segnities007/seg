@@ -1,7 +1,7 @@
 package com.segnities007.seg.ui.screens.hub.search
 
 import androidx.compose.runtime.Immutable
-import com.segnities007.seg.data.model.Post
+import com.example.domain.model.Post
 import java.time.LocalDateTime
 
 @Immutable

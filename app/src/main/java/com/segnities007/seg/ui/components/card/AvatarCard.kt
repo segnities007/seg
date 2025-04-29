@@ -20,8 +20,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import coil3.compose.AsyncImage
+import com.example.domain.model.User
 import com.segnities007.seg.R
-import com.segnities007.seg.data.model.User
 
 @Composable
 fun AvatarCard(

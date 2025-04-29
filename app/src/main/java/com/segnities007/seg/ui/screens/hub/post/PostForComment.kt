@@ -17,9 +17,9 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.domain.model.Post
+import com.example.domain.presentation.Navigation
 import com.segnities007.seg.R
-import com.segnities007.seg.data.model.Post
-import com.segnities007.seg.domain.presentation.Navigation
 import com.segnities007.seg.ui.components.button.SmallButton
 import com.segnities007.seg.ui.components.card.postcard.PostCard
 import com.segnities007.seg.ui.components.card.postcard.PostCardAction
@@ -65,9 +65,16 @@ fun PostForComment(
                     onPostCardAction = onPostCardAction,
                     onHubAction = onHubAction,
                     onHubNavigate = onHubNavigate,
-                    onProcessOfEngagementAction = {commentViewModel.onCommentAction(CommentAction.ProcessOfEngagementAction(it))}
+                    onProcessOfEngagementAction = {
+                        commentViewModel.onCommentAction(
+                            CommentAction.ProcessOfEngagementAction(
+                                it,
+                            ),
+                        )
+                    },
                 )
-                Spacer( // Prevent to click PostCard
+                Spacer(
+                    // Prevent to click PostCard
                     modifier =
                         Modifier
                             .matchParentSize()
@@ -103,12 +110,14 @@ fun PostScope.TopToolBarForCommentForComment(
         SmallButton(
             textID = R.string.post,
             onClick = {
-                onPostAction(PostAction.CreateComment(
-                    hubState = hubState,
-                    onHubAction = onHubAction,
-                    onUpdateIsLoading = {onPostAction(PostAction.UpdateIsLoading(it))},
-                    onNavigate = onHubNavigate
-                ))
+                onPostAction(
+                    PostAction.CreateComment(
+                        hubState = hubState,
+                        onHubAction = onHubAction,
+                        onUpdateIsLoading = { onPostAction(PostAction.UpdateIsLoading(it)) },
+                        onNavigate = onHubNavigate,
+                    ),
+                )
             },
         )
     }

@@ -19,8 +19,8 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.domain.presentation.Navigation
 import com.segnities007.seg.R
-import com.segnities007.seg.domain.presentation.Navigation
 import com.segnities007.seg.ui.components.button.SmallButton
 import com.segnities007.seg.ui.components.card.postcard.PostCard
 import com.segnities007.seg.ui.components.card.postcard.PostCardAction
@@ -171,7 +171,9 @@ private fun SubTitle(
     modifier: Modifier = Modifier,
     textID: Int,
 ) {
-    Box(modifier = modifier.padding(dimensionResource(R.dimen.padding_normal)).fillMaxWidth()) {
+    Box(modifier = modifier
+        .padding(dimensionResource(R.dimen.padding_normal))
+        .fillMaxWidth()) {
         Text(text = stringResource(textID))
     }
 }

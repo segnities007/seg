@@ -1,15 +1,8 @@
 package com.segnities007.seg.ui.screens.hub.setting.userinfo
 
 import androidx.compose.runtime.Immutable
-import com.segnities007.seg.data.model.User
+import com.example.domain.model.User
 
-//
-// data class UserInfoAction(
-//    val onUserUpdate: suspend (user: User) -> Unit,
-//    val onDescriptionChange: (newDescription: String) -> Unit,
-//    val onNameChange: (newName: String) -> Unit,
-//    val onUserIDChange: (newUserID: String) -> Unit,
-// )
 
 @Immutable
 sealed class UserInfoAction {

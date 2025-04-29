@@ -5,7 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.segnities007.seg.domain.presentation.Navigation
+import com.example.domain.presentation.NavigationRoute
 import com.segnities007.seg.ui.navigation.hub.NavigationHub
 import com.segnities007.seg.ui.navigation.login.NavigationLogin
 import com.segnities007.seg.ui.screens.splash.Splash
@@ -26,7 +26,7 @@ fun TopNavigation() {
         }
         composable<NavigationRoute.Hub> {
             NavigationHub(
-                onTopNavigate = { route: Navigation ->
+                onTopNavigate = { route ->
                     // go to login
                     topNavController.navigate(route)
                 },

@@ -1,9 +1,9 @@
 package com.segnities007.seg.ui.components.card.postcard
 
 import androidx.compose.runtime.Immutable
+import com.example.domain.model.Post
+import com.example.domain.model.User
 import com.segnities007.seg.R
-import com.segnities007.seg.data.model.Post
-import com.segnities007.seg.data.model.User
 
 @Immutable
 data class EngagementIconAction(

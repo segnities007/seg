@@ -4,8 +4,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
-import com.segnities007.seg.domain.repository.AuthRepository
-import com.segnities007.seg.domain.repository.UserRepository
+import com.example.domain.repository.AuthRepository
+import com.example.domain.repository.UserRepository
 import com.segnities007.seg.ui.navigation.TopLayerViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

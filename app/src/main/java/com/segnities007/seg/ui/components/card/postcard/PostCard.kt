@@ -31,9 +31,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import com.example.domain.model.Post
+import com.example.domain.presentation.NavigationHubRoute
 import com.segnities007.seg.R
-import com.segnities007.seg.data.model.Post
-import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
 import com.segnities007.seg.ui.screens.hub.HubAction
 import com.segnities007.seg.ui.screens.hub.HubState
 
@@ -104,7 +104,8 @@ fun PostCardScope.CardContents(content: @Composable () -> Unit) {
                 .clickable {
                     onHubAction(HubAction.SetComment(post))
                     onPostCardAction(PostCardAction.ClickPostCard(onHubNavigate))
-                }.fillMaxWidth(),
+                }
+                .fillMaxWidth(),
     ) {
         AsyncImage(
             modifier =
@@ -186,7 +187,14 @@ fun PostCardScope.ActionIcons(onProcessOfEngagementAction: (newPost: Post) -> Un
                 },
             count = counts[0],
             onClick = {
-                onPostCardAction(PostCardAction.ClickLikeIcon(post, hubState, onHubAction, onProcessOfEngagementAction))
+                onPostCardAction(
+                    PostCardAction.ClickLikeIcon(
+                        post,
+                        hubState,
+                        onHubAction,
+                        onProcessOfEngagementAction,
+                    ),
+                )
             },
         )
         Spacer(Modifier.weight(1f))
@@ -200,9 +208,14 @@ fun PostCardScope.ActionIcons(onProcessOfEngagementAction: (newPost: Post) -> Un
                     EngagementIconState.unPushIcons[1]
                 },
             onClick = {
-                onPostCardAction(PostCardAction.ClickRepostIcon(
-                    post, hubState, onHubAction, onProcessOfEngagementAction
-                ))
+                onPostCardAction(
+                    PostCardAction.ClickRepostIcon(
+                        post,
+                        hubState,
+                        onHubAction,
+                        onProcessOfEngagementAction,
+                    ),
+                )
             },
         )
         Spacer(Modifier.weight(1f))
@@ -268,7 +281,10 @@ fun PostCardScope.Name() {
 
 @Composable
 fun PostCardScope.Description() {
-    Box(modifier = Modifier.padding(vertical = dimensionResource(R.dimen.padding_sn)), contentAlignment = Alignment.CenterStart) {
+    Box(
+        modifier = Modifier.padding(vertical = dimensionResource(R.dimen.padding_sn)),
+        contentAlignment = Alignment.CenterStart,
+    ) {
         Text(post.description)
     }
 }
