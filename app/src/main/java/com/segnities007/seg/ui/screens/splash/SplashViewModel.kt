@@ -3,7 +3,7 @@ package com.segnities007.seg.ui.screens.splash
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.segnities007.seg.data.repository.AuthRepositoryImpl
+import com.example.domain.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -14,7 +14,7 @@ import javax.inject.Inject
 class SplashViewModel
     @Inject
     constructor(
-        private val authRepositoryImpl: AuthRepositoryImpl,
+        private val authRepository: AuthRepository,
     ) : ViewModel() {
         fun hasLogged(
             onNavigateToLogin: () -> Unit,
@@ -23,7 +23,10 @@ class SplashViewModel
             Log.d("check splash", "run hasLogged")
             viewModelScope.launch {
                 withContext(Dispatchers.Main) {
-                    authRepositoryImpl.hasLogged(onNavigateToHost = onNavigateToHost, onNavigateToLogin = onNavigateToLogin)
+                    authRepository.hasLogged(
+                        onNavigateToHost = onNavigateToHost,
+                        onNavigateToLogin = onNavigateToLogin,
+                    )
                 }
             }
         }

@@ -8,9 +8,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.segnities007.seg.domain.presentation.Navigation
+import com.example.domain.presentation.Navigation
+import com.example.domain.presentation.NavigationHubRoute
 import com.segnities007.seg.ui.components.card.AvatarCard
-import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
 import com.segnities007.seg.ui.screens.hub.HubAction
 import com.segnities007.seg.ui.screens.hub.HubState
 import com.segnities007.seg.ui.screens.hub.account.AccountAction

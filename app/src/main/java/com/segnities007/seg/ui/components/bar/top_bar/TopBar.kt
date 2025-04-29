@@ -16,8 +16,8 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.example.domain.presentation.NavigationLoginRoute
 import com.segnities007.seg.R
-import com.segnities007.seg.ui.navigation.login.NavigationLoginRoute
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -40,12 +40,24 @@ fun TopBar(
             ),
         navigationIcon = {
             when (routeName) {
-                NavigationLoginRoute.CreateAccount.toString() -> Spacer(modifier = Modifier.padding(0.dp))
+                NavigationLoginRoute.CreateAccount.toString() ->
+                    Spacer(
+                        modifier =
+                            Modifier.padding(
+                                0.dp,
+                            ),
+                    )
+
                 NavigationLoginRoute.ConfirmEmail.toString() -> Spacer(modifier = Modifier.padding(0.dp))
                 else ->
                     IconButton(onClick = {
                         scope.launch { onDrawerOpen() }
-                    }) { Icon(painter = painterResource(id = R.drawable.baseline_menu_24), contentDescription = null) }
+                    }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.baseline_menu_24),
+                            contentDescription = null,
+                        )
+                    }
             }
         },
         scrollBehavior = scrollBehavior,

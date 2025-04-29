@@ -21,12 +21,10 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.domain.presentation.Navigation
 import com.segnities007.seg.R
-import com.segnities007.seg.domain.presentation.Navigation
 import com.segnities007.seg.ui.components.button.SmallButton
-import com.segnities007.seg.ui.components.card.postcard.PostCardAction
 import com.segnities007.seg.ui.components.indicator.CircleIndicator
-import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
 import com.segnities007.seg.ui.screens.hub.HubAction
 import com.segnities007.seg.ui.screens.hub.HubState
 import com.segnities007.seg.ui.screens.hub.home.HomeAction
@@ -87,7 +85,8 @@ fun PostUi(
                 .padding(
                     vertical = dimensionResource(R.dimen.padding_smaller),
                     horizontal = dimensionResource(R.dimen.padding_small),
-                ).fillMaxSize(),
+                )
+                .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         scope.content()
@@ -125,21 +124,27 @@ fun PostScope.TopToolBar(modifier: Modifier = Modifier) {
             modifier
                 .padding(
                     vertical = dimensionResource(R.dimen.padding_normal),
-                ).fillMaxWidth(),
+                )
+                .fillMaxWidth(),
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        SmallButton(textID = R.string.clear, onClick = { onPostAction(PostAction.UpdateInputText("")) })
+        SmallButton(
+            textID = R.string.clear,
+            onClick = { onPostAction(PostAction.UpdateInputText("")) },
+        )
         Spacer(modifier = Modifier.weight(1f))
         SmallButton(
             textID = R.string.post,
             onClick = {
-                onPostAction(PostAction.CreatePost(
-                    user = hubState.user,
-                    onUpdateIsLoading = {onPostAction(PostAction.UpdateIsLoading(it))},
-                    onUpdateSelf = {onHubAction(HubAction.GetUser)},
-                    onNavigate = onHubNavigate
-                ))
+                onPostAction(
+                    PostAction.CreatePost(
+                        user = hubState.user,
+                        onUpdateIsLoading = { onPostAction(PostAction.UpdateIsLoading(it)) },
+                        onUpdateSelf = { onHubAction(HubAction.GetUser) },
+                        onNavigate = onHubNavigate,
+                    ),
+                )
             },
         )
     }
@@ -159,7 +164,10 @@ private fun PostPreview() {
     ) {
         Column {
             TopToolBar()
-            InputField(modifier = Modifier.weight(1f), label = { Text(stringResource(R.string.post_label)) })
+            InputField(
+                modifier = Modifier.weight(1f),
+                label = { Text(stringResource(R.string.post_label)) },
+            )
         }
     }
 }

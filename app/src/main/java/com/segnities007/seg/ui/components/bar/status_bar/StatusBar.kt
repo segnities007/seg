@@ -24,8 +24,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import com.example.domain.model.User
 import com.segnities007.seg.R
-import com.segnities007.seg.data.model.User
 
 @Composable
 fun StatusBar(
@@ -52,7 +52,9 @@ fun StatusBarUi(
         )
 
     Column(
-        modifier = modifier.fillMaxWidth().background(color = MaterialTheme.colorScheme.primaryContainer),
+        modifier = modifier
+            .fillMaxWidth()
+            .background(color = MaterialTheme.colorScheme.primaryContainer),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_nl)))
@@ -71,9 +73,14 @@ private fun Status(
 ) {
     val name = "${user.name}@${user.userID}"
 
-    Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         AsyncImage(
-            modifier = Modifier.size(dimensionResource(R.dimen.icon_large)).clip(CircleShape),
+            modifier = Modifier
+                .size(dimensionResource(R.dimen.icon_large))
+                .clip(CircleShape),
             model = user.iconURL,
             placeholder = painterResource(R.mipmap.segnities007),
             contentDescription = null,
@@ -100,13 +107,15 @@ fun Bottom() {
                             bottomEnd = shape,
                         ),
                     elevation = dimensionResource(R.dimen.elevation_nl),
-                ).clip(
+                )
+                .clip(
                     shape =
                         RoundedCornerShape(
                             bottomStart = shape,
                             bottomEnd = shape,
                         ),
-                ).background(color = MaterialTheme.colorScheme.primaryContainer),
+                )
+                .background(color = MaterialTheme.colorScheme.primaryContainer),
     ) {
         Spacer(Modifier.padding(height))
     }

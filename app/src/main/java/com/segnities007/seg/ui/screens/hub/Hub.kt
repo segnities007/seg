@@ -11,9 +11,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
+import com.example.domain.model.BottomBarHubItem
+import com.example.domain.presentation.Navigation
+import com.example.domain.presentation.NavigationHubRoute
 import com.segnities007.seg.R
-import com.segnities007.seg.data.model.bottom_bar.BottomBarHubItem
-import com.segnities007.seg.domain.presentation.Navigation
 import com.segnities007.seg.ui.components.bar.bottom_bar.BottomBar
 import com.segnities007.seg.ui.components.bar.status_bar.StatusBarWithFollows
 import com.segnities007.seg.ui.components.bar.status_bar.StatusBarWithTab
@@ -27,7 +28,6 @@ import com.segnities007.seg.ui.components.tab.TabAction
 import com.segnities007.seg.ui.components.tab.TabUiState
 import com.segnities007.seg.ui.navigation.TopAction
 import com.segnities007.seg.ui.navigation.TopState
-import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
 import com.segnities007.seg.ui.screens.hub.account.AccountState
 import com.segnities007.seg.ui.screens.hub.search.SearchAction
 

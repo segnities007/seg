@@ -1,7 +1,7 @@
 package com.segnities007.seg.ui.screens.hub.search
 
-import com.segnities007.seg.data.model.Post
-import com.segnities007.seg.data.model.User
+import com.example.domain.model.Post
+import com.example.domain.model.User
 
 data class SearchState(
     val users: List<User> = listOf(),

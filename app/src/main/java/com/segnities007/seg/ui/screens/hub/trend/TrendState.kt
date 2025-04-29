@@ -1,6 +1,6 @@
 package com.segnities007.seg.ui.screens.hub.trend
 
-import com.segnities007.seg.data.model.Post
+import com.example.domain.model.Post
 
 data class TrendListState(
     val trendPostsOfToday: List<Post> = listOf(),

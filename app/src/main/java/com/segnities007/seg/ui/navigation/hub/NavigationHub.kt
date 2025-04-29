@@ -11,7 +11,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.segnities007.seg.domain.presentation.Navigation
+import com.example.domain.presentation.Navigation
+import com.example.domain.presentation.NavigationHubRoute
 import com.segnities007.seg.ui.components.card.postcard.PostCardViewModel
 import com.segnities007.seg.ui.components.tab.TabViewModel
 import com.segnities007.seg.ui.navigation.hub.setting.NavigationSetting

@@ -13,9 +13,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.domain.presentation.Navigation
 import com.segnities007.seg.R
-import com.segnities007.seg.data.model.Post
-import com.segnities007.seg.domain.presentation.Navigation
 import com.segnities007.seg.ui.components.card.postcard.PostCard
 import com.segnities007.seg.ui.components.card.postcard.PostCardAction
 import com.segnities007.seg.ui.components.card.postcard.PostCardWithDetailButton
@@ -140,7 +139,7 @@ private fun Posts(
                     post = myPostsState.posts[i],
                     hubState = hubState,
                     onHubNavigate = onHubNavigate,
-                    onProcessOfEngagementAction = { newPost: Post ->
+                    onProcessOfEngagementAction = { newPost ->
                         onMyPostsAction(
                             MyPostsAction.ProcessOfEngagement(
                                 newPost,

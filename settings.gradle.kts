@@ -21,3 +21,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "seg"
 include(":app")
+include(":data")
+include(":domain")
+include(":core-di")

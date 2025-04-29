@@ -1,7 +1,7 @@
 package com.segnities007.seg.ui.screens.hub.trend
 
 import androidx.compose.runtime.Immutable
-import com.segnities007.seg.data.model.Post
+import com.example.domain.model.Post
 
 @Immutable
 sealed class TrendAction {

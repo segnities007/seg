@@ -1,5 +1,3 @@
-import java.util.Properties
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -21,12 +19,6 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
-        val supabaseUrl = getLocalProperty("SUPABASE_URL")
-        val supabaseKey = getLocalProperty("SUPABASE_PUBLIC_KEY")
-
-        buildConfigField("String", "SUPABASE_URL", "\"$supabaseUrl\"")
-        buildConfigField("String", "SUPABASE_PUBLIC_KEY", "\"$supabaseKey\"")
     }
 
     buildTypes {
@@ -63,6 +55,8 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.firebase.firestore.ktx)
     implementation(libs.transportation.consumer)
+    implementation(project(":domain"))
+    implementation(project(":core-di"))
     testImplementation(libs.junit)
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.junit.jupiter)
@@ -95,15 +89,4 @@ dependencies {
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
-}
-
-fun getLocalProperty(key: String): String? {
-    val properties = Properties()
-    val localPropertiesFile = rootProject.file("local.properties")
-    if (localPropertiesFile.exists()) {
-        localPropertiesFile.inputStream().use { stream ->
-            properties.load(stream)
-        }
-    }
-    return properties.getProperty(key)
 }

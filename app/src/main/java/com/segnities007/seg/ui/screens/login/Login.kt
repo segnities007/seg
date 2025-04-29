@@ -9,15 +9,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.domain.model.BottomBarLoginItem
+import com.example.domain.presentation.Navigation
+import com.example.domain.presentation.NavigationLoginRoute
 import com.segnities007.seg.R
-import com.segnities007.seg.data.model.bottom_bar.BottomBarLoginItem
-import com.segnities007.seg.domain.presentation.Navigation
 import com.segnities007.seg.ui.components.bar.bottom_bar.BottomBar
 import com.segnities007.seg.ui.components.bar.top_bar.TopBar
 import com.segnities007.seg.ui.components.navigation_drawer.NavigationDrawer
 import com.segnities007.seg.ui.navigation.TopAction
 import com.segnities007.seg.ui.navigation.TopState
-import com.segnities007.seg.ui.navigation.login.NavigationLoginRoute
 
 @Composable
 fun Login(

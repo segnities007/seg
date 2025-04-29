@@ -11,11 +11,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.Dp
+import com.example.domain.presentation.Navigation
+import com.example.domain.presentation.NavigationRoute
+import com.example.domain.presentation.NavigationSettingRoute
 import com.segnities007.seg.R
-import com.segnities007.seg.domain.presentation.Navigation
 import com.segnities007.seg.ui.components.button.SmallButton
-import com.segnities007.seg.ui.navigation.NavigationRoute
-import com.segnities007.seg.ui.navigation.hub.setting.NavigationSettingRoute
 import com.segnities007.seg.ui.screens.hub.HubAction
 import com.segnities007.seg.ui.screens.hub.setting.SettingAction
 

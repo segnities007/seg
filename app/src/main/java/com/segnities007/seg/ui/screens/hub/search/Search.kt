@@ -11,15 +11,15 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import com.example.domain.presentation.Navigation
+import com.example.domain.presentation.NavigationHubRoute
 import com.segnities007.seg.R
-import com.segnities007.seg.domain.presentation.Navigation
 import com.segnities007.seg.ui.components.bar.top_search_bar.TopSearchBarState
 import com.segnities007.seg.ui.components.card.AvatarCard
 import com.segnities007.seg.ui.components.card.postcard.PostCard
 import com.segnities007.seg.ui.components.card.postcard.PostCardAction
 import com.segnities007.seg.ui.components.indicator.LoadingUI
 import com.segnities007.seg.ui.components.tab.TabUiState
-import com.segnities007.seg.ui.navigation.hub.NavigationHubRoute
 import com.segnities007.seg.ui.screens.hub.HubAction
 import com.segnities007.seg.ui.screens.hub.HubState
 import com.segnities007.seg.ui.screens.hub.account.AccountAction
@@ -117,10 +117,10 @@ private fun MostViewPosts(
                 isIncrementView = false,
                 onProcessOfEngagementAction = { newPost ->
                     (
-                        SearchAction.ProcessOfEngagementAction(
-                            newPost,
-                        )
-                    )
+                            SearchAction.ProcessOfEngagementAction(
+                                newPost,
+                            )
+                            )
                 },
                 onHubAction = onHubAction,
                 onPostCardAction = onPostCardAction,
@@ -224,7 +224,9 @@ private fun Users(
     onHubNavigate: (Navigation) -> Unit,
 ) {
     LazyColumn(
-        modifier = modifier.fillMaxSize().padding(top = dimensionResource(R.dimen.padding_smaller)),
+        modifier = modifier
+            .fillMaxSize()
+            .padding(top = dimensionResource(R.dimen.padding_smaller)),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
     ) {

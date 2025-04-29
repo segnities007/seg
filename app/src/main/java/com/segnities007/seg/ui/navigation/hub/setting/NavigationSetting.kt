@@ -7,7 +7,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.segnities007.seg.domain.presentation.Navigation
+import com.example.domain.presentation.Navigation
+import com.example.domain.presentation.NavigationSettingRoute
 import com.segnities007.seg.ui.components.card.postcard.PostCardAction
 import com.segnities007.seg.ui.components.tab.TabAction
 import com.segnities007.seg.ui.components.tab.TabUiState

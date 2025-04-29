@@ -6,7 +6,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import com.segnities007.seg.data.model.User
+import com.example.domain.model.User
 import com.segnities007.seg.ui.components.tab.Tab
 import com.segnities007.seg.ui.components.tab.TabAction
 import com.segnities007.seg.ui.components.tab.TabUiState

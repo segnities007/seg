@@ -14,8 +14,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import com.example.domain.presentation.Navigation
 import com.segnities007.seg.R
-import com.segnities007.seg.domain.presentation.Navigation
 import com.segnities007.seg.ui.components.button.SmallButton
 import com.segnities007.seg.ui.components.card.postcard.PostCard
 import com.segnities007.seg.ui.components.card.postcard.PostCardAction
@@ -143,12 +143,14 @@ private fun FollowButtons(
                 if (hubState.user.follows.contains(accountState.user.userID)) R.string.followed else R.string.follow,
             onClick = {
                 onAccountAction(AccountAction.ToggleIsLoading)
-                onAccountAction(AccountAction.ClickFollowButton(
-                    hubState.user.follows.contains(accountState.user.userID),
-                    hubState.user,
-                    accountState.user,
-                    {onHubAction(HubAction.GetUser)},
-                ))
+                onAccountAction(
+                    AccountAction.ClickFollowButton(
+                        hubState.user.follows.contains(accountState.user.userID),
+                        hubState.user,
+                        accountState.user,
+                        { onHubAction(HubAction.GetUser) },
+                    ),
+                )
             },
         )
         Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_normal)))

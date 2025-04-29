@@ -9,8 +9,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.segnities007.seg.domain.presentation.Navigation
-import com.segnities007.seg.ui.navigation.NavigationRoute
+import com.example.domain.presentation.Navigation
+import com.example.domain.presentation.NavigationLoginRoute
+import com.example.domain.presentation.NavigationRoute
 import com.segnities007.seg.ui.screens.login.Login
 import com.segnities007.seg.ui.screens.login.LoginAction
 import com.segnities007.seg.ui.screens.login.LoginViewModel
