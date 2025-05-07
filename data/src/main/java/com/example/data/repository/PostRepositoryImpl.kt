@@ -1,6 +1,8 @@
 package com.example.data.repository
 
 import android.util.Log
+import com.example.data.module.PostDto
+import com.example.data.module.toPost
 import com.example.domain.model.post.Genre
 import com.example.domain.model.post.Post
 import com.example.domain.model.user.User
@@ -31,12 +33,12 @@ class PostRepositoryImpl
         ): Boolean {
             try {
                 val post =
-                    Post(
+                    PostDto(
                         userID = user.userID,
                         name = user.name,
                         description = description,
                         iconURL = user.iconURL,
-                        genre = genre,
+                        genre = genre.name,
                     )
 
                 val result =
@@ -44,7 +46,7 @@ class PostRepositoryImpl
                         .from(posts)
                         .insert(post) {
                             select()
-                        }.decodeSingle<Post>()
+                        }.decodeSingle<PostDto>()
 
                 val updatedUser = user.copy(posts = user.posts.plus(result.id))
 
@@ -98,11 +100,12 @@ class PostRepositoryImpl
                     postgrest
                         .from(posts)
                         .select {
-                            filter { Post::userID eq userID }
+                            filter { PostDto::userID eq userID }
                             order("create_at", Order.DESCENDING)
                             limit(count = 7)
-                        }.decodeList<Post>()
-                return result
+                        }.decodeList<PostDto>()
+                val posts = result.map { it.toPost() }
+                return posts
             } catch (e: Exception) {
                 Log.e(tag, "failed onGetPostsOfUser $e")
                 throw e
@@ -121,17 +124,18 @@ class PostRepositoryImpl
                         .from(posts)
                         .select {
                             filter {
-                                Post::userID eq userID
+                                PostDto::userID eq userID
                                 lt("create_at", updateAt)
                             }
                             order("create_at", Order.DESCENDING)
                             limit(count = count)
-                        }.decodeList<Post>()
-                if (result.isEmpty()) return result
+                        }.decodeList<PostDto>()
+                if (result.isEmpty()) return listOf()
 
                 val list = result.minus(result.first())
+                val posts = list.map { it.toPost() }
 
-                return list
+                return posts
             } catch (e: Exception) {
                 Log.e(tag, "failed onGetBeforePostsOfUser $e")
                 throw e
@@ -145,9 +149,9 @@ class PostRepositoryImpl
                         .from(posts)
                         .select {
                             filter {
-                                Post::id eq postID
+                                PostDto::id eq postID
                             }
-                        }.decodeList<Post>()
+                        }.decodeList<PostDto>()
 
                 // The process of removing deleted and nonexistent Posts from its own list.
                 if (result.isEmpty()) {
@@ -161,7 +165,7 @@ class PostRepositoryImpl
                     userRepository.onUpdateUser(user)
                 }
 
-                return if (result.isNotEmpty()) result.first() else Post()
+                return if (result.isNotEmpty()) result.first().toPost() else Post()
             } catch (e: Exception) {
                 Log.e(tag, "failed onGetPost $e")
                 throw e
@@ -175,11 +179,11 @@ class PostRepositoryImpl
                         .from(posts)
                         .select {
                             filter {
-                                Post::id eq commentID
+                                PostDto::id eq commentID
                             }
-                        }.decodeList<Post>()
+                        }.decodeList<PostDto>()
 
-                return if (result.isNotEmpty()) result.first() else Post()
+                return if (result.isNotEmpty()) result.first().toPost() else Post()
             } catch (e: Exception) {
                 Log.e(tag, "failed onGetComment $e")
                 throw e
@@ -230,8 +234,8 @@ class PostRepositoryImpl
                         .from(posts)
                         .select {
                             order("create_at", Order.DESCENDING)
-                        }.decodeSingle<Post>()
-                return result
+                        }.decodeSingle<PostDto>()
+                return result.toPost()
             } catch (e: Exception) {
                 Log.e(tag, "failed onGetNewPost $e")
                 throw e
@@ -249,12 +253,12 @@ class PostRepositoryImpl
                                 lt("create_at", afterPostCreateAt)
                             } // targetPost より古い投稿をフィルタリング
                             limit(7) // その中で最新の1件を取得
-                        }.decodeList<Post>()
+                        }.decodeList<PostDto>()
                 val list = result.minus(result.first())
 
-                if (result.isEmpty()) return result
+                if (result.isEmpty()) return listOf()
 
-                return list
+                return list.map { it.toPost() }
             } catch (e: Exception) {
                 Log.e(tag, "failed onGetBeforePosts $e")
                 throw e
@@ -269,8 +273,8 @@ class PostRepositoryImpl
                         .select {
                             order("create_at", Order.DESCENDING)
                             limit(count = 7)
-                        }.decodeList<Post>()
-                return result
+                        }.decodeList<PostDto>()
+                return result.map { it.toPost() }
             } catch (e: Exception) {
                 Log.e(tag, "failed onGetNewPosts $e")
                 throw e
@@ -291,9 +295,9 @@ class PostRepositoryImpl
                             }
                             order("view_count", Order.DESCENDING)
                             limit(count = limit)
-                        }.decodeList<Post>()
+                        }.decodeList<PostDto>()
 
-                return result
+                return result.map { it.toPost() }
             } catch (e: Exception) {
                 Log.e(tag, "153: $e")
                 throw e
@@ -314,9 +318,9 @@ class PostRepositoryImpl
                             }
                             order("view_count", Order.DESCENDING)
                             limit(count = limit)
-                        }.decodeList<Post>()
+                        }.decodeList<PostDto>()
 
-                return result
+                return result.map { it.toPost() }
             } catch (e: Exception) {
                 Log.e(tag, "190: $e")
                 throw e
@@ -337,9 +341,9 @@ class PostRepositoryImpl
                             }
                             order("view_count", Order.DESCENDING)
                             limit(count = limit)
-                        }.decodeList<Post>()
+                        }.decodeList<PostDto>()
 
-                return result
+                return result.map { it.toPost() }
             } catch (e: Exception) {
                 Log.e(tag, "213: $e")
                 throw e
@@ -360,9 +364,9 @@ class PostRepositoryImpl
                             }
                             order("view_count", Order.DESCENDING)
                             limit(count = limit)
-                        }.decodeList<Post>()
+                        }.decodeList<PostDto>()
 
-                return result
+                return result.map { it.toPost() }
             } catch (e: Exception) {
                 Log.e(tag, "153: $e")
                 throw e
@@ -382,9 +386,9 @@ class PostRepositoryImpl
                             }
                             order("create_at", Order.DESCENDING)
                             limit(count = count)
-                        }.decodeList<Post>()
+                        }.decodeList<PostDto>()
 
-                return result
+                return result.map { it.toPost() }
             } catch (e: Exception) {
                 Log.e(tag, "failed onGetPostsByKeyword $e")
                 throw e
@@ -404,16 +408,16 @@ class PostRepositoryImpl
                         .select {
                             filter {
                                 lt("create_at", afterPostCreateAt)
-                                Post::description like "%$keyword%"
+                                PostDto::description like "%$keyword%"
                             }
                             order("create_at", Order.DESCENDING)
                             limit(count = count)
-                        }.decodeList<Post>()
-                if (result.isEmpty()) return result
+                        }.decodeList<PostDto>()
+                if (result.isEmpty()) return listOf()
 
                 val list = result.minus(result.first())
 
-                return list
+                return list.map { it.toPost() }
             } catch (e: Exception) {
                 Log.e(tag, "failed onGetBeforePostsByKeyword $e")
                 throw e
@@ -429,13 +433,13 @@ class PostRepositoryImpl
                         .from(posts)
                         .select {
                             filter {
-                                Post::description like "%$keyword%"
+                                PostDto::description like "%$keyword%"
                             }
                             order("view_count", Order.DESCENDING)
                             limit(count = count)
-                        }.decodeList<Post>()
+                        }.decodeList<PostDto>()
 
-                return result
+                return result.map { it.toPost() }
             } catch (e: Exception) {
                 Log.e(tag, "failed onGetPostsByKeywordSortedByViewCount $e")
                 throw e
@@ -455,16 +459,16 @@ class PostRepositoryImpl
                         .select {
                             filter {
                                 lt("view_count", viewCount)
-                                Post::description like "%$keyword%"
+                                PostDto::description like "%$keyword%"
                             }
                             order("view_count", Order.DESCENDING)
                             limit(count = count)
-                        }.decodeList<Post>()
+                        }.decodeList<PostDto>()
 
-                if (result.isEmpty()) return result
+                if (result.isEmpty()) return listOf()
 
                 val list = result.minus(result.first())
-                return list
+                return list.map { it.toPost() }
             } catch (e: Exception) {
                 Log.e(tag, "success onGetBeforePostsByKeywordSortedByViewCount $e")
                 throw e
@@ -474,10 +478,10 @@ class PostRepositoryImpl
         override suspend fun onIncrementView(post: Post) {
             try {
                 postgrest.from(posts).update({
-                    Post::viewCount setTo (post.viewCount + 1)
+                    PostDto::viewCount setTo (post.viewCount + 1)
                 }) {
                     filter {
-                        Post::id eq post.id
+                        PostDto::id eq post.id
                     }
                 }
             } catch (e: Exception) {
@@ -490,7 +494,7 @@ class PostRepositoryImpl
             try {
                 postgrest.from(posts).update(post) {
                     filter {
-                        Post::id eq post.id
+                        PostDto::id eq post.id
                     }
                 }
             } catch (e: Exception) {
@@ -501,7 +505,7 @@ class PostRepositoryImpl
         override suspend fun onDeletePost(post: Post) {
             try {
                 postgrest.from(posts).delete {
-                    filter { Post::id eq post.id }
+                    filter { PostDto::id eq post.id }
                 }
             } catch (e: Exception) {
                 Log.e(tag, e.toString())
@@ -517,10 +521,10 @@ class PostRepositoryImpl
             try {
                 // increment like count
                 postgrest.from(posts).update({
-                    Post::likeCount setTo (post.likeCount)
+                    PostDto::likeCount setTo (post.likeCount)
                 }) {
                     filter {
-                        Post::id eq post.id
+                        PostDto::id eq post.id
                     }
                 }
 
@@ -549,10 +553,10 @@ class PostRepositoryImpl
             try {
                 // decrement like count
                 postgrest.from(posts).update({
-                    Post::likeCount setTo post.likeCount
+                    PostDto::likeCount setTo post.likeCount
                 }) {
                     filter {
-                        Post::id eq post.id
+                        PostDto::id eq post.id
                     }
                 }
 
@@ -583,10 +587,10 @@ class PostRepositoryImpl
             try {
                 // increment post count
                 postgrest.from(posts).update({
-                    Post::repostCount setTo post.repostCount
+                    PostDto::repostCount setTo post.repostCount
                 }) {
                     filter {
-                        Post::id eq post.id
+                        PostDto::id eq post.id
                     }
                 }
 
@@ -615,10 +619,10 @@ class PostRepositoryImpl
             try {
                 // decrement post count
                 postgrest.from(posts).update({
-                    Post::repostCount setTo post.repostCount
+                    PostDto::repostCount setTo post.repostCount
                 }) {
                     filter {
-                        Post::id eq post.id
+                        PostDto::id eq post.id
                     }
                 }
 

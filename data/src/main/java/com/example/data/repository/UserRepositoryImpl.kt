@@ -18,7 +18,7 @@ class UserRepositoryImpl
         private val postgrest: Postgrest,
         private val imageRepository: ImageRepository,
     ) : UserRepository {
-        private val tag = "UserRepository"
+        private val tag = "UserRepositoryImpl"
         private val tableName = "users"
         private val userColumn =
             (
@@ -98,7 +98,6 @@ class UserRepositoryImpl
                             filter { User::userID like "%$keyword%" }
                             order("create_at", Order.DESCENDING)
                         }.decodeList<User>()
-                Log.d(tag, "$result")
 
                 return result
             } catch (e: Exception) {
@@ -163,7 +162,6 @@ class UserRepositoryImpl
         override suspend fun onUpdatePostsOfUser(user: User) {
             val posts = "post_id_list"
 
-            Log.e(tag, user.posts.toString())
             try {
                 postgrest.from(tableName).update({
                     set(posts, user.posts)
