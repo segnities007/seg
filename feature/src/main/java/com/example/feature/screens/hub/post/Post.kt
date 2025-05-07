@@ -21,7 +21,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.domain.presentation.Navigation
+import com.example.domain.presentation.navigation.Navigation
 import com.example.feature.R
 import com.example.feature.components.button.SmallButton
 import com.example.feature.components.indicator.CircleIndicator
@@ -85,8 +85,7 @@ fun PostUi(
                 .padding(
                     vertical = dimensionResource(R.dimen.padding_smaller),
                     horizontal = dimensionResource(R.dimen.padding_small),
-                )
-                .fillMaxSize(),
+                ).fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         scope.content()
@@ -124,8 +123,7 @@ fun PostScope.TopToolBar(modifier: Modifier = Modifier) {
             modifier
                 .padding(
                     vertical = dimensionResource(R.dimen.padding_normal),
-                )
-                .fillMaxWidth(),
+                ).fillMaxWidth(),
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically,
     ) {

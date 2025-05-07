@@ -1,7 +1,7 @@
 package com.example.feature.screens.hub.search
 
-import com.example.domain.model.Post
 import com.example.domain.model.User
+import com.example.domain.model.post.Post
 
 data class SearchState(
     val users: List<User> = listOf(),

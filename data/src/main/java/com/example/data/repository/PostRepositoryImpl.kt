@@ -1,8 +1,8 @@
 package com.example.data.repository
 
 import android.util.Log
-import com.example.domain.model.Post
 import com.example.domain.model.User
+import com.example.domain.model.post.Post
 import com.example.domain.repository.PostRepository
 import com.example.domain.repository.UserRepository
 import io.github.jan.supabase.postgrest.Postgrest
@@ -79,7 +79,7 @@ class PostRepositoryImpl
                 userRepository.onUpdateUser(updatedSelf)
 
                 val newCommentedPost =
-                    commentedPost.copy(comments = commentedPost.comments.plus(result.id))
+                    commentedPost.copy(commentIDs = commentedPost.commentIDs.plus(result.id))
                 onUpdatePost(newCommentedPost)
 
                 return true
@@ -200,7 +200,7 @@ class PostRepositoryImpl
         override suspend fun onGetComments(comment: Post): List<Post> {
             try {
                 val list: MutableList<Post> = mutableListOf()
-                for (id in comment.comments) {
+                for (id in comment.commentIDs) {
                     list.add(onGetPost(id))
                 }
 
@@ -208,7 +208,7 @@ class PostRepositoryImpl
                 if (list.any { it.id == 0 }) {
                     list.removeIf { it.id == 0 }
                     val commentIDs = list.map { it.id }
-                    val updatedComment = comment.copy(comments = commentIDs.toList())
+                    val updatedComment = comment.copy(commentIDs = commentIDs.toList())
                     onUpdatePost(updatedComment)
                     return list.toList()
                 }

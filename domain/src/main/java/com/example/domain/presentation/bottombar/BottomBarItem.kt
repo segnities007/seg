@@ -1,6 +1,6 @@
-package com.example.domain.model
+package com.example.domain.presentation.bottombar
 
-import com.example.domain.presentation.Navigation
+import com.example.domain.presentation.navigation.Navigation
 
 interface BottomBarItem {
     val selectedIconIDs: List<Int>

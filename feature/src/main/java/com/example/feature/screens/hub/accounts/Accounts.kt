@@ -8,8 +8,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.domain.presentation.Navigation
-import com.example.domain.presentation.NavigationHubRoute
+import com.example.domain.presentation.navigation.Navigation
+import com.example.domain.presentation.navigation.NavigationHubRoute
 import com.example.feature.components.card.AvatarCard
 import com.example.feature.screens.hub.HubAction
 import com.example.feature.screens.hub.HubState

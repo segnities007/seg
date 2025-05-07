@@ -1,7 +1,7 @@
 package com.example.domain.repository
 
-import com.example.domain.model.Post
 import com.example.domain.model.User
+import com.example.domain.model.post.Post
 import java.time.LocalDateTime
 
 interface PostRepository {

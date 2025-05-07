@@ -13,7 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.domain.presentation.Navigation
+import com.example.domain.presentation.navigation.Navigation
 import com.example.feature.R
 import com.example.feature.components.card.postcard.PostCard
 import com.example.feature.components.card.postcard.PostCardAction

@@ -31,8 +31,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import com.example.domain.model.Post
-import com.example.domain.presentation.NavigationHubRoute
+import com.example.domain.model.post.Post
+import com.example.domain.presentation.navigation.NavigationHubRoute
 import com.example.feature.R
 import com.example.feature.screens.hub.HubAction
 import com.example.feature.screens.hub.HubState
@@ -104,8 +104,7 @@ fun PostCardScope.CardContents(content: @Composable () -> Unit) {
                 .clickable {
                     onHubAction(HubAction.SetComment(post))
                     onPostCardAction(PostCardAction.ClickPostCard(onHubNavigate))
-                }
-                .fillMaxWidth(),
+                }.fillMaxWidth(),
     ) {
         AsyncImage(
             modifier =
@@ -165,7 +164,7 @@ fun PostCardScope.ActionIcons(onProcessOfEngagementAction: (newPost: Post) -> Un
         listOf(
             post.likeCount,
             post.repostCount,
-            post.comments.size,
+            post.commentIDs.size,
             post.viewCount,
         )
 

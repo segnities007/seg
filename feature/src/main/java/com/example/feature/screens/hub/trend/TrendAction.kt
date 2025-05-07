@@ -1,7 +1,7 @@
 package com.example.feature.screens.hub.trend
 
 import androidx.compose.runtime.Immutable
-import com.example.domain.model.Post
+import com.example.domain.model.post.Post
 
 @Immutable
 sealed class TrendAction {

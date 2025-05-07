@@ -19,7 +19,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.domain.presentation.Navigation
+import com.example.domain.presentation.navigation.Navigation
 import com.example.feature.R
 import com.example.feature.components.button.SmallButton
 import com.example.feature.components.card.postcard.PostCard
@@ -172,9 +172,10 @@ private fun SubTitle(
     textID: Int,
 ) {
     Box(
-        modifier = modifier
-            .padding(dimensionResource(R.dimen.padding_normal))
-            .fillMaxWidth()
+        modifier =
+            modifier
+                .padding(dimensionResource(R.dimen.padding_normal))
+                .fillMaxWidth(),
     ) {
         Text(text = stringResource(textID))
     }

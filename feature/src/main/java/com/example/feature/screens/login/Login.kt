@@ -9,9 +9,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.example.domain.model.BottomBarLoginItem
-import com.example.domain.presentation.Navigation
-import com.example.domain.presentation.NavigationLoginRoute
+import com.example.domain.presentation.bottombar.BottomBarLoginItem
+import com.example.domain.presentation.navigation.Navigation
+import com.example.domain.presentation.navigation.NavigationLoginRoute
 import com.example.feature.R
 import com.example.feature.components.bar.bottom_bar.BottomBar
 import com.example.feature.components.bar.top_bar.TopBar

@@ -7,8 +7,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.domain.presentation.Navigation
-import com.example.domain.presentation.NavigationSettingRoute
+import com.example.domain.presentation.navigation.Navigation
+import com.example.domain.presentation.navigation.NavigationSettingRoute
 import com.example.feature.components.card.postcard.PostCardAction
 import com.example.feature.components.tab.TabAction
 import com.example.feature.components.tab.TabUiState

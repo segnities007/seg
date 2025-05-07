@@ -6,8 +6,8 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
-import com.example.domain.model.BottomBarItem
-import com.example.domain.presentation.Navigation
+import com.example.domain.presentation.bottombar.BottomBarItem
+import com.example.domain.presentation.navigation.Navigation
 
 @Composable
 fun BottomBar(

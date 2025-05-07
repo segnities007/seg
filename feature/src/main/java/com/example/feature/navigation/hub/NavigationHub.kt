@@ -10,8 +10,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.domain.presentation.Navigation
-import com.example.domain.presentation.NavigationHubRoute
+import com.example.domain.presentation.navigation.Navigation
+import com.example.domain.presentation.navigation.NavigationHubRoute
 import com.example.feature.components.card.postcard.PostCardViewModel
 import com.example.feature.components.screens.hub.search.Search
 import com.example.feature.components.tab.TabViewModel

@@ -4,8 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.Dp
-import com.example.domain.presentation.Navigation
-import com.example.domain.presentation.NavigationLoginRoute
+import com.example.domain.presentation.navigation.Navigation
+import com.example.domain.presentation.navigation.NavigationLoginRoute
 import com.example.feature.R
 import com.example.feature.components.card.LoginCard
 import com.example.feature.screens.login.LoginAction

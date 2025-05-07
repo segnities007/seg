@@ -1,8 +1,8 @@
 package com.example.feature.components.card.postcard
 
 import androidx.compose.runtime.Stable
-import com.example.domain.model.Post
-import com.example.domain.presentation.NavigationHubRoute
+import com.example.domain.model.post.Post
+import com.example.domain.presentation.navigation.NavigationHubRoute
 import com.example.feature.screens.hub.HubAction
 import com.example.feature.screens.hub.HubState
 

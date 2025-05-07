@@ -1,7 +1,7 @@
 package com.example.feature.screens.hub.home
 
 import androidx.compose.runtime.Immutable
-import com.example.domain.model.Post
+import com.example.domain.model.post.Post
 import java.time.LocalDateTime
 
 @Immutable

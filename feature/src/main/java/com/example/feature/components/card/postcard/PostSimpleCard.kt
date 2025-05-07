@@ -5,8 +5,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
-import com.example.domain.model.Post
-import com.example.domain.presentation.NavigationHubRoute
+import com.example.domain.model.post.Post
+import com.example.domain.presentation.navigation.NavigationHubRoute
 import com.example.feature.R
 import com.example.feature.screens.hub.HubAction
 import com.example.feature.screens.hub.HubState

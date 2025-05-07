@@ -14,10 +14,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.domain.model.BottomBarHubItem
-import com.example.domain.model.BottomBarItem
 import com.example.domain.model.User
-import com.example.domain.presentation.Navigation
+import com.example.domain.presentation.bottombar.BottomBarHubItem
+import com.example.domain.presentation.bottombar.BottomBarItem
+import com.example.domain.presentation.navigation.Navigation
 import com.example.feature.components.bar.status_bar.StatusBar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -70,7 +70,7 @@ private fun DrawerSheet(
         icon = {
             Icon(
                 painter = painterResource(painterResourceID),
-                contentDescription = route::class.simpleName.toString()
+                contentDescription = route::class.simpleName.toString(),
             )
         },
         selected = false,
