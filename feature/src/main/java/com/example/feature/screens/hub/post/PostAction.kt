@@ -1,7 +1,7 @@
 package com.example.feature.screens.hub.post
 
 import androidx.compose.runtime.Immutable
-import com.example.domain.model.User
+import com.example.domain.model.user.User
 import com.example.domain.presentation.navigation.NavigationHubRoute
 import com.example.feature.screens.hub.HubAction
 import com.example.feature.screens.hub.HubState

@@ -1,7 +1,7 @@
 package com.example.feature.screens.hub
 
-import com.example.domain.model.User
 import com.example.domain.model.post.Post
+import com.example.domain.model.user.User
 
 sealed class HubAction {
     data object ChangeIsHideTopBar : HubAction()

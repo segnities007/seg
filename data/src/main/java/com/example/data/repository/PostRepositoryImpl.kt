@@ -1,8 +1,8 @@
 package com.example.data.repository
 
 import android.util.Log
-import com.example.domain.model.User
 import com.example.domain.model.post.Post
+import com.example.domain.model.user.User
 import com.example.domain.repository.PostRepository
 import com.example.domain.repository.UserRepository
 import io.github.jan.supabase.postgrest.Postgrest

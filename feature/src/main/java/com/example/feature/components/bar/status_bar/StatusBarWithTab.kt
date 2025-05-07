@@ -6,7 +6,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import com.example.domain.model.User
+import com.example.domain.model.user.User
 import com.example.feature.components.tab.Tab
 import com.example.feature.components.tab.TabAction
 import com.example.feature.components.tab.TabUiState
