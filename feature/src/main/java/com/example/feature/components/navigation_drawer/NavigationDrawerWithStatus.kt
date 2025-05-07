@@ -14,7 +14,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.domain.model.User
+import com.example.domain.model.user.User
 import com.example.domain.presentation.bottombar.BottomBarHubItem
 import com.example.domain.presentation.bottombar.BottomBarItem
 import com.example.domain.presentation.navigation.Navigation

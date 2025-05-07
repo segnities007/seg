@@ -1,6 +1,6 @@
 package com.example.domain.repository
 
-import com.example.domain.model.User
+import com.example.domain.model.user.User
 import java.time.LocalDateTime
 
 interface UserRepository {

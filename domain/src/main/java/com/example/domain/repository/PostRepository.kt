@@ -1,7 +1,8 @@
 package com.example.domain.repository
 
-import com.example.domain.model.User
+import com.example.domain.model.post.Genre
 import com.example.domain.model.post.Post
+import com.example.domain.model.user.User
 import java.time.LocalDateTime
 
 interface PostRepository {
@@ -9,6 +10,7 @@ interface PostRepository {
     suspend fun onCreatePost(
         description: String,
         user: User,
+        genre: Genre,
     ): Boolean
 
     suspend fun onCreateComment(

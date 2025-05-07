@@ -1,8 +1,8 @@
 package com.example.feature.screens.hub.account
 
 import androidx.compose.runtime.Immutable
-import com.example.domain.model.User
 import com.example.domain.model.post.Post
+import com.example.domain.model.user.User
 
 @Immutable
 sealed class AccountAction {

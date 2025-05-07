@@ -1,8 +1,7 @@
 package com.example.feature.screens.hub.setting.userinfo
 
 import androidx.compose.runtime.Immutable
-import com.example.domain.model.User
-
+import com.example.domain.model.user.User
 
 @Immutable
 sealed class UserInfoAction {

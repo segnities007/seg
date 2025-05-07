@@ -2,7 +2,7 @@ package com.example.feature.components.bar.status_bar
 
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.unit.Dp
-import com.example.domain.model.User
+import com.example.domain.model.user.User
 
 @Stable
 interface StatusBarScope {

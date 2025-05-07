@@ -1,6 +1,7 @@
-package com.example.domain.model
+package com.example.domain.model.user
 
-import com.example.domain.model.User
+import com.example.domain.model.LocalDateSerializer
+import com.example.domain.model.LocalDateTimeSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import java.time.LocalDate
