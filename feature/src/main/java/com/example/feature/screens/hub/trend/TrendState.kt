@@ -1,6 +1,6 @@
 package com.example.feature.screens.hub.trend
 
-import com.example.domain.model.Post
+import com.example.domain.model.post.Post
 
 data class TrendListState(
     val trendPostsOfToday: List<Post> = listOf(),

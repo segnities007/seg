@@ -34,8 +34,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.domain.presentation.Navigation
-import com.example.domain.presentation.NavigationSettingRoute
+import com.example.domain.presentation.navigation.Navigation
+import com.example.domain.presentation.navigation.NavigationSettingRoute
 import com.example.feature.R
 import com.example.feature.components.button.BasicButton
 import com.example.feature.screens.hub.HubAction
@@ -197,17 +197,19 @@ private fun SelectionButtons(
         horizontalArrangement = Arrangement.Center,
     ) {
         BasicButton(
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth(),
+            modifier =
+                Modifier
+                    .weight(1f)
+                    .fillMaxWidth(),
             textID = R.string.cancel,
             onClick = { onNavigate(NavigationSettingRoute.Preference) },
         )
         Spacer(modifier = Modifier.padding(commonPadding))
         BasicButton(
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth(),
+            modifier =
+                Modifier
+                    .weight(1f)
+                    .fillMaxWidth(),
             textID = R.string.enter,
             onClick = {
                 scope.launch {

@@ -11,8 +11,8 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
-import com.example.domain.presentation.Navigation
-import com.example.domain.presentation.NavigationHubRoute
+import com.example.domain.presentation.navigation.Navigation
+import com.example.domain.presentation.navigation.NavigationHubRoute
 import com.example.feature.R
 import com.example.feature.components.bar.top_search_bar.TopSearchBarState
 import com.example.feature.components.card.AvatarCard
@@ -119,10 +119,10 @@ private fun MostViewPosts(
                 isIncrementView = false,
                 onProcessOfEngagementAction = { newPost ->
                     (
-                            SearchAction.ProcessOfEngagementAction(
-                                newPost,
-                            )
-                            )
+                        SearchAction.ProcessOfEngagementAction(
+                            newPost,
+                        )
+                    )
                 },
                 onHubAction = onHubAction,
                 onPostCardAction = onPostCardAction,
@@ -226,9 +226,10 @@ private fun Users(
     onHubNavigate: (Navigation) -> Unit,
 ) {
     LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(top = dimensionResource(R.dimen.padding_smaller)),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .padding(top = dimensionResource(R.dimen.padding_smaller)),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
     ) {

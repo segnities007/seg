@@ -17,7 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.domain.model.User
-import com.example.domain.presentation.NavigationHubRoute
+import com.example.domain.presentation.navigation.NavigationHubRoute
 import com.example.feature.R
 import com.example.feature.screens.hub.HubAction
 
@@ -64,8 +64,7 @@ private fun StatusBarScope.AboutFollow(
                     .clickable {
                         onHubAction(HubAction.SetAccounts(user.follows))
                         onHubNavigate(NavigationHubRoute.Accounts)
-                    }
-                    .padding(commonPadding),
+                    }.padding(commonPadding),
         ) {
             Text(text = followsText, color = fontColor)
         }
@@ -76,8 +75,7 @@ private fun StatusBarScope.AboutFollow(
                     .clickable {
                         onHubAction(HubAction.SetAccounts(user.followers))
                         onHubNavigate(NavigationHubRoute.Accounts)
-                    }
-                    .padding(commonPadding),
+                    }.padding(commonPadding),
         ) {
             Text(text = followersText, color = fontColor)
         }

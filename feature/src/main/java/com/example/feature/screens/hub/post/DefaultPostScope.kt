@@ -1,6 +1,6 @@
 package com.example.feature.screens.hub.post
 
-import com.example.domain.presentation.Navigation
+import com.example.domain.presentation.navigation.Navigation
 import com.example.feature.screens.hub.HubAction
 import com.example.feature.screens.hub.HubState
 import com.example.feature.screens.hub.home.HomeAction

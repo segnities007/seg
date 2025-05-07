@@ -11,9 +11,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.Dp
-import com.example.domain.presentation.Navigation
-import com.example.domain.presentation.NavigationRoute
-import com.example.domain.presentation.NavigationSettingRoute
+import com.example.domain.presentation.navigation.Navigation
+import com.example.domain.presentation.navigation.NavigationRoute
+import com.example.domain.presentation.navigation.NavigationSettingRoute
 import com.example.feature.R
 import com.example.feature.components.button.SmallButton
 import com.example.feature.screens.hub.HubAction

@@ -5,7 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.domain.presentation.NavigationRoute
+import com.example.domain.presentation.navigation.NavigationRoute
 import com.example.feature.navigation.hub.NavigationHub
 import com.example.feature.navigation.login.NavigationLogin
 import com.example.feature.screens.splash.Splash

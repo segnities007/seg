@@ -1,8 +1,9 @@
-package com.example.domain.model
+package com.example.domain.presentation.bottombar
 
 import com.example.domain.R
-import com.example.domain.presentation.Navigation
-import com.example.domain.presentation.NavigationHubRoute
+import com.example.domain.presentation.bottombar.BottomBarItem
+import com.example.domain.presentation.navigation.Navigation
+import com.example.domain.presentation.navigation.NavigationHubRoute
 
 data class BottomBarHubItem(
     override val selectedIconIDs: List<Int> =

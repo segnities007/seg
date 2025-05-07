@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
-import com.example.domain.presentation.Navigation
+import com.example.domain.presentation.navigation.Navigation
 import com.example.feature.R
 import com.example.feature.components.card.postcard.PostCard
 import com.example.feature.components.card.postcard.PostCardAction
@@ -75,8 +75,8 @@ private fun HomeUi(
                 onProcessOfEngagementAction = { newPost ->
                     onHomeAction(
                         HomeAction.ProcessOfEngagement(
-                            newPost
-                        )
+                            newPost,
+                        ),
                     )
                 },
             )

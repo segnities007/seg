@@ -1,8 +1,8 @@
 package com.example.feature.components.card.postcard
 
 import androidx.compose.runtime.Immutable
-import com.example.domain.model.Post
 import com.example.domain.model.User
+import com.example.domain.model.post.Post
 import com.example.feature.R
 
 @Immutable

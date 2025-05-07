@@ -11,9 +11,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
-import com.example.domain.model.BottomBarHubItem
-import com.example.domain.presentation.Navigation
-import com.example.domain.presentation.NavigationHubRoute
+import com.example.domain.presentation.bottombar.BottomBarHubItem
+import com.example.domain.presentation.navigation.Navigation
+import com.example.domain.presentation.navigation.NavigationHubRoute
 import com.example.feature.R
 import com.example.feature.components.bar.bottom_bar.BottomBar
 import com.example.feature.components.bar.status_bar.StatusBarWithFollows

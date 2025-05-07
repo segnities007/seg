@@ -10,7 +10,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.domain.presentation.Navigation
+import com.example.domain.presentation.navigation.Navigation
 import com.example.feature.R
 import com.example.feature.components.card.postcard.PostCard
 import com.example.feature.components.card.postcard.PostCardAction
@@ -93,8 +93,8 @@ private fun CommentUi(
                 onProcessOfEngagementAction = { newPost ->
                     onCommentAction(
                         CommentAction.ProcessOfEngagementAction(
-                            newPost
-                        )
+                            newPost,
+                        ),
                     )
                 },
             )
