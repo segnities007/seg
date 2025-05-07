@@ -29,7 +29,11 @@ class PostViewModel
                     onUpdateIsLoading(true)
                     viewModelScope.launch(Dispatchers.IO) {
                         val result =
-                            postRepository.onCreatePost(description = description, user = action.user)
+                            postRepository.onCreatePost(
+                                description = description,
+                                user = action.user,
+                                genre = postState.genre,
+                            )
                         if (result) {
                             action.onUpdateSelf()
                             viewModelScope.launch(Dispatchers.Main) {
