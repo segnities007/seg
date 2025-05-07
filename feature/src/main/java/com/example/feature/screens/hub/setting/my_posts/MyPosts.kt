@@ -12,7 +12,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.domain.presentation.navigation.Navigation
 import com.example.feature.R
 import com.example.feature.components.card.postcard.PostCard
@@ -35,7 +35,7 @@ fun MyPosts(
     onPostCardAction: (PostCardAction) -> Unit,
     onHubNavigate: (Navigation) -> Unit,
 ) {
-    val myPostsViewModel: MyPostsViewModel = viewModel()
+    val myPostsViewModel: MyPostsViewModel = hiltViewModel()
 
     LaunchedEffect(Unit) {
         onHubAction(HubAction.ChangeIsHideTopBar)

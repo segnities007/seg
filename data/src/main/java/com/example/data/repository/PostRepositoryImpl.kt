@@ -1,6 +1,7 @@
 package com.example.data.repository
 
 import android.util.Log
+import com.example.domain.model.post.Genre
 import com.example.domain.model.post.Post
 import com.example.domain.model.user.User
 import com.example.domain.repository.PostRepository
@@ -26,6 +27,7 @@ class PostRepositoryImpl
         override suspend fun onCreatePost(
             description: String,
             user: User,
+            genre: Genre,
         ): Boolean {
             try {
                 val post =
@@ -34,6 +36,7 @@ class PostRepositoryImpl
                         name = user.name,
                         description = description,
                         iconURL = user.iconURL,
+                        genre = genre,
                     )
 
                 val result =

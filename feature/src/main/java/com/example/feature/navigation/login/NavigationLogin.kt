@@ -3,7 +3,7 @@ package com.example.feature.navigation.login
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -22,7 +22,7 @@ import com.example.feature.screens.login.sign_up.create_account.CreateAccount
 @Composable
 fun NavigationLogin(navHostController: NavHostController) {
     val loginNavHostController: NavHostController = rememberNavController()
-    val loginViewModel: LoginViewModel = viewModel()
+    val loginViewModel: LoginViewModel = hiltViewModel()
     val navBackStackEntry by loginNavHostController.currentBackStackEntryAsState()
     val currentRoute =
         navBackStackEntry

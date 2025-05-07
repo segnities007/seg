@@ -20,7 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.domain.presentation.navigation.Navigation
 import com.example.feature.R
 import com.example.feature.components.button.SmallButton
@@ -35,9 +35,9 @@ fun Post(
     hubState: HubState,
     onHubAction: (HubAction) -> Unit,
     onHomeAction: (HomeAction) -> Unit,
-    onHubNavigate: (Navigation) -> Unit, // go to home
+    onHubNavigate: (Navigation) -> Unit,
 ) {
-    val postViewModel: PostViewModel = viewModel()
+    val postViewModel: PostViewModel = hiltViewModel()
 
     PostUi(
         modifier = modifier,

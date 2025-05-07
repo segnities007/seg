@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.domain.model.post.Post
 import com.example.domain.presentation.navigation.Navigation
@@ -40,8 +41,8 @@ fun PostForComment(
     onBackHubNavigate: () -> Unit,
     onHubNavigate: (Navigation) -> Unit,
 ) {
-    val commentViewModel: CommentViewModel = viewModel()
-    val postViewModel: PostViewModel = viewModel()
+    val commentViewModel: CommentViewModel = hiltViewModel()
+    val postViewModel: PostViewModel = hiltViewModel()
 
     LaunchedEffect(Unit) {
         commentViewModel.onCommentAction(CommentAction.GetComments(hubState.comment))
