@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.domain.presentation.navigation.Navigation
 import com.example.feature.R
@@ -37,7 +38,7 @@ fun Trend(
     onHubNavigate: (Navigation) -> Unit,
 ) {
     val commonPadding: Dp = dimensionResource(R.dimen.padding_sn)
-    val trendViewModel: TrendViewModel = viewModel()
+    val trendViewModel: TrendViewModel = hiltViewModel()
 
     LaunchedEffect(Unit) {
         trendViewModel.onTrendAction(TrendAction.Init)

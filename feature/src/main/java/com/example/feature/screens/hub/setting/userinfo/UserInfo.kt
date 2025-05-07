@@ -33,7 +33,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.domain.presentation.navigation.Navigation
 import com.example.domain.presentation.navigation.NavigationSettingRoute
 import com.example.feature.R
@@ -54,7 +54,7 @@ fun UserInfo(
     onNavigate: (Navigation) -> Unit,
 ) {
     val commonPadding: Dp = dimensionResource(R.dimen.padding_normal)
-    val userInfoViewModel: UserInfoViewModel = viewModel()
+    val userInfoViewModel: UserInfoViewModel = hiltViewModel()
 
     LaunchedEffect(Unit) {
         userInfoViewModel.onUserInfoAction(UserInfoAction.ChangeName(hubState.user.name))

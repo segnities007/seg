@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -35,12 +35,12 @@ import com.example.feature.screens.hub.trend.Trend
 @Composable
 fun NavigationHub(onTopNavigate: (route: Navigation) -> Unit) {
     val hubNavHostController: NavHostController = rememberNavController()
-    val postCardViewModel: PostCardViewModel = viewModel()
-    val accountViewModel: AccountViewModel = viewModel()
-    val searchViewModel: SearchViewModel = viewModel()
-    val homeViewModel: HomeViewModel = viewModel()
-    val hubViewModel: HubViewModel = viewModel()
-    val tabViewModel: TabViewModel = viewModel()
+    val postCardViewModel: PostCardViewModel = hiltViewModel()
+    val accountViewModel: AccountViewModel = hiltViewModel()
+    val searchViewModel: SearchViewModel = hiltViewModel()
+    val homeViewModel: HomeViewModel = hiltViewModel()
+    val hubViewModel: HubViewModel = hiltViewModel()
+    val tabViewModel: TabViewModel = hiltViewModel()
 
     LaunchedEffect(Unit) {
         hubViewModel.onHubAction(HubAction.GetUser)

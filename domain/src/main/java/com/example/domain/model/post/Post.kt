@@ -30,5 +30,6 @@ data class Post(
     val updateAt: LocalDateTime = LocalDateTime.now(),
     @SerialName("comment_id_list")
     val commentIDs: List<Int> = listOf(),
+    @Serializable
     val genre: Genre = Genre.NORMAL,
 )
