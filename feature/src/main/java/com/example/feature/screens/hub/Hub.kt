@@ -8,9 +8,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
+import com.example.domain.model.post.Genre
 import com.example.domain.presentation.bottombar.BottomBarHubItem
 import com.example.domain.presentation.navigation.Navigation
 import com.example.domain.presentation.navigation.NavigationHubRoute
@@ -19,6 +21,7 @@ import com.example.feature.components.bar.bottom_bar.BottomBar
 import com.example.feature.components.bar.status_bar.StatusBarWithFollows
 import com.example.feature.components.bar.status_bar.StatusBarWithTab
 import com.example.feature.components.bar.top_bar.TopBar
+import com.example.feature.components.bar.top_home_bar.TopHomeBar
 import com.example.feature.components.bar.top_search_bar.TopSearchBar
 import com.example.feature.components.bar.top_search_bar.TopSearchBarAction
 import com.example.feature.components.bar.top_search_bar.TopSearchBarState
@@ -141,13 +144,27 @@ private fun HubTopBar(
     onTopSearchBarAction: (TopSearchBarAction) -> Unit,
     scrollBehavior: TopAppBarScrollBehavior,
 ) {
+    LaunchedEffect(Unit) {
+        val labels =
+            listOf(
+                Genre.NORMAL.name,
+                Genre.HAIKU.name,
+                Genre.TANKA.name,
+                Genre.SEDOUKA.name,
+                Genre.DODOITSU.name,
+            )
+        onTabAction(TabAction.SetLabels(labels))
+    }
+
     when (currentRouteName) {
         NavigationHubRoute.Home.name ->
-            TopBar(
+            TopHomeBar(
+                tabUiState = tabUiState,
+                routeName = currentRouteName,
+                onTabAction = onTabAction,
                 titleContent = { Text(text = currentRouteName) },
                 onDrawerOpen = { onTopAction(TopAction.OpenDrawer) },
                 scrollBehavior = scrollBehavior,
-                routeName = currentRouteName,
             )
 
         NavigationHubRoute.Trend.name ->

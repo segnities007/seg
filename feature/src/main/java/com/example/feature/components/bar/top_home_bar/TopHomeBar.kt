@@ -1,40 +1,40 @@
-package com.example.feature.components.bar.top_search_bar
+package com.example.feature.components.bar.top_home_bar
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.unit.Dp
-import com.example.feature.R
-import com.example.feature.components.tab.Tab
+import com.example.domain.model.post.Genre
+import com.example.feature.components.bar.top_bar.TopBar
+import com.example.feature.components.tab.ScrollTab
 import com.example.feature.components.tab.TabAction
 import com.example.feature.components.tab.TabUiState
-import com.example.feature.screens.hub.search.SearchAction
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopSearchBar(
+fun TopHomeBar(
     modifier: Modifier = Modifier,
     tabUiState: TabUiState,
-    topSearchBarState: TopSearchBarState,
+    routeName: String,
     onTabAction: (TabAction) -> Unit,
-    onSearchAction: (SearchAction) -> Unit,
-    onTopSearchBarAction: (TopSearchBarAction) -> Unit,
+    titleContent: @Composable () -> Unit,
+    onDrawerOpen: suspend () -> Unit,
+    scrollBehavior: TopAppBarScrollBehavior? = null,
 ) {
-    val commonPadding: Dp = dimensionResource(R.dimen.padding_sn)
-
     LaunchedEffect(Unit) {
         val labels =
             listOf(
-                "Most View",
-                "Latest",
-                "Users",
+                Genre.NORMAL.name,
+                Genre.HAIKU.name,
+                Genre.TANKA.name,
+                Genre.SEDOUKA.name,
+                Genre.DODOITSU.name,
             )
         onTabAction(TabAction.SetLabels(labels))
     }
@@ -44,13 +44,13 @@ fun TopSearchBar(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
     ) {
-        SearchInputForm(
-            topSearchBarState = topSearchBarState,
-            onSearchAction = onSearchAction,
-            onTopSearchBarAction = onTopSearchBarAction,
+        TopBar(
+            titleContent = titleContent,
+            routeName = routeName,
+            onDrawerOpen = onDrawerOpen,
+            scrollBehavior = scrollBehavior,
         )
-        Spacer(Modifier.padding(commonPadding))
-        Tab(
+        ScrollTab(
             modifier = modifier.background(color = MaterialTheme.colorScheme.primaryContainer),
             tabUiState = tabUiState,
             onTabAction = onTabAction,

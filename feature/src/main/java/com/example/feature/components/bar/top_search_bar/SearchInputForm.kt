@@ -1,4 +1,4 @@
-package com.example.feature.components.bar
+package com.example.feature.components.bar.top_search_bar
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -23,8 +23,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import com.example.feature.R
-import com.example.feature.components.bar.top_search_bar.TopSearchBarAction
-import com.example.feature.components.bar.top_search_bar.TopSearchBarState
 import com.example.feature.screens.hub.search.SearchAction
 
 @OptIn(ExperimentalMaterial3Api::class)
