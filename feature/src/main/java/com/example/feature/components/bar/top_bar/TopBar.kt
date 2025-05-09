@@ -28,8 +28,9 @@ fun TopBar(
     routeName: String,
     onDrawerOpen: suspend () -> Unit,
     scrollBehavior: TopAppBarScrollBehavior? = null,
-    scope: CoroutineScope = rememberCoroutineScope(),
 ) {
+    val scope: CoroutineScope = rememberCoroutineScope()
+
     CenterAlignedTopAppBar(
         modifier = Modifier.shadow(elevation = dimensionResource(R.dimen.elevation_nl)),
         title = { titleContent() },

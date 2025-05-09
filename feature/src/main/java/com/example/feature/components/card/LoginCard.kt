@@ -64,7 +64,7 @@ fun LoginCard(
                 Row {
                     BasicButton(
                         modifier = Modifier.weight(1f),
-                        textID = textIDOfEnterLabel,
+                        text = stringResource(textIDOfEnterLabel),
                         onClick = {
                             onClickSignButton()
                         },

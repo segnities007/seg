@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.sp
 import com.example.feature.R
@@ -16,7 +17,7 @@ import com.example.feature.R
 @Composable
 fun BasicButton(
     modifier: Modifier = Modifier,
-    textID: Int,
+    text: String,
     fontSize: Int = 16,
     onClick: () -> Unit,
     elevation: Dp = dimensionResource(R.dimen.elevation_small),
@@ -29,8 +30,17 @@ fun BasicButton(
         shape = RoundedCornerShape(dimensionResource(R.dimen.rounded_corner_shape)),
     ) {
         Text(
-            text = stringResource(textID),
+            text = text,
             fontSize = fontSize.sp,
         )
     }
+}
+
+@Composable
+@Preview
+private fun BasicButtonPreview(){
+    BasicButton(
+        text = "aaa",
+        onClick = {}
+    )
 }

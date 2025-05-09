@@ -1,6 +1,7 @@
 package com.example.feature.screens.hub.post
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -8,11 +9,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -21,9 +28,10 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.domain.model.post.Genre
 import com.example.domain.presentation.navigation.Navigation
 import com.example.feature.R
-import com.example.feature.components.button.SmallButton
+import com.example.feature.components.button.BasicButton
 import com.example.feature.components.indicator.CircleIndicator
 import com.example.feature.screens.hub.HubAction
 import com.example.feature.screens.hub.HubState
@@ -31,7 +39,7 @@ import com.example.feature.screens.hub.home.HomeAction
 
 @Composable
 fun Post(
-    modifier: Modifier = Modifier,
+    modifier: Modifier,
     hubState: HubState,
     onHubAction: (HubAction) -> Unit,
     onHomeAction: (HomeAction) -> Unit,
@@ -60,7 +68,7 @@ fun Post(
 
 @Composable
 fun PostUi(
-    modifier: Modifier = Modifier,
+    modifier: Modifier,
     hubState: HubState,
     postState: PostState,
     onHubAction: (HubAction) -> Unit,
@@ -85,7 +93,8 @@ fun PostUi(
                 .padding(
                     vertical = dimensionResource(R.dimen.padding_smaller),
                     horizontal = dimensionResource(R.dimen.padding_small),
-                ).fillMaxSize(),
+                )
+                .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         scope.content()
@@ -123,17 +132,15 @@ fun PostScope.TopToolBar(modifier: Modifier = Modifier) {
             modifier
                 .padding(
                     vertical = dimensionResource(R.dimen.padding_normal),
-                ).fillMaxWidth(),
+                )
+                .fillMaxWidth(),
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        SmallButton(
-            textID = R.string.clear,
-            onClick = { onPostAction(PostAction.UpdateInputText("")) },
-        )
+        GenreMenu(postState = postState, onPostAction = onPostAction)
         Spacer(modifier = Modifier.weight(1f))
-        SmallButton(
-            textID = R.string.post,
+        BasicButton(
+            text = stringResource(R.string.post),
             onClick = {
                 onPostAction(
                     PostAction.CreatePost(
@@ -145,6 +152,36 @@ fun PostScope.TopToolBar(modifier: Modifier = Modifier) {
                 )
             },
         )
+    }
+}
+
+@Composable
+private fun GenreMenu(
+    postState: PostState,
+    onPostAction: (PostAction) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+
+    Box {
+        BasicButton(
+            text = postState.genre.name,
+            onClick = {
+                expanded = !expanded
+            },
+        )
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            for (genre in Genre.entries) {
+                DropdownMenuItem(
+                    text = { Text(genre.name) },
+                    onClick = {
+                        onPostAction(PostAction.UpdateGenre(genre))
+                    }
+                )
+            }
+        }
     }
 }
 

@@ -201,7 +201,7 @@ private fun SelectionButtons(
                 Modifier
                     .weight(1f)
                     .fillMaxWidth(),
-            textID = R.string.cancel,
+            text = stringResource(R.string.cancel),
             onClick = { onNavigate(NavigationSettingRoute.Preference) },
         )
         Spacer(modifier = Modifier.padding(commonPadding))
@@ -210,7 +210,7 @@ private fun SelectionButtons(
                 Modifier
                     .weight(1f)
                     .fillMaxWidth(),
-            textID = R.string.enter,
+            text = stringResource(R.string.enter),
             onClick = {
                 scope.launch {
                     onUserInfoAction(UserInfoAction.UpdateUser(hubState.user))
