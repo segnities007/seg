@@ -5,8 +5,10 @@ import androidx.compose.ui.Modifier
 import com.example.domain.model.post.Genre
 import com.example.domain.presentation.navigation.Navigation
 import com.example.feature.components.card.postcard.PostCardAction
+import com.example.feature.components.tab.TabUiState
 import com.example.feature.screens.hub.HubAction
 import com.example.feature.screens.hub.HubState
+import com.example.feature.screens.hub.home.haiku.Haiku
 import com.example.feature.screens.hub.home.normal.Normal
 
 @Composable
@@ -22,6 +24,18 @@ fun Home(
     when (homeState.currentGenre) {
         Genre.NORMAL -> {
             Normal(
+                modifier = modifier,
+                hubState = hubState,
+                homeState = homeState,
+                onHubAction = onHubAction,
+                onHomeAction = onHomeAction,
+                onPostCardAction = onPostCardAction,
+                onHubNavigate = onHubNavigate,
+            )
+        }
+
+        Genre.HAIKU -> {
+            Haiku(
                 modifier = modifier,
                 hubState = hubState,
                 homeState = homeState,
