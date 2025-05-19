@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,12 +26,14 @@ fun Normal(
     modifier: Modifier,
     hubState: HubState,
     homeState: HomeState,
+    lazyListStateOfNormal: LazyListState,
     onHubAction: (HubAction) -> Unit,
     onHomeAction: (HomeAction) -> Unit,
     onPostCardAction: (PostCardAction) -> Unit,
     onHubNavigate: (Navigation) -> Unit,
 ) {
     LazyColumn(
+        state = lazyListStateOfNormal,
         modifier =
             modifier
                 .fillMaxSize()
@@ -64,7 +67,7 @@ fun Normal(
             Spacer(Modifier.padding(dimensionResource(R.dimen.padding_smallest)))
         }
         item {
-            if (!homeState.hasNoMorePost && homeState.posts.isNotEmpty()) {
+            if (!homeState.isAllPostsFetched && homeState.posts.isNotEmpty()) {
                 Column {
                     Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_smaller)))
                     LoadingUI(

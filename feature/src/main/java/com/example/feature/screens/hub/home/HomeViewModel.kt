@@ -1,5 +1,6 @@
 package com.example.feature.screens.hub.home
 
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -19,17 +20,23 @@ class HomeViewModel
     ) : ViewModel() {
         var homeState by mutableStateOf(HomeState())
             private set
+        val lazyListStateOfNormal = LazyListState()
+        val lazyListStateOfHaiku = LazyListState()
 
         fun onHomeAction(action: HomeAction) {
             when (action) {
-                HomeAction.ChangeHasNoMorePost -> {
-                    onChangeHasNoMorePost()
+                HomeAction.ChangeIsAllPostsFetched -> {
+                    onChangeIsAllPostsFetched()
+                }
+
+                HomeAction.ChangeIsAllHaikusFetched -> {
+                    onChangeIsAllHaikusFetched()
                 }
 
                 is HomeAction.GetBeforeNewPosts -> {
                     viewModelScope.launch(Dispatchers.IO) {
                         val posts = postRepository.onGetBeforePosts(action.updatedAt)
-                        if (posts.isEmpty()) onChangeHasNoMorePost()
+                        if (posts.isEmpty()) onChangeIsAllPostsFetched()
                         homeState = homeState.copy(posts = homeState.posts.plus(posts))
                     }
                 }
@@ -53,10 +60,29 @@ class HomeViewModel
                 is HomeAction.UpdateCurrentGenre -> {
                     homeState = homeState.copy(currentGenre = action.newGenre)
                 }
+
+                is HomeAction.GetBeforeNewHaikus -> {
+                    viewModelScope.launch(Dispatchers.IO) {
+                        val haikus = postRepository.onGetBeforeHaikus(action.updatedAt)
+                        if (haikus.isEmpty()) onChangeIsAllHaikusFetched()
+                        homeState = homeState.copy(haikus = homeState.haikus.plus(haikus))
+                    }
+                }
+
+                HomeAction.GetNewHaikus -> {
+                    viewModelScope.launch(Dispatchers.IO) {
+                        val haikus = postRepository.onGetNewHaikus()
+                        homeState = homeState.copy(haikus = haikus)
+                    }
+                }
             }
         }
 
-        private fun onChangeHasNoMorePost() {
-            homeState = homeState.copy(hasNoMorePost = !homeState.hasNoMorePost)
+        private fun onChangeIsAllPostsFetched() {
+            homeState = homeState.copy(isAllPostsFetched = !homeState.isAllPostsFetched)
+        }
+
+        private fun onChangeIsAllHaikusFetched() {
+            homeState = homeState.copy(isAllHaikusFetched = !homeState.isAllHaikusFetched)
         }
     }

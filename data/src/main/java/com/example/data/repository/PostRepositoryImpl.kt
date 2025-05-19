@@ -242,6 +242,22 @@ class PostRepositoryImpl
             }
         }
 
+        override suspend fun onGetNewHaiku(): Post {
+            try {
+                val result =
+                    postgrest
+                        .from(posts)
+                        .select {
+                            filter { PostDto::genre eq Genre.HAIKU.name }
+                            order("create_at", Order.DESCENDING)
+                        }.decodeSingle<PostDto>()
+                return result.toPost()
+            } catch (e: Exception) {
+                Log.e(tag, "failed onGetNewHaiku $e")
+                throw e
+            }
+        }
+
         override suspend fun onGetBeforePosts(afterPostCreateAt: LocalDateTime): List<Post> {
             try {
                 val result =
@@ -265,6 +281,30 @@ class PostRepositoryImpl
             }
         }
 
+        override suspend fun onGetBeforeHaikus(afterPostCreateAt: LocalDateTime): List<Post> {
+            try {
+                val result =
+                    postgrest
+                        .from(posts)
+                        .select {
+                            order("create_at", Order.DESCENDING)
+                            filter {
+                                PostDto::genre eq Genre.HAIKU.name
+                                lt("create_at", afterPostCreateAt)
+                            }
+                            limit(7)
+                        }.decodeList<PostDto>()
+                val list = result.minus(result.first())
+
+                if (result.isEmpty()) return listOf()
+
+                return list.map { it.toPost() }
+            } catch (e: Exception) {
+                Log.e(tag, "failed onGetBeforeHaikus $e")
+                throw e
+            }
+        }
+
         override suspend fun onGetNewPosts(): List<Post> {
             try {
                 val result =
@@ -277,6 +317,23 @@ class PostRepositoryImpl
                 return result.map { it.toPost() }
             } catch (e: Exception) {
                 Log.e(tag, "failed onGetNewPosts $e")
+                throw e
+            }
+        }
+
+        override suspend fun onGetNewHaikus(): List<Post> {
+            try {
+                val result =
+                    postgrest
+                        .from(posts)
+                        .select {
+                            filter { PostDto::genre eq Genre.HAIKU.name }
+                            order("create_at", Order.DESCENDING)
+                            limit(count = 7)
+                        }.decodeList<PostDto>()
+                return result.map { it.toPost() }
+            } catch (e: Exception) {
+                Log.e(tag, "failed onGetNewHaikus $e")
                 throw e
             }
         }
