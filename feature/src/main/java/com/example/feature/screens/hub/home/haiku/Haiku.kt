@@ -55,6 +55,7 @@ fun Haiku(
                 isIncrementView = true,
                 onHubNavigate = onHubNavigate,
                 onHubAction = onHubAction,
+                onHomeAction = onHomeAction,
                 onPostCardAction = onPostCardAction,
             )
             Spacer(Modifier.padding(dimensionResource(R.dimen.padding_smallest)))

@@ -48,13 +48,21 @@ class HomeViewModel
                     }
                 }
 
-                is HomeAction.ProcessOfEngagement -> {
+                is HomeAction.ChangeEngagementOfPost -> {
                     val newPosts =
                         homeState.posts.map { post ->
                             if (action.newPost.id == post.id) action.newPost else post
                         }
 
                     homeState = homeState.copy(posts = newPosts)
+                }
+
+                is HomeAction.ChangeEngagementOfHaiku -> {
+                    val newHaikus =
+                        homeState.haikus.map { haiku ->
+                            if (action.newHaiku.id == haiku.id) action.newHaiku else haiku
+                        }
+                    homeState = homeState.copy(haikus = newHaikus)
                 }
 
                 is HomeAction.UpdateCurrentGenre -> {

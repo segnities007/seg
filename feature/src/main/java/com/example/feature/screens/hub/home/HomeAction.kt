@@ -27,7 +27,11 @@ sealed interface HomeAction {
         val updatedAt: LocalDateTime,
     ) : HomeAction
 
-    data class ProcessOfEngagement(
+    data class ChangeEngagementOfPost(
         val newPost: Post,
+    ) : HomeAction
+
+    data class ChangeEngagementOfHaiku(
+        val newHaiku: Post,
     ) : HomeAction
 }

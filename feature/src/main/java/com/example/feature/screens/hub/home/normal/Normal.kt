@@ -58,7 +58,7 @@ fun Normal(
                 onPostCardAction = onPostCardAction,
                 onProcessOfEngagementAction = { newPost ->
                     onHomeAction(
-                        HomeAction.ProcessOfEngagement(
+                        HomeAction.ChangeEngagementOfPost(
                             newPost,
                         ),
                     )
