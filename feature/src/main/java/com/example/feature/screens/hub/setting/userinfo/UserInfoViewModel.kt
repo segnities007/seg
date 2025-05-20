@@ -14,38 +14,38 @@ import javax.inject.Inject
 
 @HiltViewModel
 class UserInfoViewModel
-@Inject
-constructor(
-    private val userRepository: UserRepository,
-) : ViewModel() {
-    var userInfoState by mutableStateOf(UserInfoState())
+    @Inject
+    constructor(
+        private val userRepository: UserRepository,
+    ) : ViewModel() {
+        var userInfoState by mutableStateOf(UserInfoState())
 
-    fun onUserInfoAction(action: UserInfoAction) {
-        when (action) {
-            is UserInfoAction.ChangeDescription -> {
-                userInfoState = userInfoState.copy(description = action.newDescription)
-            }
+        fun onUserInfoAction(action: UserInfoAction) {
+            when (action) {
+                is UserInfoAction.ChangeDescription -> {
+                    userInfoState = userInfoState.copy(description = action.newDescription)
+                }
 
-            is UserInfoAction.ChangeName -> {
-                userInfoState = userInfoState.copy(name = action.newName)
-            }
+                is UserInfoAction.ChangeName -> {
+                    userInfoState = userInfoState.copy(name = action.newName)
+                }
 
-            is UserInfoAction.ChangeUserID -> {
-                userInfoState = userInfoState.copy(userID = action.newUserID)
-            }
+                is UserInfoAction.ChangeUserID -> {
+                    userInfoState = userInfoState.copy(userID = action.newUserID)
+                }
 
-            is UserInfoAction.UpdateUser -> {
-                viewModelScope.launch(Dispatchers.IO) {
-                    val newUser =
-                        action.user.copy(
-                            name = userInfoState.name,
-                            description = userInfoState.description,
-                            userID = userInfoState.userID,
-                            updateAt = LocalDateTime.now(),
-                        )
-                    userRepository.onUpdateUser(newUser)
+                is UserInfoAction.UpdateUser -> {
+                    viewModelScope.launch(Dispatchers.IO) {
+                        val newUser =
+                            action.user.copy(
+                                name = userInfoState.name,
+                                description = userInfoState.description,
+                                userID = userInfoState.userID,
+                                updateAt = LocalDateTime.now(),
+                            )
+                        userRepository.onUpdateUser(newUser)
+                    }
                 }
             }
         }
     }
-}

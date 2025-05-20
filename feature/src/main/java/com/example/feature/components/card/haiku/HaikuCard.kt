@@ -19,7 +19,6 @@ import com.example.domain.model.post.Post
 import com.example.domain.presentation.navigation.NavigationHubRoute
 import com.example.feature.R
 import com.example.feature.components.card.postcard.CardContents
-import com.example.feature.components.card.postcard.Description
 import com.example.feature.components.card.postcard.Name
 import com.example.feature.components.card.postcard.PostCardAction
 import com.example.feature.components.card.postcard.PostCardScope
@@ -46,10 +45,11 @@ fun HaikuCard(
     ) {
         CardContents {
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentSize()
-                    .padding(horizontal = dimensionResource(R.dimen.padding_sn)),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .wrapContentSize()
+                        .padding(horizontal = dimensionResource(R.dimen.padding_sn)),
             ) {
                 Name()
                 Haiku()
@@ -69,9 +69,9 @@ private fun PostCardScope.Haiku() {
         Column(
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(4.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            for(c in upperPhrase){
+            for (c in upperPhrase) {
                 Text(text = c.toString(), fontSize = fontSize)
             }
             Spacer(Modifier.weight(1f))
@@ -82,10 +82,10 @@ private fun PostCardScope.Haiku() {
         Column(
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(4.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Spacer(Modifier.weight(1f))
-            for(c in middlePhrase){
+            for (c in middlePhrase) {
                 Text(text = c.toString(), fontSize = fontSize)
             }
             Spacer(Modifier.weight(1f))
@@ -96,10 +96,10 @@ private fun PostCardScope.Haiku() {
         Column(
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(4.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Spacer(Modifier.weight(1f))
-            for(c in lowerPhase){
+            for (c in lowerPhase) {
                 Text(text = c.toString(), fontSize = fontSize)
             }
         }
@@ -108,7 +108,7 @@ private fun PostCardScope.Haiku() {
     Row(
         modifier = Modifier.wrapContentSize(),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
+        horizontalArrangement = Arrangement.Center,
     ) {
         lower()
         middle()
@@ -118,13 +118,13 @@ private fun PostCardScope.Haiku() {
 
 @Composable
 @Preview
-private fun HaikuPreview(){
+private fun HaikuPreview() {
     HaikuCard(
         post = Post(description = "abcdefghrjklmnopq"),
         hubState = HubState(),
         isIncrementView = false,
         onHubAction = {},
         onPostCardAction = {},
-        onHubNavigate = {}
+        onHubNavigate = {},
     )
 }

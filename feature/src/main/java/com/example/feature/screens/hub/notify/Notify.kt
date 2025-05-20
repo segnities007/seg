@@ -27,8 +27,9 @@ fun Notify(modifier: Modifier) {
 @Composable
 private fun BulletinBoard() {
     ElevatedCard(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(dimensionResource(R.dimen.padding_normal)),
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .padding(dimensionResource(R.dimen.padding_normal)),
     ) { }
 }

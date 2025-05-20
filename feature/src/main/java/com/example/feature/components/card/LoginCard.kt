@@ -36,9 +36,10 @@ fun LoginCard(
     onClickSignButton: () -> Unit,
 ) {
     Box(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(dimensionResource(R.dimen.padding_large)),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .padding(dimensionResource(R.dimen.padding_large)),
         contentAlignment = Alignment.Center,
     ) {
         Card {

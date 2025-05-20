@@ -16,38 +16,38 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingViewModel
-@Inject
-constructor(
-    private val authRepository: AuthRepository,
-) : ViewModel() {
-    var settingState by mutableStateOf(SettingState())
-        private set
+    @Inject
+    constructor(
+        private val authRepository: AuthRepository,
+    ) : ViewModel() {
+        var settingState by mutableStateOf(SettingState())
+            private set
 
-    fun onSettingAction(action: SettingAction) {
-        when (action) {
-            SettingAction.CloseDatePicker -> {
-                settingState = settingState.copy(isDatePickerDialogShow = false)
-            }
-
-            SettingAction.Logout -> {
-                viewModelScope.launch(Dispatchers.IO) {
-                    authRepository.logout()
+        fun onSettingAction(action: SettingAction) {
+            when (action) {
+                SettingAction.CloseDatePicker -> {
+                    settingState = settingState.copy(isDatePickerDialogShow = false)
                 }
-            }
 
-            SettingAction.OpenDatePicker -> {
-                settingState = settingState.copy(isDatePickerDialogShow = true)
-            }
+                SettingAction.Logout -> {
+                    viewModelScope.launch(Dispatchers.IO) {
+                        authRepository.logout()
+                    }
+                }
 
-            is SettingAction.SelectDate -> {
-                val instant = Instant.fromEpochMilliseconds(action.millis!!)
-                val localDateTime = instant.toLocalDateTime(TimeZone.currentSystemDefault())
-                val year = localDateTime.year
-                val month = localDateTime.monthNumber
-                val day = localDateTime.dayOfMonth
+                SettingAction.OpenDatePicker -> {
+                    settingState = settingState.copy(isDatePickerDialogShow = true)
+                }
 
-                // TODO
+                is SettingAction.SelectDate -> {
+                    val instant = Instant.fromEpochMilliseconds(action.millis!!)
+                    val localDateTime = instant.toLocalDateTime(TimeZone.currentSystemDefault())
+                    val year = localDateTime.year
+                    val month = localDateTime.monthNumber
+                    val day = localDateTime.dayOfMonth
+
+                    // TODO
+                }
             }
         }
     }
-}
