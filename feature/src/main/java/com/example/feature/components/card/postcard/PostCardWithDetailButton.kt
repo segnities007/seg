@@ -26,6 +26,7 @@ import com.example.domain.presentation.navigation.NavigationHubRoute
 import com.example.feature.R
 import com.example.feature.components.button.SmallButton
 import com.example.feature.components.card.haiku.Haiku
+import com.example.feature.components.card.tanka.Tanka
 import com.example.feature.screens.hub.HubAction
 import com.example.feature.screens.hub.HubState
 import com.example.feature.screens.hub.home.HomeAction
@@ -46,6 +47,7 @@ fun PostCardWithDetailButton(
     val actionIconEvent: (Post) -> Unit = {
         when (it.genre) {
             Genre.HAIKU -> onHomeAction(HomeAction.ChangeEngagementOfHaiku(it))
+            Genre.TANKA -> onHomeAction(HomeAction.ChangeEngagementOfTanka(it))
             else -> onHomeAction(HomeAction.ChangeEngagementOfPost(it))
         }
     }
@@ -73,6 +75,7 @@ fun PostCardWithDetailButton(
                     Name()
                     when (post.genre) {
                         Genre.HAIKU -> Haiku()
+                        Genre.TANKA -> Tanka()
                         else -> Description()
                     }
                     ActionIcons(actionIconEvent)

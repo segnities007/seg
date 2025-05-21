@@ -45,6 +45,7 @@ fun TopHomeBar(
         val genre =
             when (tabUiState.labels[tabUiState.index]) {
                 Genre.HAIKU.name -> Genre.HAIKU
+                Genre.TANKA.name -> Genre.TANKA
                 else -> Genre.NORMAL
             }
         onHomeAction(HomeAction.UpdateCurrentGenre(genre))

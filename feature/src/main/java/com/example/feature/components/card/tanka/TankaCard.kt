@@ -28,7 +28,6 @@ import com.example.feature.components.card.postcard.PostCardUi
 import com.example.feature.screens.hub.HubAction
 import com.example.feature.screens.hub.HubState
 import com.example.feature.screens.hub.home.HomeAction
-import kotlin.toString
 
 @Composable
 fun TankaCard(
@@ -61,7 +60,7 @@ fun TankaCard(
                 ActionIcons(
                     onProcessOfEngagementAction = { tanka ->
                         onHomeAction(
-                            HomeAction.ChangeEngagementOfHaiku(
+                            HomeAction.ChangeEngagementOfTanka(
                                 tanka,
                             ),
                         )
@@ -73,24 +72,25 @@ fun TankaCard(
 }
 
 @Composable
-private fun PostCardScope.Tanka() {
+fun PostCardScope.Tanka() {
     val firstPhrase = post.description.substring(0..4)
-    val secondPhrase = post.description.substring(5..9)
-    val thirdPhrase = post.description.substring(10..14)
-    val forthPhrase = post.description.substring(15..21)
-    val fifthPhrase = post.description.substring(22..28)
+    val secondPhrase = post.description.substring(5..11)
+    val thirdPhrase = post.description.substring(12..16)
+    val forthPhrase = post.description.substring(17..23)
+    val fifthPhrase = post.description.substring(24..30)
 
     Row(
         modifier = Modifier.wrapContentSize(),
-        verticalAlignment = Alignment.CenterVertically,
+        verticalAlignment = Alignment.Top,
         horizontalArrangement = Arrangement.Center,
     ) {
         Spacer(Modifier.weight(1f))
-        Column {
             Phrase(forthPhrase)
             Phrase(fifthPhrase)
-        }
-        Column {
+        Spacer(Modifier.padding(4.dp))
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+        ){
             Phrase(firstPhrase)
             Phrase(secondPhrase)
             Phrase(thirdPhrase)
@@ -103,10 +103,9 @@ private fun PostCardScope.Tanka() {
 private fun Phrase(
     phrase: String,
     fontSize: TextUnit = 24.sp,
-){
+) {
     Column(
         modifier = Modifier.padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(4.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         for (c in phrase) {
@@ -119,7 +118,7 @@ private fun Phrase(
 @Preview
 private fun TankaPreview() {
     TankaCard(
-        post = Post(description = "ppppppppppppppppppppppppppppp"),
+        post = Post(description = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
         hubState = HubState(),
         isIncrementView = false,
         onHubAction = {},

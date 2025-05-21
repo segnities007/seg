@@ -35,6 +35,13 @@ class PostViewModel
                                 onNavigate = action.onNavigate,
                             )
 
+                        Genre.TANKA ->
+                            createTankaPost(
+                                user = action.user,
+                                onUpdateSelf = action.onUpdateSelf,
+                                onNavigate = action.onNavigate,
+                            )
+
                         else ->
                             createNormalPost(
                                 user = action.user,
@@ -115,6 +122,19 @@ class PostViewModel
             onNavigate: (NavigationHubRoute) -> Unit,
         ) {
             if (postState.inputText.length != 17) return
+            createNormalPost(
+                user = user,
+                onUpdateSelf = onUpdateSelf,
+                onNavigate = onNavigate,
+            )
+        }
+
+        private fun createTankaPost(
+            user: User,
+            onUpdateSelf: () -> Unit,
+            onNavigate: (NavigationHubRoute) -> Unit,
+        ) {
+            if (postState.inputText.length != 31) return
             createNormalPost(
                 user = user,
                 onUpdateSelf = onUpdateSelf,

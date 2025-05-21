@@ -1,4 +1,4 @@
-package com.example.feature.screens.hub.home.normal
+package com.example.feature.screens.hub.home.tanka
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,8 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import com.example.domain.presentation.navigation.Navigation
 import com.example.feature.R
-import com.example.feature.components.card.postcard.PostCard
 import com.example.feature.components.card.postcard.PostCardAction
+import com.example.feature.components.card.tanka.TankaCard
 import com.example.feature.components.indicator.LoadingUI
 import com.example.feature.screens.hub.HubAction
 import com.example.feature.screens.hub.HubState
@@ -21,7 +21,7 @@ import com.example.feature.screens.hub.home.HomeAction
 import com.example.feature.screens.hub.home.HomeState
 
 @Composable
-fun Normal(
+fun Tanka(
     modifier: Modifier,
     hubState: HubState,
     homeState: HomeState,
@@ -31,7 +31,7 @@ fun Normal(
     onHubNavigate: (Navigation) -> Unit,
 ) {
     LazyColumn(
-        state = homeState.lazyListStateOfPost,
+        state = homeState.lazyListStateOfHaiku,
         modifier =
             modifier
                 .fillMaxSize()
@@ -44,34 +44,28 @@ fun Normal(
         verticalArrangement = Arrangement.Top,
     ) {
         items(
-            homeState.posts.size,
-            key = { index: Int -> homeState.posts[index].id },
+            homeState.tankas.size,
+            key = { index: Int -> homeState.tankas[index].id },
         ) { i ->
-            PostCard(
-                post = homeState.posts[i],
+            TankaCard(
+                post = homeState.tankas[i],
                 hubState = hubState,
                 isIncrementView = true,
                 onHubNavigate = onHubNavigate,
                 onHubAction = onHubAction,
+                onHomeAction = onHomeAction,
                 onPostCardAction = onPostCardAction,
-                onProcessOfEngagementAction = { newPost ->
-                    onHomeAction(
-                        HomeAction.ChangeEngagementOfPost(
-                            newPost,
-                        ),
-                    )
-                },
             )
             Spacer(Modifier.padding(dimensionResource(R.dimen.padding_smallest)))
         }
         item {
-            if (!homeState.isAllPostsFetched && homeState.posts.isNotEmpty()) {
+            if (!homeState.isAllTankasFetched && homeState.tankas.isNotEmpty()) {
                 Column {
                     Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_smaller)))
                     LoadingUI(
                         onLoading = {
-                            if (homeState.posts.isNotEmpty()) {
-                                onHomeAction(HomeAction.GetBeforeNewPosts(homeState.posts.last().updateAt))
+                            if (homeState.tankas.isNotEmpty()) {
+                                onHomeAction(HomeAction.GetBeforeNewTankas(homeState.tankas.last().updateAt))
                             }
                         },
                     )
