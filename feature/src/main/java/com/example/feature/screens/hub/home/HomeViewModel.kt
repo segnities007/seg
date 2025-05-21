@@ -1,11 +1,11 @@
 package com.example.feature.screens.hub.home
 
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.domain.model.post.Genre
 import com.example.domain.repository.PostRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -20,32 +20,63 @@ class HomeViewModel
     ) : ViewModel() {
         var homeState by mutableStateOf(HomeState())
             private set
-        val lazyListStateOfNormal = LazyListState()
-        val lazyListStateOfHaiku = LazyListState()
-        val lazyListStateOfTanka = LazyListState()
 
         fun onHomeAction(action: HomeAction) {
             when (action) {
                 HomeAction.ChangeIsAllPostsFetched -> {
-                    onChangeIsAllPostsFetched()
+                    onChangeIsAllFetched(Genre.NORMAL)
                 }
 
                 HomeAction.ChangeIsAllHaikusFetched -> {
-                    onChangeIsAllHaikusFetched()
+                    onChangeIsAllFetched(Genre.HAIKU)
                 }
 
-                is HomeAction.GetBeforeNewPosts -> {
-                    viewModelScope.launch(Dispatchers.IO) {
-                        val posts = postRepository.onGetBeforePosts(action.updatedAt)
-                        if (posts.isEmpty()) onChangeIsAllPostsFetched()
-                        homeState = homeState.copy(posts = homeState.posts.plus(posts))
-                    }
+                HomeAction.ChangeIsAllTankasFetched -> {
+                    onChangeIsAllFetched(Genre.TANKA)
                 }
 
                 HomeAction.GetNewPosts -> {
                     viewModelScope.launch(Dispatchers.IO) {
                         val posts = postRepository.onGetNewPosts()
                         homeState = homeState.copy(posts = posts)
+                    }
+                }
+
+                HomeAction.GetNewHaikus -> {
+                    viewModelScope.launch(Dispatchers.IO) {
+                        val haikus = postRepository.onGetNewHaikus()
+                        homeState = homeState.copy(haikus = haikus)
+                    }
+                }
+
+                HomeAction.GetNewTankas -> {
+                    viewModelScope.launch(Dispatchers.IO) {
+                        val tankas = postRepository.onGetNewTankas()
+                        homeState = homeState.copy(tankas = tankas)
+                    }
+                }
+
+                is HomeAction.GetBeforeNewPosts -> {
+                    viewModelScope.launch(Dispatchers.IO) {
+                        val posts = postRepository.onGetBeforePosts(action.updatedAt)
+                        if (posts.isEmpty()) onChangeIsAllFetched(Genre.NORMAL)
+                        homeState = homeState.copy(posts = homeState.posts.plus(posts))
+                    }
+                }
+
+                is HomeAction.GetBeforeNewHaikus -> {
+                    viewModelScope.launch(Dispatchers.IO) {
+                        val haikus = postRepository.onGetBeforeHaikus(action.updatedAt)
+                        if (haikus.isEmpty()) onChangeIsAllFetched(Genre.HAIKU)
+                        homeState = homeState.copy(haikus = homeState.haikus.plus(haikus))
+                    }
+                }
+
+                is HomeAction.GetBeforeNewTankas -> {
+                    viewModelScope.launch(Dispatchers.IO) {
+                        val tankas = postRepository.onGetBeforeTankas(action.updatedAt)
+                        if (tankas.isEmpty()) onChangeIsAllFetched(Genre.TANKA)
+                        homeState = homeState.copy(tankas = homeState.tankas.plus(tankas))
                     }
                 }
 
@@ -66,37 +97,26 @@ class HomeViewModel
                     homeState = homeState.copy(haikus = newHaikus)
                 }
 
+                is HomeAction.ChangeEngagementOfTanka -> {
+                    val newTankas =
+                        homeState.tankas.map { tanka ->
+                            if (action.newTanka.id == tanka.id) action.newTanka else tanka
+                        }
+                    homeState = homeState.copy(tankas = newTankas)
+                }
+
                 is HomeAction.UpdateCurrentGenre -> {
                     homeState = homeState.copy(currentGenre = action.newGenre)
                 }
-
-                is HomeAction.GetBeforeNewHaikus -> {
-                    viewModelScope.launch(Dispatchers.IO) {
-                        val haikus = postRepository.onGetBeforeHaikus(action.updatedAt)
-                        if (haikus.isEmpty()) onChangeIsAllHaikusFetched()
-                        homeState = homeState.copy(haikus = homeState.haikus.plus(haikus))
-                    }
-                }
-
-                HomeAction.GetNewHaikus -> {
-                    viewModelScope.launch(Dispatchers.IO) {
-                        val haikus = postRepository.onGetNewHaikus()
-                        homeState = homeState.copy(haikus = haikus)
-                    }
-                }
-
-                is HomeAction.ChangeEngagementOfTanka -> TODO()
-                HomeAction.ChangeIsAllTankasFetched -> TODO()
-                is HomeAction.GetBeforeNewTankas -> TODO()
-                HomeAction.GetNewTankas -> TODO()
             }
         }
 
-        private fun onChangeIsAllPostsFetched() {
-            homeState = homeState.copy(isAllPostsFetched = !homeState.isAllPostsFetched)
-        }
-
-        private fun onChangeIsAllHaikusFetched() {
-            homeState = homeState.copy(isAllHaikusFetched = !homeState.isAllHaikusFetched)
+        private fun onChangeIsAllFetched(genre: Genre) {
+            homeState =
+                when (genre) {
+                    Genre.HAIKU -> homeState.copy(isAllHaikusFetched = !homeState.isAllHaikusFetched)
+                    Genre.TANKA -> homeState.copy(isAllTankasFetched = !homeState.isAllTankasFetched)
+                    else -> homeState.copy(isAllPostsFetched = !homeState.isAllPostsFetched)
+                }
         }
     }

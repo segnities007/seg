@@ -1,5 +1,6 @@
 package com.example.feature.screens.hub.home
 
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Immutable
 import com.example.domain.model.post.Genre
 import com.example.domain.model.post.Post
@@ -12,4 +13,8 @@ data class HomeState(
     val currentGenre: Genre = Genre.NORMAL,
     val isAllPostsFetched: Boolean = false,
     val isAllHaikusFetched: Boolean = false,
+    val isAllTankasFetched: Boolean = false,
+    val lazyListStateOfPost: LazyListState = LazyListState(),
+    val lazyListStateOfHaiku: LazyListState = LazyListState(),
+    val lazyListStateOfTanka: LazyListState = LazyListState(),
 )
