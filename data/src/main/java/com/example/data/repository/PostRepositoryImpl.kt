@@ -305,6 +305,30 @@ class PostRepositoryImpl
             }
         }
 
+        override suspend fun onGetBeforeTankas(afterPostCreateAt: LocalDateTime): List<Post> {
+            try {
+                val result =
+                    postgrest
+                        .from(posts)
+                        .select {
+                            order("create_at", Order.DESCENDING)
+                            filter {
+                                PostDto::genre eq Genre.TANKA.name
+                                lt("create_at", afterPostCreateAt)
+                            }
+                            limit(7)
+                        }.decodeList<PostDto>()
+                val list = result.minus(result.first())
+
+                if (result.isEmpty()) return listOf()
+
+                return list.map { it.toPost() }
+            } catch (e: Exception) {
+                Log.e(tag, "failed onGetBeforeTankas $e")
+                throw e
+            }
+        }
+
         override suspend fun onGetNewPosts(): List<Post> {
             try {
                 val result =
@@ -334,6 +358,23 @@ class PostRepositoryImpl
                 return result.map { it.toPost() }
             } catch (e: Exception) {
                 Log.e(tag, "failed onGetNewHaikus $e")
+                throw e
+            }
+        }
+
+        override suspend fun onGetNewTankas(): List<Post> {
+            try {
+                val result =
+                    postgrest
+                        .from(posts)
+                        .select {
+                            filter { PostDto::genre eq Genre.TANKA.name }
+                            order("create_at", Order.DESCENDING)
+                            limit(count = 7)
+                        }.decodeList<PostDto>()
+                return result.map { it.toPost() }
+            } catch (e: Exception) {
+                Log.e(tag, "failed onGetNewTankas $e")
                 throw e
             }
         }
