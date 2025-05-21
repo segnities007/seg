@@ -86,7 +86,7 @@ class PostCardViewModel
                     action.onHubAction(HubAction.SetSelf(newSelf))
                     viewModelScope.launch(Dispatchers.IO) {
                         postRepository.onDeletePost(post)
-                        action.onHomeAction(HomeAction.GetNewPosts)
+                        action.onHomeAction(HomeAction.GetNewPosts(post.genre))
                     }
                 }
 
