@@ -22,6 +22,7 @@ class HomeViewModel
             private set
         val lazyListStateOfNormal = LazyListState()
         val lazyListStateOfHaiku = LazyListState()
+        val lazyListStateOfTanka = LazyListState()
 
         fun onHomeAction(action: HomeAction) {
             when (action) {
@@ -83,6 +84,11 @@ class HomeViewModel
                         homeState = homeState.copy(haikus = haikus)
                     }
                 }
+
+                is HomeAction.ChangeEngagementOfTanka -> TODO()
+                HomeAction.ChangeIsAllTankasFetched -> TODO()
+                is HomeAction.GetBeforeNewTankas -> TODO()
+                HomeAction.GetNewTankas -> TODO()
             }
         }
 

@@ -30,6 +30,8 @@ interface PostRepository {
 
     suspend fun onGetBeforeHaikus(afterPostCreateAt: LocalDateTime): List<Post>
 
+    suspend fun onGetBeforeTankas(afterPostCreateAt: LocalDateTime): List<Post>
+
     suspend fun onGetPost(postID: Int): Post
 
     suspend fun onGetComment(commentID: Int): Post
@@ -45,6 +47,8 @@ interface PostRepository {
     suspend fun onGetNewHaiku(): Post
 
     suspend fun onGetNewHaikus(): List<Post>
+
+    suspend fun onGetNewTankas(): List<Post>
 
     suspend fun onGetTrendPostOfToday(limit: Long = 10): List<Post>
 
