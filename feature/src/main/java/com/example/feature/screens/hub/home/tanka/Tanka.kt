@@ -59,13 +59,13 @@ fun Tanka(
             Spacer(Modifier.padding(dimensionResource(R.dimen.padding_smallest)))
         }
         item {
-            if (!homeState.isAllHaikusFetched && homeState.tankas.isNotEmpty()) {
+            if (!homeState.isAllTankasFetched && homeState.tankas.isNotEmpty()) {
                 Column {
                     Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_smaller)))
                     LoadingUI(
                         onLoading = {
                             if (homeState.tankas.isNotEmpty()) {
-                                onHomeAction(HomeAction.GetBeforeNewHaikus(homeState.tankas.last().updateAt))
+                                onHomeAction(HomeAction.GetBeforeNewTankas(homeState.tankas.last().updateAt))
                             }
                         },
                     )

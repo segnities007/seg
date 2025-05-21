@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.domain.model.post.Post
@@ -75,47 +76,6 @@ fun PostCardScope.Haiku() {
     val upperPhrase = post.description.substring(0..4)
     val middlePhrase = post.description.substring(5..11)
     val lowerPhase = post.description.substring(12..16)
-    val fontSize = 32.sp
-
-    val upper: @Composable () -> Unit = {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            for (c in upperPhrase) {
-                Text(text = c.toString(), fontSize = fontSize)
-            }
-            Spacer(Modifier.weight(1f))
-        }
-    }
-
-    val middle: @Composable () -> Unit = {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Spacer(Modifier.weight(1f))
-            for (c in middlePhrase) {
-                Text(text = c.toString(), fontSize = fontSize)
-            }
-            Spacer(Modifier.weight(1f))
-        }
-    }
-
-    val lower: @Composable () -> Unit = {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Spacer(Modifier.weight(1f))
-            for (c in lowerPhase) {
-                Text(text = c.toString(), fontSize = fontSize)
-            }
-        }
-    }
 
     Row(
         modifier = Modifier.wrapContentSize(),
@@ -123,10 +83,25 @@ fun PostCardScope.Haiku() {
         horizontalArrangement = Arrangement.Center,
     ) {
         Spacer(Modifier.weight(1f))
-        lower()
-        middle()
-        upper()
+        Phrase(lowerPhase)
+        Phrase(middlePhrase)
+        Phrase(upperPhrase)
         Spacer(Modifier.weight(1f))
+    }
+}
+
+@Composable
+private fun Phrase(
+    phrase: String,
+    fontSize: TextUnit = 24.sp,
+) {
+    Column(
+        modifier = Modifier.padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        for (c in phrase) {
+            Text(text = c.toString(), fontSize = fontSize)
+        }
     }
 }
 
