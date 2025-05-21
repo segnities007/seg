@@ -60,7 +60,7 @@ fun KatautaCard(
                 ActionIcons(
                     onProcessOfEngagementAction = { katauta ->
                         onHomeAction(
-                            HomeAction.ChangeEngagementOfTanka(
+                            HomeAction.ChangeEngagementOfKatauta(
                                 katauta,
                             ),
                         )

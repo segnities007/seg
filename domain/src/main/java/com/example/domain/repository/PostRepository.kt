@@ -26,11 +26,10 @@ interface PostRepository {
         updateAt: LocalDateTime,
     ): List<Post>
 
-    suspend fun onGetBeforePosts(afterPostCreateAt: LocalDateTime): List<Post>
-
-    suspend fun onGetBeforeHaikus(afterPostCreateAt: LocalDateTime): List<Post>
-
-    suspend fun onGetBeforeTankas(afterPostCreateAt: LocalDateTime): List<Post>
+    suspend fun onGetBeforePosts(
+        afterPostCreateAt: LocalDateTime,
+        genre: Genre,
+    ): List<Post>
 
     suspend fun onGetPost(postID: Int): Post
 
@@ -42,13 +41,9 @@ interface PostRepository {
 
     suspend fun onGetNewPost(): Post
 
-    suspend fun onGetNewPosts(): List<Post>
-
     suspend fun onGetNewHaiku(): Post
 
-    suspend fun onGetNewHaikus(): List<Post>
-
-    suspend fun onGetNewTankas(): List<Post>
+    suspend fun onGetNewPosts(genre: Genre): List<Post>
 
     suspend fun onGetTrendPostOfToday(limit: Long = 10): List<Post>
 

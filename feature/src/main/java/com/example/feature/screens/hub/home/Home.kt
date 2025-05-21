@@ -58,6 +58,10 @@ fun Home(
             )
         }
 
+        Genre.KATAUTA -> {
+            // TODO
+        }
+
         else -> {}
     }
 }
