@@ -42,7 +42,6 @@ fun PostDto.toPost(): Post {
             Genre.TANKA.name -> Genre.TANKA
             Genre.HAIKU.name -> Genre.HAIKU
             Genre.SEDOUKA.name -> Genre.SEDOUKA
-            Genre.DODOITSU.name -> Genre.DODOITSU
             else -> Genre.NORMAL
         }
     return Post(
@@ -68,7 +67,7 @@ fun PostDto.fromPost(post: Post): PostDto {
             Genre.TANKA -> Genre.TANKA.name
             Genre.HAIKU -> Genre.HAIKU.name
             Genre.SEDOUKA -> Genre.SEDOUKA.name
-            Genre.DODOITSU -> Genre.DODOITSU.name
+            Genre.KATAUTA -> Genre.KATAUTA.name
             else -> Genre.NORMAL.name
         }
 

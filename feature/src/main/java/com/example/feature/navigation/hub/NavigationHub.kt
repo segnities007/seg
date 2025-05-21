@@ -10,6 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.domain.model.post.Genre
 import com.example.domain.presentation.navigation.Navigation
 import com.example.domain.presentation.navigation.NavigationHubRoute
 import com.example.feature.components.card.postcard.PostCardViewModel
@@ -44,9 +45,10 @@ fun NavigationHub(onTopNavigate: (route: Navigation) -> Unit) {
 
     LaunchedEffect(Unit) {
         hubViewModel.onHubAction(HubAction.GetUser)
-        homeViewModel.onHomeAction(HomeAction.GetNewPosts)
-        homeViewModel.onHomeAction(HomeAction.GetNewHaikus)
-        homeViewModel.onHomeAction(HomeAction.GetNewTankas)
+        homeViewModel.onHomeAction(HomeAction.GetNewPosts(Genre.NORMAL))
+        homeViewModel.onHomeAction(HomeAction.GetNewPosts(Genre.HAIKU))
+        homeViewModel.onHomeAction(HomeAction.GetNewPosts(Genre.TANKA))
+        homeViewModel.onHomeAction(HomeAction.GetNewPosts(Genre.KATAUTA))
     }
 
     val navBackStackEntry by hubNavHostController.currentBackStackEntryAsState()

@@ -1,4 +1,4 @@
-package com.example.feature.components.card.haiku
+package com.example.feature.components.card.katauta
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -30,7 +30,7 @@ import com.example.feature.screens.hub.HubState
 import com.example.feature.screens.hub.home.HomeAction
 
 @Composable
-fun HaikuCard(
+fun KatautaCard(
     post: Post,
     hubState: HubState,
     isIncrementView: Boolean = true,
@@ -56,12 +56,12 @@ fun HaikuCard(
                         .padding(horizontal = dimensionResource(R.dimen.padding_sn)),
             ) {
                 Name()
-                Haiku()
+                Katauta()
                 ActionIcons(
-                    onProcessOfEngagementAction = { haiku ->
+                    onProcessOfEngagementAction = { katauta ->
                         onHomeAction(
                             HomeAction.ChangeEngagementOfPost(
-                                haiku,
+                                katauta,
                             ),
                         )
                     },
@@ -72,20 +72,20 @@ fun HaikuCard(
 }
 
 @Composable
-fun PostCardScope.Haiku() {
-    val upperPhrase = post.description.substring(0..4)
-    val middlePhrase = post.description.substring(5..11)
-    val lowerPhase = post.description.substring(12..16)
+fun PostCardScope.Katauta() {
+    val firstPhrase = post.description.substring(0..4)
+    val secondPhrase = post.description.substring(5..11)
+    val thirdPhrase = post.description.substring(12..18)
 
     Row(
         modifier = Modifier.wrapContentSize(),
-        verticalAlignment = Alignment.CenterVertically,
+        verticalAlignment = Alignment.Top,
         horizontalArrangement = Arrangement.Center,
     ) {
         Spacer(Modifier.weight(1f))
-        Phrase(lowerPhase)
-        Phrase(middlePhrase)
-        Phrase(upperPhrase)
+        Phrase(firstPhrase)
+        Phrase(secondPhrase)
+        Phrase(thirdPhrase)
         Spacer(Modifier.weight(1f))
     }
 }
@@ -107,9 +107,9 @@ private fun Phrase(
 
 @Composable
 @Preview
-private fun HaikuPreview() {
-    HaikuCard(
-        post = Post(description = "abcdefghrjklmnopq"),
+private fun KatautaPreview() {
+    KatautaCard(
+        post = Post(description = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
         hubState = HubState(),
         isIncrementView = false,
         onHubAction = {},

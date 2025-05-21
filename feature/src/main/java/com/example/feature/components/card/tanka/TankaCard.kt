@@ -60,7 +60,7 @@ fun TankaCard(
                 ActionIcons(
                     onProcessOfEngagementAction = { tanka ->
                         onHomeAction(
-                            HomeAction.ChangeEngagementOfTanka(
+                            HomeAction.ChangeEngagementOfPost(
                                 tanka,
                             ),
                         )
@@ -85,12 +85,12 @@ fun PostCardScope.Tanka() {
         horizontalArrangement = Arrangement.Center,
     ) {
         Spacer(Modifier.weight(1f))
-            Phrase(forthPhrase)
-            Phrase(fifthPhrase)
+        Phrase(forthPhrase)
+        Phrase(fifthPhrase)
         Spacer(Modifier.padding(4.dp))
         Row(
             verticalAlignment = Alignment.CenterVertically,
-        ){
+        ) {
             Phrase(firstPhrase)
             Phrase(secondPhrase)
             Phrase(thirdPhrase)

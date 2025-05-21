@@ -23,86 +23,71 @@ class HomeViewModel
 
         fun onHomeAction(action: HomeAction) {
             when (action) {
-                HomeAction.ChangeIsAllPostsFetched -> {
-                    onChangeIsAllFetched(Genre.NORMAL)
+                is HomeAction.ChangeIsAllPostsFetched -> {
+                    onChangeIsAllFetched(action.genre)
                 }
 
-                HomeAction.ChangeIsAllHaikusFetched -> {
-                    onChangeIsAllFetched(Genre.HAIKU)
-                }
-
-                HomeAction.ChangeIsAllTankasFetched -> {
-                    onChangeIsAllFetched(Genre.TANKA)
-                }
-
-                HomeAction.GetNewPosts -> {
+                is HomeAction.GetNewPosts -> {
                     viewModelScope.launch(Dispatchers.IO) {
-                        val posts = postRepository.onGetNewPosts()
-                        homeState = homeState.copy(posts = posts)
-                    }
-                }
-
-                HomeAction.GetNewHaikus -> {
-                    viewModelScope.launch(Dispatchers.IO) {
-                        val haikus = postRepository.onGetNewHaikus()
-                        homeState = homeState.copy(haikus = haikus)
-                    }
-                }
-
-                HomeAction.GetNewTankas -> {
-                    viewModelScope.launch(Dispatchers.IO) {
-                        val tankas = postRepository.onGetNewTankas()
-                        homeState = homeState.copy(tankas = tankas)
+                        val posts = postRepository.onGetNewPosts(action.genre)
+                        homeState =
+                            when (action.genre) {
+                                Genre.HAIKU -> homeState.copy(haikus = posts)
+                                Genre.TANKA -> homeState.copy(tankas = posts)
+                                Genre.KATAUTA -> homeState.copy(katautas = posts)
+                                else -> homeState.copy(posts = posts)
+                            }
                     }
                 }
 
                 is HomeAction.GetBeforeNewPosts -> {
                     viewModelScope.launch(Dispatchers.IO) {
-                        val posts = postRepository.onGetBeforePosts(action.updatedAt)
-                        if (posts.isEmpty()) onChangeIsAllFetched(Genre.NORMAL)
-                        homeState = homeState.copy(posts = homeState.posts.plus(posts))
-                    }
-                }
-
-                is HomeAction.GetBeforeNewHaikus -> {
-                    viewModelScope.launch(Dispatchers.IO) {
-                        val haikus = postRepository.onGetBeforeHaikus(action.updatedAt)
-                        if (haikus.isEmpty()) onChangeIsAllFetched(Genre.HAIKU)
-                        homeState = homeState.copy(haikus = homeState.haikus.plus(haikus))
-                    }
-                }
-
-                is HomeAction.GetBeforeNewTankas -> {
-                    viewModelScope.launch(Dispatchers.IO) {
-                        val tankas = postRepository.onGetBeforeTankas(action.updatedAt)
-                        if (tankas.isEmpty()) onChangeIsAllFetched(Genre.TANKA)
-                        homeState = homeState.copy(tankas = homeState.tankas.plus(tankas))
+                        val posts =
+                            postRepository.onGetBeforePosts(
+                                afterPostCreateAt = action.updatedAt,
+                                genre = action.genre,
+                            )
+                        if (posts.isEmpty()) onChangeIsAllFetched(action.genre)
+                        homeState =
+                            when (action.genre) {
+                                Genre.HAIKU -> homeState.copy(haikus = homeState.haikus.plus(posts))
+                                Genre.TANKA -> homeState.copy(tankas = homeState.tankas.plus(posts))
+                                Genre.KATAUTA -> homeState.copy(katautas = homeState.katautas.plus(posts))
+                                else -> homeState.copy(posts = homeState.posts.plus(posts))
+                            }
                     }
                 }
 
                 is HomeAction.ChangeEngagementOfPost -> {
                     val newPosts =
-                        homeState.posts.map { post ->
-                            if (action.newPost.id == post.id) action.newPost else post
-                        }
+                        when (action.newPost.genre) {
+                            Genre.HAIKU ->
+                                homeState.haikus.map { haiku ->
+                                    if (haiku.id == action.newPost.id) action.newPost else haiku
+                                }
 
-                    homeState = homeState.copy(posts = newPosts)
-                }
+                            Genre.TANKA ->
+                                homeState.tankas.map { tanka ->
+                                    if (tanka.id == action.newPost.id) action.newPost else tanka
+                                }
 
-                is HomeAction.ChangeEngagementOfHaiku -> {
-                    val newHaikus =
-                        homeState.haikus.map { haiku ->
-                            if (action.newHaiku.id == haiku.id) action.newHaiku else haiku
-                        }
-                    homeState = homeState.copy(haikus = newHaikus)
-                }
+                            Genre.KATAUTA ->
+                                homeState.katautas.map { katauta ->
+                                    if (katauta.id == action.newPost.id) action.newPost else katauta
+                                }
 
-                is HomeAction.ChangeEngagementOfTanka -> {
-                    val newTankas =
-                        homeState.tankas.map { tanka ->
-                            if (action.newTanka.id == tanka.id) action.newTanka else tanka
+                            else ->
+                                homeState.posts.map { post ->
+                                    if (post.id == action.newPost.id) action.newPost else post
+                                }
                         }
-                    homeState = homeState.copy(tankas = newTankas)
+                    homeState =
+                        when (action.newPost.genre) {
+                            Genre.TANKA -> homeState.copy(tankas = newPosts)
+                            Genre.HAIKU -> homeState.copy(haikus = newPosts)
+                            Genre.KATAUTA -> homeState.copy(katautas = newPosts)
+                            else -> homeState.copy(posts = newPosts)
+                        }
                 }
 
                 is HomeAction.UpdateCurrentGenre -> {
@@ -116,6 +101,7 @@ class HomeViewModel
                 when (genre) {
                     Genre.HAIKU -> homeState.copy(isAllHaikusFetched = !homeState.isAllHaikusFetched)
                     Genre.TANKA -> homeState.copy(isAllTankasFetched = !homeState.isAllTankasFetched)
+                    Genre.KATAUTA -> homeState.copy(isAllKatautasFetched = !homeState.isAllKatautasFetched)
                     else -> homeState.copy(isAllPostsFetched = !homeState.isAllPostsFetched)
                 }
         }

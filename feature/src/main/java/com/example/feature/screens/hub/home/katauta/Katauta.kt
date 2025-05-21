@@ -1,4 +1,4 @@
-package com.example.feature.screens.hub.home.haiku
+package com.example.feature.screens.hub.home.katauta
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,7 +13,7 @@ import androidx.compose.ui.res.dimensionResource
 import com.example.domain.model.post.Genre
 import com.example.domain.presentation.navigation.Navigation
 import com.example.feature.R
-import com.example.feature.components.card.haiku.HaikuCard
+import com.example.feature.components.card.katauta.KatautaCard
 import com.example.feature.components.card.postcard.PostCardAction
 import com.example.feature.components.indicator.LoadingUI
 import com.example.feature.screens.hub.HubAction
@@ -22,7 +22,7 @@ import com.example.feature.screens.hub.home.HomeAction
 import com.example.feature.screens.hub.home.HomeState
 
 @Composable
-fun Haiku(
+fun Katauta(
     modifier: Modifier,
     hubState: HubState,
     homeState: HomeState,
@@ -32,7 +32,7 @@ fun Haiku(
     onHubNavigate: (Navigation) -> Unit,
 ) {
     LazyColumn(
-        state = homeState.lazyListStateOfHaiku,
+        state = homeState.lazyListStateOfKatauta,
         modifier =
             modifier
                 .fillMaxSize()
@@ -45,11 +45,11 @@ fun Haiku(
         verticalArrangement = Arrangement.Top,
     ) {
         items(
-            homeState.haikus.size,
-            key = { index: Int -> homeState.haikus[index].id },
+            homeState.katautas.size,
+            key = { index: Int -> homeState.katautas[index].id },
         ) { i ->
-            HaikuCard(
-                post = homeState.haikus[i],
+            KatautaCard(
+                post = homeState.katautas[i],
                 hubState = hubState,
                 isIncrementView = true,
                 onHubNavigate = onHubNavigate,
@@ -60,16 +60,16 @@ fun Haiku(
             Spacer(Modifier.padding(dimensionResource(R.dimen.padding_smallest)))
         }
         item {
-            if (!homeState.isAllHaikusFetched && homeState.haikus.isNotEmpty()) {
+            if (!homeState.isAllKatautasFetched && homeState.katautas.isNotEmpty()) {
                 Column {
                     Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_smaller)))
                     LoadingUI(
                         onLoading = {
-                            if (homeState.haikus.isNotEmpty()) {
+                            if (homeState.katautas.isNotEmpty()) {
                                 onHomeAction(
                                     HomeAction.GetBeforeNewPosts(
-                                        updatedAt = homeState.haikus.last().updateAt,
-                                        genre = Genre.HAIKU,
+                                        updatedAt = homeState.katautas.last().updateAt,
+                                        genre = Genre.KATAUTA,
                                     ),
                                 )
                             }
