@@ -11,9 +11,13 @@ sealed interface HomeAction {
 
     data object GetNewHaikus : HomeAction
 
+    data object GetNewTankas : HomeAction
+
     data object ChangeIsAllPostsFetched : HomeAction
 
     data object ChangeIsAllHaikusFetched : HomeAction
+
+    data object ChangeIsAllTankasFetched : HomeAction
 
     data class UpdateCurrentGenre(
         val newGenre: Genre,
@@ -27,11 +31,19 @@ sealed interface HomeAction {
         val updatedAt: LocalDateTime,
     ) : HomeAction
 
+    data class GetBeforeNewTankas(
+        val updatedAt: LocalDateTime,
+    ) : HomeAction
+
     data class ChangeEngagementOfPost(
         val newPost: Post,
     ) : HomeAction
 
     data class ChangeEngagementOfHaiku(
         val newHaiku: Post,
+    ) : HomeAction
+
+    data class ChangeEngagementOfTanka(
+        val newTanka: Post,
     ) : HomeAction
 }
