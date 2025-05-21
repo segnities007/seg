@@ -32,6 +32,7 @@ import com.example.feature.components.tab.TabUiState
 import com.example.feature.navigation.TopAction
 import com.example.feature.navigation.TopState
 import com.example.feature.screens.hub.account.AccountState
+import com.example.feature.screens.hub.home.HomeAction
 import com.example.feature.screens.hub.search.SearchAction
 
 @Composable
@@ -47,6 +48,7 @@ fun Hub(
     onTopAction: (TopAction) -> Unit,
     onSearchAction: (SearchAction) -> Unit,
     onTopSearchBarAction: (TopSearchBarAction) -> Unit,
+    onHomeAction: (HomeAction) -> Unit,
     onHubNavigate: (Navigation) -> Unit,
     content: @Composable (Modifier) -> Unit,
 ) {
@@ -70,6 +72,7 @@ fun Hub(
             onSearchAction = onSearchAction,
             onTabAction = onTabAction,
             onTopSearchBarAction = onTopSearchBarAction,
+            onHomeAction = onHomeAction,
         )
     }
 }
@@ -88,6 +91,7 @@ private fun HubUi(
     onTabAction: (TabAction) -> Unit,
     onTopSearchBarAction: (TopSearchBarAction) -> Unit,
     onHubNavigate: (Navigation) -> Unit,
+    onHomeAction: (HomeAction) -> Unit,
     content: @Composable (modifier: Modifier) -> Unit,
 ) {
     val scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
@@ -107,6 +111,7 @@ private fun HubUi(
                 onSearchAction = onSearchAction,
                 onTabAction = onTabAction,
                 onTopSearchBarAction = onTopSearchBarAction,
+                onHomeAction = onHomeAction,
                 scrollBehavior = scrollBehavior,
             )
         },
@@ -142,6 +147,7 @@ private fun HubTopBar(
     onSearchAction: (SearchAction) -> Unit,
     onTabAction: (TabAction) -> Unit,
     onTopSearchBarAction: (TopSearchBarAction) -> Unit,
+    onHomeAction: (HomeAction) -> Unit,
     scrollBehavior: TopAppBarScrollBehavior,
 ) {
     LaunchedEffect(Unit) {
@@ -165,6 +171,7 @@ private fun HubTopBar(
                 titleContent = { Text(text = currentRouteName) },
                 onDrawerOpen = { onTopAction(TopAction.OpenDrawer) },
                 scrollBehavior = scrollBehavior,
+                onHomeAction = onHomeAction,
             )
 
         NavigationHubRoute.Trend.name ->

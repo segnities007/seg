@@ -12,22 +12,22 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SplashViewModel
-@Inject
-constructor(
-    private val authRepository: AuthRepository,
-) : ViewModel() {
-    fun hasLogged(
-        onNavigateToLogin: () -> Unit,
-        onNavigateToHost: () -> Unit,
-    ) {
-        Log.d("check splash", "run hasLogged")
-        viewModelScope.launch {
-            withContext(Dispatchers.Main) {
-                authRepository.hasLogged(
-                    onNavigateToHost = onNavigateToHost,
-                    onNavigateToLogin = onNavigateToLogin,
-                )
+    @Inject
+    constructor(
+        private val authRepository: AuthRepository,
+    ) : ViewModel() {
+        fun hasLogged(
+            onNavigateToLogin: () -> Unit,
+            onNavigateToHost: () -> Unit,
+        ) {
+            Log.d("check splash", "run hasLogged")
+            viewModelScope.launch {
+                withContext(Dispatchers.Main) {
+                    authRepository.hasLogged(
+                        onNavigateToHost = onNavigateToHost,
+                        onNavigateToLogin = onNavigateToLogin,
+                    )
+                }
             }
         }
     }
-}

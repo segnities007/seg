@@ -1,5 +1,6 @@
 package com.example.feature.screens.hub.home
 
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.example.domain.model.post.Genre
@@ -7,6 +8,7 @@ import com.example.domain.presentation.navigation.Navigation
 import com.example.feature.components.card.postcard.PostCardAction
 import com.example.feature.screens.hub.HubAction
 import com.example.feature.screens.hub.HubState
+import com.example.feature.screens.hub.home.haiku.Haiku
 import com.example.feature.screens.hub.home.normal.Normal
 
 @Composable
@@ -14,6 +16,8 @@ fun Home(
     modifier: Modifier,
     hubState: HubState,
     homeState: HomeState,
+    lazyListStateOfNormal: LazyListState,
+    lazyListStateOfHaiku: LazyListState,
     onHubAction: (HubAction) -> Unit,
     onHomeAction: (HomeAction) -> Unit,
     onPostCardAction: (PostCardAction) -> Unit,
@@ -25,6 +29,20 @@ fun Home(
                 modifier = modifier,
                 hubState = hubState,
                 homeState = homeState,
+                lazyListStateOfNormal = lazyListStateOfNormal,
+                onHubAction = onHubAction,
+                onHomeAction = onHomeAction,
+                onPostCardAction = onPostCardAction,
+                onHubNavigate = onHubNavigate,
+            )
+        }
+
+        Genre.HAIKU -> {
+            Haiku(
+                modifier = modifier,
+                hubState = hubState,
+                homeState = homeState,
+                lazyListStateOfHaiku = lazyListStateOfHaiku,
                 onHubAction = onHubAction,
                 onHomeAction = onHomeAction,
                 onPostCardAction = onPostCardAction,

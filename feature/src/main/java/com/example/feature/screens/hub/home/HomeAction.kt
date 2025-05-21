@@ -9,7 +9,11 @@ import java.time.LocalDateTime
 sealed interface HomeAction {
     data object GetNewPosts : HomeAction
 
-    data object ChangeHasNoMorePost : HomeAction
+    data object GetNewHaikus : HomeAction
+
+    data object ChangeIsAllPostsFetched : HomeAction
+
+    data object ChangeIsAllHaikusFetched : HomeAction
 
     data class UpdateCurrentGenre(
         val newGenre: Genre,
@@ -19,7 +23,15 @@ sealed interface HomeAction {
         val updatedAt: LocalDateTime,
     ) : HomeAction
 
-    data class ProcessOfEngagement(
+    data class GetBeforeNewHaikus(
+        val updatedAt: LocalDateTime,
+    ) : HomeAction
+
+    data class ChangeEngagementOfPost(
         val newPost: Post,
+    ) : HomeAction
+
+    data class ChangeEngagementOfHaiku(
+        val newHaiku: Post,
     ) : HomeAction
 }

@@ -13,29 +13,29 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CommentViewModel
-@Inject
-constructor(
-    private val postRepository: PostRepository,
-) : ViewModel() {
-    var commentState by mutableStateOf(CommentState())
-        private set
+    @Inject
+    constructor(
+        private val postRepository: PostRepository,
+    ) : ViewModel() {
+        var commentState by mutableStateOf(CommentState())
+            private set
 
-    fun onCommentAction(action: CommentAction) {
-        when (action) {
-            is CommentAction.GetComments -> {
-                viewModelScope.launch(Dispatchers.IO) {
-                    val comments = postRepository.onGetComments(action.comment)
-                    commentState = commentState.copy(comments = comments)
-                }
-            }
-
-            is CommentAction.ProcessOfEngagementAction -> {
-                val newPosts =
-                    commentState.comments.map { post ->
-                        if (action.updatedPost.id == post.id) action.updatedPost else post
+        fun onCommentAction(action: CommentAction) {
+            when (action) {
+                is CommentAction.GetComments -> {
+                    viewModelScope.launch(Dispatchers.IO) {
+                        val comments = postRepository.onGetComments(action.comment)
+                        commentState = commentState.copy(comments = comments)
                     }
-                commentState = commentState.copy(comments = newPosts)
+                }
+
+                is CommentAction.ProcessOfEngagementAction -> {
+                    val newPosts =
+                        commentState.comments.map { post ->
+                            if (action.updatedPost.id == post.id) action.updatedPost else post
+                        }
+                    commentState = commentState.copy(comments = newPosts)
+                }
             }
         }
     }
-}

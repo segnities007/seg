@@ -7,6 +7,8 @@ import com.example.domain.model.post.Post
 @Immutable
 data class HomeState(
     val posts: List<Post> = listOf(),
+    val haikus: List<Post> = listOf(),
     val currentGenre: Genre = Genre.NORMAL,
-    val hasNoMorePost: Boolean = false,
+    val isAllPostsFetched: Boolean = false,
+    val isAllHaikusFetched: Boolean = false,
 )

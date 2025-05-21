@@ -183,8 +183,8 @@ private fun ImagePickerButton(createAccountAction: (CreateAccountAction) -> Unit
                         createAccountAction(
                             CreateAccountAction.SetPicture(
                                 uri.path.toString(),
-                                byteArray
-                            )
+                                byteArray,
+                            ),
                         )
                         createAccountAction(CreateAccountAction.SetUri(uri))
                     }

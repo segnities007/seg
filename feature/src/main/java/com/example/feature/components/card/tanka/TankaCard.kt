@@ -1,4 +1,4 @@
-package com.example.feature.components.card.haiku
+package com.example.feature.components.card.tanka
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.domain.model.post.Post
@@ -27,9 +28,10 @@ import com.example.feature.components.card.postcard.PostCardUi
 import com.example.feature.screens.hub.HubAction
 import com.example.feature.screens.hub.HubState
 import com.example.feature.screens.hub.home.HomeAction
+import kotlin.toString
 
 @Composable
-fun HaikuCard(
+fun TankaCard(
     post: Post,
     hubState: HubState,
     isIncrementView: Boolean = true,
@@ -55,12 +57,12 @@ fun HaikuCard(
                         .padding(horizontal = dimensionResource(R.dimen.padding_sn)),
             ) {
                 Name()
-                Haiku()
+                Tanka()
                 ActionIcons(
-                    onProcessOfEngagementAction = { haiku ->
+                    onProcessOfEngagementAction = { tanka ->
                         onHomeAction(
                             HomeAction.ChangeEngagementOfHaiku(
-                                haiku,
+                                tanka,
                             ),
                         )
                     },
@@ -71,51 +73,12 @@ fun HaikuCard(
 }
 
 @Composable
-fun PostCardScope.Haiku() {
-    val upperPhrase = post.description.substring(0..4)
-    val middlePhrase = post.description.substring(5..11)
-    val lowerPhase = post.description.substring(12..16)
-    val fontSize = 32.sp
-
-    val upper: @Composable () -> Unit = {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            for (c in upperPhrase) {
-                Text(text = c.toString(), fontSize = fontSize)
-            }
-            Spacer(Modifier.weight(1f))
-        }
-    }
-
-    val middle: @Composable () -> Unit = {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Spacer(Modifier.weight(1f))
-            for (c in middlePhrase) {
-                Text(text = c.toString(), fontSize = fontSize)
-            }
-            Spacer(Modifier.weight(1f))
-        }
-    }
-
-    val lower: @Composable () -> Unit = {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Spacer(Modifier.weight(1f))
-            for (c in lowerPhase) {
-                Text(text = c.toString(), fontSize = fontSize)
-            }
-        }
-    }
+private fun PostCardScope.Tanka() {
+    val firstPhrase = post.description.substring(0..4)
+    val secondPhrase = post.description.substring(5..9)
+    val thirdPhrase = post.description.substring(10..14)
+    val forthPhrase = post.description.substring(15..21)
+    val fifthPhrase = post.description.substring(22..28)
 
     Row(
         modifier = Modifier.wrapContentSize(),
@@ -123,18 +86,40 @@ fun PostCardScope.Haiku() {
         horizontalArrangement = Arrangement.Center,
     ) {
         Spacer(Modifier.weight(1f))
-        lower()
-        middle()
-        upper()
+        Column {
+            Phrase(forthPhrase)
+            Phrase(fifthPhrase)
+        }
+        Column {
+            Phrase(firstPhrase)
+            Phrase(secondPhrase)
+            Phrase(thirdPhrase)
+        }
         Spacer(Modifier.weight(1f))
     }
 }
 
 @Composable
+private fun Phrase(
+    phrase: String,
+    fontSize: TextUnit = 24.sp,
+){
+    Column(
+        modifier = Modifier.padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        for (c in phrase) {
+            Text(text = c.toString(), fontSize = fontSize)
+        }
+    }
+}
+
+@Composable
 @Preview
-private fun HaikuPreview() {
-    HaikuCard(
-        post = Post(description = "abcdefghrjklmnopq"),
+private fun TankaPreview() {
+    TankaCard(
+        post = Post(description = "ppppppppppppppppppppppppppppp"),
         hubState = HubState(),
         isIncrementView = false,
         onHubAction = {},

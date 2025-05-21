@@ -38,6 +38,7 @@ fun TopBar(
             TopAppBarDefaults.centerAlignedTopAppBarColors(
                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                 titleContentColor = MaterialTheme.colorScheme.primary,
+                scrolledContainerColor = MaterialTheme.colorScheme.primaryContainer,
             ),
         navigationIcon = {
             when (routeName) {

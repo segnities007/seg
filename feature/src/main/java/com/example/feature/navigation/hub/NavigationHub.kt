@@ -45,6 +45,7 @@ fun NavigationHub(onTopNavigate: (route: Navigation) -> Unit) {
     LaunchedEffect(Unit) {
         hubViewModel.onHubAction(HubAction.GetUser)
         homeViewModel.onHomeAction(HomeAction.GetNewPosts)
+        homeViewModel.onHomeAction(HomeAction.GetNewHaikus)
     }
 
     val navBackStackEntry by hubNavHostController.currentBackStackEntryAsState()
@@ -72,6 +73,7 @@ fun NavigationHub(onTopNavigate: (route: Navigation) -> Unit) {
         onTabAction = tabViewModel::onTabAction,
         onTopSearchBarAction = searchViewModel::onTopSearchBarAction,
         topState = hubViewModel.topState,
+        onHomeAction = homeViewModel::onHomeAction,
         onTopAction = hubViewModel::onTopAction,
     ) { modifier: Modifier ->
         NavHost(navController = hubNavHostController, startDestination = NavigationHubRoute.Home) {
@@ -80,6 +82,8 @@ fun NavigationHub(onTopNavigate: (route: Navigation) -> Unit) {
                     modifier = modifier,
                     hubState = hubViewModel.hubState,
                     homeState = homeViewModel.homeState,
+                    lazyListStateOfNormal = homeViewModel.lazyListStateOfNormal,
+                    lazyListStateOfHaiku = homeViewModel.lazyListStateOfHaiku,
                     onHubNavigate = onHubNavigate,
                     onHubAction = hubViewModel::onHubAction,
                     onHomeAction = homeViewModel::onHomeAction,

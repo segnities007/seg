@@ -19,79 +19,79 @@ data class ConfirmEmailUiAction(
 
 @HiltViewModel
 class LoginViewModel
-@Inject
-constructor(
-    private val authRepository: AuthRepository,
-    private val userRepository: UserRepository,
-) : TopLayerViewModel() {
-    var loginUiState by mutableStateOf(LoginState())
-        private set
+    @Inject
+    constructor(
+        private val authRepository: AuthRepository,
+        private val userRepository: UserRepository,
+    ) : TopLayerViewModel() {
+        var loginUiState by mutableStateOf(LoginState())
+            private set
 
-    private fun onConfirmEmail(onNavigate: () -> Unit) {
-        viewModelScope.launch(Dispatchers.IO) {
-            authRepository.signInWithEmailPassword(
-                email = loginUiState.email,
-                password = loginUiState.password,
-            )
-            withContext(Dispatchers.Main) {
-                val isConfirmed = userRepository.onConfirmEmail()
-                if (isConfirmed) onNavigate()
-            }
-        }
-    }
-
-    fun onGetConfirmEmailUiAction(): ConfirmEmailUiAction =
-        ConfirmEmailUiAction(
-            onConfirmEmail = this::onConfirmEmail,
-        )
-
-    fun onLoginAction(action: LoginAction) {
-        when (action) {
-            LoginAction.ResetIsFailedSignIn -> {
-                loginUiState = loginUiState.copy(isFailedSignIn = false)
-            }
-
-            LoginAction.ChangeIsFailedSignIn -> {
-                loginUiState = loginUiState.copy(isFailedSignIn = !loginUiState.isFailedSignIn)
-            }
-
-            is LoginAction.ChangeEmail -> {
-                loginUiState = loginUiState.copy(email = action.email)
-            }
-
-            is LoginAction.ChangePassword -> {
-                loginUiState = loginUiState.copy(password = action.password)
-            }
-
-            is LoginAction.ChangeCurrentRouteName -> {
-                loginUiState = loginUiState.copy(currentRouteName = action.newCurrentRouteName)
-            }
-
-            is LoginAction.SignInWithEmailPassword -> {
-                viewModelScope.launch(Dispatchers.IO) {
-                    val isSuccess =
-                        authRepository.signInWithEmailPassword(
-                            email = loginUiState.email,
-                            password = loginUiState.password,
-                        )
-                    withContext(Dispatchers.Main) {
-                        if (isSuccess) action.onNavigate()
-                    }
+        private fun onConfirmEmail(onNavigate: () -> Unit) {
+            viewModelScope.launch(Dispatchers.IO) {
+                authRepository.signInWithEmailPassword(
+                    email = loginUiState.email,
+                    password = loginUiState.password,
+                )
+                withContext(Dispatchers.Main) {
+                    val isConfirmed = userRepository.onConfirmEmail()
+                    if (isConfirmed) onNavigate()
                 }
             }
+        }
 
-            is LoginAction.SignUpWithEmailPassword -> {
-                viewModelScope.launch(Dispatchers.IO) {
-                    withContext(Dispatchers.Main) {
+        fun onGetConfirmEmailUiAction(): ConfirmEmailUiAction =
+            ConfirmEmailUiAction(
+                onConfirmEmail = this::onConfirmEmail,
+            )
+
+        fun onLoginAction(action: LoginAction) {
+            when (action) {
+                LoginAction.ResetIsFailedSignIn -> {
+                    loginUiState = loginUiState.copy(isFailedSignIn = false)
+                }
+
+                LoginAction.ChangeIsFailedSignIn -> {
+                    loginUiState = loginUiState.copy(isFailedSignIn = !loginUiState.isFailedSignIn)
+                }
+
+                is LoginAction.ChangeEmail -> {
+                    loginUiState = loginUiState.copy(email = action.email)
+                }
+
+                is LoginAction.ChangePassword -> {
+                    loginUiState = loginUiState.copy(password = action.password)
+                }
+
+                is LoginAction.ChangeCurrentRouteName -> {
+                    loginUiState = loginUiState.copy(currentRouteName = action.newCurrentRouteName)
+                }
+
+                is LoginAction.SignInWithEmailPassword -> {
+                    viewModelScope.launch(Dispatchers.IO) {
                         val isSuccess =
-                            authRepository.signUpWithEmailPassword(
+                            authRepository.signInWithEmailPassword(
                                 email = loginUiState.email,
                                 password = loginUiState.password,
                             )
-                        if (isSuccess) action.onNavigate()
+                        withContext(Dispatchers.Main) {
+                            if (isSuccess) action.onNavigate()
+                        }
+                    }
+                }
+
+                is LoginAction.SignUpWithEmailPassword -> {
+                    viewModelScope.launch(Dispatchers.IO) {
+                        withContext(Dispatchers.Main) {
+                            val isSuccess =
+                                authRepository.signUpWithEmailPassword(
+                                    email = loginUiState.email,
+                                    password = loginUiState.password,
+                                )
+                            if (isSuccess) action.onNavigate()
+                        }
                     }
                 }
             }
         }
     }
-}

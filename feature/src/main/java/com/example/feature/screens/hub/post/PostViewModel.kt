@@ -5,6 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.domain.model.post.Genre
+import com.example.domain.model.user.User
 import com.example.domain.presentation.navigation.NavigationHubRoute
 import com.example.domain.repository.PostRepository
 import com.example.feature.screens.hub.HubAction
@@ -15,73 +17,108 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PostViewModel
-@Inject
-constructor(
-    private val postRepository: PostRepository,
-) : ViewModel() {
-    var postState by mutableStateOf(PostState())
-        private set
+    @Inject
+    constructor(
+        private val postRepository: PostRepository,
+    ) : ViewModel() {
+        var postState by mutableStateOf(PostState())
+            private set
 
-    fun onPostAction(action: PostAction) {
-        when (action) {
-            is PostAction.CreatePost -> {
-                val description = postState.inputText
-                onUpdateIsLoading(true)
-                viewModelScope.launch(Dispatchers.IO) {
-                    val result =
-                        postRepository.onCreatePost(
-                            description = description,
-                            user = action.user,
-                            genre = postState.genre,
-                        )
-                    if (result) {
-                        action.onUpdateSelf()
-                        viewModelScope.launch(Dispatchers.Main) {
-                            action.onNavigate(NavigationHubRoute.Home)
-                        }
+        fun onPostAction(action: PostAction) {
+            when (action) {
+                is PostAction.CreatePost -> {
+                    when (postState.genre) {
+                        Genre.HAIKU ->
+                            createHaikuPost(
+                                user = action.user,
+                                onUpdateSelf = action.onUpdateSelf,
+                                onNavigate = action.onNavigate,
+                            )
+
+                        else ->
+                            createNormalPost(
+                                user = action.user,
+                                onUpdateSelf = action.onUpdateSelf,
+                                onNavigate = action.onNavigate,
+                            )
                     }
-                    onUpdateIsLoading(false)
                 }
-            }
 
-            is PostAction.UpdateInputText -> {
-                postState = postState.copy(inputText = action.newInputText)
-            }
+                is PostAction.UpdateInputText -> {
+                    postState = postState.copy(inputText = action.newInputText)
+                }
 
-            is PostAction.UpdateIsLoading -> {
-                onUpdateIsLoading(action.isLoading)
-            }
+                is PostAction.UpdateIsLoading -> {
+                    onUpdateIsLoading(action.isLoading)
+                }
 
-            is PostAction.CreateComment -> {
-                val description = postState.inputText
-                onUpdateIsLoading(true)
-                viewModelScope.launch(Dispatchers.IO) {
-                    val result =
-                        postRepository.onCreateComment(
-                            description = description,
-                            self = action.hubState.user,
-                            commentedPost = action.hubState.comment,
-                        )
-                    if (result) {
-                        action.onHubAction(HubAction.GetUser)
-                        val updatedCommentedPost =
-                            postRepository.onGetPost(action.hubState.comment.id)
-                        action.onHubAction(HubAction.SetComment(updatedCommentedPost))
-                        viewModelScope.launch(Dispatchers.Main) {
-                            action.onNavigate(NavigationHubRoute.Home)
+                is PostAction.CreateComment -> {
+                    val description = postState.inputText
+                    onUpdateIsLoading(true)
+                    viewModelScope.launch(Dispatchers.IO) {
+                        val result =
+                            postRepository.onCreateComment(
+                                description = description,
+                                self = action.hubState.user,
+                                commentedPost = action.hubState.comment,
+                            )
+                        if (result) {
+                            action.onHubAction(HubAction.GetUser)
+                            val updatedCommentedPost =
+                                postRepository.onGetPost(action.hubState.comment.id)
+                            action.onHubAction(HubAction.SetComment(updatedCommentedPost))
+                            viewModelScope.launch(Dispatchers.Main) {
+                                action.onNavigate(NavigationHubRoute.Home)
+                            }
                         }
+                        onUpdateIsLoading(false)
                     }
-                    onUpdateIsLoading(false)
                 }
-            }
 
-            is PostAction.UpdateGenre -> {
-                postState = postState.copy(genre = action.newGenre)
+                is PostAction.UpdateGenre -> {
+                    postState = postState.copy(genre = action.newGenre)
+                }
             }
         }
-    }
 
-    private fun onUpdateIsLoading(isLoading: Boolean) {
-        postState = postState.copy(isLoading = isLoading)
+        private fun onUpdateIsLoading(isLoading: Boolean) {
+            postState = postState.copy(isLoading = isLoading)
+        }
+
+        private fun createNormalPost(
+            user: User,
+            onUpdateSelf: () -> Unit,
+            onNavigate: (NavigationHubRoute) -> Unit,
+        ) {
+            val description = postState.inputText
+            onUpdateIsLoading(true)
+            viewModelScope.launch(Dispatchers.IO) {
+                val result =
+                    postRepository.onCreatePost(
+                        description = description,
+                        user = user,
+                        genre = postState.genre,
+                    )
+                if (result) {
+                    onUpdateSelf()
+                    viewModelScope.launch(Dispatchers.Main) {
+                        onNavigate(NavigationHubRoute.Home)
+                    }
+                }
+                onUpdateIsLoading(false)
+            }
+        }
+
+        private fun createHaikuPost(
+            user: User,
+            onUpdateSelf: () -> Unit,
+            onNavigate: (NavigationHubRoute) -> Unit,
+        ) {
+            if (postState.inputText.length != 17) return
+            createNormalPost(
+                user = user,
+                onUpdateSelf = onUpdateSelf,
+                onNavigate = onNavigate,
+            )
+        }
     }
-}

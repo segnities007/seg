@@ -15,6 +15,7 @@ import com.example.feature.components.bar.top_bar.TopBar
 import com.example.feature.components.tab.ScrollTab
 import com.example.feature.components.tab.TabAction
 import com.example.feature.components.tab.TabUiState
+import com.example.feature.screens.hub.home.HomeAction
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -23,6 +24,7 @@ fun TopHomeBar(
     tabUiState: TabUiState,
     routeName: String,
     onTabAction: (TabAction) -> Unit,
+    onHomeAction: (HomeAction) -> Unit,
     titleContent: @Composable () -> Unit,
     onDrawerOpen: suspend () -> Unit,
     scrollBehavior: TopAppBarScrollBehavior? = null,
@@ -37,6 +39,15 @@ fun TopHomeBar(
                 Genre.DODOITSU.name,
             )
         onTabAction(TabAction.SetLabels(labels))
+    }
+
+    LaunchedEffect(tabUiState.index) {
+        val genre =
+            when (tabUiState.labels[tabUiState.index]) {
+                Genre.HAIKU.name -> Genre.HAIKU
+                else -> Genre.NORMAL
+            }
+        onHomeAction(HomeAction.UpdateCurrentGenre(genre))
     }
 
     Column(

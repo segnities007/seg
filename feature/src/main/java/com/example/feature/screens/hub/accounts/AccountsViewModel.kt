@@ -13,32 +13,32 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AccountsViewModel
-@Inject
-constructor(
-    private val userRepository: UserRepository,
-) : ViewModel() {
-    var accountsState by mutableStateOf(AccountsState())
-        private set
+    @Inject
+    constructor(
+        private val userRepository: UserRepository,
+    ) : ViewModel() {
+        var accountsState by mutableStateOf(AccountsState())
+            private set
 
-    fun onAccountsAction(action: AccountsAction) {
-        when (action) {
-            AccountsAction.ChangeIsNotCompletedOfAccounts -> {
-                accountsState = accountsState.copy(isNotCompleted = !accountsState.isNotCompleted)
-            }
-
-            is AccountsAction.GetUser -> {
-                viewModelScope.launch(Dispatchers.IO) {
-                    val user = userRepository.onGetOtherUser(action.userID)
-                    accountsState = accountsState.copy(user = user)
+        fun onAccountsAction(action: AccountsAction) {
+            when (action) {
+                AccountsAction.ChangeIsNotCompletedOfAccounts -> {
+                    accountsState = accountsState.copy(isNotCompleted = !accountsState.isNotCompleted)
                 }
-            }
 
-            is AccountsAction.GetUsers -> {
-                viewModelScope.launch(Dispatchers.IO) {
-                    val users = userRepository.onGetUsers(action.userIDs)
-                    accountsState = accountsState.copy(users = users)
+                is AccountsAction.GetUser -> {
+                    viewModelScope.launch(Dispatchers.IO) {
+                        val user = userRepository.onGetOtherUser(action.userID)
+                        accountsState = accountsState.copy(user = user)
+                    }
+                }
+
+                is AccountsAction.GetUsers -> {
+                    viewModelScope.launch(Dispatchers.IO) {
+                        val users = userRepository.onGetUsers(action.userIDs)
+                        accountsState = accountsState.copy(users = users)
+                    }
                 }
             }
         }
     }
-}

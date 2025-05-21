@@ -93,8 +93,7 @@ fun PostUi(
                 .padding(
                     vertical = dimensionResource(R.dimen.padding_smaller),
                     horizontal = dimensionResource(R.dimen.padding_small),
-                )
-                .fillMaxSize(),
+                ).fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         scope.content()
@@ -132,8 +131,7 @@ fun PostScope.TopToolBar(modifier: Modifier = Modifier) {
             modifier
                 .padding(
                     vertical = dimensionResource(R.dimen.padding_normal),
-                )
-                .fillMaxWidth(),
+                ).fillMaxWidth(),
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -158,7 +156,7 @@ fun PostScope.TopToolBar(modifier: Modifier = Modifier) {
 @Composable
 private fun GenreMenu(
     postState: PostState,
-    onPostAction: (PostAction) -> Unit
+    onPostAction: (PostAction) -> Unit,
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -171,14 +169,14 @@ private fun GenreMenu(
         )
         DropdownMenu(
             expanded = expanded,
-            onDismissRequest = { expanded = false }
+            onDismissRequest = { expanded = false },
         ) {
             for (genre in Genre.entries) {
                 DropdownMenuItem(
                     text = { Text(genre.name) },
                     onClick = {
                         onPostAction(PostAction.UpdateGenre(genre))
-                    }
+                    },
                 )
             }
         }
