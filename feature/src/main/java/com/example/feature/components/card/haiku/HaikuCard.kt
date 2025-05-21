@@ -60,7 +60,7 @@ fun HaikuCard(
                 ActionIcons(
                     onProcessOfEngagementAction = { haiku ->
                         onHomeAction(
-                            HomeAction.ChangeEngagementOfHaiku(
+                            HomeAction.ChangeEngagementOfPost(
                                 haiku,
                             ),
                         )

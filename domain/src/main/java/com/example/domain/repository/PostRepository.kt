@@ -41,8 +41,6 @@ interface PostRepository {
 
     suspend fun onGetNewPost(): Post
 
-    suspend fun onGetNewHaiku(): Post
-
     suspend fun onGetNewPosts(genre: Genre): List<Post>
 
     suspend fun onGetTrendPostOfToday(limit: Long = 10): List<Post>

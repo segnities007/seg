@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import com.example.domain.model.post.Genre
 import com.example.domain.presentation.navigation.Navigation
 import com.example.feature.R
 import com.example.feature.components.card.haiku.HaikuCard
@@ -65,7 +66,12 @@ fun Haiku(
                     LoadingUI(
                         onLoading = {
                             if (homeState.haikus.isNotEmpty()) {
-                                onHomeAction(HomeAction.GetBeforeNewHaikus(homeState.haikus.last().updateAt))
+                                onHomeAction(
+                                    HomeAction.GetBeforeNewPosts(
+                                        updatedAt = homeState.haikus.last().updateAt,
+                                        genre = Genre.HAIKU,
+                                    ),
+                                )
                             }
                         },
                     )

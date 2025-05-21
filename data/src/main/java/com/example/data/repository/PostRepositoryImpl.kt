@@ -48,6 +48,8 @@ class PostRepositoryImpl
                             select()
                         }.decodeSingle<PostDto>()
 
+                Log.d(tag, result.genre)
+
                 val updatedUser = user.copy(posts = user.posts.plus(result.id))
 
                 userRepository.onUpdatePostsOfUser(updatedUser)
@@ -238,22 +240,6 @@ class PostRepositoryImpl
                 return result.toPost()
             } catch (e: Exception) {
                 Log.e(tag, "failed onGetNewPost $e")
-                throw e
-            }
-        }
-
-        override suspend fun onGetNewHaiku(): Post {
-            try {
-                val result =
-                    postgrest
-                        .from(posts)
-                        .select {
-                            filter { PostDto::genre eq Genre.HAIKU.name }
-                            order("create_at", Order.DESCENDING)
-                        }.decodeSingle<PostDto>()
-                return result.toPost()
-            } catch (e: Exception) {
-                Log.e(tag, "failed onGetNewHaiku $e")
                 throw e
             }
         }

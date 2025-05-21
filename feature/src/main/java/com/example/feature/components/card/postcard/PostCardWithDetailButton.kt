@@ -44,13 +44,6 @@ fun PostCardWithDetailButton(
 ) {
     var isShowBottomSheet by remember { mutableStateOf(false) }
     val toggleIsShowBottomSheet = { isShowBottomSheet = !isShowBottomSheet }
-    val actionIconEvent: (Post) -> Unit = {
-        when (it.genre) {
-            Genre.HAIKU -> onHomeAction(HomeAction.ChangeEngagementOfHaiku(it))
-            Genre.TANKA -> onHomeAction(HomeAction.ChangeEngagementOfTanka(it))
-            else -> onHomeAction(HomeAction.ChangeEngagementOfPost(it))
-        }
-    }
 
     PostCardUi(
         post = post,
@@ -78,7 +71,13 @@ fun PostCardWithDetailButton(
                         Genre.TANKA -> Tanka()
                         else -> Description()
                     }
-                    ActionIcons(actionIconEvent)
+                    ActionIcons(onProcessOfEngagementAction = {
+                        onHomeAction(
+                            HomeAction.ChangeEngagementOfPost(
+                                it,
+                            ),
+                        )
+                    })
                 }
             }
             DetailButton(
