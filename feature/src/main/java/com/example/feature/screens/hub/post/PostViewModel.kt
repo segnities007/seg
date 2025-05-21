@@ -28,27 +28,16 @@ class PostViewModel
             when (action) {
                 is PostAction.CreatePost -> {
                     when (postState.genre) {
-                        Genre.HAIKU ->
-                            createHaikuPost(
-                                user = action.user,
-                                onUpdateSelf = action.onUpdateSelf,
-                                onNavigate = action.onNavigate,
-                            )
-
-                        Genre.TANKA ->
-                            createTankaPost(
-                                user = action.user,
-                                onUpdateSelf = action.onUpdateSelf,
-                                onNavigate = action.onNavigate,
-                            )
-
-                        else ->
-                            createNormalPost(
-                                user = action.user,
-                                onUpdateSelf = action.onUpdateSelf,
-                                onNavigate = action.onNavigate,
-                            )
+                        Genre.HAIKU -> if (postState.inputText.length != 17) return
+                        Genre.TANKA -> if (postState.inputText.length != 31) return
+                        Genre.KATAUTA -> if (postState.inputText.length != 19) return
+                        else -> if (postState.inputText.length >= 100) return
                     }
+                    createNormalPost(
+                        user = action.user,
+                        onUpdateSelf = action.onUpdateSelf,
+                        onNavigate = action.onNavigate,
+                    )
                 }
 
                 is PostAction.UpdateInputText -> {
@@ -114,31 +103,5 @@ class PostViewModel
                 }
                 onUpdateIsLoading(false)
             }
-        }
-
-        private fun createHaikuPost(
-            user: User,
-            onUpdateSelf: () -> Unit,
-            onNavigate: (NavigationHubRoute) -> Unit,
-        ) {
-            if (postState.inputText.length != 17) return
-            createNormalPost(
-                user = user,
-                onUpdateSelf = onUpdateSelf,
-                onNavigate = onNavigate,
-            )
-        }
-
-        private fun createTankaPost(
-            user: User,
-            onUpdateSelf: () -> Unit,
-            onNavigate: (NavigationHubRoute) -> Unit,
-        ) {
-            if (postState.inputText.length != 31) return
-            createNormalPost(
-                user = user,
-                onUpdateSelf = onUpdateSelf,
-                onNavigate = onNavigate,
-            )
         }
     }

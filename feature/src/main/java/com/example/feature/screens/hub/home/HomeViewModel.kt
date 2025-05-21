@@ -34,6 +34,7 @@ class HomeViewModel
                             when (action.genre) {
                                 Genre.HAIKU -> homeState.copy(haikus = posts)
                                 Genre.TANKA -> homeState.copy(tankas = posts)
+                                Genre.KATAUTA -> homeState.copy(katautas = posts)
                                 else -> homeState.copy(posts = posts)
                             }
                     }
@@ -46,11 +47,12 @@ class HomeViewModel
                                 afterPostCreateAt = action.updatedAt,
                                 genre = action.genre,
                             )
-                        if (posts.isEmpty()) onChangeIsAllFetched(Genre.NORMAL)
+                        if (posts.isEmpty()) onChangeIsAllFetched(action.genre)
                         homeState =
                             when (action.genre) {
                                 Genre.HAIKU -> homeState.copy(haikus = homeState.haikus.plus(posts))
                                 Genre.TANKA -> homeState.copy(tankas = homeState.tankas.plus(posts))
+                                Genre.KATAUTA -> homeState.copy(katautas = homeState.katautas.plus(posts))
                                 else -> homeState.copy(posts = homeState.posts.plus(posts))
                             }
                     }
@@ -69,6 +71,11 @@ class HomeViewModel
                                     if (tanka.id == action.newPost.id) action.newPost else tanka
                                 }
 
+                            Genre.KATAUTA ->
+                                homeState.katautas.map { katauta ->
+                                    if (katauta.id == action.newPost.id) action.newPost else katauta
+                                }
+
                             else ->
                                 homeState.posts.map { post ->
                                     if (post.id == action.newPost.id) action.newPost else post
@@ -78,6 +85,7 @@ class HomeViewModel
                         when (action.newPost.genre) {
                             Genre.TANKA -> homeState.copy(tankas = newPosts)
                             Genre.HAIKU -> homeState.copy(haikus = newPosts)
+                            Genre.KATAUTA -> homeState.copy(katautas = newPosts)
                             else -> homeState.copy(posts = newPosts)
                         }
                 }
@@ -93,6 +101,7 @@ class HomeViewModel
                 when (genre) {
                     Genre.HAIKU -> homeState.copy(isAllHaikusFetched = !homeState.isAllHaikusFetched)
                     Genre.TANKA -> homeState.copy(isAllTankasFetched = !homeState.isAllTankasFetched)
+                    Genre.KATAUTA -> homeState.copy(isAllKatautasFetched = !homeState.isAllKatautasFetched)
                     else -> homeState.copy(isAllPostsFetched = !homeState.isAllPostsFetched)
                 }
         }

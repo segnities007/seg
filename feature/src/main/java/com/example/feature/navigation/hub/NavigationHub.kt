@@ -48,6 +48,7 @@ fun NavigationHub(onTopNavigate: (route: Navigation) -> Unit) {
         homeViewModel.onHomeAction(HomeAction.GetNewPosts(Genre.NORMAL))
         homeViewModel.onHomeAction(HomeAction.GetNewPosts(Genre.HAIKU))
         homeViewModel.onHomeAction(HomeAction.GetNewPosts(Genre.TANKA))
+        homeViewModel.onHomeAction(HomeAction.GetNewPosts(Genre.KATAUTA))
     }
 
     val navBackStackEntry by hubNavHostController.currentBackStackEntryAsState()
