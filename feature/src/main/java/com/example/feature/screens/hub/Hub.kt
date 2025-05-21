@@ -157,7 +157,7 @@ private fun HubTopBar(
                 Genre.HAIKU.name,
                 Genre.TANKA.name,
                 Genre.SEDOUKA.name,
-                Genre.DODOITSU.name,
+                Genre.KATAUTA.name,
             )
         onTabAction(TabAction.SetLabels(labels))
     }
