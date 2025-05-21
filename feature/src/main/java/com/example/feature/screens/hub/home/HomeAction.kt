@@ -13,11 +13,15 @@ sealed interface HomeAction {
 
     data object GetNewTankas : HomeAction
 
+    data object GetNewKatautas : HomeAction
+
     data object ChangeIsAllPostsFetched : HomeAction
 
     data object ChangeIsAllHaikusFetched : HomeAction
 
     data object ChangeIsAllTankasFetched : HomeAction
+
+    data object ChangeIsAllKatautasFetched : HomeAction
 
     data class UpdateCurrentGenre(
         val newGenre: Genre,
@@ -35,6 +39,10 @@ sealed interface HomeAction {
         val updatedAt: LocalDateTime,
     ) : HomeAction
 
+    data class GetBeforeNewKatautas(
+        val updatedAt: LocalDateTime,
+    ) : HomeAction
+
     data class ChangeEngagementOfPost(
         val newPost: Post,
     ) : HomeAction
@@ -45,5 +53,9 @@ sealed interface HomeAction {
 
     data class ChangeEngagementOfTanka(
         val newTanka: Post,
+    ) : HomeAction
+
+    data class ChangeEngagementOfKatauta(
+        val newKatauta: Post,
     ) : HomeAction
 }
