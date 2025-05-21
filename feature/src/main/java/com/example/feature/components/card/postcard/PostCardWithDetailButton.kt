@@ -20,10 +20,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
+import com.example.domain.model.post.Genre
 import com.example.domain.model.post.Post
 import com.example.domain.presentation.navigation.NavigationHubRoute
 import com.example.feature.R
 import com.example.feature.components.button.SmallButton
+import com.example.feature.components.card.haiku.Haiku
 import com.example.feature.screens.hub.HubAction
 import com.example.feature.screens.hub.HubState
 import com.example.feature.screens.hub.home.HomeAction
@@ -38,10 +40,15 @@ fun PostCardWithDetailButton(
     onHubAction: (HubAction) -> Unit,
     onHomeAction: (HomeAction) -> Unit,
     onHubNavigate: (NavigationHubRoute) -> Unit,
-    onProcessOfEngagementAction: (newPost: Post) -> Unit,
 ) {
     var isShowBottomSheet by remember { mutableStateOf(false) }
     val toggleIsShowBottomSheet = { isShowBottomSheet = !isShowBottomSheet }
+    val actionIconEvent: (Post) -> Unit = {
+        when (it.genre) {
+            Genre.HAIKU -> onHomeAction(HomeAction.ChangeEngagementOfHaiku(it))
+            else -> onHomeAction(HomeAction.ChangeEngagementOfPost(it))
+        }
+    }
 
     PostCardUi(
         post = post,
@@ -64,8 +71,11 @@ fun PostCardWithDetailButton(
             CardContents {
                 Column(modifier = Modifier.padding(horizontal = dimensionResource(R.dimen.padding_sn))) {
                     Name()
-                    Description()
-                    ActionIcons(onProcessOfEngagementAction = onProcessOfEngagementAction)
+                    when (post.genre) {
+                        Genre.HAIKU -> Haiku()
+                        else -> Description()
+                    }
+                    ActionIcons(actionIconEvent)
                 }
             }
             DetailButton(

@@ -139,13 +139,6 @@ private fun Posts(
                     post = myPostsState.posts[i],
                     hubState = hubState,
                     onHubNavigate = onHubNavigate,
-                    onProcessOfEngagementAction = { newPost ->
-                        onMyPostsAction(
-                            MyPostsAction.ProcessOfEngagement(
-                                newPost,
-                            ),
-                        )
-                    },
                     onPostCardAction = onPostCardAction,
                     onHubAction = onHubAction,
                     onHomeAction = onHomeAction,

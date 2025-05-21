@@ -71,7 +71,7 @@ fun HaikuCard(
 }
 
 @Composable
-private fun PostCardScope.Haiku() {
+fun PostCardScope.Haiku() {
     val upperPhrase = post.description.substring(0..4)
     val middlePhrase = post.description.substring(5..11)
     val lowerPhase = post.description.substring(12..16)
