@@ -103,7 +103,7 @@ private fun Phrase(
     fontSize: TextUnit = 24.sp,
 ) {
     Column(
-        modifier = Modifier.padding(16.dp),
+        modifier = Modifier.padding(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         for (c in phrase) {
