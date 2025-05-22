@@ -26,6 +26,7 @@ import com.example.domain.presentation.navigation.NavigationHubRoute
 import com.example.feature.R
 import com.example.feature.components.button.SmallButton
 import com.example.feature.components.card.haiku.Haiku
+import com.example.feature.components.card.katauta.Katauta
 import com.example.feature.components.card.tanka.Tanka
 import com.example.feature.screens.hub.HubAction
 import com.example.feature.screens.hub.HubState
@@ -69,6 +70,7 @@ fun PostCardWithDetailButton(
                     when (post.genre) {
                         Genre.HAIKU -> Haiku()
                         Genre.TANKA -> Tanka()
+                        Genre.KATAUTA -> Katauta()
                         else -> Description()
                     }
                     ActionIcons(onProcessOfEngagementAction = {

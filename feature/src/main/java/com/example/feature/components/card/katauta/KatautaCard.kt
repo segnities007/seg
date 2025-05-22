@@ -83,9 +83,9 @@ fun PostCardScope.Katauta() {
         horizontalArrangement = Arrangement.Center,
     ) {
         Spacer(Modifier.weight(1f))
-        Phrase(firstPhrase)
-        Phrase(secondPhrase)
         Phrase(thirdPhrase)
+        Phrase(secondPhrase)
+        Phrase(firstPhrase)
         Spacer(Modifier.weight(1f))
     }
 }
