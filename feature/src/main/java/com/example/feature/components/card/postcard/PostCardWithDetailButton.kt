@@ -27,6 +27,7 @@ import com.example.feature.R
 import com.example.feature.components.button.SmallButton
 import com.example.feature.components.card.haiku.Haiku
 import com.example.feature.components.card.katauta.Katauta
+import com.example.feature.components.card.sedouka.Sedouka
 import com.example.feature.components.card.tanka.Tanka
 import com.example.feature.screens.hub.HubAction
 import com.example.feature.screens.hub.HubState
@@ -71,6 +72,7 @@ fun PostCardWithDetailButton(
                         Genre.HAIKU -> Haiku()
                         Genre.TANKA -> Tanka()
                         Genre.KATAUTA -> Katauta()
+                        Genre.SEDOUKA -> Sedouka()
                         else -> Description()
                     }
                     ActionIcons(onProcessOfEngagementAction = {
