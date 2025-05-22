@@ -30,7 +30,7 @@ Segではあえてこれらのメディア機能を排除し、言葉による�
 
 ## アプリを使用する際の注意点
 
-Supabaseを使用するので、local.propertyファイルに以下のコードを記述してください。
-
-SUPABASE_URL=https://twxdngcbimgolvfbglpk.supabase.co <br>
-SUPABASE_PUBLIC_KEY= Twitter(新X)のDMでキープリーズみたいな感じで言ってくだされば渡します。(@segnities007)
+Supabaseを使用するのにkeyを使用するので、直接ビルドしても使用できません。
+なので、実際に動くアプリを見たい場合は、APKファイルを渡すので、X等でお伝え下さい。
+(その際に生じた損失等に関しては、こちらは一切責任を負いません。ご了承ください。)
+(今年度中までには、このアプリをGoogle Playに上げたいと思っているので、期待せずに待っててくださると助かります。)
