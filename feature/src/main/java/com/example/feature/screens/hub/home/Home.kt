@@ -10,6 +10,7 @@ import com.example.feature.screens.hub.HubState
 import com.example.feature.screens.hub.home.haiku.Haiku
 import com.example.feature.screens.hub.home.katauta.Katauta
 import com.example.feature.screens.hub.home.normal.Normal
+import com.example.feature.screens.hub.home.sedouka.Sedouka
 import com.example.feature.screens.hub.home.tanka.Tanka
 
 @Composable
@@ -71,6 +72,16 @@ fun Home(
             )
         }
 
-        else -> {}
+        Genre.SEDOUKA -> {
+            Sedouka(
+                modifier = modifier,
+                hubState = hubState,
+                homeState = homeState,
+                onHubAction = onHubAction,
+                onHomeAction = onHomeAction,
+                onPostCardAction = onPostCardAction,
+                onHubNavigate = onHubNavigate,
+            )
+        }
     }
 }

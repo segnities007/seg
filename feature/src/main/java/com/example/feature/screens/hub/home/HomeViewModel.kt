@@ -35,6 +35,7 @@ class HomeViewModel
                                 Genre.HAIKU -> homeState.copy(haikus = posts)
                                 Genre.TANKA -> homeState.copy(tankas = posts)
                                 Genre.KATAUTA -> homeState.copy(katautas = posts)
+                                Genre.SEDOUKA -> homeState.copy(sedoukas = posts)
                                 else -> homeState.copy(posts = posts)
                             }
                     }
@@ -53,6 +54,7 @@ class HomeViewModel
                                 Genre.HAIKU -> homeState.copy(haikus = homeState.haikus.plus(posts))
                                 Genre.TANKA -> homeState.copy(tankas = homeState.tankas.plus(posts))
                                 Genre.KATAUTA -> homeState.copy(katautas = homeState.katautas.plus(posts))
+                                Genre.SEDOUKA -> homeState.copy(sedoukas = homeState.sedoukas.plus(posts))
                                 else -> homeState.copy(posts = homeState.posts.plus(posts))
                             }
                     }
@@ -76,6 +78,11 @@ class HomeViewModel
                                     if (katauta.id == action.newPost.id) action.newPost else katauta
                                 }
 
+                            Genre.SEDOUKA ->
+                                homeState.sedoukas.map { sedouka ->
+                                    if (sedouka.id == action.newPost.id) action.newPost else sedouka
+                                }
+
                             else ->
                                 homeState.posts.map { post ->
                                     if (post.id == action.newPost.id) action.newPost else post
@@ -86,6 +93,7 @@ class HomeViewModel
                             Genre.TANKA -> homeState.copy(tankas = newPosts)
                             Genre.HAIKU -> homeState.copy(haikus = newPosts)
                             Genre.KATAUTA -> homeState.copy(katautas = newPosts)
+                            Genre.SEDOUKA -> homeState.copy(sedoukas = newPosts)
                             else -> homeState.copy(posts = newPosts)
                         }
                 }
@@ -102,6 +110,7 @@ class HomeViewModel
                     Genre.HAIKU -> homeState.copy(isAllHaikusFetched = !homeState.isAllHaikusFetched)
                     Genre.TANKA -> homeState.copy(isAllTankasFetched = !homeState.isAllTankasFetched)
                     Genre.KATAUTA -> homeState.copy(isAllKatautasFetched = !homeState.isAllKatautasFetched)
+                    Genre.SEDOUKA -> homeState.copy(isAllSedoukasFetched = !homeState.isAllSedoukasFetched)
                     else -> homeState.copy(isAllPostsFetched = !homeState.isAllPostsFetched)
                 }
         }

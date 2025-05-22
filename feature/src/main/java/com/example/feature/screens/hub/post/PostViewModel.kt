@@ -31,7 +31,8 @@ class PostViewModel
                         Genre.HAIKU -> if (postState.inputText.length != 17) return
                         Genre.TANKA -> if (postState.inputText.length != 31) return
                         Genre.KATAUTA -> if (postState.inputText.length != 19) return
-                        else -> if (postState.inputText.length >= 100) return
+                        Genre.SEDOUKA -> if (postState.inputText.length != 38) return
+                        else -> if (postState.inputText.length > 100) return
                     }
                     createNormalPost(
                         user = action.user,

@@ -47,6 +47,7 @@ fun TopHomeBar(
                 Genre.HAIKU.name -> Genre.HAIKU
                 Genre.TANKA.name -> Genre.TANKA
                 Genre.KATAUTA.name -> Genre.KATAUTA
+                Genre.SEDOUKA.name -> Genre.SEDOUKA
                 else -> Genre.NORMAL
             }
         onHomeAction(HomeAction.UpdateCurrentGenre(genre))
