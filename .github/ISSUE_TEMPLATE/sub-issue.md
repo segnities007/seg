@@ -9,7 +9,7 @@ assignees: segnities007
 
 # About
 
-OO のSub issueです。
+**OO のSub issueです。**
 以下のTaskを完了してください。
 
 ## Task
