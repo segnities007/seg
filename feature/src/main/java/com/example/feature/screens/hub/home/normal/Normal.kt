@@ -13,7 +13,7 @@ import androidx.compose.ui.res.dimensionResource
 import com.example.domain.model.post.Genre
 import com.example.domain.presentation.navigation.Navigation
 import com.example.feature.R
-import com.example.feature.components.card.postcard.PostCard
+import com.example.feature.components.card.postcard.DefaultPostCard
 import com.example.feature.components.card.postcard.PostCardAction
 import com.example.feature.components.indicator.LoadingUI
 import com.example.feature.screens.hub.HubAction
@@ -48,20 +48,14 @@ fun Normal(
             homeState.posts.size,
             key = { index: Int -> homeState.posts[index].id },
         ) { i ->
-            PostCard(
+            DefaultPostCard(
                 post = homeState.posts[i],
                 hubState = hubState,
                 isIncrementView = true,
                 onHubNavigate = onHubNavigate,
                 onHubAction = onHubAction,
+                onHomeAction = onHomeAction,
                 onPostCardAction = onPostCardAction,
-                onProcessOfEngagementAction = { newPost ->
-                    onHomeAction(
-                        HomeAction.ChangeEngagementOfPost(
-                            newPost,
-                        ),
-                    )
-                },
             )
             Spacer(Modifier.padding(dimensionResource(R.dimen.padding_smallest)))
         }

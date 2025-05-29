@@ -12,7 +12,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.domain.presentation.navigation.Navigation
 import com.example.feature.R
-import com.example.feature.components.card.postcard.PostCard
+import com.example.feature.components.card.postcard.DefaultPostCard
 import com.example.feature.components.card.postcard.PostCardAction
 import com.example.feature.screens.hub.HubAction
 import com.example.feature.screens.hub.HubState
@@ -64,7 +64,7 @@ private fun CommentUi(
         verticalArrangement = Arrangement.Top,
     ) {
         item {
-            PostCard(
+            DefaultPostCard(
                 post = hubState.comment,
                 hubState = hubState,
                 onHubNavigate = onHubNavigate,
@@ -84,7 +84,7 @@ private fun CommentUi(
             commentState.comments.size,
             key = { index: Int -> commentState.comments[index].id },
         ) {
-            PostCard(
+            DefaultPostCard(
                 post = commentState.comments[it],
                 hubState = hubState,
                 onHubNavigate = onHubNavigate,

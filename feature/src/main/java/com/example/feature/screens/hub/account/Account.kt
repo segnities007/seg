@@ -17,7 +17,7 @@ import androidx.compose.ui.res.dimensionResource
 import com.example.domain.presentation.navigation.Navigation
 import com.example.feature.R
 import com.example.feature.components.button.SmallButton
-import com.example.feature.components.card.postcard.PostCard
+import com.example.feature.components.card.postcard.DefaultPostCard
 import com.example.feature.components.card.postcard.PostCardAction
 import com.example.feature.components.indicator.LoadingUI
 import com.example.feature.screens.hub.HubAction
@@ -94,7 +94,7 @@ private fun AccountUi(
             accountState.posts.size,
             key = { index: Int -> accountState.posts[index].id },
         ) { i ->
-            PostCard(
+            DefaultPostCard(
                 post = accountState.posts[i],
                 hubState = hubState,
                 onHubNavigate = onHubNavigate,
