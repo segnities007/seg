@@ -15,7 +15,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.domain.presentation.navigation.Navigation
 import com.example.feature.R
-import com.example.feature.components.card.postcard.DefaultPostCard
+import com.example.feature.components.card.postcard.PostCard
 import com.example.feature.components.card.postcard.PostCardAction
 import com.example.feature.components.card.postcard.PostCardWithDetailButton
 import com.example.feature.components.indicator.LoadingUI
@@ -184,11 +184,13 @@ private fun Likes(
                 myPostsState.likedPosts.size,
                 key = { index: Int -> myPostsState.likedPosts[index].id },
             ) { i ->
-                DefaultPostCard(
+                PostCard(
                     post = myPostsState.likedPosts[i],
                     hubState = hubState,
-                    isIncrementView = false,
                     onHubNavigate = onHubNavigate,
+                    onPostCardAction = onPostCardAction,
+                    onHubAction = onHubAction,
+                    isIncrementView = false,
                     onProcessOfEngagementAction = { newPost ->
                         onMyPostsAction(
                             MyPostsAction.ProcessOfEngagement(
@@ -196,8 +198,6 @@ private fun Likes(
                             ),
                         )
                     },
-                    onHubAction = onHubAction,
-                    onPostCardAction = onPostCardAction,
                 )
                 Spacer(Modifier.padding(dimensionResource(R.dimen.padding_smallest)))
             }
@@ -239,13 +239,13 @@ private fun Reposts(
                 myPostsState.repostedPosts.size,
                 key = { index: Int -> myPostsState.repostedPosts[index].id },
             ) { i ->
-                DefaultPostCard(
+                PostCard(
                     post = myPostsState.repostedPosts[i],
                     hubState = hubState,
-                    isIncrementView = false,
                     onHubNavigate = onHubNavigate,
-                    onHubAction = onHubAction,
                     onPostCardAction = onPostCardAction,
+                    onHubAction = onHubAction,
+                    isIncrementView = false,
                     onProcessOfEngagementAction = { newPost ->
                         onMyPostsAction(
                             MyPostsAction.ProcessOfEngagement(
