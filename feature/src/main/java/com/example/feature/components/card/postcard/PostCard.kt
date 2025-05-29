@@ -10,7 +10,6 @@ import com.example.feature.components.card.sedouka.SedoukaCard
 import com.example.feature.components.card.tanka.TankaCard
 import com.example.feature.screens.hub.HubAction
 import com.example.feature.screens.hub.HubState
-import com.example.feature.screens.hub.home.HomeAction
 
 @Composable
 fun PostCard(
@@ -18,9 +17,9 @@ fun PostCard(
     hubState: HubState,
     isIncrementView: Boolean = true,
     onHubAction: (HubAction) -> Unit,
-    onHomeAction: (HomeAction) -> Unit,
     onPostCardAction: (PostCardAction) -> Unit,
     onHubNavigate: (NavigationHubRoute) -> Unit,
+    onProcessOfEngagementAction: (newPost: Post) -> Unit,
 ) {
     when (post.genre) {
         Genre.HAIKU ->
@@ -30,8 +29,8 @@ fun PostCard(
                 isIncrementView = isIncrementView,
                 onHubAction = onHubAction,
                 onPostCardAction = onPostCardAction,
-                onHomeAction = onHomeAction,
                 onHubNavigate = onHubNavigate,
+                onProcessOfEngagementAction = onProcessOfEngagementAction,
             )
 
         Genre.TANKA ->
@@ -41,8 +40,8 @@ fun PostCard(
                 isIncrementView = isIncrementView,
                 onHubAction = onHubAction,
                 onPostCardAction = onPostCardAction,
-                onHomeAction = onHomeAction,
                 onHubNavigate = onHubNavigate,
+                onProcessOfEngagementAction = onProcessOfEngagementAction,
             )
 
         Genre.SEDOUKA ->
@@ -52,8 +51,8 @@ fun PostCard(
                 isIncrementView = isIncrementView,
                 onHubAction = onHubAction,
                 onPostCardAction = onPostCardAction,
-                onHomeAction = onHomeAction,
                 onHubNavigate = onHubNavigate,
+                onProcessOfEngagementAction = onProcessOfEngagementAction,
             )
 
         Genre.KATAUTA ->
@@ -63,8 +62,8 @@ fun PostCard(
                 isIncrementView = isIncrementView,
                 onHubAction = onHubAction,
                 onPostCardAction = onPostCardAction,
-                onHomeAction = onHomeAction,
                 onHubNavigate = onHubNavigate,
+                onProcessOfEngagementAction = onProcessOfEngagementAction,
             )
 
         else ->
@@ -74,8 +73,8 @@ fun PostCard(
                 isIncrementView = isIncrementView,
                 onHubAction = onHubAction,
                 onPostCardAction = onPostCardAction,
-                onHomeAction = onHomeAction,
                 onHubNavigate = onHubNavigate,
+                onProcessOfEngagementAction = onProcessOfEngagementAction,
             )
     }
 }

@@ -27,7 +27,6 @@ import com.example.feature.components.card.postcard.PostCardScope
 import com.example.feature.components.card.postcard.PostCardUi
 import com.example.feature.screens.hub.HubAction
 import com.example.feature.screens.hub.HubState
-import com.example.feature.screens.hub.home.HomeAction
 
 @Composable
 fun HaikuCard(
@@ -35,9 +34,9 @@ fun HaikuCard(
     hubState: HubState,
     isIncrementView: Boolean = true,
     onHubAction: (HubAction) -> Unit,
-    onHomeAction: (HomeAction) -> Unit,
     onPostCardAction: (PostCardAction) -> Unit,
     onHubNavigate: (NavigationHubRoute) -> Unit,
+    onProcessOfEngagementAction: (newPost: Post) -> Unit,
 ) {
     PostCardUi(
         post = post,
@@ -57,15 +56,7 @@ fun HaikuCard(
             ) {
                 Name()
                 Haiku()
-                ActionIcons(
-                    onProcessOfEngagementAction = { haiku ->
-                        onHomeAction(
-                            HomeAction.ChangeEngagementOfPost(
-                                haiku,
-                            ),
-                        )
-                    },
-                )
+                ActionIcons(onProcessOfEngagementAction = onProcessOfEngagementAction)
             }
         }
     }
@@ -115,6 +106,6 @@ private fun HaikuPreview() {
         onHubAction = {},
         onPostCardAction = {},
         onHubNavigate = {},
-        onHomeAction = {},
+        onProcessOfEngagementAction = {},
     )
 }

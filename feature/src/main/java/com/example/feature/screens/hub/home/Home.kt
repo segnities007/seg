@@ -33,6 +33,9 @@ fun Home(
                 onHomeAction = onHomeAction,
                 onPostCardAction = onPostCardAction,
                 onHubNavigate = onHubNavigate,
+                onProcessOfEngagementAction = {
+                    onHomeAction(HomeAction.ChangeEngagementOfPost(it))
+                },
             )
         }
 
@@ -45,6 +48,9 @@ fun Home(
                 onHomeAction = onHomeAction,
                 onPostCardAction = onPostCardAction,
                 onHubNavigate = onHubNavigate,
+                onProcessOfEngagementAction = {
+                    onHomeAction(HomeAction.ChangeEngagementOfPost(it))
+                },
             )
         }
 
@@ -57,6 +63,9 @@ fun Home(
                 onHomeAction = onHomeAction,
                 onPostCardAction = onPostCardAction,
                 onHubNavigate = onHubNavigate,
+                onProcessOfEngagementAction = {
+                    onHomeAction(HomeAction.ChangeEngagementOfPost(it))
+                },
             )
         }
 
@@ -69,6 +78,9 @@ fun Home(
                 onHomeAction = onHomeAction,
                 onPostCardAction = onPostCardAction,
                 onHubNavigate = onHubNavigate,
+                onProcessOfEngagementAction = {
+                    onHomeAction(HomeAction.ChangeEngagementOfPost(it))
+                },
             )
         }
 
@@ -81,6 +93,9 @@ fun Home(
                 onHomeAction = onHomeAction,
                 onPostCardAction = onPostCardAction,
                 onHubNavigate = onHubNavigate,
+                onProcessOfEngagementAction = {
+                    onHomeAction(HomeAction.ChangeEngagementOfPost(it))
+                },
             )
         }
     }

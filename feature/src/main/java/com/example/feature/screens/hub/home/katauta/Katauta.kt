@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import com.example.domain.model.post.Genre
+import com.example.domain.model.post.Post
 import com.example.domain.presentation.navigation.Navigation
 import com.example.feature.R
 import com.example.feature.components.card.katauta.KatautaCard
@@ -30,6 +31,7 @@ fun Katauta(
     onHomeAction: (HomeAction) -> Unit,
     onPostCardAction: (PostCardAction) -> Unit,
     onHubNavigate: (Navigation) -> Unit,
+    onProcessOfEngagementAction: (newPost: Post) -> Unit,
 ) {
     LazyColumn(
         state = homeState.lazyListStateOfKatauta,
@@ -54,8 +56,8 @@ fun Katauta(
                 isIncrementView = true,
                 onHubNavigate = onHubNavigate,
                 onHubAction = onHubAction,
-                onHomeAction = onHomeAction,
                 onPostCardAction = onPostCardAction,
+                onProcessOfEngagementAction = onProcessOfEngagementAction,
             )
             Spacer(Modifier.padding(dimensionResource(R.dimen.padding_smallest)))
         }

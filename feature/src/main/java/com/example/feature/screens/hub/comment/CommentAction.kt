@@ -2,14 +2,15 @@ package com.example.feature.screens.hub.comment
 
 import androidx.compose.runtime.Immutable
 import com.example.domain.model.post.Post
+import com.example.feature.screens.hub.home.HomeAction
 
 @Immutable
-sealed class CommentAction {
+sealed interface CommentAction : HomeAction{
     data class GetComments(
         val comment: Post,
-    ) : CommentAction()
+    ) : CommentAction
 
     data class ProcessOfEngagementAction(
         val updatedPost: Post,
-    ) : CommentAction()
+    ) : CommentAction
 }

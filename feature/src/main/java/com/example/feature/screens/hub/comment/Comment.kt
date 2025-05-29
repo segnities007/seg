@@ -10,9 +10,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.domain.model.post.Post
 import com.example.domain.presentation.navigation.Navigation
 import com.example.feature.R
-import com.example.feature.components.card.postcard.DefaultPostCard
+import com.example.feature.components.card.postcard.PostCard
 import com.example.feature.components.card.postcard.PostCardAction
 import com.example.feature.screens.hub.HubAction
 import com.example.feature.screens.hub.HubState
@@ -36,9 +37,11 @@ fun Comment(
         hubState = hubState,
         commentState = commentViewModel.commentState,
         onHubAction = onHubAction,
-        onCommentAction = commentViewModel::onCommentAction,
         onPostCardAction = onPostCardAction,
         onHubNavigate = onHubNavigate,
+        onProcessOfEngagementAction = {
+            commentViewModel.onCommentAction(CommentAction.ProcessOfEngagementAction(it))
+        },
     )
 }
 
@@ -48,9 +51,9 @@ private fun CommentUi(
     hubState: HubState,
     commentState: CommentState,
     onHubAction: (HubAction) -> Unit,
-    onCommentAction: (CommentAction) -> Unit,
     onPostCardAction: (PostCardAction) -> Unit,
     onHubNavigate: (Navigation) -> Unit,
+    onProcessOfEngagementAction: (newPost: Post) -> Unit,
 ) {
     LazyColumn(
         modifier =
@@ -64,19 +67,13 @@ private fun CommentUi(
         verticalArrangement = Arrangement.Top,
     ) {
         item {
-            DefaultPostCard(
+            PostCard(
                 post = hubState.comment,
                 hubState = hubState,
                 onHubNavigate = onHubNavigate,
-                onPostCardAction = onPostCardAction,
-                onProcessOfEngagementAction = {
-                    onCommentAction(
-                        CommentAction.ProcessOfEngagementAction(
-                            it,
-                        ),
-                    )
-                },
                 onHubAction = onHubAction,
+                onPostCardAction = onPostCardAction,
+                onProcessOfEngagementAction = onProcessOfEngagementAction,
             )
             Spacer(Modifier.padding(dimensionResource(R.dimen.padding_normal)))
         }
@@ -84,19 +81,13 @@ private fun CommentUi(
             commentState.comments.size,
             key = { index: Int -> commentState.comments[index].id },
         ) {
-            DefaultPostCard(
+            PostCard(
                 post = commentState.comments[it],
                 hubState = hubState,
                 onHubNavigate = onHubNavigate,
                 onHubAction = onHubAction,
                 onPostCardAction = onPostCardAction,
-                onProcessOfEngagementAction = { newPost ->
-                    onCommentAction(
-                        CommentAction.ProcessOfEngagementAction(
-                            newPost,
-                        ),
-                    )
-                },
+                onProcessOfEngagementAction = onProcessOfEngagementAction,
             )
             Spacer(Modifier.padding(dimensionResource(R.dimen.padding_smaller)))
         }

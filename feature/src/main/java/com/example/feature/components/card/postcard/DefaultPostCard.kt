@@ -36,17 +36,16 @@ import com.example.domain.presentation.navigation.NavigationHubRoute
 import com.example.feature.R
 import com.example.feature.screens.hub.HubAction
 import com.example.feature.screens.hub.HubState
-import com.example.feature.screens.hub.home.HomeAction
 
 @Composable
 fun DefaultPostCard(
     post: Post,
     hubState: HubState,
     isIncrementView: Boolean = true,
-    onHomeAction: (HomeAction) -> Unit,
     onHubAction: (HubAction) -> Unit,
     onPostCardAction: (PostCardAction) -> Unit,
     onHubNavigate: (NavigationHubRoute) -> Unit,
+    onProcessOfEngagementAction: (newPost: Post) -> Unit,
 ) {
     PostCardUi(
         post = post,
@@ -60,15 +59,7 @@ fun DefaultPostCard(
             Column(modifier = Modifier.padding(horizontal = dimensionResource(R.dimen.padding_sn))) {
                 Name()
                 Description()
-                ActionIcons(
-                    onProcessOfEngagementAction = { post ->
-                        onHomeAction(
-                            HomeAction.ChangeEngagementOfPost(
-                                post,
-                            ),
-                        )
-                    },
-                )
+                ActionIcons(onProcessOfEngagementAction = onProcessOfEngagementAction)
             }
         }
     }
@@ -306,7 +297,7 @@ private fun PostCardPreview() {
         onHubAction = {},
         onPostCardAction = {},
         isIncrementView = false,
-        onHomeAction = {},
         onHubNavigate = {},
+        onProcessOfEngagementAction = {},
     )
 }
