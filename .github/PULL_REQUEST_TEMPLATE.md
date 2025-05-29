@@ -1,6 +1,6 @@
 ---
-name: Basic pull request
-about: 基本的なPR用テンプレートです。
+name: pull request
+about: PR用テンプレートです。
 title: ''
 labels:
 assignees: segnities007
@@ -9,7 +9,7 @@ assignees: segnities007
 
 # About
 
-**OO のPRです。**
+**この issue に対するPRです。**
 以下のTaskを完了しました。
 
 ## DO
