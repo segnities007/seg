@@ -21,7 +21,7 @@ import com.example.domain.model.post.Post
 import com.example.domain.presentation.navigation.Navigation
 import com.example.feature.R
 import com.example.feature.components.button.SmallButton
-import com.example.feature.components.card.postcard.PostCard
+import com.example.feature.components.card.postcard.DefaultPostCard
 import com.example.feature.components.card.postcard.PostCardAction
 import com.example.feature.components.card.postcard.PostSimpleCard
 import com.example.feature.screens.hub.HubAction
@@ -58,7 +58,7 @@ fun PostForComment(
     ) {
         Column {
             Box {
-                PostCard(
+                DefaultPostCard(
                     post = hubState.comment,
                     hubState = hubState,
                     isIncrementView = false,

@@ -16,7 +16,7 @@ import com.example.domain.presentation.navigation.NavigationHubRoute
 import com.example.feature.R
 import com.example.feature.components.bar.top_search_bar.TopSearchBarState
 import com.example.feature.components.card.AvatarCard
-import com.example.feature.components.card.postcard.PostCard
+import com.example.feature.components.card.postcard.DefaultPostCard
 import com.example.feature.components.card.postcard.PostCardAction
 import com.example.feature.components.indicator.LoadingUI
 import com.example.feature.components.tab.TabUiState
@@ -112,7 +112,7 @@ private fun MostViewPosts(
                 searchState.postsSortedByViewCount[index].id
             },
         ) { i ->
-            PostCard(
+            DefaultPostCard(
                 post = searchState.postsSortedByViewCount[i],
                 hubState = hubState,
                 onHubNavigate = onHubNavigate,
@@ -178,7 +178,7 @@ private fun LatestPosts(
                 searchState.posts[index].id
             },
         ) { i ->
-            PostCard(
+            DefaultPostCard(
                 post = searchState.posts[i],
                 hubState = hubState,
                 onHubNavigate = onHubNavigate,

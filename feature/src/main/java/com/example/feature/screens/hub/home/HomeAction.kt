@@ -6,7 +6,7 @@ import com.example.domain.model.post.Post
 import java.time.LocalDateTime
 
 @Immutable
-sealed interface HomeAction {
+interface HomeAction {
     data class GetNewPosts(
         val genre: Genre,
     ) : HomeAction

@@ -35,9 +35,9 @@ fun KatautaCard(
     hubState: HubState,
     isIncrementView: Boolean = true,
     onHubAction: (HubAction) -> Unit,
-    onHomeAction: (HomeAction) -> Unit,
     onPostCardAction: (PostCardAction) -> Unit,
     onHubNavigate: (NavigationHubRoute) -> Unit,
+    onProcessOfEngagementAction: (newPost: Post) -> Unit,
 ) {
     PostCardUi(
         post = post,
@@ -57,15 +57,7 @@ fun KatautaCard(
             ) {
                 Name()
                 Katauta()
-                ActionIcons(
-                    onProcessOfEngagementAction = { katauta ->
-                        onHomeAction(
-                            HomeAction.ChangeEngagementOfPost(
-                                katauta,
-                            ),
-                        )
-                    },
-                )
+                ActionIcons(onProcessOfEngagementAction = onProcessOfEngagementAction,)
             }
         }
     }
@@ -115,6 +107,6 @@ private fun KatautaPreview() {
         onHubAction = {},
         onPostCardAction = {},
         onHubNavigate = {},
-        onHomeAction = {},
+        onProcessOfEngagementAction = {},
     )
 }
