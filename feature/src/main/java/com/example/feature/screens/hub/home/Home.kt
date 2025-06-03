@@ -2,16 +2,11 @@ package com.example.feature.screens.hub.home
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.example.domain.model.post.Genre
 import com.example.domain.presentation.navigation.Navigation
 import com.example.feature.components.card.postcard.PostCardAction
 import com.example.feature.screens.hub.HubAction
 import com.example.feature.screens.hub.HubState
-import com.example.feature.screens.hub.home.haiku.Haiku
-import com.example.feature.screens.hub.home.katauta.Katauta
 import com.example.feature.screens.hub.home.normal.Normal
-import com.example.feature.screens.hub.home.sedouka.Sedouka
-import com.example.feature.screens.hub.home.tanka.Tanka
 
 @Composable
 fun Home(
@@ -23,80 +18,16 @@ fun Home(
     onPostCardAction: (PostCardAction) -> Unit,
     onHubNavigate: (Navigation) -> Unit,
 ) {
-    when (homeState.currentGenre) {
-        Genre.NORMAL -> {
-            Normal(
-                modifier = modifier,
-                hubState = hubState,
-                homeState = homeState,
-                onHubAction = onHubAction,
-                onHomeAction = onHomeAction,
-                onPostCardAction = onPostCardAction,
-                onHubNavigate = onHubNavigate,
-                onProcessOfEngagementAction = {
-                    onHomeAction(HomeAction.ChangeEngagementOfPost(it))
-                },
-            )
-        }
-
-        Genre.HAIKU -> {
-            Haiku(
-                modifier = modifier,
-                hubState = hubState,
-                homeState = homeState,
-                onHubAction = onHubAction,
-                onHomeAction = onHomeAction,
-                onPostCardAction = onPostCardAction,
-                onHubNavigate = onHubNavigate,
-                onProcessOfEngagementAction = {
-                    onHomeAction(HomeAction.ChangeEngagementOfPost(it))
-                },
-            )
-        }
-
-        Genre.TANKA -> {
-            Tanka(
-                modifier = modifier,
-                hubState = hubState,
-                homeState = homeState,
-                onHubAction = onHubAction,
-                onHomeAction = onHomeAction,
-                onPostCardAction = onPostCardAction,
-                onHubNavigate = onHubNavigate,
-                onProcessOfEngagementAction = {
-                    onHomeAction(HomeAction.ChangeEngagementOfPost(it))
-                },
-            )
-        }
-
-        Genre.KATAUTA -> {
-            Katauta(
-                modifier = modifier,
-                hubState = hubState,
-                homeState = homeState,
-                onHubAction = onHubAction,
-                onHomeAction = onHomeAction,
-                onPostCardAction = onPostCardAction,
-                onHubNavigate = onHubNavigate,
-                onProcessOfEngagementAction = {
-                    onHomeAction(HomeAction.ChangeEngagementOfPost(it))
-                },
-            )
-        }
-
-        Genre.SEDOUKA -> {
-            Sedouka(
-                modifier = modifier,
-                hubState = hubState,
-                homeState = homeState,
-                onHubAction = onHubAction,
-                onHomeAction = onHomeAction,
-                onPostCardAction = onPostCardAction,
-                onHubNavigate = onHubNavigate,
-                onProcessOfEngagementAction = {
-                    onHomeAction(HomeAction.ChangeEngagementOfPost(it))
-                },
-            )
-        }
-    }
+    Normal(
+        modifier = modifier,
+        hubState = hubState,
+        homeState = homeState,
+        onHubAction = onHubAction,
+        onHomeAction = onHomeAction,
+        onPostCardAction = onPostCardAction,
+        onHubNavigate = onHubNavigate,
+        onProcessOfEngagementAction = {
+            onHomeAction(HomeAction.ChangeEngagementOfPost(it))
+        },
+    )
 }
