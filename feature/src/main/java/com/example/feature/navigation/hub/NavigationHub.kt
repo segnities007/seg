@@ -14,7 +14,6 @@ import com.example.domain.model.post.Genre
 import com.example.domain.presentation.navigation.Navigation
 import com.example.domain.presentation.navigation.NavigationHubRoute
 import com.example.feature.components.card.postcard.PostCardViewModel
-import com.example.feature.components.screens.hub.search.Search
 import com.example.feature.components.tab.TabViewModel
 import com.example.feature.navigation.hub.setting.NavigationSetting
 import com.example.feature.screens.hub.Hub
@@ -30,6 +29,7 @@ import com.example.feature.screens.hub.home.HomeViewModel
 import com.example.feature.screens.hub.notify.Notify
 import com.example.feature.screens.hub.post.Post
 import com.example.feature.screens.hub.post.PostForComment
+import com.example.feature.screens.hub.search.Search
 import com.example.feature.screens.hub.search.SearchViewModel
 import com.example.feature.screens.hub.trend.Trend
 
