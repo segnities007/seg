@@ -22,7 +22,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.domain.presentation.navigation.Navigation
 import com.example.feature.R
 import com.example.feature.components.button.SmallButton
-import com.example.feature.components.card.postcard.DefaultPostCard
+import com.example.feature.components.card.postcard.PostCard
 import com.example.feature.components.card.postcard.PostCardAction
 import com.example.feature.components.indicator.PagingIndicator
 import com.example.feature.screens.hub.HubAction
@@ -132,7 +132,7 @@ private fun TrendUi(
         ) {
             SubTitle(textID = textIDs[page])
             for (post in postLists[page]) {
-                DefaultPostCard(
+                PostCard(
                     post = post,
                     hubState = hubState,
                     onHubNavigate = onHubNavigate,
