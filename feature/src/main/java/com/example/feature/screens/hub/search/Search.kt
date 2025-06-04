@@ -1,4 +1,4 @@
-package com.example.feature.components.screens.hub.search
+package com.example.feature.screens.hub.search
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,15 +16,13 @@ import com.example.domain.presentation.navigation.NavigationHubRoute
 import com.example.feature.R
 import com.example.feature.components.bar.top_search_bar.TopSearchBarState
 import com.example.feature.components.card.AvatarCard
-import com.example.feature.components.card.postcard.DefaultPostCard
+import com.example.feature.components.card.postcard.PostCard
 import com.example.feature.components.card.postcard.PostCardAction
 import com.example.feature.components.indicator.LoadingUI
 import com.example.feature.components.tab.TabUiState
 import com.example.feature.screens.hub.HubAction
 import com.example.feature.screens.hub.HubState
 import com.example.feature.screens.hub.account.AccountAction
-import com.example.feature.screens.hub.search.SearchAction
-import com.example.feature.screens.hub.search.SearchState
 
 @Composable
 fun Search(
@@ -112,7 +110,7 @@ private fun MostViewPosts(
                 searchState.postsSortedByViewCount[index].id
             },
         ) { i ->
-            DefaultPostCard(
+            PostCard(
                 post = searchState.postsSortedByViewCount[i],
                 hubState = hubState,
                 onHubNavigate = onHubNavigate,
@@ -178,7 +176,7 @@ private fun LatestPosts(
                 searchState.posts[index].id
             },
         ) { i ->
-            DefaultPostCard(
+            PostCard(
                 post = searchState.posts[i],
                 hubState = hubState,
                 onHubNavigate = onHubNavigate,
