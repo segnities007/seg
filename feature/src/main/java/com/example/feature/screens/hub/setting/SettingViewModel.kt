@@ -25,18 +25,14 @@ class SettingViewModel
 
         fun onSettingAction(action: SettingAction) {
             when (action) {
-                SettingAction.CloseDatePicker -> {
-                    settingState = settingState.copy(isDatePickerDialogShow = false)
-                }
+                SettingAction.CloseDatePicker,
+                SettingAction.OpenDatePicker,
+                -> settingState = settingReducer(state = settingState, action = action)
 
                 SettingAction.Logout -> {
                     viewModelScope.launch(Dispatchers.IO) {
                         authRepository.logout()
                     }
-                }
-
-                SettingAction.OpenDatePicker -> {
-                    settingState = settingState.copy(isDatePickerDialogShow = true)
                 }
 
                 is SettingAction.SelectDate -> {

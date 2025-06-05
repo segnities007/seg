@@ -25,7 +25,7 @@ class UserInfoViewModel
                 is UserInfoAction.ChangeDescription,
                 is UserInfoAction.ChangeName,
                 is UserInfoAction.ChangeUserID,
-                -> userInfoReducer(state = userInfoState, action = action)
+                -> userInfoState = userInfoReducer(state = userInfoState, action = action)
 
                 is UserInfoAction.UpdateUser -> {
                     viewModelScope.launch(Dispatchers.IO) {

@@ -114,46 +114,12 @@ class MyPostsViewModel
                     }
                 }
 
-                MyPostsAction.Init -> { // TODO
-                }
-
-                is MyPostsAction.ProcessOfEngagement -> {
-                    val newPost = action.newPost
-
-                    val newPosts =
-                        myPostsState.posts.map { post ->
-                            if (newPost.id == post.id) newPost else post
-                        }
-
-                    val newLikedPosts =
-                        myPostsState.likedPosts.map { post ->
-                            if (newPost.id == post.id) newPost else post
-                        }
-
-                    val newRepostedPosts =
-                        myPostsState.repostedPosts.map { post ->
-                            if (newPost.id == post.id) newPost else post
-                        }
-
-                    myPostsState =
-                        myPostsState.copy(
-                            posts = newPosts,
-                            likedPosts = newLikedPosts,
-                            repostedPosts = newRepostedPosts,
-                        )
-                }
-
-                is MyPostsAction.RemovePostFromPosts -> {
-                    myPostsState = myPostsState.copy(posts = myPostsState.posts.minus(action.post))
-                }
-
-                is MyPostsAction.SetSelf -> {
-                    myPostsState = myPostsState.copy(self = action.self)
-                }
-
-                is MyPostsAction.UpdateSelectedTabIndex -> {
-                    myPostsState = myPostsState.copy(selectedTabIndex = action.index)
-                }
+                is MyPostsAction.ProcessOfEngagement,
+                MyPostsAction.Init,
+                is MyPostsAction.SetSelf,
+                is MyPostsAction.RemovePostFromPosts,
+                is MyPostsAction.UpdateSelectedTabIndex,
+                -> myPostsState = myPostsReducer(myPostsState, action)
             }
         }
 
