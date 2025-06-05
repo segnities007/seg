@@ -12,7 +12,7 @@ class TopSearchBarViewModel : ViewModel() {
     fun onTopSearchBarAction(action: TopSearchBarAction) {
         when (action) {
             is TopSearchBarAction.UpdateKeyword -> {
-                topSearchBarState = topSearchBarState.copy(keyword = action.newKeyword)
+                topSearchBarState = topSearchBarReducer(state = topSearchBarState, action = action)
             }
         }
     }
