@@ -3,37 +3,37 @@ package com.example.feature.screens.login.sign_up.create_account
 import android.net.Uri
 import java.time.LocalDate
 
-sealed class CreateAccountAction {
-    data object OpenDatePicker : CreateAccountAction()
+sealed interface CreateAccountAction {
+    data object OpenDatePicker : CreateAccountAction
 
-    data object CloseDatePicker : CreateAccountAction()
+    data object CloseDatePicker : CreateAccountAction
 
     data class SetDate(
         val millis: Long?,
-    ) : CreateAccountAction()
+    ) : CreateAccountAction
 
     data class ChangeName(
         val name: String,
-    ) : CreateAccountAction()
+    ) : CreateAccountAction
 
     data class ChangeUserID(
         val userID: String,
-    ) : CreateAccountAction()
+    ) : CreateAccountAction
 
     data class ChangeBirthday(
         val birthday: LocalDate,
-    ) : CreateAccountAction()
+    ) : CreateAccountAction
 
     data class CreateUser(
         val onNavigateToHub: () -> Unit,
-    ) : CreateAccountAction()
+    ) : CreateAccountAction
 
     data class SetUri(
         val uri: Uri,
-    ) : CreateAccountAction()
+    ) : CreateAccountAction
 
     data class SetPicture(
         val path: String,
         val byteArray: ByteArray,
-    ) : CreateAccountAction()
+    ) : CreateAccountAction
 }
