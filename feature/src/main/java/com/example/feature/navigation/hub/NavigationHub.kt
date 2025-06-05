@@ -76,7 +76,7 @@ fun NavigationHub(onTopNavigate: (route: Navigation) -> Unit) {
         onSearchAction = searchViewModel::onSearchAction,
         onTabAction = tabViewModel::onTabAction,
         onTopSearchBarAction = searchViewModel::onTopSearchBarAction,
-        topState = hubViewModel.topState,
+        topLayerState = hubViewModel.topLayerState,
         onHomeAction = homeViewModel::onHomeAction,
         onTopAction = hubViewModel::onTopAction,
     ) { modifier: Modifier ->

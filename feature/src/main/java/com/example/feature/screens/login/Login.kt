@@ -16,22 +16,22 @@ import com.example.feature.R
 import com.example.feature.components.bar.bottom_bar.BottomBar
 import com.example.feature.components.bar.top_bar.TopBar
 import com.example.feature.components.navigation_drawer.NavigationDrawer
-import com.example.feature.navigation.TopAction
-import com.example.feature.navigation.TopState
+import com.example.feature.navigation.TopLayerAction
+import com.example.feature.navigation.TopLayerState
 
 @Composable
 fun Login(
-    topState: TopState,
+    topLayerState: TopLayerState,
     currentRouteName: String,
-    onTopAction: (TopAction) -> Unit,
+    onTopAction: (TopLayerAction) -> Unit,
     onNavigate: (Navigation) -> Unit,
     content: @Composable (Modifier) -> Unit,
 ) {
     NavigationDrawer(
         items = BottomBarLoginItem(),
-        drawerState = topState.drawerState,
+        drawerState = topLayerState.drawerState,
         onNavigate = onNavigate,
-        onDrawerClose = { onTopAction(TopAction.CloseDrawer) },
+        onDrawerClose = { onTopAction(TopLayerAction.CloseDrawer) },
     ) {
         LoginUi(
             currentRouteName = currentRouteName,
@@ -45,7 +45,7 @@ fun Login(
 @Composable
 private fun LoginUi(
     currentRouteName: String,
-    onTopAction: (TopAction) -> Unit,
+    onTopAction: (TopLayerAction) -> Unit,
     onNavigate: (Navigation) -> Unit,
     content: @Composable (Modifier) -> Unit,
 ) {
@@ -71,12 +71,12 @@ private fun LoginUi(
 @Composable
 private fun LoginTopBar(
     currentRouteName: String,
-    onTopAction: (TopAction) -> Unit,
+    onTopAction: (TopLayerAction) -> Unit,
 ) {
     TopBar(
         titleContent = { Text(text = stringResource(R.string.login_screen_title)) },
         routeName = currentRouteName,
-        onDrawerOpen = { onTopAction(TopAction.OpenDrawer) },
+        onDrawerOpen = { onTopAction(TopLayerAction.OpenDrawer) },
     )
 }
 
