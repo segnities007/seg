@@ -26,21 +26,17 @@ class AccountViewModel
         fun onAccountAction(action: AccountAction) {
             when (action) {
                 is AccountAction.ClickFollowButton -> {
-                    val myself = action.self
-                    val other = action.other
-                    val isFollow = action.isFollow
-
                     viewModelScope.launch(Dispatchers.IO) {
-                        if (isFollow) {
+                        if (action.isFollow) {
                             userRepository.onUnFollowUser(
-                                myself,
-                                other,
+                                action.self,
+                                action.other,
                             )
                         } else {
-                            userRepository.onFollowUser(myself, other)
+                            userRepository.onFollowUser(action.self, action.other)
                         }
                         action.getSelf()
-                        onToggleIsLoading()
+                        accountReducer(action, accountUiState)
                     }
                 }
 
@@ -64,12 +60,11 @@ class AccountViewModel
                 }
 
                 is AccountAction.InitAccountState -> {
-                    val userID = action.userID
                     viewModelScope.launch(Dispatchers.IO) {
-                        val user = userRepository.onGetOtherUser(userID)
+                        val user = userRepository.onGetOtherUser(action.userID)
                         accountUiState = accountUiState.copy(user = user, posts = listOf())
 
-                        val posts = postRepository.onGetPostsOfUser(userID)
+                        val posts = postRepository.onGetPostsOfUser(action.userID)
                         if (posts.isNotEmpty()) {
                             accountUiState = accountUiState.copy(posts = posts)
                         } else {
@@ -78,22 +73,9 @@ class AccountViewModel
                     }
                 }
 
-                AccountAction.ResetState -> {
-                    accountUiState =
-                        accountUiState.copy(posts = listOf(), isCompletedFetchPosts = false)
-                }
-
-                is AccountAction.SetOtherUser -> {
-                    val user = action.user
-                    viewModelScope.launch(Dispatchers.IO) {
-                        accountUiState = accountUiState.copy(user = user)
-                    }
-                }
-
                 is AccountAction.GetUserPosts -> {
-                    val userID = action.userID
                     viewModelScope.launch(Dispatchers.IO) {
-                        val posts = postRepository.onGetPostsOfUser(userID)
+                        val posts = postRepository.onGetPostsOfUser(action.userID)
                         if (posts.isNotEmpty()) {
                             accountUiState = accountUiState.copy(posts = posts)
                         } else {
@@ -103,14 +85,14 @@ class AccountViewModel
                 }
 
                 is AccountAction.ProcessOfEngagementAction -> {
-                    val newPost = action.newPost
-                    onUpdatePosts(newPost)
+                    onUpdatePosts(action.newPost)
                     onGetOtherUser(accountUiState.user.userID)
                 }
 
-                AccountAction.ToggleIsLoading -> {
-                    onToggleIsLoading()
-                }
+                AccountAction.ToggleIsLoading,
+                AccountAction.ResetState,
+                is AccountAction.SetOtherUser,
+                -> accountUiState = accountReducer(action, accountUiState)
             }
         }
 
@@ -149,9 +131,5 @@ class AccountViewModel
         private fun onToggleIsCompletedFetchPosts() {
             accountUiState =
                 accountUiState.copy(isCompletedFetchPosts = !accountUiState.isCompletedFetchPosts)
-        }
-
-        private fun onToggleIsLoading() {
-            accountUiState = accountUiState.copy(isLoading = !accountUiState.isLoading)
         }
     }
