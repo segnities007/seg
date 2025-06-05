@@ -13,9 +13,7 @@ class TabViewModel : ViewModel() {
         when (action) {
             is TabAction.SetLabels,
             is TabAction.UpdateIndex,
-            -> {
-                tabUiState = tabReducer(state = tabUiState, action = action)
-            }
+            -> tabUiState = tabReducer(state = tabUiState, action = action)
         }
     }
 }

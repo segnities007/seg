@@ -1,11 +1,11 @@
 package com.example.feature.components.tab
 
-sealed class TabAction {
+sealed interface TabAction {
     data class UpdateIndex(
         val newIndex: Int,
-    ) : TabAction()
+    ) : TabAction
 
     data class SetLabels(
         val newLabels: List<String>,
-    ) : TabAction()
+    ) : TabAction
 }
