@@ -48,7 +48,7 @@ class PostViewModel
                         val result =
                             postRepository.onCreateComment(
                                 description = description,
-                                self = action.hubState.user,
+                                self = action.hubState.self,
                                 commentedPost = action.hubState.comment,
                             )
                         if (result) {

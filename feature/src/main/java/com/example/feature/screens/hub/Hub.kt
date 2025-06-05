@@ -57,7 +57,7 @@ fun Hub(
         drawerState = topLayerState.drawerState,
         onNavigate = onHubNavigate,
         onDrawerClose = { onTopAction(TopLayerAction.CloseDrawer) },
-        user = hubState.user,
+        user = hubState.self,
     ) {
         HubUi(
             content = content,
@@ -221,13 +221,13 @@ private fun HubTopBar(
         NavigationHubRoute.Setting.name ->
             if (!hubState.isHideTopBar) {
                 StatusBarWithFollows(
-                    user = hubState.user,
+                    user = hubState.self,
                     onHubNavigate = onHubNavigate,
                     onHubAction = onHubAction,
                 )
             } else {
                 StatusBarWithTab(
-                    user = hubState.user,
+                    user = hubState.self,
                     tabUiState = tabUiState,
                     onTabAction = onTabAction,
                 )

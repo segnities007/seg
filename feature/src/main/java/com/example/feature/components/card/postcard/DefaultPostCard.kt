@@ -176,7 +176,7 @@ fun PostCardScope.ActionIcons(onProcessOfEngagementAction: (newPost: Post) -> Un
         ActionIcon(
             modifier = Modifier.padding(top = dimensionResource(R.dimen.padding_sn)),
             painterRes =
-                if (hubState.user.likes.contains(
+                if (hubState.self.likes.contains(
                         post.id,
                     )
                 ) {
@@ -201,7 +201,7 @@ fun PostCardScope.ActionIcons(onProcessOfEngagementAction: (newPost: Post) -> Un
             modifier = Modifier.padding(top = dimensionResource(R.dimen.padding_sn)),
             count = counts[1],
             painterRes =
-                if (hubState.user.reposts.contains(post.id)) {
+                if (hubState.self.reposts.contains(post.id)) {
                     EngagementIconState.pushIcons[1]
                 } else {
                     EngagementIconState.unPushIcons[1]
@@ -222,7 +222,7 @@ fun PostCardScope.ActionIcons(onProcessOfEngagementAction: (newPost: Post) -> Un
             modifier = Modifier.padding(top = dimensionResource(R.dimen.padding_sn)),
             count = counts[2],
             painterRes =
-                if (hubState.user.comments.contains(post.id)) {
+                if (hubState.self.comments.contains(post.id)) {
                     EngagementIconState.pushIcons[2]
                 } else {
                     EngagementIconState.unPushIcons[2]

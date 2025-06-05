@@ -39,7 +39,7 @@ fun MyPosts(
 
     LaunchedEffect(Unit) {
         onHubAction(HubAction.ChangeIsHideTopBar)
-        myPostsViewModel.onMyPostsAction(MyPostsAction.SetSelf(hubState.user))
+        myPostsViewModel.onMyPostsAction(MyPostsAction.SetSelf(hubState.self))
         myPostsViewModel.onMyPostsAction(MyPostsAction.Init)
     }
 

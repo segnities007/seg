@@ -3,46 +3,46 @@ package com.example.feature.screens.hub
 import com.example.domain.model.post.Post
 import com.example.domain.model.user.User
 
-sealed class HubAction {
-    data object ChangeIsHideTopBar : HubAction()
+sealed interface HubAction {
+    data object ChangeIsHideTopBar : HubAction
 
-    data object ResetIsHideTopBar : HubAction()
+    data object ResetIsHideTopBar : HubAction
 
-    data object GetUser : HubAction()
+    data object GetUser : HubAction
 
     data class SetSelf(
         val newSelf: User,
-    ) : HubAction()
+    ) : HubAction
 
     data class SetComment(
         val comment: Post,
-    ) : HubAction()
+    ) : HubAction
 
     data class SetUserID(
         val userID: String,
-    ) : HubAction()
+    ) : HubAction
 
     data class SetAccounts(
         val accounts: List<String>,
-    ) : HubAction()
+    ) : HubAction
 
     data class AddPostIDToMyLikes(
         val postID: Int,
-    ) : HubAction()
+    ) : HubAction
 
     data class RemovePostIDFromMyLikes(
         val postID: Int,
-    ) : HubAction()
+    ) : HubAction
 
     data class AddPostIDFromReposts(
         val postID: Int,
-    ) : HubAction()
+    ) : HubAction
 
     data class RemovePostIDFromReposts(
         val postID: Int,
-    ) : HubAction()
+    ) : HubAction
 
     data class ChangeCurrentRouteName(
         val currentRouteName: String,
-    ) : HubAction()
+    ) : HubAction
 }

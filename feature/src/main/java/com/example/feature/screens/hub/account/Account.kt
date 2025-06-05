@@ -34,7 +34,7 @@ fun Account(
     onHubNavigate: (Navigation) -> Unit,
 ) {
     LaunchedEffect(Unit) {
-        onAccountAction(AccountAction.InitAccountState(hubState.userID))
+        onAccountAction(AccountAction.InitAccountState(hubState.otherUserID))
     }
 
     DisposableEffect(Unit) {
@@ -76,7 +76,7 @@ private fun AccountUi(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
     ) {
-        if (hubState.user.userID != accountState.user.userID) {
+        if (hubState.self.userID != accountState.user.userID) {
             item {
                 FollowButtons(
                     hubState = hubState,
@@ -135,13 +135,13 @@ private fun FollowButtons(
             modifier = Modifier.weight(1f),
             isLoading = accountState.isLoading,
             textID =
-                if (hubState.user.follows.contains(accountState.user.userID)) R.string.followed else R.string.follow,
+                if (hubState.self.follows.contains(accountState.user.userID)) R.string.followed else R.string.follow,
             onClick = {
                 onAccountAction(AccountAction.ToggleIsLoading)
                 onAccountAction(
                     AccountAction.ClickFollowButton(
-                        hubState.user.follows.contains(accountState.user.userID),
-                        hubState.user,
+                        hubState.self.follows.contains(accountState.user.userID),
+                        hubState.self,
                         accountState.user,
                         { onHubAction(HubAction.GetUser) },
                     ),
