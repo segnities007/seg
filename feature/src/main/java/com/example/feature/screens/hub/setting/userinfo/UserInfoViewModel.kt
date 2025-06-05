@@ -22,17 +22,10 @@ class UserInfoViewModel
 
         fun onUserInfoAction(action: UserInfoAction) {
             when (action) {
-                is UserInfoAction.ChangeDescription -> {
-                    userInfoState = userInfoState.copy(description = action.newDescription)
-                }
-
-                is UserInfoAction.ChangeName -> {
-                    userInfoState = userInfoState.copy(name = action.newName)
-                }
-
-                is UserInfoAction.ChangeUserID -> {
-                    userInfoState = userInfoState.copy(userID = action.newUserID)
-                }
+                is UserInfoAction.ChangeDescription,
+                is UserInfoAction.ChangeName,
+                is UserInfoAction.ChangeUserID,
+                -> userInfoReducer(state = userInfoState, action = action)
 
                 is UserInfoAction.UpdateUser -> {
                     viewModelScope.launch(Dispatchers.IO) {
