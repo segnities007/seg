@@ -23,9 +23,10 @@ class HomeViewModel
 
         fun onHomeAction(action: HomeAction) {
             when (action) {
-                is HomeAction.ChangeIsAllPostsFetched -> {
-                    onChangeIsAllFetched(action.genre)
-                }
+                is HomeAction.UpdateCurrentGenre,
+                is HomeAction.ChangeEngagementOfPost,
+                is HomeAction.ChangeIsAllPostsFetched,
+                -> homeState = homeReducer(action, homeState)
 
                 is HomeAction.GetNewPosts -> {
                     viewModelScope.launch(Dispatchers.IO) {
@@ -48,7 +49,7 @@ class HomeViewModel
                                 afterPostCreateAt = action.updatedAt,
                                 genre = action.genre,
                             )
-                        if (posts.isEmpty()) onChangeIsAllFetched(action.genre)
+                        if (posts.isEmpty()) homeReducer(action, homeState)
                         homeState =
                             when (action.genre) {
                                 Genre.HAIKU -> homeState.copy(haikus = homeState.haikus.plus(posts))
@@ -59,59 +60,6 @@ class HomeViewModel
                             }
                     }
                 }
-
-                is HomeAction.ChangeEngagementOfPost -> {
-                    val newPosts =
-                        when (action.newPost.genre) {
-                            Genre.HAIKU ->
-                                homeState.haikus.map { haiku ->
-                                    if (haiku.id == action.newPost.id) action.newPost else haiku
-                                }
-
-                            Genre.TANKA ->
-                                homeState.tankas.map { tanka ->
-                                    if (tanka.id == action.newPost.id) action.newPost else tanka
-                                }
-
-                            Genre.KATAUTA ->
-                                homeState.katautas.map { katauta ->
-                                    if (katauta.id == action.newPost.id) action.newPost else katauta
-                                }
-
-                            Genre.SEDOUKA ->
-                                homeState.sedoukas.map { sedouka ->
-                                    if (sedouka.id == action.newPost.id) action.newPost else sedouka
-                                }
-
-                            else ->
-                                homeState.posts.map { post ->
-                                    if (post.id == action.newPost.id) action.newPost else post
-                                }
-                        }
-                    homeState =
-                        when (action.newPost.genre) {
-                            Genre.TANKA -> homeState.copy(tankas = newPosts)
-                            Genre.HAIKU -> homeState.copy(haikus = newPosts)
-                            Genre.KATAUTA -> homeState.copy(katautas = newPosts)
-                            Genre.SEDOUKA -> homeState.copy(sedoukas = newPosts)
-                            else -> homeState.copy(posts = newPosts)
-                        }
-                }
-
-                is HomeAction.UpdateCurrentGenre -> {
-                    homeState = homeState.copy(currentGenre = action.newGenre)
-                }
             }
-        }
-
-        private fun onChangeIsAllFetched(genre: Genre) {
-            homeState =
-                when (genre) {
-                    Genre.HAIKU -> homeState.copy(isAllHaikusFetched = !homeState.isAllHaikusFetched)
-                    Genre.TANKA -> homeState.copy(isAllTankasFetched = !homeState.isAllTankasFetched)
-                    Genre.KATAUTA -> homeState.copy(isAllKatautasFetched = !homeState.isAllKatautasFetched)
-                    Genre.SEDOUKA -> homeState.copy(isAllSedoukasFetched = !homeState.isAllSedoukasFetched)
-                    else -> homeState.copy(isAllPostsFetched = !homeState.isAllPostsFetched)
-                }
         }
     }
