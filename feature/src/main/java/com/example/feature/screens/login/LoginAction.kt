@@ -1,27 +1,27 @@
 package com.example.feature.screens.login
 
-sealed class LoginAction {
-    data object ChangeIsFailedSignIn : LoginAction()
+sealed interface LoginAction {
+    data object ChangeIsFailedSignIn : LoginAction
 
-    data object ResetIsFailedSignIn : LoginAction()
+    data object ResetIsFailedSignIn : LoginAction
 
     data class ChangeCurrentRouteName(
         val newCurrentRouteName: String,
-    ) : LoginAction()
+    ) : LoginAction
 
     data class ChangePassword(
         val password: String,
-    ) : LoginAction()
+    ) : LoginAction
 
     data class ChangeEmail(
         val email: String,
-    ) : LoginAction()
+    ) : LoginAction
 
     data class SignUpWithEmailPassword(
         val onNavigate: () -> Unit,
-    ) : LoginAction()
+    ) : LoginAction
 
     data class SignInWithEmailPassword(
         val onNavigate: () -> Unit,
-    ) : LoginAction()
+    ) : LoginAction
 }
