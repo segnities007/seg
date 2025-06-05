@@ -27,7 +27,6 @@ import com.example.feature.screens.hub.HubState
 fun Account(
     modifier: Modifier = Modifier,
     hubState: HubState,
-    accountUiFlagState: AccountUiFlagState,
     accountState: AccountState,
     onHubAction: (HubAction) -> Unit,
     onAccountAction: (AccountAction) -> Unit,
@@ -48,7 +47,6 @@ fun Account(
         modifier = modifier,
         hubState = hubState,
         onHubAction = onHubAction,
-        accountUiFlagState = accountUiFlagState,
         accountState = accountState,
         onAccountAction = onAccountAction,
         onPostCardAction = onPostCardAction,
@@ -60,7 +58,6 @@ fun Account(
 private fun AccountUi(
     modifier: Modifier = Modifier,
     hubState: HubState,
-    accountUiFlagState: AccountUiFlagState,
     accountState: AccountState,
     onHubAction: (HubAction) -> Unit,
     onAccountAction: (AccountAction) -> Unit,
@@ -83,7 +80,6 @@ private fun AccountUi(
             item {
                 FollowButtons(
                     hubState = hubState,
-                    accountUiFlagState = accountUiFlagState,
                     accountState = accountState,
                     onHubAction = onHubAction,
                     onAccountAction = onAccountAction,
@@ -107,7 +103,7 @@ private fun AccountUi(
             Spacer(Modifier.padding(dimensionResource(R.dimen.padding_smallest)))
         }
         // action for fetching before-post
-        if (!accountUiFlagState.isCompletedFetchPosts) {
+        if (!accountState.isCompletedFetchPosts) {
             item {
                 Column {
                     Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_smaller)))
@@ -126,7 +122,6 @@ private fun AccountUi(
 private fun FollowButtons(
     modifier: Modifier = Modifier,
     hubState: HubState,
-    accountUiFlagState: AccountUiFlagState,
     accountState: AccountState,
     onHubAction: (HubAction) -> Unit,
     onAccountAction: (AccountAction) -> Unit,
@@ -138,7 +133,7 @@ private fun FollowButtons(
         Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_normal)))
         SmallButton(
             modifier = Modifier.weight(1f),
-            isLoading = accountUiFlagState.isLoading,
+            isLoading = accountState.isLoading,
             textID =
                 if (hubState.user.follows.contains(accountState.user.userID)) R.string.followed else R.string.follow,
             onClick = {
