@@ -11,12 +11,10 @@ class TabViewModel : ViewModel() {
 
     fun onTabAction(action: TabAction) {
         when (action) {
-            is TabAction.SetLabels -> {
-                tabUiState = tabUiState.copy(labels = action.newLabels)
-            }
-
-            is TabAction.UpdateIndex -> {
-                tabUiState = tabUiState.copy(index = action.newIndex)
+            is TabAction.SetLabels,
+            is TabAction.UpdateIndex,
+            -> {
+                tabUiState = tabReducer(state = tabUiState, action = action)
             }
         }
     }
