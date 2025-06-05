@@ -5,28 +5,28 @@ import com.example.domain.model.post.Post
 import com.example.domain.model.user.User
 
 @Immutable
-sealed class MyPostsAction {
-    data object Init : MyPostsAction()
+sealed interface MyPostsAction {
+    data object Init : MyPostsAction
 
-    data object GetPosts : MyPostsAction()
+    data object GetPosts : MyPostsAction
 
-    data object GetLikedPosts : MyPostsAction()
+    data object GetLikedPosts : MyPostsAction
 
-    data object GetRepostedPosts : MyPostsAction()
+    data object GetRepostedPosts : MyPostsAction
 
     data class UpdateSelectedTabIndex(
         val index: Int,
-    ) : MyPostsAction()
+    ) : MyPostsAction
 
     data class SetSelf(
         val self: User,
-    ) : MyPostsAction()
+    ) : MyPostsAction
 
     data class RemovePostFromPosts(
         val post: Post,
-    ) : MyPostsAction()
+    ) : MyPostsAction
 
     data class ProcessOfEngagement(
         val newPost: Post,
-    ) : MyPostsAction()
+    ) : MyPostsAction
 }

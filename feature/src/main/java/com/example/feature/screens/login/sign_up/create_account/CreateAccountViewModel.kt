@@ -31,13 +31,16 @@ class CreateAccountViewModel
 
         fun onCreateAccountAction(action: CreateAccountAction) {
             when (action) {
-                CreateAccountAction.OpenDatePicker -> {
-                    createAccountUiState = createAccountUiState.copy(isShow = true)
-                }
-
-                CreateAccountAction.CloseDatePicker -> {
-                    createAccountUiState = createAccountUiState.copy(isShow = false)
-                }
+                CreateAccountAction.CloseDatePicker,
+                CreateAccountAction.OpenDatePicker,
+                is CreateAccountAction.ChangeName,
+                is CreateAccountAction.ChangeUserID,
+                is CreateAccountAction.ChangeBirthday,
+                is CreateAccountAction.SetUri,
+                is CreateAccountAction.SetPicture,
+                ->
+                    createAccountUiState =
+                        createAccountReducer(state = createAccountUiState, action = action)
 
                 is CreateAccountAction.CreateUser -> {
                     val user =
@@ -71,40 +74,15 @@ class CreateAccountViewModel
                     }
                 }
 
-                is CreateAccountAction.ChangeBirthday -> {
-                    onBirthdayChange(action.birthday)
-                }
-
-                is CreateAccountAction.ChangeName -> {
-                    createAccountUiState = createAccountUiState.copy(name = action.name)
-                }
-
-                is CreateAccountAction.ChangeUserID -> {
-                    createAccountUiState = createAccountUiState.copy(userID = action.userID)
-                }
-
                 is CreateAccountAction.SetDate -> {
                     val instant = Instant.fromEpochMilliseconds(action.millis!!)
                     val localDateTime = instant.toLocalDateTime(TimeZone.currentSystemDefault())
                     val year = localDateTime.year
                     val month = localDateTime.monthNumber
                     val day = localDateTime.dayOfMonth
-
-                    onBirthdayChange(LocalDate.of(year, month, day))
-                }
-
-                is CreateAccountAction.SetUri -> {
-                    createAccountUiState = createAccountUiState.copy(uri = action.uri)
-                }
-
-                is CreateAccountAction.SetPicture -> {
                     createAccountUiState =
-                        createAccountUiState.copy(path = action.path, byteArray = action.byteArray)
+                        createAccountUiState.copy(birthday = LocalDate.of(year, month, day))
                 }
             }
-        }
-
-        private fun onBirthdayChange(newBirthday: LocalDate) {
-            createAccountUiState = createAccountUiState.copy(birthday = newBirthday)
         }
     }

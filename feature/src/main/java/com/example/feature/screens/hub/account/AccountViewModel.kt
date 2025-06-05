@@ -5,18 +5,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.domain.model.post.Post
 import com.example.domain.repository.PostRepository
 import com.example.domain.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
-data class AccountUiFlagState(
-    val isCompletedFetchPosts: Boolean = false,
-    val isLoading: Boolean = false,
-)
 
 @HiltViewModel
 class AccountViewModel
@@ -28,32 +22,29 @@ class AccountViewModel
         var accountUiState by mutableStateOf(AccountState())
             private set
 
-        var accountUiFlagState by mutableStateOf(AccountUiFlagState())
-            private set
-
         fun onAccountAction(action: AccountAction) {
             when (action) {
-                is AccountAction.ClickFollowButton -> {
-                    val myself = action.self
-                    val other = action.other
-                    val isFollow = action.isFollow
+                is AccountAction.GetOtherUser,
+                -> onGetOtherUser(action.userID)
 
+                AccountAction.ToggleIsLoading,
+                AccountAction.ResetState,
+                is AccountAction.SetOtherUser,
+                -> accountUiState = accountReducer(action, accountUiState)
+
+                is AccountAction.ClickFollowButton -> {
                     viewModelScope.launch(Dispatchers.IO) {
-                        if (isFollow) {
+                        if (action.isFollow) {
                             userRepository.onUnFollowUser(
-                                myself,
-                                other,
+                                action.self,
+                                action.other,
                             )
                         } else {
-                            userRepository.onFollowUser(myself, other)
+                            userRepository.onFollowUser(action.self, action.other)
                         }
                         action.getSelf()
-                        onToggleIsLoading()
+                        accountUiState = accountReducer(action, accountUiState)
                     }
-                }
-
-                is AccountAction.GetOtherUser -> {
-                    onGetOtherUser(action.userID)
                 }
 
                 AccountAction.GetPosts -> {
@@ -61,63 +52,44 @@ class AccountViewModel
                         if (accountUiState.posts.isEmpty()) {
                             val posts = postRepository.onGetPostsOfUser(accountUiState.user.userID)
                             if (posts.isEmpty()) {
-                                onToggleIsCompletedFetchPosts()
+                                accountUiState = accountReducer(action, accountUiState)
                                 return@launch
                             }
                             accountUiState = accountUiState.copy(posts = posts)
                         } else {
-                            onGetBeforePosts()
+                            onGetBeforePosts(action)
                         }
                     }
                 }
 
                 is AccountAction.InitAccountState -> {
-                    val userID = action.userID
                     viewModelScope.launch(Dispatchers.IO) {
-                        val user = userRepository.onGetOtherUser(userID)
+                        val user = userRepository.onGetOtherUser(action.userID)
                         accountUiState = accountUiState.copy(user = user, posts = listOf())
 
-                        val posts = postRepository.onGetPostsOfUser(userID)
-                        if (posts.isNotEmpty()) {
-                            accountUiState = accountUiState.copy(posts = posts)
-                        } else {
-                            onToggleIsCompletedFetchPosts()
-                        }
-                    }
-                }
-
-                AccountAction.ResetState -> {
-                    accountUiFlagState = accountUiFlagState.copy(isCompletedFetchPosts = false)
-                    accountUiState = accountUiState.copy(posts = listOf())
-                }
-
-                is AccountAction.SetOtherUser -> {
-                    val user = action.user
-                    viewModelScope.launch(Dispatchers.IO) {
-                        accountUiState = accountUiState.copy(user = user)
+                        val posts = postRepository.onGetPostsOfUser(action.userID)
+                        accountUiState =
+                            when {
+                                posts.isNotEmpty() -> accountUiState.copy(posts = posts)
+                                else -> accountReducer(action, accountUiState)
+                            }
                     }
                 }
 
                 is AccountAction.GetUserPosts -> {
-                    val userID = action.userID
                     viewModelScope.launch(Dispatchers.IO) {
-                        val posts = postRepository.onGetPostsOfUser(userID)
-                        if (posts.isNotEmpty()) {
-                            accountUiState = accountUiState.copy(posts = posts)
-                        } else {
-                            onToggleIsCompletedFetchPosts()
-                        }
+                        val posts = postRepository.onGetPostsOfUser(action.userID)
+                        accountUiState =
+                            when {
+                                posts.isNotEmpty() -> accountUiState.copy(posts = posts)
+                                else -> accountReducer(action, accountUiState)
+                            }
                     }
                 }
 
                 is AccountAction.ProcessOfEngagementAction -> {
-                    val newPost = action.newPost
-                    onUpdatePosts(newPost)
+                    accountUiState = accountReducer(action, accountUiState)
                     onGetOtherUser(accountUiState.user.userID)
-                }
-
-                AccountAction.ToggleIsLoading -> {
-                    onToggleIsLoading()
                 }
             }
         }
@@ -129,7 +101,7 @@ class AccountViewModel
             }
         }
 
-        private fun onGetBeforePosts() {
+        private fun onGetBeforePosts(action: AccountAction) {
             if (accountUiState.posts.isEmpty()) return
             viewModelScope.launch(Dispatchers.IO) {
                 val posts =
@@ -137,29 +109,11 @@ class AccountViewModel
                         accountUiState.user.userID,
                         accountUiState.posts.last().updateAt,
                     )
-                if (posts.isNotEmpty()) {
-                    accountUiState = accountUiState.copy(posts = accountUiState.posts.plus(posts))
-                } else {
-                    onToggleIsCompletedFetchPosts()
-                }
+                accountUiState =
+                    when {
+                        posts.isNotEmpty() -> accountUiState.copy(posts = accountUiState.posts.plus(posts))
+                        else -> accountReducer(action, accountUiState)
+                    }
             }
-        }
-
-        private fun onUpdatePosts(newPost: Post) {
-            val newPosts =
-                accountUiState.posts.map { post ->
-                    if (newPost.id == post.id) newPost else post
-                }
-
-            accountUiState = accountUiState.copy(posts = newPosts)
-        }
-
-        private fun onToggleIsCompletedFetchPosts() {
-            accountUiFlagState =
-                accountUiFlagState.copy(isCompletedFetchPosts = !accountUiFlagState.isCompletedFetchPosts)
-        }
-
-        private fun onToggleIsLoading() {
-            accountUiFlagState = accountUiFlagState.copy(isLoading = !accountUiFlagState.isLoading)
         }
     }

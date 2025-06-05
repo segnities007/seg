@@ -57,9 +57,9 @@ fun UserInfo(
     val userInfoViewModel: UserInfoViewModel = hiltViewModel()
 
     LaunchedEffect(Unit) {
-        userInfoViewModel.onUserInfoAction(UserInfoAction.ChangeName(hubState.user.name))
-        userInfoViewModel.onUserInfoAction(UserInfoAction.ChangeUserID(hubState.user.userID))
-        userInfoViewModel.onUserInfoAction(UserInfoAction.ChangeDescription(hubState.user.description))
+        userInfoViewModel.onUserInfoAction(UserInfoAction.ChangeName(hubState.self.name))
+        userInfoViewModel.onUserInfoAction(UserInfoAction.ChangeUserID(hubState.self.userID))
+        userInfoViewModel.onUserInfoAction(UserInfoAction.ChangeDescription(hubState.self.description))
     }
 
     if (settingState.isDatePickerDialogShow) {
@@ -213,7 +213,7 @@ private fun SelectionButtons(
             text = stringResource(R.string.enter),
             onClick = {
                 scope.launch {
-                    onUserInfoAction(UserInfoAction.UpdateUser(hubState.user))
+                    onUserInfoAction(UserInfoAction.UpdateUser(hubState.self))
                     onHubAction(HubAction.GetUser)
                     onNavigate(NavigationSettingRoute.Preference)
                 }

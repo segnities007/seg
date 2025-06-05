@@ -4,6 +4,8 @@ import com.example.domain.model.post.Post
 import com.example.domain.model.user.User
 
 data class AccountState(
+    val isCompletedFetchPosts: Boolean = false,
+    val isLoading: Boolean = false,
     val user: User = User(),
     val posts: List<Post> = listOf(),
     val likedPosts: List<Post> = listOf(),

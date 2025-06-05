@@ -22,10 +22,6 @@ class AccountsViewModel
 
         fun onAccountsAction(action: AccountsAction) {
             when (action) {
-                AccountsAction.ChangeIsNotCompletedOfAccounts -> {
-                    accountsState = accountsState.copy(isNotCompleted = !accountsState.isNotCompleted)
-                }
-
                 is AccountsAction.GetUser -> {
                     viewModelScope.launch(Dispatchers.IO) {
                         val user = userRepository.onGetOtherUser(action.userID)
@@ -39,6 +35,9 @@ class AccountsViewModel
                         accountsState = accountsState.copy(users = users)
                     }
                 }
+
+                AccountsAction.ChangeIsNotCompletedOfAccounts,
+                -> accountsState = accountsReducer(action, accountsState)
             }
         }
     }

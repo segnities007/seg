@@ -5,37 +5,37 @@ import com.example.domain.model.post.Post
 import com.example.domain.model.user.User
 
 @Immutable
-sealed class AccountAction {
-    data object ResetState : AccountAction()
+sealed interface AccountAction {
+    data object ResetState : AccountAction
 
-    data object GetPosts : AccountAction()
+    data object GetPosts : AccountAction
 
-    data object ToggleIsLoading : AccountAction()
+    data object ToggleIsLoading : AccountAction
 
     data class InitAccountState(
         val userID: String,
-    ) : AccountAction()
+    ) : AccountAction
 
     data class GetOtherUser(
         val userID: String,
-    ) : AccountAction()
+    ) : AccountAction
 
     data class SetOtherUser(
         val user: User,
-    ) : AccountAction()
+    ) : AccountAction
 
     data class GetUserPosts(
         val userID: String,
-    ) : AccountAction()
+    ) : AccountAction
 
     data class ClickFollowButton(
         val isFollow: Boolean,
         val self: User,
         val other: User,
         val getSelf: () -> Unit,
-    ) : AccountAction()
+    ) : AccountAction
 
     data class ProcessOfEngagementAction(
         val newPost: Post,
-    ) : AccountAction()
+    ) : AccountAction
 }

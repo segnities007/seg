@@ -29,13 +29,8 @@ class CommentViewModel
                     }
                 }
 
-                is CommentAction.ProcessOfEngagementAction -> {
-                    val newPosts =
-                        commentState.comments.map { post ->
-                            if (action.updatedPost.id == post.id) action.updatedPost else post
-                        }
-                    commentState = commentState.copy(comments = newPosts)
-                }
+                is CommentAction.ProcessOfEngagementAction,
+                -> commentReducer(action, commentState)
             }
         }
     }

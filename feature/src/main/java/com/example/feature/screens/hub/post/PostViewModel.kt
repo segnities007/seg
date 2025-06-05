@@ -41,14 +41,6 @@ class PostViewModel
                     )
                 }
 
-                is PostAction.UpdateInputText -> {
-                    postState = postState.copy(inputText = action.newInputText)
-                }
-
-                is PostAction.UpdateIsLoading -> {
-                    onUpdateIsLoading(action.isLoading)
-                }
-
                 is PostAction.CreateComment -> {
                     val description = postState.inputText
                     onUpdateIsLoading(true)
@@ -56,7 +48,7 @@ class PostViewModel
                         val result =
                             postRepository.onCreateComment(
                                 description = description,
-                                self = action.hubState.user,
+                                self = action.hubState.self,
                                 commentedPost = action.hubState.comment,
                             )
                         if (result) {
@@ -72,9 +64,10 @@ class PostViewModel
                     }
                 }
 
-                is PostAction.UpdateGenre -> {
-                    postState = postState.copy(genre = action.newGenre)
-                }
+                is PostAction.UpdateGenre,
+                is PostAction.UpdateIsLoading,
+                is PostAction.UpdateInputText,
+                -> postReducer(postState, action)
             }
         }
 

@@ -32,18 +32,18 @@ class PostCardViewModel
                 is PostCardAction.ClickLikeIcon -> {
                     val newPost: Post
 
-                    if (action.hubState.user.likes
+                    if (action.hubState.self.likes
                             .contains(action.post.id)
                     ) {
                         newPost = action.post.copy(likeCount = action.post.likeCount - 1)
                         viewModelScope.launch(Dispatchers.IO) {
-                            postRepository.onUnLike(post = newPost, user = action.hubState.user)
+                            postRepository.onUnLike(post = newPost, user = action.hubState.self)
                         }
                         action.onHubAction(HubAction.RemovePostIDFromMyLikes(action.post.id))
                     } else {
                         newPost = action.post.copy(likeCount = action.post.likeCount + 1)
                         viewModelScope.launch(Dispatchers.IO) {
-                            postRepository.onLike(post = newPost, user = action.hubState.user)
+                            postRepository.onLike(post = newPost, user = action.hubState.self)
                         }
                         action.onHubAction(HubAction.AddPostIDToMyLikes(action.post.id))
                     }
@@ -56,19 +56,19 @@ class PostCardViewModel
                     val hubState = action.hubState
                     val post = action.post
 
-                    if (hubState.user.reposts.contains(post.id)) {
+                    if (hubState.self.reposts.contains(post.id)) {
                         newPost = post.copy(repostCount = post.repostCount - 1)
                         viewModelScope.launch(Dispatchers.IO) {
-                            postRepository.onUnRepost(post = newPost, user = hubState.user)
+                            postRepository.onUnRepost(post = newPost, user = hubState.self)
                         }
                     } else {
                         newPost = post.copy(repostCount = post.repostCount + 1)
                         viewModelScope.launch(Dispatchers.IO) {
-                            postRepository.onRepost(post = newPost, user = hubState.user)
+                            postRepository.onRepost(post = newPost, user = hubState.self)
                         }
                     }
 
-                    if (hubState.user.reposts.contains(post.id)) {
+                    if (hubState.self.reposts.contains(post.id)) {
                         action.onHubAction(HubAction.RemovePostIDFromReposts(post.id))
                     } else {
                         action.onHubAction(HubAction.AddPostIDFromReposts(post.id))
@@ -80,9 +80,9 @@ class PostCardViewModel
                     val hubState = action.hubState
                     val post = action.post
 
-                    val newPostsOfSelf = hubState.user.posts.minus(post.id)
+                    val newPostsOfSelf = hubState.self.posts.minus(post.id)
                     action.onMyPostsAction(MyPostsAction.RemovePostFromPosts(post))
-                    val newSelf = hubState.user.copy(posts = newPostsOfSelf)
+                    val newSelf = hubState.self.copy(posts = newPostsOfSelf)
                     action.onHubAction(HubAction.SetSelf(newSelf))
                     viewModelScope.launch(Dispatchers.IO) {
                         postRepository.onDeletePost(post)

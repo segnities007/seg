@@ -29,8 +29,8 @@ import com.example.feature.components.button.FloatingButton
 import com.example.feature.components.navigation_drawer.NavigationDrawerWithState
 import com.example.feature.components.tab.TabAction
 import com.example.feature.components.tab.TabUiState
-import com.example.feature.navigation.TopAction
-import com.example.feature.navigation.TopState
+import com.example.feature.navigation.TopLayerAction
+import com.example.feature.navigation.TopLayerState
 import com.example.feature.screens.hub.account.AccountState
 import com.example.feature.screens.hub.home.HomeAction
 import com.example.feature.screens.hub.search.SearchAction
@@ -40,12 +40,12 @@ fun Hub(
     currentRouteName: String,
     hubState: HubState,
     tabUiState: TabUiState,
-    topState: TopState,
+    topLayerState: TopLayerState,
     topSearchBarState: TopSearchBarState,
     accountState: AccountState,
     onTabAction: (TabAction) -> Unit,
     onHubAction: (HubAction) -> Unit,
-    onTopAction: (TopAction) -> Unit,
+    onTopAction: (TopLayerAction) -> Unit,
     onSearchAction: (SearchAction) -> Unit,
     onTopSearchBarAction: (TopSearchBarAction) -> Unit,
     onHomeAction: (HomeAction) -> Unit,
@@ -54,10 +54,10 @@ fun Hub(
 ) {
     NavigationDrawerWithState(
         items = BottomBarHubItem(),
-        drawerState = topState.drawerState,
+        drawerState = topLayerState.drawerState,
         onNavigate = onHubNavigate,
-        onDrawerClose = { onTopAction(TopAction.CloseDrawer) },
-        user = hubState.user,
+        onDrawerClose = { onTopAction(TopLayerAction.CloseDrawer) },
+        user = hubState.self,
     ) {
         HubUi(
             content = content,
@@ -86,7 +86,7 @@ private fun HubUi(
     tabUiState: TabUiState,
     topSearchBarState: TopSearchBarState,
     onHubAction: (HubAction) -> Unit,
-    onTopAction: (TopAction) -> Unit,
+    onTopAction: (TopLayerAction) -> Unit,
     onSearchAction: (SearchAction) -> Unit,
     onTabAction: (TabAction) -> Unit,
     onTopSearchBarAction: (TopSearchBarAction) -> Unit,
@@ -143,7 +143,7 @@ private fun HubTopBar(
     topSearchBarState: TopSearchBarState,
     onHubNavigate: (Navigation) -> Unit,
     onHubAction: (HubAction) -> Unit,
-    onTopAction: (TopAction) -> Unit,
+    onTopAction: (TopLayerAction) -> Unit,
     onSearchAction: (SearchAction) -> Unit,
     onTabAction: (TabAction) -> Unit,
     onTopSearchBarAction: (TopSearchBarAction) -> Unit,
@@ -169,7 +169,7 @@ private fun HubTopBar(
                 routeName = currentRouteName,
                 onTabAction = onTabAction,
                 titleContent = { Text(text = currentRouteName) },
-                onDrawerOpen = { onTopAction(TopAction.OpenDrawer) },
+                onDrawerOpen = { onTopAction(TopLayerAction.OpenDrawer) },
                 scrollBehavior = scrollBehavior,
                 onHomeAction = onHomeAction,
             )
@@ -177,7 +177,7 @@ private fun HubTopBar(
         NavigationHubRoute.Trend.name ->
             TopBar(
                 titleContent = { Text(text = currentRouteName) },
-                onDrawerOpen = { onTopAction(TopAction.OpenDrawer) },
+                onDrawerOpen = { onTopAction(TopLayerAction.OpenDrawer) },
                 routeName = currentRouteName,
             )
 
@@ -193,14 +193,14 @@ private fun HubTopBar(
         NavigationHubRoute.Post.name ->
             TopBar(
                 titleContent = { Text(text = currentRouteName) },
-                onDrawerOpen = { onTopAction(TopAction.OpenDrawer) },
+                onDrawerOpen = { onTopAction(TopLayerAction.OpenDrawer) },
                 routeName = currentRouteName,
             )
 
         NavigationHubRoute.Notify.name ->
             TopBar(
                 titleContent = { Text(text = currentRouteName) },
-                onDrawerOpen = { onTopAction(TopAction.OpenDrawer) },
+                onDrawerOpen = { onTopAction(TopLayerAction.OpenDrawer) },
                 routeName = currentRouteName,
             )
 
@@ -214,20 +214,20 @@ private fun HubTopBar(
         NavigationHubRoute.Accounts.name ->
             TopBar(
                 titleContent = { Text(text = currentRouteName) },
-                onDrawerOpen = { onTopAction(TopAction.OpenDrawer) },
+                onDrawerOpen = { onTopAction(TopLayerAction.OpenDrawer) },
                 routeName = currentRouteName,
             )
 
         NavigationHubRoute.Setting.name ->
             if (!hubState.isHideTopBar) {
                 StatusBarWithFollows(
-                    user = hubState.user,
+                    user = hubState.self,
                     onHubNavigate = onHubNavigate,
                     onHubAction = onHubAction,
                 )
             } else {
                 StatusBarWithTab(
-                    user = hubState.user,
+                    user = hubState.self,
                     tabUiState = tabUiState,
                     onTabAction = onTabAction,
                 )
@@ -236,14 +236,14 @@ private fun HubTopBar(
         NavigationHubRoute.Comment.name ->
             TopBar(
                 titleContent = { Text(text = currentRouteName) },
-                onDrawerOpen = { onTopAction(TopAction.OpenDrawer) },
+                onDrawerOpen = { onTopAction(TopLayerAction.OpenDrawer) },
                 routeName = currentRouteName,
             )
 
         NavigationHubRoute.PostForComment.name ->
             TopBar(
                 titleContent = { Text(text = currentRouteName) },
-                onDrawerOpen = { onTopAction(TopAction.OpenDrawer) },
+                onDrawerOpen = { onTopAction(TopLayerAction.OpenDrawer) },
                 routeName = currentRouteName,
             )
 

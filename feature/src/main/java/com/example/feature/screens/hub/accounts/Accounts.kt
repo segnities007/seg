@@ -26,7 +26,7 @@ fun Accounts(
     val accountsViewModel: AccountsViewModel = hiltViewModel()
 
     LaunchedEffect(Unit) {
-        accountsViewModel.onAccountsAction(AccountsAction.GetUser(hubState.userID))
+        accountsViewModel.onAccountsAction(AccountsAction.GetUser(hubState.otherUserID))
         accountsViewModel.onAccountsAction(AccountsAction.GetUsers(hubState.accounts))
     }
 

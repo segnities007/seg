@@ -4,20 +4,20 @@ import androidx.compose.runtime.Immutable
 import com.example.domain.model.user.User
 
 @Immutable
-sealed class UserInfoAction {
+sealed interface UserInfoAction {
     data class UpdateUser(
         val user: User,
-    ) : UserInfoAction()
+    ) : UserInfoAction
 
     data class ChangeDescription(
         val newDescription: String,
-    ) : UserInfoAction()
+    ) : UserInfoAction
 
     data class ChangeName(
         val newName: String,
-    ) : UserInfoAction()
+    ) : UserInfoAction
 
     data class ChangeUserID(
         val newUserID: String,
-    ) : UserInfoAction()
+    ) : UserInfoAction
 }

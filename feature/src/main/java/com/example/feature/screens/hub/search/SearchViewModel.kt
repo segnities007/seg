@@ -5,7 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.domain.model.post.Post
 import com.example.domain.repository.PostRepository
 import com.example.domain.repository.UserRepository
 import com.example.feature.components.bar.top_search_bar.TopSearchBarAction
@@ -119,17 +118,8 @@ class SearchViewModel
                     }
                 }
 
-                is SearchAction.ProcessOfEngagementAction -> {
-                    onUpdatePosts(action.newPost)
-                }
-
                 SearchAction.ResetSearchState -> {
-                    searchState =
-                        searchState.copy(
-                            users = listOf(),
-                            posts = listOf(),
-                            postsSortedByViewCount = listOf(),
-                        )
+                    searchState = searchReducer(searchState, action)
                     onResetIs()
                 }
 
@@ -149,6 +139,12 @@ class SearchViewModel
                             )
                     }
                 }
+
+                is SearchAction.ProcessOfEngagementAction ->
+                    searchReducer(
+                        state = searchState,
+                        action = action,
+                    )
             }
         }
 
@@ -184,21 +180,5 @@ class SearchViewModel
 
         private fun onUpdateKeyword(newKeyword: String) {
             topSearchBarUiState = topSearchBarUiState.copy(keyword = newKeyword)
-        }
-
-        private fun onUpdatePosts(newPost: Post) {
-            var newPosts =
-                searchState.posts.map { post ->
-                    if (newPost.id == post.id) newPost else post
-                }
-
-            searchState = searchState.copy(posts = newPosts)
-
-            newPosts =
-                searchState.postsSortedByViewCount.map { post ->
-                    if (newPost.id == post.id) newPost else post
-                }
-
-            searchState = searchState.copy(postsSortedByViewCount = newPosts)
         }
     }
