@@ -36,8 +36,8 @@ class AccountsViewModel
                     }
                 }
 
-                AccountsAction.ChangeIsNotCompletedOfAccounts ->
-                    accountsState = accountsReducer(action, accountsState)
+                AccountsAction.ChangeIsNotCompletedOfAccounts,
+                -> accountsState = accountsReducer(action, accountsState)
             }
         }
     }

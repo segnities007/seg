@@ -15,5 +15,18 @@ fun accountReducer(
         is AccountAction.SetOtherUser,
         -> state.copy(user = action.user)
 
+        is AccountAction.ProcessOfEngagementAction -> {
+            val newPosts =
+                state.posts.map { post ->
+                    if (action.newPost.id == post.id) action.newPost else post
+                }
+
+            state.copy(posts = newPosts)
+        }
+
+        is AccountAction.GetUserPosts,
+        is AccountAction.GetPosts,
+        -> state.copy(isCompletedFetchPosts = !state.isCompletedFetchPosts)
+
         else -> state
     }
