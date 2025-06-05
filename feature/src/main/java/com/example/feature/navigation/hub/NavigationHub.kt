@@ -130,7 +130,6 @@ fun NavigationHub(onTopNavigate: (route: Navigation) -> Unit) {
                 Account(
                     modifier = modifier,
                     hubState = hubViewModel.hubState,
-                    accountUiFlagState = accountViewModel.accountUiFlagState,
                     accountState = accountViewModel.accountUiState,
                     onHubNavigate = onHubNavigate,
                     onHubAction = hubViewModel::onHubAction,

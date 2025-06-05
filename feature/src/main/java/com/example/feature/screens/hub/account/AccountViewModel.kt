@@ -13,11 +13,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-data class AccountUiFlagState(
-    val isCompletedFetchPosts: Boolean = false,
-    val isLoading: Boolean = false,
-)
-
 @HiltViewModel
 class AccountViewModel
     @Inject
@@ -26,9 +21,6 @@ class AccountViewModel
         private val postRepository: PostRepository,
     ) : ViewModel() {
         var accountUiState by mutableStateOf(AccountState())
-            private set
-
-        var accountUiFlagState by mutableStateOf(AccountUiFlagState())
             private set
 
         fun onAccountAction(action: AccountAction) {
@@ -87,8 +79,8 @@ class AccountViewModel
                 }
 
                 AccountAction.ResetState -> {
-                    accountUiFlagState = accountUiFlagState.copy(isCompletedFetchPosts = false)
-                    accountUiState = accountUiState.copy(posts = listOf())
+                    accountUiState =
+                        accountUiState.copy(posts = listOf(), isCompletedFetchPosts = false)
                 }
 
                 is AccountAction.SetOtherUser -> {
@@ -155,11 +147,11 @@ class AccountViewModel
         }
 
         private fun onToggleIsCompletedFetchPosts() {
-            accountUiFlagState =
-                accountUiFlagState.copy(isCompletedFetchPosts = !accountUiFlagState.isCompletedFetchPosts)
+            accountUiState =
+                accountUiState.copy(isCompletedFetchPosts = !accountUiState.isCompletedFetchPosts)
         }
 
         private fun onToggleIsLoading() {
-            accountUiFlagState = accountUiFlagState.copy(isLoading = !accountUiFlagState.isLoading)
+            accountUiState = accountUiState.copy(isLoading = !accountUiState.isLoading)
         }
     }
