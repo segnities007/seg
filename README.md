@@ -13,7 +13,7 @@ Segではあえてこれらのメディア機能を排除し、言葉による�
 クライアント: Kotlin, Jetpack Compose<br>
 サーバーサイド: Supabase<br>
 
-使用アーキテクチャ: MVVM, Clean Architecture<br>
+使用アーキテクチャ: MVVM(MVIに移行中), Clean Architecture(？)<br>
 使用ツール: Ktlint<br>
 
 ## 工夫した点
