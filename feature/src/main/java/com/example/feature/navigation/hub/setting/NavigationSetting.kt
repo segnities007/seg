@@ -11,7 +11,7 @@ import com.example.domain.presentation.navigation.Navigation
 import com.example.domain.presentation.navigation.NavigationSettingRoute
 import com.example.feature.components.card.postcard.PostCardAction
 import com.example.feature.components.tab.TabAction
-import com.example.feature.components.tab.TabUiState
+import com.example.feature.components.tab.TabState
 import com.example.feature.screens.hub.HubAction
 import com.example.feature.screens.hub.HubState
 import com.example.feature.screens.hub.home.HomeAction
@@ -24,7 +24,7 @@ import com.example.feature.screens.hub.setting.userinfo.UserInfo
 @Composable
 fun NavigationSetting(
     modifier: Modifier = Modifier,
-    tabUiState: TabUiState,
+    tabState: TabState,
     hubState: HubState,
     onHubAction: (HubAction) -> Unit,
     onHomeAction: (HomeAction) -> Unit,
@@ -68,7 +68,7 @@ fun NavigationSetting(
             composable<NavigationSettingRoute.Posts> {
                 MyPosts(
                     hubState = hubState,
-                    tabUiState = tabUiState,
+                    tabState = tabState,
                     onHubNavigate = onHubNavigate,
                     onTabAction = onTabAction,
                     onHubAction = onHubAction,

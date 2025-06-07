@@ -18,7 +18,7 @@ class TrendViewModel
     constructor(
         private val postRepository: PostRepository,
     ) : TopLayerViewModel() {
-        var trendListState by mutableStateOf(TrendListState())
+        var trendState by mutableStateOf(TrendState())
             private set
 
         var trendFlagState by mutableStateOf(TrendFlagState())
@@ -50,7 +50,7 @@ class TrendViewModel
                     viewModelScope.launch(Dispatchers.IO) {
                         val trendPostsOfMonth =
                             postRepository.onGetTrendPostOfMonth(limit = action.limit)
-                        trendListState = trendListState.copy(trendPostsOfMonth = trendPostsOfMonth)
+                        trendState = trendState.copy(trendPostsOfMonth = trendPostsOfMonth)
                     }
                 }
 
@@ -58,21 +58,21 @@ class TrendViewModel
                     viewModelScope.launch(Dispatchers.IO) {
                         val trendPostsOfToday =
                             postRepository.onGetTrendPostOfToday(limit = action.limit)
-                        trendListState = trendListState.copy(trendPostsOfToday = trendPostsOfToday)
+                        trendState = trendState.copy(trendPostsOfToday = trendPostsOfToday)
                     }
                 }
 
                 is TrendAction.GetTrendPostOfWeek -> {
                     viewModelScope.launch(Dispatchers.IO) {
                         val trendPostsOfWeek = postRepository.onGetTrendPostOfWeek(limit = action.limit)
-                        trendListState = trendListState.copy(trendPostsOfWeek = trendPostsOfWeek)
+                        trendState = trendState.copy(trendPostsOfWeek = trendPostsOfWeek)
                     }
                 }
 
                 is TrendAction.GetTrendPostOfYear -> {
                     viewModelScope.launch(Dispatchers.IO) {
                         val trendPostsOfYear = postRepository.onGetTrendPostOfYear(limit = action.limit)
-                        trendListState = trendListState.copy(trendPostsOfYear = trendPostsOfYear)
+                        trendState = trendState.copy(trendPostsOfYear = trendPostsOfYear)
                     }
                 }
 
@@ -91,8 +91,8 @@ class TrendViewModel
                         val trendPostOfWeek = postRepository.onGetTrendPostOfWeek(limit = limit)
                         val trendPostOfMonth = postRepository.onGetTrendPostOfMonth(limit = limit)
                         val trendPostOfYear = postRepository.onGetTrendPostOfYear(limit = limit)
-                        trendListState =
-                            trendListState.copy(
+                        trendState =
+                            trendState.copy(
                                 trendPostsOfToday = trendPostOfToday,
                                 trendPostsOfWeek = trendPostOfWeek,
                                 trendPostsOfMonth = trendPostOfMonth,
@@ -105,31 +105,31 @@ class TrendViewModel
 
         private fun onUpdateTrendLists(newTrend: Post) {
             var trendLists =
-                trendListState.trendPostsOfToday.map { trend ->
+                trendState.trendPostsOfToday.map { trend ->
                     if (newTrend.id == trend.id) newTrend else trend
                 }
 
-            trendListState = trendListState.copy(trendPostsOfToday = trendLists)
+            trendState = trendState.copy(trendPostsOfToday = trendLists)
 
             trendLists =
-                trendListState.trendPostsOfWeek.map { trend ->
+                trendState.trendPostsOfWeek.map { trend ->
                     if (newTrend.id == trend.id) newTrend else trend
                 }
 
-            trendListState = trendListState.copy(trendPostsOfWeek = trendLists)
+            trendState = trendState.copy(trendPostsOfWeek = trendLists)
 
             trendLists =
-                trendListState.trendPostsOfMonth.map { trend ->
+                trendState.trendPostsOfMonth.map { trend ->
                     if (newTrend.id == trend.id) newTrend else trend
                 }
 
-            trendListState = trendListState.copy(trendPostsOfMonth = trendLists)
+            trendState = trendState.copy(trendPostsOfMonth = trendLists)
 
             trendLists =
-                trendListState.trendPostsOfYear.map { trend ->
+                trendState.trendPostsOfYear.map { trend ->
                     if (newTrend.id == trend.id) newTrend else trend
                 }
 
-            trendListState = trendListState.copy(trendPostsOfYear = trendLists)
+            trendState = trendState.copy(trendPostsOfYear = trendLists)
         }
     }

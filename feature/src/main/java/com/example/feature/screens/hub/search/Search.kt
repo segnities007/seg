@@ -19,7 +19,7 @@ import com.example.feature.components.card.AvatarCard
 import com.example.feature.components.card.postcard.PostCard
 import com.example.feature.components.card.postcard.PostCardAction
 import com.example.feature.components.indicator.LoadingUI
-import com.example.feature.components.tab.TabUiState
+import com.example.feature.components.tab.TabState
 import com.example.feature.screens.hub.HubAction
 import com.example.feature.screens.hub.HubState
 import com.example.feature.screens.hub.account.AccountAction
@@ -28,7 +28,7 @@ import com.example.feature.screens.hub.account.AccountAction
 fun Search(
     modifier: Modifier = Modifier,
     hubState: HubState,
-    tabUiState: TabUiState,
+    tabState: TabState,
     topSearchBarState: TopSearchBarState,
     searchState: SearchState,
     onHubAction: (HubAction) -> Unit,
@@ -43,7 +43,7 @@ fun Search(
         }
     }
 
-    when (tabUiState.index) {
+    when (tabState.index) {
         0 ->
             MostViewPosts(
                 modifier = modifier,

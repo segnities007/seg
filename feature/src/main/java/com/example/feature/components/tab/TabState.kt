@@ -1,6 +1,9 @@
 package com.example.feature.components.tab
 
-data class TabUiState(
+import com.example.feature.model.UiStatus
+
+data class TabState(
+    val uiStatus: UiStatus = UiStatus.Initial,
     val index: Int = 0,
     val labels: List<String> = listOf(),
 )

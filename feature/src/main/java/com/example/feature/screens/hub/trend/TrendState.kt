@@ -1,8 +1,10 @@
 package com.example.feature.screens.hub.trend
 
 import com.example.domain.model.post.Post
+import com.example.feature.model.UiStatus
 
-data class TrendListState(
+data class TrendState(
+    val uiStatus: UiStatus = UiStatus.Initial,
     val trendPostsOfToday: List<Post> = listOf(),
     val trendPostsOfWeek: List<Post> = listOf(),
     val trendPostsOfMonth: List<Post> = listOf(),

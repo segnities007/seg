@@ -57,7 +57,7 @@ fun Trend(
         onHubAction = onHubAction,
         onTrendAction = trendViewModel::onTrendAction,
         onPostCardAction = onPostCardAction,
-        trendListState = trendViewModel.trendListState,
+        trendState = trendViewModel.trendState,
         trendFlagState = trendViewModel.trendFlagState,
     )
 }
@@ -66,7 +66,7 @@ fun Trend(
 private fun TrendUi(
     modifier: Modifier,
     commonPadding: Dp,
-    trendListState: TrendListState,
+    trendState: TrendState,
     trendFlagState: TrendFlagState,
     hubState: HubState,
     onHubAction: (HubAction) -> Unit,
@@ -92,10 +92,10 @@ private fun TrendUi(
 
     val postLists =
         listOf(
-            trendListState.trendPostsOfToday,
-            trendListState.trendPostsOfWeek,
-            trendListState.trendPostsOfMonth,
-            trendListState.trendPostsOfYear,
+            trendState.trendPostsOfToday,
+            trendState.trendPostsOfWeek,
+            trendState.trendPostsOfMonth,
+            trendState.trendPostsOfYear,
         )
 
     val onClicks =

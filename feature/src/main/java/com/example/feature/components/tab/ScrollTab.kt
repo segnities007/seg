@@ -10,18 +10,18 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun ScrollTab(
     modifier: Modifier = Modifier,
-    tabUiState: TabUiState,
+    tabState: TabState,
     onTabAction: (TabAction) -> Unit,
 ) {
     ScrollableTabRow(
         modifier = modifier,
         edgePadding = 0.dp,
-        selectedTabIndex = tabUiState.index,
+        selectedTabIndex = tabState.index,
     ) {
-        tabUiState.labels.forEachIndexed { index, title ->
+        tabState.labels.forEachIndexed { index, title ->
             androidx.compose.material3.Tab(
                 modifier = modifier,
-                selected = tabUiState.index == index,
+                selected = tabState.index == index,
                 onClick = {
                     onTabAction(TabAction.UpdateIndex(index))
                 },

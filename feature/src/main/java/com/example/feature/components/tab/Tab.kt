@@ -9,17 +9,17 @@ import androidx.compose.ui.text.style.TextOverflow
 @Composable
 fun Tab(
     modifier: Modifier = Modifier,
-    tabUiState: TabUiState,
+    tabState: TabState,
     onTabAction: (TabAction) -> Unit,
 ) {
     TabRow(
         modifier = modifier,
-        selectedTabIndex = tabUiState.index,
+        selectedTabIndex = tabState.index,
     ) {
-        tabUiState.labels.forEachIndexed { index, title ->
+        tabState.labels.forEachIndexed { index, title ->
             androidx.compose.material3.Tab(
                 modifier = modifier,
-                selected = tabUiState.index == index,
+                selected = tabState.index == index,
                 onClick = {
                     onTabAction(TabAction.UpdateIndex(index))
                 },

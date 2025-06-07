@@ -4,9 +4,11 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Immutable
 import com.example.domain.model.post.Genre
 import com.example.domain.model.post.Post
+import com.example.feature.model.UiStatus
 
 @Immutable
 data class HomeState(
+    val uiStatus: UiStatus = UiStatus.Initial,
     val posts: List<Post> = listOf(),
     val haikus: List<Post> = listOf(),
     val tankas: List<Post> = listOf(),
