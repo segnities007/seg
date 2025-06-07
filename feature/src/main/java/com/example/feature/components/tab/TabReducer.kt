@@ -1,9 +1,9 @@
 package com.example.feature.components.tab
 
 internal fun tabReducer(
-    state: TabUiState,
+    state: TabState,
     action: TabAction,
-): TabUiState =
+): TabState =
     when (action) {
         is TabAction.SetLabels,
         -> state.copy(labels = action.newLabels)

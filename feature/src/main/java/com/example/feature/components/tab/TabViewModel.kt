@@ -6,14 +6,14 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 
 class TabViewModel : ViewModel() {
-    var tabUiState by mutableStateOf(TabUiState())
+    var tabState by mutableStateOf(TabState())
         private set
 
     fun onTabAction(action: TabAction) {
         when (action) {
             is TabAction.SetLabels,
             is TabAction.UpdateIndex,
-            -> tabUiState = tabReducer(state = tabUiState, action = action)
+            -> tabState = tabReducer(state = tabState, action = action)
         }
     }
 }

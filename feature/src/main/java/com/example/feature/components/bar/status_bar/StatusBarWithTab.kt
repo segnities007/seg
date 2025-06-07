@@ -9,12 +9,12 @@ import androidx.compose.ui.Modifier
 import com.example.domain.model.user.User
 import com.example.feature.components.tab.Tab
 import com.example.feature.components.tab.TabAction
-import com.example.feature.components.tab.TabUiState
+import com.example.feature.components.tab.TabState
 
 @Composable
 fun StatusBarWithTab(
     user: User,
-    tabUiState: TabUiState,
+    tabState: TabState,
     onTabAction: (TabAction) -> Unit,
 ) {
     LaunchedEffect(Unit) {
@@ -33,7 +33,7 @@ fun StatusBarWithTab(
     ) {
         Tab(
             modifier = Modifier.background(color = MaterialTheme.colorScheme.primaryContainer),
-            tabUiState = tabUiState,
+            tabState = tabState,
             onTabAction = onTabAction,
         )
     }

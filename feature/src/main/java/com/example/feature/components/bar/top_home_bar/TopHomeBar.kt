@@ -14,14 +14,14 @@ import com.example.domain.model.post.Genre
 import com.example.feature.components.bar.top_bar.TopBar
 import com.example.feature.components.tab.ScrollTab
 import com.example.feature.components.tab.TabAction
-import com.example.feature.components.tab.TabUiState
+import com.example.feature.components.tab.TabState
 import com.example.feature.screens.hub.home.HomeAction
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopHomeBar(
     modifier: Modifier = Modifier,
-    tabUiState: TabUiState,
+    tabState: TabState,
     routeName: String,
     onTabAction: (TabAction) -> Unit,
     onHomeAction: (HomeAction) -> Unit,
@@ -41,9 +41,9 @@ fun TopHomeBar(
         onTabAction(TabAction.SetLabels(labels))
     }
 
-    LaunchedEffect(tabUiState.index) {
+    LaunchedEffect(tabState.index) {
         val genre =
-            when (tabUiState.labels[tabUiState.index]) {
+            when (tabState.labels[tabState.index]) {
                 Genre.HAIKU.name -> Genre.HAIKU
                 Genre.TANKA.name -> Genre.TANKA
                 Genre.KATAUTA.name -> Genre.KATAUTA
@@ -66,7 +66,7 @@ fun TopHomeBar(
         )
         ScrollTab(
             modifier = modifier.background(color = MaterialTheme.colorScheme.primaryContainer),
-            tabUiState = tabUiState,
+            tabState = tabState,
             onTabAction = onTabAction,
         )
     }

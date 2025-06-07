@@ -15,13 +15,13 @@ import androidx.compose.ui.unit.Dp
 import com.example.feature.R
 import com.example.feature.components.tab.Tab
 import com.example.feature.components.tab.TabAction
-import com.example.feature.components.tab.TabUiState
+import com.example.feature.components.tab.TabState
 import com.example.feature.screens.hub.search.SearchAction
 
 @Composable
 fun TopSearchBar(
     modifier: Modifier = Modifier,
-    tabUiState: TabUiState,
+    tabState: TabState,
     topSearchBarState: TopSearchBarState,
     onTabAction: (TabAction) -> Unit,
     onSearchAction: (SearchAction) -> Unit,
@@ -52,7 +52,7 @@ fun TopSearchBar(
         Spacer(Modifier.padding(commonPadding))
         Tab(
             modifier = modifier.background(color = MaterialTheme.colorScheme.primaryContainer),
-            tabUiState = tabUiState,
+            tabState = tabState,
             onTabAction = onTabAction,
         )
     }

@@ -28,7 +28,7 @@ import com.example.feature.components.bar.top_search_bar.TopSearchBarState
 import com.example.feature.components.button.FloatingButton
 import com.example.feature.components.navigation_drawer.NavigationDrawerWithState
 import com.example.feature.components.tab.TabAction
-import com.example.feature.components.tab.TabUiState
+import com.example.feature.components.tab.TabState
 import com.example.feature.navigation.TopLayerAction
 import com.example.feature.navigation.TopLayerState
 import com.example.feature.screens.hub.account.AccountState
@@ -39,7 +39,7 @@ import com.example.feature.screens.hub.search.SearchAction
 fun Hub(
     currentRouteName: String,
     hubState: HubState,
-    tabUiState: TabUiState,
+    tabState: TabState,
     topLayerState: TopLayerState,
     topSearchBarState: TopSearchBarState,
     accountState: AccountState,
@@ -64,7 +64,7 @@ fun Hub(
             currentRouteName = currentRouteName,
             onHubNavigate = onHubNavigate,
             hubState = hubState,
-            tabUiState = tabUiState,
+            tabState = tabState,
             accountState = accountState,
             topSearchBarState = topSearchBarState,
             onHubAction = onHubAction,
@@ -83,7 +83,7 @@ private fun HubUi(
     currentRouteName: String,
     hubState: HubState,
     accountState: AccountState,
-    tabUiState: TabUiState,
+    tabState: TabState,
     topSearchBarState: TopSearchBarState,
     onHubAction: (HubAction) -> Unit,
     onTopAction: (TopLayerAction) -> Unit,
@@ -103,7 +103,7 @@ private fun HubUi(
                 currentRouteName = currentRouteName,
                 hubState = hubState,
                 accountState = accountState,
-                tabUiState = tabUiState,
+                tabState = tabState,
                 topSearchBarState = topSearchBarState,
                 onHubNavigate = onHubNavigate,
                 onHubAction = onHubAction,
@@ -139,7 +139,7 @@ private fun HubTopBar(
     currentRouteName: String,
     hubState: HubState,
     accountState: AccountState,
-    tabUiState: TabUiState,
+    tabState: TabState,
     topSearchBarState: TopSearchBarState,
     onHubNavigate: (Navigation) -> Unit,
     onHubAction: (HubAction) -> Unit,
@@ -165,7 +165,7 @@ private fun HubTopBar(
     when (currentRouteName) {
         NavigationHubRoute.Home.name ->
             TopHomeBar(
-                tabUiState = tabUiState,
+                tabState = tabState,
                 routeName = currentRouteName,
                 onTabAction = onTabAction,
                 titleContent = { Text(text = currentRouteName) },
@@ -183,7 +183,7 @@ private fun HubTopBar(
 
         NavigationHubRoute.Search.name ->
             TopSearchBar(
-                tabUiState = tabUiState,
+                tabState = tabState,
                 topSearchBarState = topSearchBarState,
                 onTabAction = onTabAction,
                 onSearchAction = onSearchAction,
@@ -228,7 +228,7 @@ private fun HubTopBar(
             } else {
                 StatusBarWithTab(
                     user = hubState.self,
-                    tabUiState = tabUiState,
+                    tabState = tabState,
                     onTabAction = onTabAction,
                 )
             }

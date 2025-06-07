@@ -20,7 +20,7 @@ import com.example.feature.components.card.postcard.PostCardAction
 import com.example.feature.components.card.postcard.PostCardWithDetailButton
 import com.example.feature.components.indicator.LoadingUI
 import com.example.feature.components.tab.TabAction
-import com.example.feature.components.tab.TabUiState
+import com.example.feature.components.tab.TabState
 import com.example.feature.screens.hub.HubAction
 import com.example.feature.screens.hub.HubState
 import com.example.feature.screens.hub.home.HomeAction
@@ -28,7 +28,7 @@ import com.example.feature.screens.hub.home.HomeAction
 @Composable
 fun MyPosts(
     hubState: HubState,
-    tabUiState: TabUiState,
+    tabState: TabState,
     onTabAction: (TabAction) -> Unit,
     onHubAction: (HubAction) -> Unit,
     onHomeAction: (HomeAction) -> Unit,
@@ -52,7 +52,7 @@ fun MyPosts(
     Column {
         MyPostsUi(
             hubState = hubState,
-            tabUiState = tabUiState,
+            tabState = tabState,
             myPostsState = myPostsViewModel.myPostsState,
             onHubNavigate = onHubNavigate,
             onHubAction = onHubAction,
@@ -67,14 +67,14 @@ fun MyPosts(
 private fun MyPostsUi(
     hubState: HubState,
     myPostsState: MyPostsState,
-    tabUiState: TabUiState,
+    tabState: TabState,
     onHubAction: (HubAction) -> Unit,
     onHomeAction: (HomeAction) -> Unit,
     onMyPostsAction: (MyPostsAction) -> Unit,
     onPostCardAction: (PostCardAction) -> Unit,
     onHubNavigate: (Navigation) -> Unit,
 ) {
-    when (tabUiState.index) {
+    when (tabState.index) {
         0 ->
             Posts(
                 myPostsState = myPostsState,
