@@ -22,22 +22,24 @@ class AccountsViewModel
 
         fun onAccountsAction(action: AccountsAction) {
             when (action) {
-                is AccountsAction.GetUser -> {
-                    viewModelScope.launch(Dispatchers.IO) {
-                        val user = userRepository.onGetOtherUser(action.userID)
-                        accountsState = accountsState.copy(user = user)
-                    }
-                }
-
-                is AccountsAction.GetUsers -> {
-                    viewModelScope.launch(Dispatchers.IO) {
-                        val users = userRepository.onGetUsers(action.userIDs)
-                        accountsState = accountsState.copy(users = users)
-                    }
-                }
-
+                is AccountsAction.GetUser -> getUser(action)
+                is AccountsAction.GetUsers -> getUsers(action)
                 AccountsAction.ChangeIsNotCompletedOfAccounts,
                 -> accountsState = accountsReducer(action, accountsState)
+            }
+        }
+
+        private fun getUser(action: AccountsAction.GetUser) {
+            viewModelScope.launch(Dispatchers.IO) {
+                val user = userRepository.onGetOtherUser(action.userID)
+                accountsState = accountsState.copy(user = user)
+            }
+        }
+
+        private fun getUsers(action: AccountsAction.GetUsers) {
+            viewModelScope.launch(Dispatchers.IO) {
+                val users = userRepository.onGetUsers(action.userIDs)
+                accountsState = accountsState.copy(users = users)
             }
         }
     }
