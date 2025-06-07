@@ -4,7 +4,7 @@ import com.example.domain.model.post.Post
 import com.example.feature.model.UiStatus
 
 data class TrendState(
-    val uiStatus: gUiStatus = UiStatus.Initial,
+    val uiStatus: UiStatus = UiStatus.Initial,
     val trendPostsOfToday: List<Post> = listOf(),
     val trendPostsOfWeek: List<Post> = listOf(),
     val trendPostsOfMonth: List<Post> = listOf(),
