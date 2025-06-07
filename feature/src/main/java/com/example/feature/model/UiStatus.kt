@@ -1,4 +1,4 @@
-package com.example.domain.presentation
+package com.example.feature.model
 
 sealed interface UiStatus {
     object Initial : UiStatus
