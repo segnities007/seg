@@ -27,18 +27,20 @@ class UserInfoViewModel
                 is UserInfoAction.ChangeUserID,
                 -> userInfoState = userInfoReducer(state = userInfoState, action = action)
 
-                is UserInfoAction.UpdateUser -> {
-                    viewModelScope.launch(Dispatchers.IO) {
-                        val newUser =
-                            action.user.copy(
-                                name = userInfoState.name,
-                                description = userInfoState.description,
-                                userID = userInfoState.userID,
-                                updateAt = LocalDateTime.now(),
-                            )
-                        userRepository.onUpdateUser(newUser)
-                    }
-                }
+                is UserInfoAction.UpdateUser -> updateUser(action)
+            }
+        }
+
+        private fun updateUser(action: UserInfoAction.UpdateUser) {
+            viewModelScope.launch(Dispatchers.IO) {
+                val newUser =
+                    action.user.copy(
+                        name = userInfoState.name,
+                        description = userInfoState.description,
+                        userID = userInfoState.userID,
+                        updateAt = LocalDateTime.now(),
+                    )
+                userRepository.onUpdateUser(newUser)
             }
         }
     }
