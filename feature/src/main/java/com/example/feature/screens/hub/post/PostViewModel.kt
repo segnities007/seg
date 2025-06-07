@@ -26,48 +26,49 @@ class PostViewModel
 
         fun onPostAction(action: PostAction) {
             when (action) {
-                is PostAction.CreatePost -> {
-                    when (postState.genre) {
-                        Genre.HAIKU -> if (postState.inputText.length != 17) return
-                        Genre.TANKA -> if (postState.inputText.length != 31) return
-                        Genre.KATAUTA -> if (postState.inputText.length != 19) return
-                        Genre.SEDOUKA -> if (postState.inputText.length != 38) return
-                        else -> if (postState.inputText.length > 100) return
-                    }
-                    createNormalPost(
-                        user = action.user,
-                        onUpdateSelf = action.onUpdateSelf,
-                        onNavigate = action.onNavigate,
-                    )
-                }
-
-                is PostAction.CreateComment -> {
-                    val description = postState.inputText
-                    onUpdateIsLoading(true)
-                    viewModelScope.launch(Dispatchers.IO) {
-                        val result =
-                            postRepository.onCreateComment(
-                                description = description,
-                                self = action.hubState.self,
-                                commentedPost = action.hubState.comment,
-                            )
-                        if (result) {
-                            action.onHubAction(HubAction.GetUser)
-                            val updatedCommentedPost =
-                                postRepository.onGetPost(action.hubState.comment.id)
-                            action.onHubAction(HubAction.SetComment(updatedCommentedPost))
-                            viewModelScope.launch(Dispatchers.Main) {
-                                action.onNavigate(NavigationHubRoute.Home)
-                            }
-                        }
-                        onUpdateIsLoading(false)
-                    }
-                }
-
+                is PostAction.CreatePost -> createPost(action)
+                is PostAction.CreateComment -> createComment(action)
                 is PostAction.UpdateGenre,
                 is PostAction.UpdateIsLoading,
                 is PostAction.UpdateInputText,
                 -> postReducer(postState, action)
+            }
+        }
+
+        private fun createPost(action: PostAction.CreatePost) {
+            when (postState.genre) {
+                Genre.HAIKU -> if (postState.inputText.length != 17) return
+                Genre.TANKA -> if (postState.inputText.length != 31) return
+                Genre.KATAUTA -> if (postState.inputText.length != 19) return
+                Genre.SEDOUKA -> if (postState.inputText.length != 38) return
+                else -> if (postState.inputText.length > 100) return
+            }
+            createNormalPost(
+                user = action.user,
+                onUpdateSelf = action.onUpdateSelf,
+                onNavigate = action.onNavigate,
+            )
+        }
+
+        private fun createComment(action: PostAction.CreateComment) {
+            onUpdateIsLoading(true)
+            viewModelScope.launch(Dispatchers.IO) {
+                val result =
+                    postRepository.onCreateComment(
+                        description = postState.inputText,
+                        self = action.hubState.self,
+                        commentedPost = action.hubState.comment,
+                    )
+                if (result) {
+                    action.onHubAction(HubAction.GetUser)
+                    val updatedCommentedPost =
+                        postRepository.onGetPost(action.hubState.comment.id)
+                    action.onHubAction(HubAction.SetComment(updatedCommentedPost))
+                    viewModelScope.launch(Dispatchers.Main) {
+                        action.onNavigate(NavigationHubRoute.Home)
+                    }
+                }
+                onUpdateIsLoading(false)
             }
         }
 
