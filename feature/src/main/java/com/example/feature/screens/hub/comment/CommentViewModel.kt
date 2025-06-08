@@ -6,6 +6,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.repository.PostRepository
+import com.example.feature.model.UiStatus
+import com.example.feature.screens.hub.HubAction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -29,9 +31,18 @@ class CommentViewModel
         }
 
         private fun getComments(action: CommentAction.GetComments) {
+            commentState = commentState.copy(uiStatus = UiStatus.Loading)
             viewModelScope.launch(Dispatchers.IO) {
-                val comments = postRepository.onGetComments(action.comment)
-                commentState = commentState.copy(comments = comments)
+                try {
+                    val comments = postRepository.onGetComments(action.comment)
+                    commentState = commentState.copy(comments = comments, uiStatus = UiStatus.Success)
+                } catch (e: Exception) {
+                    commentState =
+                        commentState.copy(uiStatus = UiStatus.Error("コメントの取得に失敗しました。"))
+                    action.onHubAction(HubAction.OpenSnackBar((commentState.uiStatus as UiStatus.Error).message))
+                } finally {
+                    commentState = commentState.copy(uiStatus = UiStatus.Initial)
+                }
             }
         }
     }
