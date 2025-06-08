@@ -34,30 +34,33 @@ class LoginViewModel
                 is LoginAction.ChangeCurrentRouteName,
                 -> loginUiState = loginReducer(state = loginUiState, action = action)
 
-                is LoginAction.SignInWithEmailPassword -> {
-                    viewModelScope.launch(Dispatchers.IO) {
-                        val isSuccess =
-                            authRepository.signInWithEmailPassword(
-                                email = loginUiState.email,
-                                password = loginUiState.password,
-                            )
-                        withContext(Dispatchers.Main) {
-                            if (isSuccess) action.onNavigate()
-                        }
-                    }
-                }
+                is LoginAction.SignInWithEmailPassword -> signInWithEmailPassword(action)
+                is LoginAction.SignUpWithEmailPassword -> signUpWithEmailPassword(action)
+            }
+        }
 
-                is LoginAction.SignUpWithEmailPassword -> {
-                    viewModelScope.launch(Dispatchers.IO) {
-                        withContext(Dispatchers.Main) {
-                            val isSuccess =
-                                authRepository.signUpWithEmailPassword(
-                                    email = loginUiState.email,
-                                    password = loginUiState.password,
-                                )
-                            if (isSuccess) action.onNavigate()
-                        }
-                    }
+        private fun signInWithEmailPassword(action: LoginAction.SignInWithEmailPassword) {
+            viewModelScope.launch(Dispatchers.IO) {
+                val isSuccess =
+                    authRepository.signInWithEmailPassword(
+                        email = loginUiState.email,
+                        password = loginUiState.password,
+                    )
+                withContext(Dispatchers.Main) {
+                    if (isSuccess) action.onNavigate()
+                }
+            }
+        }
+
+        private fun signUpWithEmailPassword(action: LoginAction.SignUpWithEmailPassword) {
+            viewModelScope.launch(Dispatchers.IO) {
+                withContext(Dispatchers.Main) {
+                    val isSuccess =
+                        authRepository.signUpWithEmailPassword(
+                            email = loginUiState.email,
+                            password = loginUiState.password,
+                        )
+                    if (isSuccess) action.onNavigate()
                 }
             }
         }
