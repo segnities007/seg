@@ -111,7 +111,10 @@ fun NavigationHub(onTopNavigate: (route: Navigation) -> Unit) {
                 )
             }
             composable<NavigationHubRoute.Notify> {
-                Notify(modifier = modifier)
+                Notify(
+                    modifier = modifier,
+                    onHubAction = hubViewModel::onHubAction,
+                )
             }
             composable<NavigationHubRoute.Setting> {
                 NavigationSetting(
