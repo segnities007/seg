@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.tooling.preview.Preview
 import com.example.feature.R
 
 @Composable
@@ -31,5 +32,11 @@ private fun BulletinBoard() {
             Modifier
                 .fillMaxSize()
                 .padding(dimensionResource(R.dimen.padding_normal)),
-    ) { }
+    ) {}
+}
+
+@Composable
+@Preview(showBackground = true)
+private fun BulletinBoardPreview() {
+    BulletinBoard()
 }

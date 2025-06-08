@@ -36,10 +36,12 @@ class HubViewModel
 
                 HubAction.ResetIsHideTopBar,
                 HubAction.ChangeIsHideTopBar,
+                HubAction.CloseSnackBar,
                 is HubAction.SetAccounts,
                 is HubAction.SetComment,
                 is HubAction.SetUserID,
                 is HubAction.ChangeCurrentRouteName,
+                is HubAction.OpenSnackBar,
                 -> hubState = hubReducer(hubState, action)
             }
         }

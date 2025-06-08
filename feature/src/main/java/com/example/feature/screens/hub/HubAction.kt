@@ -45,4 +45,10 @@ sealed interface HubAction {
     data class ChangeCurrentRouteName(
         val currentRouteName: String,
     ) : HubAction
+
+    data class OpenSnackBar(
+        val message: String,
+    ) : HubAction
+
+    data object CloseSnackBar : HubAction
 }

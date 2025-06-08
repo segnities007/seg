@@ -5,15 +5,8 @@ fun accountReducer(
     state: AccountState,
 ): AccountState =
     when (action) {
-        AccountAction.ToggleIsLoading,
-        is AccountAction.ClickFollowButton,
-        -> state.copy(isLoading = !state.isLoading)
-
-        AccountAction.ResetState,
-        -> state.copy(posts = listOf(), isCompletedFetchPosts = false)
-
-        is AccountAction.SetOtherUser,
-        -> state.copy(user = action.user)
+        AccountAction.ResetState -> state.copy(posts = listOf(), isCompletedFetchPosts = false)
+        is AccountAction.SetOtherUser -> state.copy(user = action.user)
 
         is AccountAction.ProcessOfEngagementAction -> {
             val newPosts =

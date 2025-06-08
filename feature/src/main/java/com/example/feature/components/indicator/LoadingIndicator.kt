@@ -1,6 +1,6 @@
 package com.example.feature.components.indicator
 
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -16,5 +16,5 @@ fun LoadingUI(
     LaunchedEffect(Unit) {
         onLoading()
     }
-    CircularProgressIndicator(modifier = modifier.width(32.dp))
+    CircularProgressIndicator(modifier = modifier.size(32.dp))
 }
