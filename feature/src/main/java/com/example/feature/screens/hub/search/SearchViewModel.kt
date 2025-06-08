@@ -37,113 +37,127 @@ class SearchViewModel
 
         fun onSearchAction(action: SearchAction) {
             when (action) {
-                is SearchAction.GetBeforePostsByKeyword -> {
-                    viewModelScope.launch(Dispatchers.IO) {
-                        val newPosts =
-                            postRepository.onGetBeforePostsByKeyword(
-                                action.keyword,
-                                action.afterPostCreatedAt,
-                            )
-                        if (newPosts.isNotEmpty()) {
-                            val posts = searchState.posts.plus(newPosts)
-                            searchState = searchState.copy(posts = posts)
-                            searchState = searchState.copy(posts = searchState.posts.plus(newPosts))
-                        } else {
-                            onBeFalseIsPosts()
-                        }
-                    }
-                }
+                is SearchAction.GetBeforePostsByKeyword -> getBeforePostsByKeyword(action)
+                is SearchAction.GetBeforeUsersByKeyword -> getBeforeUsersByKeyword(action)
+                is SearchAction.GetPostsByKeyword -> getPostsByKeyword(action)
+                is SearchAction.GetUsersByKeyword -> getUsersByKeyword(action)
+                SearchAction.ResetSearchState -> resetSearchState(action)
+                is SearchAction.Search -> search(action)
+                is SearchAction.GetPostsByKeywordSortedByViewCount ->
+                    getPostsByKeywordSortedByViewCount(
+                        action,
+                    )
 
-                is SearchAction.GetBeforePostsByKeywordSortedByViewCount -> {
-                    viewModelScope.launch(Dispatchers.IO) {
-                        val newPosts =
-                            postRepository.onGetBeforePostsByKeywordSortedByViewCount(
-                                action.keyword,
-                                action.viewCount,
-                            )
-                        if (newPosts.isNotEmpty()) {
-                            val postsSortedByViewCount =
-                                searchState.postsSortedByViewCount.plus(newPosts)
-                            searchState =
-                                searchState.copy(postsSortedByViewCount = postsSortedByViewCount)
-                        } else {
-                            onBeFalseIsPostsSorted()
-                        }
-                    }
-                }
-
-                is SearchAction.GetBeforeUsersByKeyword -> {
-                    viewModelScope.launch(Dispatchers.IO) {
-                        val newUsers =
-                            userRepository.onGetBeforeUsersByKeyword(
-                                action.keyword,
-                                action.afterPostCreatedAt,
-                            )
-
-                        if (newUsers.isNotEmpty()) {
-                            val users = searchState.users.plus(newUsers)
-                            searchState = searchState.copy(users = users)
-                            return@launch
-                        } else {
-                            onBeFalseIsUsers()
-                        }
-                    }
-                }
-
-                is SearchAction.GetPostsByKeyword -> {
-                    viewModelScope.launch(Dispatchers.IO) {
-                        searchState =
-                            searchState.copy(posts = postRepository.onGetPostsByKeyword(action.keyword))
-                    }
-                }
-
-                is SearchAction.GetPostsByKeywordSortedByViewCount -> {
-                    viewModelScope.launch(Dispatchers.IO) {
-                        searchState =
-                            searchState.copy(
-                                postsSortedByViewCount =
-                                    postRepository.onGetPostsByKeywordSortedByViewCount(
-                                        action.keyword,
-                                    ),
-                            )
-                    }
-                }
-
-                is SearchAction.GetUsersByKeyword -> {
-                    viewModelScope.launch(Dispatchers.IO) {
-                        searchState =
-                            searchState.copy(
-                                users = userRepository.onGetUsersByKeyword(action.keyword),
-                            )
-                    }
-                }
-
-                SearchAction.ResetSearchState -> {
-                    searchState = searchReducer(searchState, action)
-                    onResetIs()
-                }
-
-                is SearchAction.Search -> {
-                    val keyword = action.keyword
-                    viewModelScope.launch(Dispatchers.IO) {
-                        val users = userRepository.onGetUsersByKeyword(keyword)
-                        val posts = postRepository.onGetPostsByKeyword(keyword)
-                        val postsSortedByViewCount =
-                            postRepository.onGetPostsByKeywordSortedByViewCount(keyword)
-                        onResetIs()
-                        searchState =
-                            searchState.copy(
-                                users = users,
-                                posts = posts,
-                                postsSortedByViewCount = postsSortedByViewCount,
-                            )
-                    }
-                }
+                is SearchAction.GetBeforePostsByKeywordSortedByViewCount ->
+                    getBeforePostsByKeywordSortedByViewCount(
+                        action,
+                    )
 
                 is SearchAction.ProcessOfEngagementAction ->
-                    searchReducer(
-                        state = searchState,
-                        action = action,
+                    searchState =
+                        searchReducer(state = searchState, action = action)
+            }
+        }
+
+        private fun getBeforePostsByKeyword(action: SearchAction.GetBeforePostsByKeyword) {
+            viewModelScope.launch(Dispatchers.IO) {
+                val newPosts =
+                    postRepository.onGetBeforePostsByKeyword(
+                        action.keyword,
+                        action.afterPostCreatedAt,
+                    )
+                if (newPosts.isNotEmpty()) {
+                    val posts = searchState.posts.plus(newPosts)
+                    searchState = searchState.copy(posts = posts)
+                    searchState = searchState.copy(posts = searchState.posts.plus(newPosts))
+                } else {
+                    onBeFalseIsPosts()
+                }
+            }
+        }
+
+        private fun getBeforePostsByKeywordSortedByViewCount(action: SearchAction.GetBeforePostsByKeywordSortedByViewCount) {
+            viewModelScope.launch(Dispatchers.IO) {
+                val newPosts =
+                    postRepository.onGetBeforePostsByKeywordSortedByViewCount(
+                        action.keyword,
+                        action.viewCount,
+                    )
+                if (newPosts.isNotEmpty()) {
+                    val postsSortedByViewCount =
+                        searchState.postsSortedByViewCount.plus(newPosts)
+                    searchState =
+                        searchState.copy(postsSortedByViewCount = postsSortedByViewCount)
+                } else {
+                    onBeFalseIsPostsSorted()
+                }
+            }
+        }
+
+        private fun getBeforeUsersByKeyword(action: SearchAction.GetBeforeUsersByKeyword) {
+            viewModelScope.launch(Dispatchers.IO) {
+                val newUsers =
+                    userRepository.onGetBeforeUsersByKeyword(
+                        action.keyword,
+                        action.afterPostCreatedAt,
+                    )
+
+                if (newUsers.isNotEmpty()) {
+                    val users = searchState.users.plus(newUsers)
+                    searchState = searchState.copy(users = users)
+                    return@launch
+                } else {
+                    onBeFalseIsUsers()
+                }
+            }
+        }
+
+        private fun getPostsByKeyword(action: SearchAction.GetPostsByKeyword) {
+            viewModelScope.launch(Dispatchers.IO) {
+                searchState =
+                    searchState.copy(posts = postRepository.onGetPostsByKeyword(action.keyword))
+            }
+        }
+
+        private fun getPostsByKeywordSortedByViewCount(action: SearchAction.GetPostsByKeywordSortedByViewCount) {
+            viewModelScope.launch(Dispatchers.IO) {
+                searchState =
+                    searchState.copy(
+                        postsSortedByViewCount =
+                            postRepository.onGetPostsByKeywordSortedByViewCount(
+                                action.keyword,
+                            ),
+                    )
+            }
+        }
+
+        private fun getUsersByKeyword(action: SearchAction.GetUsersByKeyword) {
+            viewModelScope.launch(Dispatchers.IO) {
+                searchState =
+                    searchState.copy(
+                        users = userRepository.onGetUsersByKeyword(action.keyword),
+                    )
+            }
+        }
+
+        private fun resetSearchState(action: SearchAction) {
+            searchState = searchReducer(searchState, action)
+            onResetIs()
+        }
+
+        private fun search(action: SearchAction.Search) {
+            val keyword = action.keyword
+            viewModelScope.launch(Dispatchers.IO) {
+                val users = userRepository.onGetUsersByKeyword(keyword)
+                val posts = postRepository.onGetPostsByKeyword(keyword)
+                val postsSortedByViewCount =
+                    postRepository.onGetPostsByKeywordSortedByViewCount(keyword)
+                onResetIs()
+                searchState =
+                    searchState.copy(
+                        users = users,
+                        posts = posts,
+                        postsSortedByViewCount = postsSortedByViewCount,
                     )
             }
         }

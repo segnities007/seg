@@ -22,12 +22,7 @@ class HubViewModel
 
         fun onHubAction(action: HubAction) {
             when (action) {
-                HubAction.GetUser -> {
-                    viewModelScope.launch(Dispatchers.IO) {
-                        val user = userRepository.onGetUser()
-                        hubState = hubState.copy(self = user, otherUserID = user.userID)
-                    }
-                }
+                HubAction.GetUser -> getUser()
 
                 is HubAction.SetSelf,
                 is HubAction.AddPostIDToMyLikes,
@@ -46,6 +41,13 @@ class HubViewModel
                 is HubAction.SetUserID,
                 is HubAction.ChangeCurrentRouteName,
                 -> hubState = hubReducer(hubState, action)
+            }
+        }
+
+        private fun getUser() {
+            viewModelScope.launch(Dispatchers.IO) {
+                val user = userRepository.onGetUser()
+                hubState = hubState.copy(self = user, otherUserID = user.userID)
             }
         }
 

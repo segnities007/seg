@@ -29,21 +29,24 @@ class SettingViewModel
                 SettingAction.OpenDatePicker,
                 -> settingState = settingReducer(state = settingState, action = action)
 
-                SettingAction.Logout -> {
-                    viewModelScope.launch(Dispatchers.IO) {
-                        authRepository.logout()
-                    }
-                }
-
-                is SettingAction.SelectDate -> {
-                    val instant = Instant.fromEpochMilliseconds(action.millis!!)
-                    val localDateTime = instant.toLocalDateTime(TimeZone.currentSystemDefault())
-                    val year = localDateTime.year
-                    val month = localDateTime.monthNumber
-                    val day = localDateTime.dayOfMonth
-
-                    // TODO
-                }
+                SettingAction.Logout -> logout()
+                is SettingAction.SelectDate -> selectDate(action)
             }
+        }
+
+        private fun logout() {
+            viewModelScope.launch(Dispatchers.IO) {
+                authRepository.logout()
+            }
+        }
+
+        private fun selectDate(action: SettingAction.SelectDate) {
+            val instant = Instant.fromEpochMilliseconds(action.millis!!)
+            val localDateTime = instant.toLocalDateTime(TimeZone.currentSystemDefault())
+            val year = localDateTime.year
+            val month = localDateTime.monthNumber
+            val day = localDateTime.dayOfMonth
+
+            // TODO
         }
     }

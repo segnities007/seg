@@ -22,15 +22,16 @@ class CommentViewModel
 
         fun onCommentAction(action: CommentAction) {
             when (action) {
-                is CommentAction.GetComments -> {
-                    viewModelScope.launch(Dispatchers.IO) {
-                        val comments = postRepository.onGetComments(action.comment)
-                        commentState = commentState.copy(comments = comments)
-                    }
-                }
-
+                is CommentAction.GetComments -> getComments(action)
                 is CommentAction.ProcessOfEngagementAction,
                 -> commentReducer(action, commentState)
+            }
+        }
+
+        private fun getComments(action: CommentAction.GetComments) {
+            viewModelScope.launch(Dispatchers.IO) {
+                val comments = postRepository.onGetComments(action.comment)
+                commentState = commentState.copy(comments = comments)
             }
         }
     }
