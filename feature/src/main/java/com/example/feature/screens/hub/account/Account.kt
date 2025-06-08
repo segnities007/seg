@@ -14,9 +14,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import com.example.domain.presentation.navigation.Navigation
 import com.example.feature.R
-import com.example.feature.components.button.SmallButton
+import com.example.feature.components.button.rounded.RoundedButton
 import com.example.feature.components.card.postcard.DefaultPostCard
 import com.example.feature.components.card.postcard.PostCardAction
 import com.example.feature.components.indicator.LoadingUI
@@ -76,15 +77,13 @@ private fun AccountUi(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
     ) {
-        if (hubState.self.userID != accountState.user.userID) {
-            item {
-                FollowButtons(
-                    hubState = hubState,
-                    accountState = accountState,
-                    onHubAction = onHubAction,
-                    onAccountAction = onAccountAction,
-                )
-            }
+        item {
+            FollowButton(
+                hubState = hubState,
+                accountState = accountState,
+                onHubAction = onHubAction,
+                onAccountAction = onAccountAction,
+            )
         }
         items(
             accountState.posts.size,
@@ -102,7 +101,6 @@ private fun AccountUi(
             )
             Spacer(Modifier.padding(dimensionResource(R.dimen.padding_smallest)))
         }
-        // action for fetching before-post
         if (!accountState.isCompletedFetchPosts) {
             item {
                 Column {
@@ -119,35 +117,36 @@ private fun AccountUi(
 }
 
 @Composable
-private fun FollowButtons(
+private fun FollowButton(
     modifier: Modifier = Modifier,
     hubState: HubState,
     accountState: AccountState,
     onHubAction: (HubAction) -> Unit,
     onAccountAction: (AccountAction) -> Unit,
 ) {
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center,
-    ) {
-        Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_normal)))
-        SmallButton(
-            modifier = Modifier.weight(1f),
-            isLoading = accountState.isLoading,
-            textID =
-                if (hubState.self.follows.contains(accountState.user.userID)) R.string.followed else R.string.follow,
-            onClick = {
-                onAccountAction(AccountAction.ToggleIsLoading)
-                onAccountAction(
-                    AccountAction.ClickFollowButton(
-                        hubState.self.follows.contains(accountState.user.userID),
-                        hubState.self,
-                        accountState.user,
-                        { onHubAction(HubAction.GetUser) },
+    if (hubState.self.userID != accountState.user.userID) {
+        Row(
+            modifier = modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
+        ) {
+            RoundedButton(
+                modifier = Modifier.weight(1f),
+                text =
+                    stringResource(
+                        if (hubState.self.follows.contains(accountState.user.userID)) R.string.followed else R.string.follow,
                     ),
-                )
-            },
-        )
-        Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_normal)))
+                uiStatus = accountState.followButtonStatus,
+                onHubAction = onHubAction,
+                onClick = {
+                    onAccountAction(
+                        AccountAction.ClickFollowButton(
+                            hubState.self.follows.contains(accountState.user.userID),
+                            hubState.self,
+                            accountState.user,
+                        ) { onHubAction(HubAction.GetUser) },
+                    )
+                },
+            )
+        }
     }
 }

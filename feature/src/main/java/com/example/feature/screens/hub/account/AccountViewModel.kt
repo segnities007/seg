@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.repository.PostRepository
 import com.example.domain.repository.UserRepository
+import com.example.feature.model.UiStatus
+import com.example.feature.screens.hub.HubAction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -24,14 +26,14 @@ class AccountViewModel
 
         fun onAccountAction(action: AccountAction) {
             when (action) {
-                is AccountAction.GetOtherUser -> onGetOtherUser(action.userID)
-                AccountAction.ToggleIsLoading,
                 AccountAction.ResetState,
                 is AccountAction.SetOtherUser,
+                is AccountAction.UpdateUiStatus,
                 -> accountUiState = accountReducer(action, accountUiState)
 
-                is AccountAction.ClickFollowButton -> clickFollowButton(action)
                 AccountAction.GetPosts -> getPosts(action)
+                is AccountAction.GetOtherUser -> onGetOtherUser(action.userID)
+                is AccountAction.ClickFollowButton -> clickFollowButton(action)
                 is AccountAction.InitAccountState -> initAccountState(action)
                 is AccountAction.GetUserPosts -> getUserPosts(action)
                 is AccountAction.ProcessOfEngagementAction -> processOfEngagementAction(action)
@@ -39,17 +41,22 @@ class AccountViewModel
         }
 
         private fun clickFollowButton(action: AccountAction.ClickFollowButton) {
+            accountUiState = accountUiState.copy(followButtonStatus = UiStatus.Loading)
             viewModelScope.launch(Dispatchers.IO) {
-                if (action.isFollow) {
-                    userRepository.onUnFollowUser(
-                        action.self,
-                        action.other,
-                    )
-                } else {
-                    userRepository.onFollowUser(action.self, action.other)
+                try {
+                    when (action.isFollow) {
+                        true -> userRepository.onUnFollowUser(action.self, action.other)
+                        false -> userRepository.onFollowUser(action.self, action.other)
+                    }
+                    accountUiState = accountUiState.copy(followButtonStatus = UiStatus.Success)
+                } catch (e: Exception) {
+                    accountUiState =
+                        accountUiState.copy(followButtonStatus = UiStatus.Error("フォロー登録または解除に失敗しました。"))
+                    // TODO
+                } finally {
+                    action.onHubAction(HubAction.GetUser)
+                    accountUiState = accountUiState.copy(followButtonStatus = UiStatus.Initial)
                 }
-                action.getSelf()
-                accountUiState = accountReducer(action, accountUiState)
             }
         }
 

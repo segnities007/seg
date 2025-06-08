@@ -7,10 +7,19 @@ fun homeReducer(
     state: HomeState,
 ): HomeState =
     when (action) {
-        is HomeAction.GetBeforeNewPosts,
+        is HomeAction.GetBeforeNewPosts -> {
+            when (action.genre) {
+                Genre.HAIKU -> state.copy(isAllHaikusFetched = !state.isAllHaikusFetched)
+                Genre.TANKA -> state.copy(isAllTankasFetched = !state.isAllTankasFetched)
+                Genre.KATAUTA -> state.copy(isAllKatautasFetched = !state.isAllKatautasFetched)
+                Genre.SEDOUKA -> state.copy(isAllSedoukasFetched = !state.isAllSedoukasFetched)
+                else -> state.copy(isAllPostsFetched = !state.isAllPostsFetched)
+            }
+        }
+
         is HomeAction.ChangeIsAllPostsFetched,
         -> {
-            when ((action as HomeAction.ChangeIsAllPostsFetched).genre) {
+            when (action.genre) {
                 Genre.HAIKU -> state.copy(isAllHaikusFetched = !state.isAllHaikusFetched)
                 Genre.TANKA -> state.copy(isAllTankasFetched = !state.isAllTankasFetched)
                 Genre.KATAUTA -> state.copy(isAllKatautasFetched = !state.isAllKatautasFetched)
