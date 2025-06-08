@@ -11,5 +11,6 @@ data class HubState(
     val accounts: List<String> = listOf(),
     val currentRouteName: String = "Home",
     val comment: Post = Post(),
+    val isShowSnackBar: Boolean = false,
     val isHideTopBar: Boolean = false,
 )
