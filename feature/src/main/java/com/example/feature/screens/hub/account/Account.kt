@@ -126,7 +126,10 @@ private fun FollowButton(
 ) {
     if (hubState.self.userID != accountState.user.userID) {
         Row(
-            modifier = modifier.fillMaxWidth(),
+            modifier =
+                modifier
+                    .fillMaxWidth()
+                    .padding(vertical = dimensionResource(R.dimen.padding_small)),
             horizontalArrangement = Arrangement.Center,
         ) {
             RoundedButton(
