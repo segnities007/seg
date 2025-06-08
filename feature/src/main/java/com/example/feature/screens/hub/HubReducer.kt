@@ -50,5 +50,18 @@ fun hubReducer(
         is HubAction.ChangeCurrentRouteName,
         -> state.copy(currentRouteName = action.currentRouteName)
 
+        is HubAction.OpenSnackBar -> {
+            state.copy(
+                snackBarMessage = action.message,
+                isShowSnackBar = true,
+            )
+        }
+
+        HubAction.CloseSnackBar -> {
+            state.copy(
+                isShowSnackBar = false,
+            )
+        }
+
         else -> state
     }

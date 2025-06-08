@@ -2,13 +2,18 @@ package com.example.feature.screens.hub
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
@@ -95,6 +100,18 @@ private fun HubUi(
     content: @Composable (modifier: Modifier) -> Unit,
 ) {
     val scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    val snackBarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(hubState.isShowSnackBar) {
+        if (hubState.isShowSnackBar == true) {
+            snackBarHostState.showSnackbar(
+                message = hubState.snackBarMessage,
+                duration = SnackbarDuration.Long,
+                withDismissAction = true,
+            )
+            onHubAction(HubAction.CloseSnackBar)
+        }
+    }
 
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -126,6 +143,12 @@ private fun HubUi(
             HubFloatingActionButton(
                 currentRouteName = currentRouteName,
                 onHubNavigate = onHubNavigate,
+            )
+        },
+        snackbarHost = {
+            SnackbarHost(
+                hostState = snackBarHostState,
+                modifier = Modifier.sizeIn(maxWidth = 400.dp),
             )
         },
     ) { innerPadding ->
