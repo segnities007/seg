@@ -113,20 +113,20 @@ class AccountViewModel
 
         private fun getUserPosts(action: AccountAction.GetUserPosts) {
             accountUiState = accountUiState.copy(followButtonStatus = UiStatus.Loading)
-            try {
-                viewModelScope.launch(Dispatchers.IO) {
+            viewModelScope.launch(Dispatchers.IO) {
+                try {
                     val posts = postRepository.onGetPostsOfUser(action.userID)
                     accountUiState =
                         when {
                             posts.isNotEmpty() -> accountUiState.copy(posts = posts)
                             else -> accountReducer(action, accountUiState)
                         }
+                } catch (e: Exception) {
+                    accountUiState =
+                        accountUiState.copy(followButtonStatus = UiStatus.Error("ポストの取得に失敗しました。"))
+                } finally {
+                    accountUiState = accountUiState.copy(followButtonStatus = UiStatus.Initial)
                 }
-            } catch (e: Exception) {
-                accountUiState =
-                    accountUiState.copy(followButtonStatus = UiStatus.Error("ポストの取得に失敗しました。"))
-            } finally {
-                accountUiState = accountUiState.copy(followButtonStatus = UiStatus.Initial)
             }
         }
 
@@ -137,25 +137,25 @@ class AccountViewModel
 
         private fun onGetOtherUser(userID: String) {
             accountUiState = accountUiState.copy(followButtonStatus = UiStatus.Loading)
-            try {
-                viewModelScope.launch(Dispatchers.IO) {
+            viewModelScope.launch(Dispatchers.IO) {
+                try {
                     val user = userRepository.onGetOtherUser(userID)
                     accountUiState = accountUiState.copy(user = user)
+                    accountUiState = accountUiState.copy(followButtonStatus = UiStatus.Success)
+                } catch (e: Exception) {
+                    accountUiState =
+                        accountUiState.copy(followButtonStatus = UiStatus.Error("ユーザー情報の取得に失敗しました。"))
+                } finally {
+                    accountUiState = accountUiState.copy(followButtonStatus = UiStatus.Initial)
                 }
-                accountUiState = accountUiState.copy(followButtonStatus = UiStatus.Success)
-            } catch (e: Exception) {
-                accountUiState =
-                    accountUiState.copy(followButtonStatus = UiStatus.Error("ユーザー情報の取得に失敗しました。"))
-            } finally {
-                accountUiState = accountUiState.copy(followButtonStatus = UiStatus.Initial)
             }
         }
 
         private fun onGetBeforePosts(action: AccountAction) {
             if (accountUiState.posts.isEmpty()) return
             accountUiState = accountUiState.copy(followButtonStatus = UiStatus.Loading)
-            try {
-                viewModelScope.launch(Dispatchers.IO) {
+            viewModelScope.launch(Dispatchers.IO) {
+                try {
                     val posts =
                         postRepository.onGetBeforePostsOfUser(
                             accountUiState.user.userID,
@@ -173,12 +173,12 @@ class AccountViewModel
 
                             else -> accountReducer(action, accountUiState)
                         }
+                } catch (e: Exception) {
+                    accountUiState =
+                        accountUiState.copy(followButtonStatus = UiStatus.Error("ポストの取得に失敗しました。"))
+                } finally {
+                    accountUiState = accountUiState.copy(followButtonStatus = UiStatus.Initial)
                 }
-            } catch (e: Exception) {
-                accountUiState =
-                    accountUiState.copy(followButtonStatus = UiStatus.Error("ポストの取得に失敗しました。"))
-            } finally {
-                accountUiState = accountUiState.copy(followButtonStatus = UiStatus.Initial)
             }
         }
     }

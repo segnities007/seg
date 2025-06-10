@@ -6,6 +6,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.repository.PostRepository
+import com.example.feature.model.UiStatus
+import com.example.feature.screens.hub.HubAction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -24,9 +26,9 @@ class MyPostsViewModel
 
         fun onMyPostsAction(action: MyPostsAction) {
             when (action) {
-                MyPostsAction.GetLikedPosts -> getLikedPosts(action)
-                MyPostsAction.GetPosts -> getPosts(action)
-                MyPostsAction.GetRepostedPosts -> getRepostedPosts(action)
+                is MyPostsAction.GetLikedPosts -> getLikedPosts(action)
+                is MyPostsAction.GetPosts -> getPosts(action)
+                is MyPostsAction.GetRepostedPosts -> getRepostedPosts(action)
                 MyPostsAction.Init,
                 is MyPostsAction.ProcessOfEngagement,
                 is MyPostsAction.SetSelf,
@@ -36,92 +38,116 @@ class MyPostsViewModel
             }
         }
 
-        private fun getLikedPosts(action: MyPostsAction) {
+        private fun getLikedPosts(action: MyPostsAction.GetLikedPosts) {
+            myPostsState = myPostsState.copy(uiStatus = UiStatus.Loading)
             viewModelScope.launch(Dispatchers.IO) {
-                if (myPostsState.likedPosts.isEmpty()) {
-                    // using reversing for sorted by descending order
-                    val posts =
-                        postRepository.onGetPosts(
+                try {
+                    if (myPostsState.likedPosts.isEmpty()) {
+                        val posts =
+                            postRepository.onGetPosts(
+                                myPostsState.self.likes
+                                    .reversed()
+                                    .take(takeN),
+                            )
+                        if (posts.isEmpty()) {
+                            myPostsReducer(state = myPostsState, action = action)
+                        } else {
+                            val newPosts = posts.filter { post -> post.id != 0 }
+                            myPostsState =
+                                myPostsState.copy(likedPosts = myPostsState.likedPosts.plus(newPosts))
+                        }
+                    } else {
+                        onGetBeforeLikedPosts(
                             myPostsState.self.likes
                                 .reversed()
                                 .take(takeN),
+                            myPostsState.likedPosts.last().id,
+                            action,
                         )
-                    if (posts.isEmpty()) {
-                        myPostsReducer(state = myPostsState, action = action)
-                    } else {
-                        val newPosts = posts.filter { post -> post.id != 0 }
-                        myPostsState =
-                            myPostsState.copy(likedPosts = myPostsState.likedPosts.plus(newPosts))
                     }
-                } else {
-                    // using reversing for sorted by descending order
-                    onGetBeforeLikedPosts(
-                        myPostsState.self.likes
-                            .reversed()
-                            .take(takeN),
-                        myPostsState.likedPosts.last().id,
-                        action,
-                    )
+                    myPostsState = myPostsState.copy(uiStatus = UiStatus.Success)
+                } catch (e: Exception) {
+                    myPostsState =
+                        myPostsState.copy(uiStatus = UiStatus.Error("エラーが発生しました。"))
+                    action.onHubAction(HubAction.OpenSnackBar((myPostsState.uiStatus as UiStatus.Error).message))
+                } finally {
+                    myPostsState = myPostsState.copy(uiStatus = UiStatus.Initial)
                 }
             }
         }
 
-        private fun getPosts(action: MyPostsAction) {
+        private fun getPosts(action: MyPostsAction.GetPosts) {
+            myPostsState = myPostsState.copy(uiStatus = UiStatus.Loading)
             viewModelScope.launch(Dispatchers.IO) {
-                if (myPostsState.posts.isEmpty()) {
-                    // using reversing for sorted by descending order
-                    val posts =
-                        postRepository.onGetPosts(
-                            myPostsState.self.posts
-                                .reversed()
-                                .take(takeN),
-                        )
-                    if (posts.isEmpty()) {
-                        myPostsState = myPostsReducer(state = myPostsState, action = action)
+                try {
+                    if (myPostsState.posts.isEmpty()) {
+                        val posts =
+                            postRepository.onGetPosts(
+                                myPostsState.self.posts
+                                    .reversed()
+                                    .take(takeN),
+                            )
+                        if (posts.isEmpty()) {
+                            myPostsState = myPostsReducer(state = myPostsState, action = action)
+                        } else {
+                            val newPosts = posts.filter { post -> post.id != 0 }
+                            myPostsState =
+                                myPostsState.copy(posts = myPostsState.posts.plus(newPosts))
+                        }
                     } else {
-                        val newPosts = posts.filter { post -> post.id != 0 }
-                        myPostsState =
-                            myPostsState.copy(posts = myPostsState.posts.plus(newPosts))
+                        onGetBeforePosts(
+                            myPostsState.self.posts.reversed(),
+                            myPostsState.posts.last().id,
+                            action,
+                        )
                     }
-                } else {
-                    // using reversing for sorted by descending order
-                    onGetBeforePosts(
-                        myPostsState.self.posts.reversed(),
-                        myPostsState.posts.last().id,
-                        action,
-                    )
+                    myPostsState = myPostsState.copy(uiStatus = UiStatus.Success)
+                } catch (e: Exception) {
+                    myPostsState =
+                        myPostsState.copy(uiStatus = UiStatus.Error("エラーが発生しました。"))
+                    action.onHubAction(HubAction.OpenSnackBar((myPostsState.uiStatus as UiStatus.Error).message))
+                } finally {
+                    myPostsState = myPostsState.copy(uiStatus = UiStatus.Initial)
                 }
             }
         }
 
-        private fun getRepostedPosts(action: MyPostsAction) {
+        private fun getRepostedPosts(action: MyPostsAction.GetRepostedPosts) {
+            myPostsState = myPostsState.copy(uiStatus = UiStatus.Loading)
             viewModelScope.launch(Dispatchers.IO) {
-                if (myPostsState.repostedPosts.isEmpty()) {
-                    // using reversing for sorted by descending order
-                    val posts =
-                        postRepository.onGetPosts(
+                try {
+                    if (myPostsState.repostedPosts.isEmpty()) {
+                        val posts =
+                            postRepository.onGetPosts(
+                                myPostsState.self.reposts
+                                    .reversed()
+                                    .take(takeN),
+                            )
+                        if (posts.isEmpty()) {
+                            myPostsState = myPostsReducer(state = myPostsState, action = action)
+                        } else {
+                            val newPosts = posts.filter { post -> post.id != 0 }
+                            myPostsState =
+                                myPostsState.copy(
+                                    repostedPosts = myPostsState.repostedPosts.plus(newPosts),
+                                )
+                        }
+                    } else {
+                        onGetBeforeRepostedPosts(
                             myPostsState.self.reposts
                                 .reversed()
                                 .take(takeN),
+                            myPostsState.repostedPosts.last().id,
+                            action,
                         )
-                    if (posts.isEmpty()) {
-                        myPostsState = myPostsReducer(state = myPostsState, action = action)
-                    } else {
-                        val newPosts = posts.filter { post -> post.id != 0 }
-                        myPostsState =
-                            myPostsState.copy(
-                                repostedPosts = myPostsState.repostedPosts.plus(newPosts),
-                            )
                     }
-                } else {
-                    // using reversing for sorted by descending order
-                    onGetBeforeRepostedPosts(
-                        myPostsState.self.reposts
-                            .reversed()
-                            .take(takeN),
-                        myPostsState.repostedPosts.last().id,
-                        action,
-                    )
+                    myPostsState = myPostsState.copy(uiStatus = UiStatus.Success)
+                } catch (e: Exception) {
+                    myPostsState =
+                        myPostsState.copy(uiStatus = UiStatus.Error("エラーが発生しました。"))
+                    action.onHubAction(HubAction.OpenSnackBar((myPostsState.uiStatus as UiStatus.Error).message))
+                } finally {
+                    myPostsState = myPostsState.copy(uiStatus = UiStatus.Initial)
                 }
             }
         }

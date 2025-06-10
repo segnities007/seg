@@ -12,7 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.Dp
 import com.example.domain.presentation.navigation.Navigation
-import com.example.domain.presentation.navigation.NavigationRoute
 import com.example.domain.presentation.navigation.NavigationSettingRoute
 import com.example.feature.R
 import com.example.feature.components.button.SmallButton
@@ -43,7 +42,11 @@ fun Preference(
         Spacer(modifier = Modifier.padding(commonPadding))
         ModifyUserInfoButton(onSettingNavigate = onSettingNavigate)
         Spacer(modifier = Modifier.padding(commonPadding))
-        LogoutButton(onSettingAction = onSettingAction, onTopNavigate = onTopNavigate)
+        LogoutButton(
+            onSettingAction = onSettingAction,
+            onTopNavigate = onTopNavigate,
+            onHubAction = onHubAction,
+        )
     }
 }
 
@@ -73,13 +76,18 @@ private fun ModifyUserInfoButton(onSettingNavigate: (Navigation) -> Unit) {
 private fun LogoutButton(
     onSettingAction: (SettingAction) -> Unit,
     onTopNavigate: (Navigation) -> Unit,
+    onHubAction: (HubAction) -> Unit,
 ) {
     SmallButton(
         modifier = Modifier.fillMaxWidth(),
         textID = R.string.logout,
         onClick = {
-            onSettingAction(SettingAction.Logout)
-            onTopNavigate(NavigationRoute.Login)
+            onSettingAction(
+                SettingAction.Logout(
+                    onTopNavigate = onTopNavigate,
+                    onHubAction = onHubAction,
+                ),
+            )
         },
     )
 }

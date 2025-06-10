@@ -23,15 +23,14 @@ sealed interface PostAction {
 
     data class CreatePost(
         val user: User,
-        val onUpdateIsLoading: (isLoading: Boolean) -> Unit,
         val onUpdateSelf: () -> Unit,
         val onNavigate: (NavigationHubRoute) -> Unit,
+        val onHubAction: (HubAction) -> Unit,
     ) : PostAction
 
     data class CreateComment(
         val hubState: HubState,
-        val onHubAction: (HubAction) -> Unit,
-        val onUpdateIsLoading: (isLoading: Boolean) -> Unit,
         val onNavigate: (NavigationHubRoute) -> Unit,
+        val onHubAction: (HubAction) -> Unit,
     ) : PostAction
 }
