@@ -2,10 +2,16 @@ package com.example.feature.screens.login
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -23,8 +29,10 @@ import com.example.feature.navigation.TopLayerState
 fun Login(
     topLayerState: TopLayerState,
     currentRouteName: String,
+    loginState: LoginState,
     onTopAction: (TopLayerAction) -> Unit,
     onNavigate: (Navigation) -> Unit,
+    onLoginAction: (LoginAction) -> Unit,
     content: @Composable (Modifier) -> Unit,
 ) {
     NavigationDrawer(
@@ -34,9 +42,11 @@ fun Login(
         onDrawerClose = { onTopAction(TopLayerAction.CloseDrawer) },
     ) {
         LoginUi(
+            loginState = loginState,
             currentRouteName = currentRouteName,
             onTopAction = onTopAction,
             onNavigate = onNavigate,
+            onLoginAction = onLoginAction,
             content = content,
         )
     }
@@ -44,11 +54,26 @@ fun Login(
 
 @Composable
 private fun LoginUi(
+    loginState: LoginState,
     currentRouteName: String,
     onTopAction: (TopLayerAction) -> Unit,
     onNavigate: (Navigation) -> Unit,
+    onLoginAction: (LoginAction) -> Unit,
     content: @Composable (Modifier) -> Unit,
 ) {
+    val snackBarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(loginState.isShowSnackBar) {
+        if (loginState.isShowSnackBar == true) {
+            snackBarHostState.showSnackbar(
+                message = loginState.snackBarMessage,
+                duration = SnackbarDuration.Long,
+                withDismissAction = true,
+            )
+            onLoginAction(LoginAction.CloseSnackBar)
+        }
+    }
+
     Scaffold(
         topBar = {
             LoginTopBar(
@@ -60,6 +85,12 @@ private fun LoginUi(
             LoginBottomBar(
                 currentRouteName = currentRouteName,
                 onNavigate = onNavigate,
+            )
+        },
+        snackbarHost = {
+            SnackbarHost(
+                hostState = snackBarHostState,
+                modifier = Modifier.sizeIn(maxWidth = 400.dp),
             )
         },
     ) { innerPadding ->

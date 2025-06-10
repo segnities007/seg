@@ -1,6 +1,7 @@
 package com.example.feature.screens.login.sign_up.create_account
 
 import android.net.Uri
+import com.example.feature.screens.login.LoginAction
 import java.time.LocalDate
 
 sealed interface CreateAccountAction {
@@ -26,6 +27,7 @@ sealed interface CreateAccountAction {
 
     data class CreateUser(
         val onNavigateToHub: () -> Unit,
+        val onLoginAction: (LoginAction) -> Unit,
     ) : CreateAccountAction
 
     data class SetUri(
