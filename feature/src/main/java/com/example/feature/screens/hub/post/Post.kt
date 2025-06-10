@@ -99,7 +99,7 @@ fun PostUi(
         scope.content()
     }
 
-    CircleIndicator(isLoading = postState.isLoading)
+    CircleIndicator(uiStatus = postState.uiStatus)
 }
 
 @Composable

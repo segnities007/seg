@@ -5,13 +5,13 @@ fun myPostsReducer(
     action: MyPostsAction,
 ): MyPostsState =
     when (action) {
-        MyPostsAction.GetPosts ->
+        is MyPostsAction.GetPosts ->
             state.copy(hasNoMorePosts = !state.hasNoMorePosts)
 
-        MyPostsAction.GetRepostedPosts ->
+        is MyPostsAction.GetRepostedPosts ->
             state.copy(hasNoMoreRepostedPosts = !state.hasNoMoreRepostedPosts)
 
-        MyPostsAction.GetLikedPosts ->
+        is MyPostsAction.GetLikedPosts ->
             state.copy(hasNoMoreLikedPosts = !state.hasNoMoreLikedPosts)
 
         MyPostsAction.Init -> {

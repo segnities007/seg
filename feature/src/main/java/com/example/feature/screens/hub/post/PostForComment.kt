@@ -44,7 +44,7 @@ fun PostForComment(
     val postViewModel: PostViewModel = hiltViewModel()
 
     LaunchedEffect(Unit) {
-        commentViewModel.onCommentAction(CommentAction.GetComments(hubState.comment))
+        commentViewModel.onCommentAction(CommentAction.GetComments(comment = hubState.comment, onHubAction = onHubAction))
     }
 
     PostUi(
@@ -114,7 +114,6 @@ fun PostScope.TopToolBarForCommentForComment(
                     PostAction.CreateComment(
                         hubState = hubState,
                         onHubAction = onHubAction,
-                        onUpdateIsLoading = { onPostAction(PostAction.UpdateIsLoading(it)) },
                         onNavigate = onHubNavigate,
                     ),
                 )

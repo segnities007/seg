@@ -210,6 +210,7 @@ private fun HubTopBar(
                 topSearchBarState = topSearchBarState,
                 onTabAction = onTabAction,
                 onSearchAction = onSearchAction,
+                onHubAction = onHubAction,
                 onTopSearchBarAction = onTopSearchBarAction,
             )
 

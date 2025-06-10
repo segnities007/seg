@@ -17,7 +17,7 @@ fun Setting(
     content: @Composable () -> Unit,
 ) {
     LaunchedEffect(Unit) {
-        onHubAction(HubAction.GetUser)
+        onHubAction(HubAction.GetUser(onHubAction))
     }
 
     Box(
