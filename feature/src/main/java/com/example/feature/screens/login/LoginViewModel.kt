@@ -29,6 +29,8 @@ class LoginViewModel
             when (action) {
                 LoginAction.ResetIsFailedSignIn,
                 LoginAction.ChangeIsFailedSignIn,
+                LoginAction.CloseSnackBar,
+                is LoginAction.OpenSnackBar,
                 is LoginAction.ChangeEmail,
                 is LoginAction.ChangePassword,
                 is LoginAction.ChangeCurrentRouteName,
