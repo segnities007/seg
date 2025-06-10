@@ -5,16 +5,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.example.domain.repository.AuthRepository
+import com.example.feature.model.UiStatus
 import com.example.feature.navigation.TopLayerViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
-
-data class ConfirmEmailUiAction(
-    val onConfirmEmail: (onNavigate: () -> Unit) -> Unit,
-)
 
 @HiltViewModel
 class LoginViewModel
@@ -42,14 +39,24 @@ class LoginViewModel
         }
 
         private fun signInWithEmailPassword(action: LoginAction.SignInWithEmailPassword) {
+            loginUiState = loginUiState.copy(uiStatus = UiStatus.Loading)
             viewModelScope.launch(Dispatchers.IO) {
-                val isSuccess =
-                    authRepository.signInWithEmailPassword(
-                        email = loginUiState.email,
-                        password = loginUiState.password,
-                    )
-                withContext(Dispatchers.Main) {
-                    if (isSuccess) action.onNavigate()
+                try {
+                    val isSuccess =
+                        authRepository.signInWithEmailPassword(
+                            email = loginUiState.email,
+                            password = loginUiState.password,
+                        )
+                    withContext(Dispatchers.Main) {
+                        if (isSuccess) action.onNavigate()
+                    }
+                    loginUiState = loginUiState.copy(uiStatus = UiStatus.Success)
+                } catch (e: Exception) {
+                    loginUiState =
+                        loginUiState.copy(uiStatus = UiStatus.Error("エラーが発生しました。"))
+                    action.onLoginAction(LoginAction.OpenSnackBar((loginUiState.uiStatus as UiStatus.Error).message))
+                } finally {
+                    loginUiState = loginUiState.copy(uiStatus = UiStatus.Success)
                 }
             }
         }

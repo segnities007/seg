@@ -25,8 +25,6 @@ class CreateAccountViewModel
     constructor(
         private val userRepository: UserRepository,
     ) : ViewModel() {
-        private val tag = "CreateAccountViewModel"
-
         var createAccountUiState by mutableStateOf(CreateAccountState())
             private set
 
