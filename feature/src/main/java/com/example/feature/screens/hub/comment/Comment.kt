@@ -29,7 +29,7 @@ fun Comment(
     val commentViewModel: CommentViewModel = hiltViewModel()
 
     LaunchedEffect(Unit) {
-        commentViewModel.onCommentAction(CommentAction.GetComments(hubState.comment))
+        commentViewModel.onCommentAction(CommentAction.GetComments(hubState.comment, onHubAction = onHubAction))
     }
 
     CommentUi(

@@ -120,30 +120,35 @@ fun Home(
                                             HomeAction.GetBeforeNewPosts(
                                                 updatedAt = homeState.katautas.last().updateAt,
                                                 genre = Genre.KATAUTA,
+                                                onHubAction = onHubAction,
                                             )
 
                                         Genre.SEDOUKA ->
                                             HomeAction.GetBeforeNewPosts(
                                                 updatedAt = homeState.sedoukas.last().updateAt,
                                                 genre = Genre.SEDOUKA,
+                                                onHubAction = onHubAction,
                                             )
 
                                         Genre.TANKA ->
                                             HomeAction.GetBeforeNewPosts(
                                                 updatedAt = homeState.tankas.last().updateAt,
                                                 genre = Genre.TANKA,
+                                                onHubAction = onHubAction,
                                             )
 
                                         Genre.HAIKU ->
                                             HomeAction.GetBeforeNewPosts(
                                                 updatedAt = homeState.haikus.last().updateAt,
                                                 genre = Genre.HAIKU,
+                                                onHubAction = onHubAction,
                                             )
 
                                         else ->
                                             HomeAction.GetBeforeNewPosts(
                                                 updatedAt = homeState.posts.last().updateAt,
                                                 genre = Genre.NORMAL,
+                                                onHubAction = onHubAction,
                                             )
                                     },
                                 )

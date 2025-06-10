@@ -53,7 +53,7 @@ class AccountViewModel
                     accountUiState =
                         accountUiState.copy(followButtonStatus = UiStatus.Error("フォロー登録または解除に失敗しました。"))
                 } finally {
-                    action.onHubAction(HubAction.GetUser)
+                    action.onHubAction(HubAction.GetUser(action.onHubAction))
                     accountUiState = accountUiState.copy(followButtonStatus = UiStatus.Initial)
                 }
             }

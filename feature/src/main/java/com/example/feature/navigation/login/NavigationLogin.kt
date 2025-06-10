@@ -34,7 +34,9 @@ fun NavigationLogin(navHostController: NavHostController) {
     Login(
         onTopAction = loginViewModel::onTopAction,
         currentRouteName = currentRoute.toString(),
+        loginState = loginViewModel.loginUiState,
         topLayerState = loginViewModel.topLayerState,
+        onLoginAction = loginViewModel::onLoginAction,
         onNavigate = { route: Navigation ->
             loginNavHostController.navigate(route)
             loginViewModel.onLoginAction(LoginAction.ChangeCurrentRouteName(route.name))

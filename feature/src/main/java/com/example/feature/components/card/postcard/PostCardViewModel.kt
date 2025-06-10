@@ -39,13 +39,23 @@ class PostCardViewModel
                         viewModelScope.launch(Dispatchers.IO) {
                             postRepository.onUnLike(post = newPost, user = action.hubState.self)
                         }
-                        action.onHubAction(HubAction.RemovePostIDFromMyLikes(action.post.id))
+                        action.onHubAction(
+                            HubAction.RemovePostIDFromMyLikes(
+                                postID = action.post.id,
+                                onHubAction = action.onHubAction,
+                            ),
+                        )
                     } else {
                         newPost = action.post.copy(likeCount = action.post.likeCount + 1)
                         viewModelScope.launch(Dispatchers.IO) {
                             postRepository.onLike(post = newPost, user = action.hubState.self)
                         }
-                        action.onHubAction(HubAction.AddPostIDToMyLikes(action.post.id))
+                        action.onHubAction(
+                            HubAction.AddPostIDToMyLikes(
+                                postID = action.post.id,
+                                onHubAction = action.onHubAction,
+                            ),
+                        )
                     }
 
                     action.onProcessOfEngagementAction(newPost)
@@ -69,9 +79,14 @@ class PostCardViewModel
                     }
 
                     if (hubState.self.reposts.contains(post.id)) {
-                        action.onHubAction(HubAction.RemovePostIDFromReposts(post.id))
+                        action.onHubAction(
+                            HubAction.RemovePostIDFromReposts(
+                                post.id,
+                                action.onHubAction,
+                            ),
+                        )
                     } else {
-                        action.onHubAction(HubAction.AddPostIDFromReposts(post.id))
+                        action.onHubAction(HubAction.AddPostIDFromReposts(post.id, action.onHubAction))
                     }
                     action.onProcessOfEngagementAction(newPost)
                 }
@@ -83,10 +98,15 @@ class PostCardViewModel
                     val newPostsOfSelf = hubState.self.posts.minus(post.id)
                     action.onMyPostsAction(MyPostsAction.RemovePostFromPosts(post))
                     val newSelf = hubState.self.copy(posts = newPostsOfSelf)
-                    action.onHubAction(HubAction.SetSelf(newSelf))
+                    action.onHubAction(HubAction.SetSelf(newSelf, onHubAction = action.onHubAction))
                     viewModelScope.launch(Dispatchers.IO) {
                         postRepository.onDeletePost(post)
-                        action.onHomeAction(HomeAction.GetNewPosts(post.genre))
+                        action.onHomeAction(
+                            HomeAction.GetNewPosts(
+                                post.genre,
+                                onHubAction = action.onHubAction,
+                            ),
+                        )
                     }
                 }
 

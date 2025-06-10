@@ -23,6 +23,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import com.example.feature.R
+import com.example.feature.screens.hub.HubAction
 import com.example.feature.screens.hub.search.SearchAction
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -31,6 +32,7 @@ fun SearchInputForm(
     modifier: Modifier = Modifier,
     topSearchBarState: TopSearchBarState,
     onSearchAction: (SearchAction) -> Unit,
+    onHubAction: (HubAction) -> Unit,
     onTopSearchBarAction: (TopSearchBarAction) -> Unit,
 ) {
     val focusManager: FocusManager = LocalFocusManager.current
@@ -42,7 +44,7 @@ fun SearchInputForm(
 
     val onSearch = { _: String ->
         focusManager.clearFocus()
-        onSearchAction(SearchAction.Search(topSearchBarState.keyword))
+        onSearchAction(SearchAction.Search(topSearchBarState.keyword, onHubAction = onHubAction))
     }
 
     SearchBar(
