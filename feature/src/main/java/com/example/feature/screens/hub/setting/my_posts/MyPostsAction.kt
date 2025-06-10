@@ -3,16 +3,23 @@ package com.example.feature.screens.hub.setting.my_posts
 import androidx.compose.runtime.Immutable
 import com.example.domain.model.post.Post
 import com.example.domain.model.user.User
+import com.example.feature.screens.hub.HubAction
 
 @Immutable
 sealed interface MyPostsAction {
     data object Init : MyPostsAction
 
-    data object GetPosts : MyPostsAction
+    data class GetPosts(
+        val onHubAction: (HubAction) -> Unit,
+    ) : MyPostsAction
 
-    data object GetLikedPosts : MyPostsAction
+    data class GetLikedPosts(
+        val onHubAction: (HubAction) -> Unit,
+    ) : MyPostsAction
 
-    data object GetRepostedPosts : MyPostsAction
+    data class GetRepostedPosts(
+        val onHubAction: (HubAction) -> Unit,
+    ) : MyPostsAction
 
     data class UpdateSelectedTabIndex(
         val index: Int,
