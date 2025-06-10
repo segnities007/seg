@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.example.domain.repository.UserRepository
+import com.example.feature.model.UiStatus
 import com.example.feature.navigation.TopLayerViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -22,7 +23,7 @@ class HubViewModel
 
         fun onHubAction(action: HubAction) {
             when (action) {
-                HubAction.GetUser -> getUser()
+                is HubAction.GetUser -> getUser(action)
 
                 is HubAction.SetSelf,
                 is HubAction.AddPostIDToMyLikes,
@@ -31,7 +32,7 @@ class HubViewModel
                 is HubAction.AddPostIDFromReposts,
                 -> {
                     hubState = hubReducer(hubState, action)
-                    onUpdateMyself()
+                    onUpdateMyself(action)
                 }
 
                 HubAction.ResetIsHideTopBar,
@@ -43,19 +44,44 @@ class HubViewModel
                 is HubAction.ChangeCurrentRouteName,
                 is HubAction.OpenSnackBar,
                 -> hubState = hubReducer(hubState, action)
+
+                is HubAction.ReturnHubAction -> { // Nothing
+                }
             }
         }
 
-        private fun getUser() {
+        private fun getUser(action: HubAction.GetUser) {
+            hubState = hubState.copy(uiStatus = UiStatus.Loading)
             viewModelScope.launch(Dispatchers.IO) {
-                val user = userRepository.onGetUser()
-                hubState = hubState.copy(self = user, otherUserID = user.userID)
+                try {
+                    val user = userRepository.onGetUser()
+                    hubState =
+                        hubState.copy(
+                            self = user,
+                            otherUserID = user.userID,
+                            uiStatus = UiStatus.Success,
+                        )
+                } catch (e: Exception) {
+                    hubState = hubState.copy(uiStatus = UiStatus.Error("エラーが発生しました。"))
+                    action.onHubAction(HubAction.OpenSnackBar((hubState.uiStatus as UiStatus.Error).message))
+                } finally {
+                    hubState = hubState.copy(uiStatus = UiStatus.Initial)
+                }
             }
         }
 
-        private fun onUpdateMyself() {
+        private fun onUpdateMyself(action: HubAction.ReturnHubAction) {
+            hubState = hubState.copy(uiStatus = UiStatus.Loading)
             viewModelScope.launch(Dispatchers.IO) {
-                userRepository.onUpdateUser(hubState.self)
+                try {
+                    userRepository.onUpdateUser(hubState.self)
+                    hubState = hubState.copy(uiStatus = UiStatus.Success)
+                } catch (e: Exception) {
+                    hubState = hubState.copy(uiStatus = UiStatus.Error("エラーが発生しました。"))
+                    action.onHubAction(HubAction.OpenSnackBar((hubState.uiStatus as UiStatus.Error).message))
+                } finally {
+                    hubState = hubState.copy(uiStatus = UiStatus.Initial)
+                }
             }
         }
     }

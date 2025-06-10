@@ -6,6 +6,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.repository.UserRepository
+import com.example.feature.model.UiStatus
+import com.example.feature.screens.hub.HubAction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -32,15 +34,25 @@ class UserInfoViewModel
         }
 
         private fun updateUser(action: UserInfoAction.UpdateUser) {
+            userInfoState = userInfoState.copy(uiStatus = UiStatus.Loading)
             viewModelScope.launch(Dispatchers.IO) {
-                val newUser =
-                    action.user.copy(
-                        name = userInfoState.name,
-                        description = userInfoState.description,
-                        userID = userInfoState.userID,
-                        updateAt = LocalDateTime.now(),
-                    )
-                userRepository.onUpdateUser(newUser)
+                try {
+                    val newUser =
+                        action.user.copy(
+                            name = userInfoState.name,
+                            description = userInfoState.description,
+                            userID = userInfoState.userID,
+                            updateAt = LocalDateTime.now(),
+                        )
+                    userRepository.onUpdateUser(newUser)
+                    action.onHubAction(HubAction.OpenSnackBar("更新しました。"))
+                } catch (e: Exception) {
+                    userInfoState =
+                        userInfoState.copy(uiStatus = UiStatus.Error("エラーが発生しました。"))
+                    action.onHubAction(HubAction.OpenSnackBar((userInfoState.uiStatus as UiStatus.Error).message))
+                } finally {
+                    userInfoState = userInfoState.copy(uiStatus = UiStatus.Initial)
+                }
             }
         }
     }

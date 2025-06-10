@@ -19,9 +19,17 @@ sealed interface LoginAction {
 
     data class SignUpWithEmailPassword(
         val onNavigate: () -> Unit,
+        val onLoginAction: (LoginAction) -> Unit,
     ) : LoginAction
 
     data class SignInWithEmailPassword(
         val onNavigate: () -> Unit,
+        val onLoginAction: (LoginAction) -> Unit,
     ) : LoginAction
+
+    data class OpenSnackBar(
+        val message: String,
+    ) : LoginAction
+
+    data object CloseSnackBar : LoginAction
 }

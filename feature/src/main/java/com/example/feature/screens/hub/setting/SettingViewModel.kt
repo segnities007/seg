@@ -5,7 +5,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.domain.presentation.navigation.NavigationRoute
 import com.example.domain.repository.AuthRepository
+import com.example.feature.model.UiStatus
+import com.example.feature.screens.hub.HubAction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -29,14 +32,24 @@ class SettingViewModel
                 SettingAction.OpenDatePicker,
                 -> settingState = settingReducer(state = settingState, action = action)
 
-                SettingAction.Logout -> logout()
+                is SettingAction.Logout -> logout(action)
                 is SettingAction.SelectDate -> selectDate(action)
             }
         }
 
-        private fun logout() {
+        private fun logout(action: SettingAction.Logout) {
+            settingState = settingState.copy(uiStatus = UiStatus.Loading)
             viewModelScope.launch(Dispatchers.IO) {
-                authRepository.logout()
+                try {
+                    authRepository.logout()
+                    action.onTopNavigate(NavigationRoute.Login)
+                } catch (e: Exception) {
+                    settingState =
+                        settingState.copy(uiStatus = UiStatus.Error("エラーが発生しました。"))
+                    action.onHubAction(HubAction.OpenSnackBar((settingState.uiStatus as UiStatus.Error).message))
+                } finally {
+                    settingState = settingState.copy(uiStatus = UiStatus.Initial)
+                }
             }
         }
 

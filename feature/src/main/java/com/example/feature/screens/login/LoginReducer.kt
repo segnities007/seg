@@ -20,5 +20,18 @@ fun loginReducer(
         is LoginAction.ChangeCurrentRouteName,
         -> state.copy(currentRouteName = action.newCurrentRouteName)
 
+        is LoginAction.OpenSnackBar -> {
+            state.copy(
+                snackBarMessage = action.message,
+                isShowSnackBar = true,
+            )
+        }
+
+        LoginAction.CloseSnackBar -> {
+            state.copy(
+                isShowSnackBar = false,
+            )
+        }
+
         else -> state
     }

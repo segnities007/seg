@@ -3,14 +3,14 @@ package com.example.feature.screens.hub.account
 import androidx.compose.runtime.Immutable
 import com.example.domain.model.post.Post
 import com.example.domain.model.user.User
+import com.example.feature.model.UiStatus
+import com.example.feature.screens.hub.HubAction
 
 @Immutable
 sealed interface AccountAction {
     data object ResetState : AccountAction
 
     data object GetPosts : AccountAction
-
-    data object ToggleIsLoading : AccountAction
 
     data class InitAccountState(
         val userID: String,
@@ -32,10 +32,14 @@ sealed interface AccountAction {
         val isFollow: Boolean,
         val self: User,
         val other: User,
-        val getSelf: () -> Unit,
+        val onHubAction: (HubAction) -> Unit,
     ) : AccountAction
 
     data class ProcessOfEngagementAction(
         val newPost: Post,
+    ) : AccountAction
+
+    data class UpdateUiStatus(
+        val uiStatus: UiStatus,
     ) : AccountAction
 }
