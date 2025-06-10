@@ -47,8 +47,10 @@ class LoginViewModel
                             email = loginUiState.email,
                             password = loginUiState.password,
                         )
-                    withContext(Dispatchers.Main) {
-                        if (isSuccess) action.onNavigate()
+                    if (isSuccess) {
+                        withContext(Dispatchers.Main) {
+                            action.onNavigate()
+                        }
                     }
                     loginUiState = loginUiState.copy(uiStatus = UiStatus.Success)
                 } catch (e: Exception) {
@@ -62,14 +64,25 @@ class LoginViewModel
         }
 
         private fun signUpWithEmailPassword(action: LoginAction.SignUpWithEmailPassword) {
+            loginUiState = loginUiState.copy(uiStatus = UiStatus.Loading)
             viewModelScope.launch(Dispatchers.IO) {
-                withContext(Dispatchers.Main) {
+                try {
                     val isSuccess =
                         authRepository.signUpWithEmailPassword(
                             email = loginUiState.email,
                             password = loginUiState.password,
                         )
-                    if (isSuccess) action.onNavigate()
+                    if (isSuccess) {
+                        withContext(Dispatchers.Main) {
+                            action.onNavigate()
+                        }
+                    }
+                } catch (e: Exception) {
+                    loginUiState =
+                        loginUiState.copy(uiStatus = UiStatus.Error("エラーが発生しました。"))
+                    action.onLoginAction(LoginAction.OpenSnackBar((loginUiState.uiStatus as UiStatus.Error).message))
+                } finally {
+                    loginUiState = loginUiState.copy(uiStatus = UiStatus.Success)
                 }
             }
         }
