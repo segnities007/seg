@@ -137,6 +137,7 @@ private fun MostViewPosts(
                                 SearchAction.GetBeforePostsByKeywordSortedByViewCount(
                                     keyword = topSearchBarState.keyword,
                                     viewCount = searchState.postsSortedByViewCount.last().viewCount,
+                                    onHubAction = onHubAction,
                                 ),
                             )
                         },
@@ -203,6 +204,7 @@ private fun LatestPosts(
                                 SearchAction.GetBeforePostsByKeyword(
                                     keyword = topSearchBarState.keyword,
                                     afterPostCreatedAt = searchState.posts.last().createAt,
+                                    onHubAction = onHubAction,
                                 ),
                             )
                         },
@@ -257,6 +259,7 @@ private fun Users(
                                 SearchAction.GetBeforeUsersByKeyword(
                                     keyword = topSearchBarState.keyword,
                                     afterPostCreatedAt = searchState.users.last().createAt,
+                                    onHubAction = onHubAction,
                                 ),
                             )
                         },
