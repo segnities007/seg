@@ -146,7 +146,7 @@ private fun FollowButton(
                             hubState.self.follows.contains(accountState.user.userID),
                             hubState.self,
                             accountState.user,
-                        ) { onHubAction(HubAction.GetUser) },
+                        ) { onHubAction(HubAction.GetUser(onHubAction)) },
                     )
                 },
             )

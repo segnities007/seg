@@ -44,12 +44,12 @@ fun NavigationHub(onTopNavigate: (route: Navigation) -> Unit) {
     val tabViewModel: TabViewModel = hiltViewModel()
 
     LaunchedEffect(Unit) {
-        hubViewModel.onHubAction(HubAction.GetUser)
-        homeViewModel.onHomeAction(HomeAction.GetNewPosts(Genre.NORMAL))
-        homeViewModel.onHomeAction(HomeAction.GetNewPosts(Genre.HAIKU))
-        homeViewModel.onHomeAction(HomeAction.GetNewPosts(Genre.TANKA))
-        homeViewModel.onHomeAction(HomeAction.GetNewPosts(Genre.KATAUTA))
-        homeViewModel.onHomeAction(HomeAction.GetNewPosts(Genre.SEDOUKA))
+        hubViewModel.onHubAction(HubAction.GetUser(hubViewModel::onHubAction))
+        homeViewModel.onHomeAction(HomeAction.GetNewPosts(Genre.NORMAL, hubViewModel::onHubAction))
+        homeViewModel.onHomeAction(HomeAction.GetNewPosts(Genre.HAIKU, hubViewModel::onHubAction))
+        homeViewModel.onHomeAction(HomeAction.GetNewPosts(Genre.TANKA, hubViewModel::onHubAction))
+        homeViewModel.onHomeAction(HomeAction.GetNewPosts(Genre.KATAUTA, hubViewModel::onHubAction))
+        homeViewModel.onHomeAction(HomeAction.GetNewPosts(Genre.SEDOUKA, hubViewModel::onHubAction))
     }
 
     val navBackStackEntry by hubNavHostController.currentBackStackEntryAsState()

@@ -143,9 +143,9 @@ fun PostScope.TopToolBar(modifier: Modifier = Modifier) {
                 onPostAction(
                     PostAction.CreatePost(
                         user = hubState.self,
-                        onUpdateIsLoading = { onPostAction(PostAction.UpdateIsLoading(it)) },
-                        onUpdateSelf = { onHubAction(HubAction.GetUser) },
+                        onUpdateSelf = { onHubAction(HubAction.GetUser(onHubAction)) },
                         onNavigate = onHubNavigate,
+                        onHubAction = onHubAction,
                     ),
                 )
             },
