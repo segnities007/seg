@@ -37,6 +37,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.feature.R
 import com.example.feature.components.button.SmallButton
 import com.example.feature.components.indicator.PagingIndicator
+import com.example.feature.screens.login.LoginAction
 
 @Composable
 fun CreateAccount(
@@ -58,6 +59,7 @@ private fun CreateAccountUi(
     onNavigateToHub: () -> Unit,
     createAccountState: CreateAccountState,
     createAccountAction: (CreateAccountAction) -> Unit,
+    onLoginAction: (LoginAction) -> Unit = {},
     commonPadding: Dp = dimensionResource(R.dimen.padding_normal),
 ) {
     val pagerState =
@@ -96,6 +98,7 @@ private fun CreateAccountUi(
                     ThirdPage(
                         createAccountAction = createAccountAction,
                         onNavigateToHub = onNavigateToHub,
+                        onLoginAction = onLoginAction,
                     )
             }
             Spacer(Modifier.weight(1f))
@@ -158,13 +161,19 @@ private fun SecondPage(
 private fun ThirdPage(
     createAccountAction: (CreateAccountAction) -> Unit,
     onNavigateToHub: () -> Unit,
+    onLoginAction: (LoginAction) -> Unit,
 ) {
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         SmallButton(textID = R.string.enter, onClick = {
-            createAccountAction(CreateAccountAction.CreateUser(onNavigateToHub))
+            createAccountAction(
+                CreateAccountAction.CreateUser(
+                    onNavigateToHub,
+                    onLoginAction = onLoginAction,
+                ),
+            )
         })
     }
 }

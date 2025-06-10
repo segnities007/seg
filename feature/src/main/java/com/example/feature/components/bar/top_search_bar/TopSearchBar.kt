@@ -16,6 +16,7 @@ import com.example.feature.R
 import com.example.feature.components.tab.Tab
 import com.example.feature.components.tab.TabAction
 import com.example.feature.components.tab.TabState
+import com.example.feature.screens.hub.HubAction
 import com.example.feature.screens.hub.search.SearchAction
 
 @Composable
@@ -25,6 +26,7 @@ fun TopSearchBar(
     topSearchBarState: TopSearchBarState,
     onTabAction: (TabAction) -> Unit,
     onSearchAction: (SearchAction) -> Unit,
+    onHubAction: (HubAction) -> Unit,
     onTopSearchBarAction: (TopSearchBarAction) -> Unit,
 ) {
     val commonPadding: Dp = dimensionResource(R.dimen.padding_sn)
@@ -47,6 +49,7 @@ fun TopSearchBar(
         SearchInputForm(
             topSearchBarState = topSearchBarState,
             onSearchAction = onSearchAction,
+            onHubAction = onHubAction,
             onTopSearchBarAction = onTopSearchBarAction,
         )
         Spacer(Modifier.padding(commonPadding))

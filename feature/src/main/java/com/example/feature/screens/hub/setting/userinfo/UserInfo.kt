@@ -213,8 +213,8 @@ private fun SelectionButtons(
             text = stringResource(R.string.enter),
             onClick = {
                 scope.launch {
-                    onUserInfoAction(UserInfoAction.UpdateUser(hubState.self))
-                    onHubAction(HubAction.GetUser)
+                    onUserInfoAction(UserInfoAction.UpdateUser(hubState.self, onHubAction))
+                    onHubAction(HubAction.GetUser(onHubAction))
                     onNavigate(NavigationSettingRoute.Preference)
                 }
             },

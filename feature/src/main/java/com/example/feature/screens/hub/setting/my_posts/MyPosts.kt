@@ -151,7 +151,7 @@ private fun Posts(
             item {
                 Column {
                     Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_smaller)))
-                    LoadingUI(onLoading = { onMyPostsAction(MyPostsAction.GetPosts) })
+                    LoadingUI(onLoading = { onMyPostsAction(MyPostsAction.GetPosts(onHubAction)) })
                 }
             }
         }
@@ -206,7 +206,7 @@ private fun Likes(
             item {
                 Column {
                     Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_smaller)))
-                    LoadingUI(onLoading = { onMyPostsAction(MyPostsAction.GetLikedPosts) })
+                    LoadingUI(onLoading = { onMyPostsAction(MyPostsAction.GetLikedPosts(onHubAction)) })
                 }
             }
         }
@@ -261,7 +261,7 @@ private fun Reposts(
             item {
                 Column {
                     Spacer(modifier = Modifier.padding(dimensionResource(R.dimen.padding_smaller)))
-                    LoadingUI(onLoading = { onMyPostsAction(MyPostsAction.GetRepostedPosts) })
+                    LoadingUI(onLoading = { onMyPostsAction(MyPostsAction.GetRepostedPosts(onHubAction)) })
                 }
             }
         }

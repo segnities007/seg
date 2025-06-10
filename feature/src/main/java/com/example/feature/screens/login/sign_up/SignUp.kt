@@ -17,18 +17,19 @@ fun SignUp(
     padding: Dp = dimensionResource(R.dimen.padding_normal),
     onNavigateToConfirmEmail: (Navigation) -> Unit,
     loginState: LoginState,
-    loginAction: (action: LoginAction) -> Unit,
+    onLoginAction: (action: LoginAction) -> Unit,
 ) {
     LoginCard(
         modifier = modifier,
         textIDOfEnterLabel = R.string.sign_up,
         padding = padding,
         loginState = loginState,
-        loginAction = loginAction,
+        loginAction = onLoginAction,
         onClickSignButton = {
-            loginAction(
+            onLoginAction(
                 LoginAction.SignUpWithEmailPassword(
                     onNavigate = { onNavigateToConfirmEmail(NavigationLoginRoute.ConfirmEmail) },
+                    onLoginAction = onLoginAction,
                 ),
             )
         },

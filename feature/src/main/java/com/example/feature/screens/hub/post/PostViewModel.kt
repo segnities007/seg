@@ -59,7 +59,7 @@ class PostViewModel
                             commentedPost = action.hubState.comment,
                         )
                     if (result) {
-                        action.onHubAction(HubAction.GetUser)
+                        action.onHubAction(HubAction.GetUser(action.onHubAction))
                         val updatedCommentedPost =
                             postRepository.onGetPost(action.hubState.comment.id)
                         action.onHubAction(HubAction.SetComment(updatedCommentedPost))

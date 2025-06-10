@@ -50,7 +50,7 @@ fun NavigationLogin(navHostController: NavHostController) {
                 SignIn(
                     modifier = modifier,
                     loginState = loginViewModel.loginUiState,
-                    loginAction = loginViewModel::onLoginAction,
+                    onLoginAction = loginViewModel::onLoginAction,
                     onNavigate = { navHostController.navigate(NavigationRoute.Hub) },
                 )
             }
@@ -58,7 +58,7 @@ fun NavigationLogin(navHostController: NavHostController) {
                 SignUp(
                     modifier = modifier,
                     loginState = loginViewModel.loginUiState,
-                    loginAction = loginViewModel::onLoginAction,
+                    onLoginAction = loginViewModel::onLoginAction,
                     onNavigateToConfirmEmail = {
                         loginNavHostController.navigate(
                             NavigationLoginRoute.CreateAccount,
